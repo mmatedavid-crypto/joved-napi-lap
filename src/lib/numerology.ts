@@ -115,7 +115,7 @@ type Pair = { works: string; tension: string; advice: string };
 
 const DEFAULT_PAIR: Pair = {
   works: "Ti ketten más-más ritmusban éltek, és pont ez tud benneteket táplálni — amíg egyik sem akarja a másikat a saját tempójához igazítani.",
-  tension: "A baj akkor kezdődik, amikor azt hiszitek, ugyanazt értitek a „közös" alatt. Pedig két különböző értelmezés ül egy asztalnál.",
+  tension: 'A baj akkor kezdődik, amikor azt hiszitek, ugyanazt értitek a „közös" alatt. Pedig két különböző értelmezés ül egy asztalnál.',
   advice: "Ne magyarázzátok el egymásnak, mit kellene érezni. Inkább kérdezzétek meg.",
 };
 
@@ -163,7 +163,7 @@ const PAIR_TEXT: Record<string, Pair> = {
   "6-9": {
     works: "Mély gondoskodás, érett szeretet. Ti tudtok valamit, amit a többiek csak utánoznak.",
     tension: "Mindketten azt hiszitek, a másik miatt vagytok így — pedig magatok döntöttetek így.",
-    advice: "Egy heti kérdés: „Mit szeretnék most magamnak?" Először magadnak válaszolj.",
+    advice: 'Egy heti kérdés: „Mit szeretnék most magamnak?" Először magadnak válaszolj.',
   },
   "7-7": {
     works: "Két mély ember egy asztalnál. Csend nélkül kifáradtok — de csenddel együtt sokáig bírjátok.",
@@ -178,7 +178,7 @@ const PAIR_TEXT: Record<string, Pair> = {
   "9-9": {
     works: "Mély, érett, jelentésteli kapcsolat. Két ember, aki tudja, mi a fontos.",
     tension: "Hajlamosak vagytok mindent megérteni — még azt is, amit nem kellene elviselni.",
-    advice: "Néha az „értem, miért csinálta" nem helyettesíti a „nem teszem zsebre".",
+    advice: 'Néha az „értem, miért csinálta" nem helyettesíti a „nem teszem zsebre".',
   },
 };
 
