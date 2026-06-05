@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as RolunkRouteImport } from './routes/rolunk'
 import { Route as RandiElottRouteImport } from './routes/randi-elott'
+import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
@@ -32,6 +33,11 @@ const RolunkRoute = RolunkRouteImport.update({
 const RandiElottRoute = RandiElottRouteImport.update({
   id: '/randi-elott',
   path: '/randi-elott',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OsszeillunkRoute = OsszeillunkRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/mai-lap'
     | '/osszeillunk'
+    | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/mai-lap'
     | '/osszeillunk'
+    | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/mai-lap'
     | '/osszeillunk'
+    | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   MaiLapRoute: typeof MaiLapRoute
   OsszeillunkRoute: typeof OsszeillunkRoute
+  ProfilRoute: typeof ProfilRoute
   RandiElottRoute: typeof RandiElottRoute
   RolunkRoute: typeof RolunkRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/randi-elott'
       fullPath: '/randi-elott'
       preLoaderRoute: typeof RandiElottRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/osszeillunk': {
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   MaiLapRoute: MaiLapRoute,
   OsszeillunkRoute: OsszeillunkRoute,
+  ProfilRoute: ProfilRoute,
   RandiElottRoute: RandiElottRoute,
   RolunkRoute: RolunkRoute,
   SzammisztikaRoute: SzammisztikaRoute,
