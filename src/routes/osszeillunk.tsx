@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { compatibilityScore, lifePath, lifePathInfo, relationshipNumber } from "@/lib/numerology";
+import { compatPairMeaning, compatibilityScore, lifePath, lifePathInfo, relationshipNumber } from "@/lib/numerology";
+import { HUDateInput } from "@/components/HUDateInput";
 
 export const Route = createFileRoute("/osszeillunk")({
   head: () => ({
@@ -33,6 +34,7 @@ function Page() {
   const ai = res && lifePathInfo(res.aN);
   const bi = res && lifePathInfo(res.bN);
   const ri = res && lifePathInfo(res.rel);
+  const pair = res && compatPairMeaning(res.aN, res.bN);
 
   return (
     <Layout>
@@ -42,16 +44,16 @@ function Page() {
           <div className="grid md:grid-cols-2 gap-4">
             <div><label className="block text-sm text-ivory/80 mb-2">A férfi neve (opcionális)</label><input value={na} onChange={(e)=>setNa(e.target.value)} className={inp}/></div>
             <div><label className="block text-sm text-ivory/80 mb-2">A nő neve (opcionális)</label><input value={nb} onChange={(e)=>setNb(e.target.value)} className={inp}/></div>
-            <div><label className="block text-sm text-ivory/80 mb-2">Férfi születési dátuma</label><input required type="date" value={a} onChange={(e)=>setA(e.target.value)} className={inp}/></div>
-            <div><label className="block text-sm text-ivory/80 mb-2">Nő születési dátuma</label><input required type="date" value={b} onChange={(e)=>setB(e.target.value)} className={inp}/></div>
+            <HUDateInput label="Férfi születési dátuma" required value={a} onChange={setA} />
+            <HUDateInput label="Nő születési dátuma" required value={b} onChange={setB} />
           </div>
           <div><label className="block text-sm text-ivory/80 mb-2">A kapcsolat státusza</label>
             <select value={status} onChange={(e)=>setStatus(e.target.value)} className={sel}>{STATUS.map((s)=><option key={s}>{s}</option>)}</select>
           </div>
-          <button className="btn-gold">Megnézem az összeillést</button>
+          <button className="btn-gold" disabled={!a || !b}>Megnézem az összeillést</button>
         </form>
 
-        {res && ai && bi && ri && (
+        {res && ai && bi && ri && pair && (
           <div className="space-y-4">
             <div className="surface p-8 text-center">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">Összeillés</div>
@@ -64,12 +66,10 @@ function Page() {
               <Section eyebrow="A kapcsolat száma" title={`${res.rel} · ${ri.title}`}>{ri.meaning}</Section>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Miért működhet?">A {ai.title.toLowerCase()} és a {bi.title.toLowerCase()} energiája akkor erősíti egymást, ha mindketten tudtok teret adni a másik tempójának.</Section>
-              <Section eyebrow="Hol lehet nehéz?">{ai.shadow} A másik oldalon: {bi.shadow}</Section>
-              <Section eyebrow="Kommunikáció">A {res.rel}-es kapcsolatszám szerint az őszinte, lassabb beszélgetések többet visznek, mint a tisztázó vita.</Section>
-              <Section eyebrow="Vonzalom">A vonzás akkor él, ha mindketten önmagatok maradtok — nem akkor, ha a másikért átalakultok.</Section>
-              <Section eyebrow="Hosszú táv">A hosszú táv nem a hasonlóságon, hanem a közös ritmuson múlik.</Section>
-              <Section eyebrow="Egy mondatban"><em>Nem lezárást, hanem irányt mutat.</em></Section>
+              <Section eyebrow="Miért működhet">{pair.works}</Section>
+              <Section eyebrow="Hol lehet nehéz">{pair.tension}</Section>
+              <Section eyebrow="Egy mondat, amit vigyetek magatokkal"><em>{pair.advice}</em></Section>
+              <Section eyebrow="A kapcsolat hangja">A {res.rel}-es kapcsolatszám lassabb, őszintébb beszélgetéseket kér — nem a vita tisztáz, hanem a kimondás.</Section>
             </div>
           </div>
         )}

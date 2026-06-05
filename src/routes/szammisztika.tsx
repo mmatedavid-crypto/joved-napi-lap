@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
+import { HUDateInput } from "@/components/HUDateInput";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -32,17 +33,13 @@ function Page() {
       <PageHeader eyebrow="Számmisztika" title="A sorsszámod" lead="Egy szám, ami a születésed napjából érkezik veled." />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={calc} className="surface p-6 space-y-5">
-          <div>
-            <label className="block text-sm text-ivory/80 mb-2">Születési dátumod</label>
-            <input required type="date" value={dob} onChange={(e)=>setDob(e.target.value)}
-              className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none" />
-          </div>
+          <HUDateInput label="Születési dátumod" required value={dob} onChange={setDob} />
           <div>
             <label className="block text-sm text-ivory/80 mb-2">Keresztneved (opcionális)</label>
             <input value={name} onChange={(e)=>setName(e.target.value)}
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none" />
           </div>
-          <button className="btn-gold">Megnézem a sorsszámom</button>
+          <button className="btn-gold" disabled={!dob}>Megnézem a sorsszámom</button>
         </form>
 
         {result && info && (
