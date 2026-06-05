@@ -105,7 +105,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
         {/* parchment glow */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] w-[90%] h-12 rounded-[50%] bg-[radial-gradient(ellipse,oklch(0.78_0.10_80/0.18),transparent_70%)] blur-md pointer-events-none" />
         {pool.map((c, i) => {
-          const t = total === 1 ? 0.5 : i / (total - 1); // 0..1
+          const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
           const lift = Math.sin(t * Math.PI) * 12; // arc bow
           const isPicked = picked.includes(i);
