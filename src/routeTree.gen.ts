@@ -9,8 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
+import { Route as RolunkRouteImport } from './routes/rolunk'
+import { Route as RandiElottRouteImport } from './routes/randi-elott'
+import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
+import { Route as MaiLapRouteImport } from './routes/mai-lap'
+import { Route as HaromLapRouteImport } from './routes/harom-lap'
+import { Route as DontesElottRouteImport } from './routes/dontes-elott'
+import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SzammisztikaRoute = SzammisztikaRouteImport.update({
+  id: '/szammisztika',
+  path: '/szammisztika',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RolunkRoute = RolunkRouteImport.update({
+  id: '/rolunk',
+  path: '/rolunk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RandiElottRoute = RandiElottRouteImport.update({
+  id: '/randi-elott',
+  path: '/randi-elott',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsszeillunkRoute = OsszeillunkRouteImport.update({
+  id: '/osszeillunk',
+  path: '/osszeillunk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaiLapRoute = MaiLapRouteImport.update({
+  id: '/mai-lap',
+  path: '/mai-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HaromLapRoute = HaromLapRouteImport.update({
+  id: '/harom-lap',
+  path: '/harom-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DontesElottRoute = DontesElottRouteImport.update({
+  id: '/dontes-elott',
+  path: '/dontes-elott',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BejelentkezesRoute = BejelentkezesRouteImport.update({
+  id: '/bejelentkezes',
+  path: '/bejelentkezes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +73,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bejelentkezes': typeof BejelentkezesRoute
+  '/dontes-elott': typeof DontesElottRoute
+  '/harom-lap': typeof HaromLapRoute
+  '/mai-lap': typeof MaiLapRoute
+  '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
+  '/randi-elott': typeof RandiElottRoute
+  '/rolunk': typeof RolunkRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bejelentkezes': typeof BejelentkezesRoute
+  '/dontes-elott': typeof DontesElottRoute
+  '/harom-lap': typeof HaromLapRoute
+  '/mai-lap': typeof MaiLapRoute
+  '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
+  '/randi-elott': typeof RandiElottRoute
+  '/rolunk': typeof RolunkRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bejelentkezes': typeof BejelentkezesRoute
+  '/dontes-elott': typeof DontesElottRoute
+  '/harom-lap': typeof HaromLapRoute
+  '/mai-lap': typeof MaiLapRoute
+  '/osszeillunk': typeof OsszeillunkRoute
+  '/profil': typeof ProfilRoute
+  '/randi-elott': typeof RandiElottRoute
+  '/rolunk': typeof RolunkRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bejelentkezes'
+    | '/dontes-elott'
+    | '/harom-lap'
+    | '/mai-lap'
+    | '/osszeillunk'
+    | '/profil'
+    | '/randi-elott'
+    | '/rolunk'
+    | '/szammisztika'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bejelentkezes'
+    | '/dontes-elott'
+    | '/harom-lap'
+    | '/mai-lap'
+    | '/osszeillunk'
+    | '/profil'
+    | '/randi-elott'
+    | '/rolunk'
+    | '/szammisztika'
+  id:
+    | '__root__'
+    | '/'
+    | '/bejelentkezes'
+    | '/dontes-elott'
+    | '/harom-lap'
+    | '/mai-lap'
+    | '/osszeillunk'
+    | '/profil'
+    | '/randi-elott'
+    | '/rolunk'
+    | '/szammisztika'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BejelentkezesRoute: typeof BejelentkezesRoute
+  DontesElottRoute: typeof DontesElottRoute
+  HaromLapRoute: typeof HaromLapRoute
+  MaiLapRoute: typeof MaiLapRoute
+  OsszeillunkRoute: typeof OsszeillunkRoute
+  ProfilRoute: typeof ProfilRoute
+  RandiElottRoute: typeof RandiElottRoute
+  RolunkRoute: typeof RolunkRoute
+  SzammisztikaRoute: typeof SzammisztikaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/szammisztika': {
+      id: '/szammisztika'
+      path: '/szammisztika'
+      fullPath: '/szammisztika'
+      preLoaderRoute: typeof SzammisztikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rolunk': {
+      id: '/rolunk'
+      path: '/rolunk'
+      fullPath: '/rolunk'
+      preLoaderRoute: typeof RolunkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/randi-elott': {
+      id: '/randi-elott'
+      path: '/randi-elott'
+      fullPath: '/randi-elott'
+      preLoaderRoute: typeof RandiElottRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/osszeillunk': {
+      id: '/osszeillunk'
+      path: '/osszeillunk'
+      fullPath: '/osszeillunk'
+      preLoaderRoute: typeof OsszeillunkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mai-lap': {
+      id: '/mai-lap'
+      path: '/mai-lap'
+      fullPath: '/mai-lap'
+      preLoaderRoute: typeof MaiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/harom-lap': {
+      id: '/harom-lap'
+      path: '/harom-lap'
+      fullPath: '/harom-lap'
+      preLoaderRoute: typeof HaromLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dontes-elott': {
+      id: '/dontes-elott'
+      path: '/dontes-elott'
+      fullPath: '/dontes-elott'
+      preLoaderRoute: typeof DontesElottRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bejelentkezes': {
+      id: '/bejelentkezes'
+      path: '/bejelentkezes'
+      fullPath: '/bejelentkezes'
+      preLoaderRoute: typeof BejelentkezesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +237,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BejelentkezesRoute: BejelentkezesRoute,
+  DontesElottRoute: DontesElottRoute,
+  HaromLapRoute: HaromLapRoute,
+  MaiLapRoute: MaiLapRoute,
+  OsszeillunkRoute: OsszeillunkRoute,
+  ProfilRoute: ProfilRoute,
+  RandiElottRoute: RandiElottRoute,
+  RolunkRoute: RolunkRoute,
+  SzammisztikaRoute: SzammisztikaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

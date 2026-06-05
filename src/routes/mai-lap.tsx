@@ -1,0 +1,78 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Layout } from "@/components/Layout";
+import { PageHeader, Section } from "@/components/Section";
+import { CardBack, CardFace } from "@/components/TarotCard";
+import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
+import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
+
+export const Route = createFileRoute("/mai-lap")({
+  head: () => ({
+    meta: [
+      { title: "Mai lap — napi tarot húzás | Jövőd.hu" },
+      { name: "description", content: "Húzz egy napi tarot lapot. Rövid, elegáns magyar üzenet a mai napodra." },
+    ],
+    links: [{ rel: "canonical", href: "/mai-lap" }],
+  }),
+  component: MaiLap,
+});
+
+type Daily = { date: string; cardId: string };
+
+function MaiLap() {
+  const [card, setCard] = useState<TarotCard | null>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const stored = loadLocal<Daily>("daily");
+    if (stored && stored.date === todayKey()) {
+      const c = CARDS.find((x) => x.id === stored.cardId) ?? null;
+      setCard(c);
+      setRevealed(true);
+    }
+  }, []);
+
+  function draw() {
+    const c = pickCards(1, dailySeed() + Math.floor(Math.random() * 1000))[0];
+    setCard(c);
+    saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id });
+  }
+
+  return (
+    <Layout>
+      <PageHeader eyebrow="Napi rituálé" title="Mai lap" lead="Egy lap, egy üzenet a mai napodra. Engedd, hogy szóljon hozzád." />
+      <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20">
+        {!card && (
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-56"><CardBack /></div>
+            <button className="btn-gold" onClick={draw}>Húzom a mai lapom</button>
+          </div>
+        )}
+        {card && (
+          <div className="grid md:grid-cols-[260px,1fr] gap-8 md:gap-10 items-start">
+            <div className="mx-auto w-full max-w-[260px]">
+              {revealed
+                ? <CardFace card={card} />
+                : <button onClick={() => setRevealed(true)} className="block w-full"><CardBack /></button>}
+              {!revealed && <p className="text-center text-ivory/60 text-sm mt-3">Koppints a lapra a felfedéshez</p>}
+            </div>
+            {revealed && (
+              <div className="space-y-4">
+                <div>
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A mai lapod</div>
+                  <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{card.name}</h2>
+                  <div className="mt-2 flex flex-wrap gap-x-3 text-sm text-ivory/60">
+                    {card.keywords.map((k) => <span key={k}>· {k}</span>)}
+                  </div>
+                </div>
+                <Section eyebrow="Mit üzen ma?">{card.general}</Section>
+                <Section eyebrow="Mire figyelj?">{card.warning}</Section>
+                <Section eyebrow="Egy mondat, amit vigyél magaddal"><em>{card.daily}</em></Section>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+}
