@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
+import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as IndexRouteImport } from './routes/index'
 
 const MaiLapRoute = MaiLapRouteImport.update({
   id: '/mai-lap',
   path: '/mai-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HaromLapRoute = HaromLapRouteImport.update({
+  id: '/harom-lap',
+  path: '/harom-lap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mai-lap'
+  fullPaths: '/' | '/harom-lap' | '/mai-lap'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mai-lap'
-  id: '__root__' | '/' | '/mai-lap'
+  to: '/' | '/harom-lap' | '/mai-lap'
+  id: '__root__' | '/' | '/harom-lap' | '/mai-lap'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HaromLapRoute: typeof HaromLapRoute
   MaiLapRoute: typeof MaiLapRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/mai-lap'
       fullPath: '/mai-lap'
       preLoaderRoute: typeof MaiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/harom-lap': {
+      id: '/harom-lap'
+      path: '/harom-lap'
+      fullPath: '/harom-lap'
+      preLoaderRoute: typeof HaromLapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HaromLapRoute: HaromLapRoute,
   MaiLapRoute: MaiLapRoute,
 }
 export const routeTree = rootRouteImport
