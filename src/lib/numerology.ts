@@ -109,3 +109,87 @@ export function compatibilityScore(a: number, b: number): number {
 export function relationshipNumber(a: number, b: number): number {
   return reduceNumber(a + b);
 }
+
+// --- Static, hand-written compatibility pair meanings ---
+type Pair = { works: string; tension: string; advice: string };
+
+const DEFAULT_PAIR: Pair = {
+  works: "Ti ketten más-más ritmusban éltek, és pont ez tud benneteket táplálni — amíg egyik sem akarja a másikat a saját tempójához igazítani.",
+  tension: "A baj akkor kezdődik, amikor azt hiszitek, ugyanazt értitek a „közös" alatt. Pedig két különböző értelmezés ül egy asztalnál.",
+  advice: "Ne magyarázzátok el egymásnak, mit kellene érezni. Inkább kérdezzétek meg.",
+};
+
+const PAIR_TEXT: Record<string, Pair> = {
+  "1-2": {
+    works: "Az 1 viszi, a 2 érzi. Ha a 2 nem tűnik el a másik árnyékában, jó páros lehet — egyik döntésképes, másik kapcsolatkész.",
+    tension: "A 2 sértődéseit az 1 nem fogja észrevenni. A néma sértődés viszont mindkettőjüket elszigeteli.",
+    advice: "A 2 mondja ki, mire vágyik — az 1 hallani fogja, ha tisztán hangzik.",
+  },
+  "1-5": {
+    works: "Két szabad ember. Ami másnál veszély, nálatok közös nyelv: a mozgás, a változás, a nem-megszelídülés.",
+    tension: "Annyira félitek az unalmat, hogy közben a mélységet is elkerülitek.",
+    advice: "Egyszer maradjatok ott, ahol nehéz. Az dönti el, mi van köztetek.",
+  },
+  "2-6": {
+    works: "Az otthonteremtés és a finom érzékelés találkozása. Csendes, mély, tartós páros.",
+    tension: "Mindketten könnyen elveszítitek magatokat a másikban. Két önfeladásból nem lesz kapcsolat.",
+    advice: "Maradjon külön térfél is — nem ellenetek, hanem értetek.",
+  },
+  "3-5": {
+    works: "Élet, kíváncsiság, könnyedség. Mellettetek vidám az élet, és ez nem felszín — energia.",
+    tension: "Amikor jön a komoly, mindketten elsiklotok mellette. Halogatott beszélgetésekből lesznek a nagy szakítások.",
+    advice: "Egy mondatot ne csomagoljatok viccbe a héten.",
+  },
+  "3-6": {
+    works: "A 3 színt visz, a 6 keretet ad. Egy kreatív otthon, ahol van rend is és levegő is.",
+    tension: "A 6 könnyen anyásít, a 3 könnyen kibújik a felelősség alól.",
+    advice: "A 3 vállaljon egy konkrét, ismétlődő dolgot. A 6 ne vegye vissza tőle.",
+  },
+  "4-8": {
+    works: "Két komoly ember. Stabil keretek, hosszú táv, közös építés. Egy olyan kapcsolat, ami tényleg meg tud állni.",
+    tension: "A munka és a kontroll lassan megeszi a gyengédséget, ha nem figyeltek rá.",
+    advice: "Egy estét hetente írjatok be a naptárba, ahol semmit nem szerveztek.",
+  },
+  "2-4": {
+    works: "Egy finom és egy stabil ember. Itt nincs hangos szerelem, viszont van bizalom — és az a ritkább.",
+    tension: "A 4 azt hiheti, a 2 nem akar dönteni. A 2 azt hiheti, a 4 nem érzi át, amit ő.",
+    advice: "Mondjátok ki, amit éreztek, ne csak amit gondoltok.",
+  },
+  "5-9": {
+    works: "Tág horizont, közös értelemkeresés. Ti nem azért vagytok együtt, mert kell, hanem mert akartok.",
+    tension: "Mindketten könnyen elindultok befelé vagy kifelé — egyszerre. Olyankor nincs senki, aki tartson.",
+    advice: "Legyen egy közös rituálé, ami akkor is megvan, ha épp nehéz.",
+  },
+  "6-9": {
+    works: "Mély gondoskodás, érett szeretet. Ti tudtok valamit, amit a többiek csak utánoznak.",
+    tension: "Mindketten azt hiszitek, a másik miatt vagytok így — pedig magatok döntöttetek így.",
+    advice: "Egy heti kérdés: „Mit szeretnék most magamnak?" Először magadnak válaszolj.",
+  },
+  "7-7": {
+    works: "Két mély ember egy asztalnál. Csend nélkül kifáradtok — de csenddel együtt sokáig bírjátok.",
+    tension: "Mindketten visszahúzódtok, ha sérültök. A távolság lassan magyarázattá válik.",
+    advice: "Ne magyarázzatok semmit — kérdezzetek vissza egyet egymástól.",
+  },
+  "1-1": {
+    works: "Két vezér. Ha tudtok ugyanabba az irányba menni, megállíthatatlanok vagytok.",
+    tension: "Egy kapcsolat nem két monológ. Ha egyikőtök sem hajlandó kicsit hátralépni, kiég a páros.",
+    advice: "Egy döntés a héten legyen olyan, ahol nem te vagy az első.",
+  },
+  "9-9": {
+    works: "Mély, érett, jelentésteli kapcsolat. Két ember, aki tudja, mi a fontos.",
+    tension: "Hajlamosak vagytok mindent megérteni — még azt is, amit nem kellene elviselni.",
+    advice: "Néha az „értem, miért csinálta" nem helyettesíti a „nem teszem zsebre".",
+  },
+};
+
+export function compatPairMeaning(a: number, b: number): Pair {
+  const aa = a > 9 ? reduceNumber(a, false) : a;
+  const bb = b > 9 ? reduceNumber(b, false) : b;
+  const k = aa <= bb ? `${aa}-${bb}` : `${bb}-${aa}`;
+  return PAIR_TEXT[k] ?? DEFAULT_PAIR;
+}
+
+// 3-card synthesis from card keywords
+export function threeCardSynthesis(past: string, present: string, future: string): string {
+  return `Ami ${past}-ként indult, most ${present} formájában kér figyelmet, és ${future} felé hív. Nem három különálló dolog — egy ív, ami most rajtad keresztül folytatódik.`;
+}
