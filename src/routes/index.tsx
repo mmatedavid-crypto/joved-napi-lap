@@ -49,7 +49,7 @@ function Index() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <FeatureCard to="/mai-lap" icon="star" title="Mai lap" desc="Húzz egy lapot, és kapj tiszta, érthető üzenetet a napodra." />
           <FeatureCard to="/harom-lap" icon="three" title="3 lapos húzás" desc="Múlt, jelen, jövő — három lap, egy összefüggő történet." />
-          <FeatureCard to="/randi-elott" icon="heart" title="Randi előtt" desc={`Egy kis tisztánlátás, mielőtt kiírod, hogy „nyolckor".`} />
+          <FeatureCard to="/randi-elott" icon="heart" title="Randi előtt" desc='Egy kis tisztánlátás, mielőtt kiírod, hogy „nyolckor".' />
           <FeatureCard to="/dontes-elott" icon="diamond" title="Döntés előtt" desc="Segítünk rálátni a lehetőségeidre, hogy magabiztosan dönthess." />
           <FeatureCard to="/szammisztika" icon="num" title="Sorsszám" desc="Fedezd fel a személyes sorsszámod üzenetét és életfeladataidat." />
           <FeatureCard to="/osszeillunk" icon="rings" title="Összeillünk?" desc="Nézd meg, milyen minőségeket hoztok ki egymásból." />
