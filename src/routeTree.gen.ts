@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
+import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as IndexRouteImport } from './routes/index'
 
 const MaiLapRoute = MaiLapRouteImport.update({
@@ -23,6 +24,11 @@ const HaromLapRoute = HaromLapRouteImport.update({
   path: '/harom-lap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DontesElottRoute = DontesElottRouteImport.update({
+  id: '/dontes-elott',
+  path: '/dontes-elott',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/harom-lap' | '/mai-lap'
+  fullPaths: '/' | '/dontes-elott' | '/harom-lap' | '/mai-lap'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/harom-lap' | '/mai-lap'
-  id: '__root__' | '/' | '/harom-lap' | '/mai-lap'
+  to: '/' | '/dontes-elott' | '/harom-lap' | '/mai-lap'
+  id: '__root__' | '/' | '/dontes-elott' | '/harom-lap' | '/mai-lap'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
   MaiLapRoute: typeof MaiLapRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HaromLapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dontes-elott': {
+      id: '/dontes-elott'
+      path: '/dontes-elott'
+      fullPath: '/dontes-elott'
+      preLoaderRoute: typeof DontesElottRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
   MaiLapRoute: MaiLapRoute,
 }
