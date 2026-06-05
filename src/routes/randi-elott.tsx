@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
+import { HUDateInput } from "@/components/HUDateInput";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -37,8 +38,8 @@ function Page() {
             <div className="grid md:grid-cols-2 gap-4">
               <F label="Te (név, opcionális)"><input value={myName} onChange={(e)=>setMyName(e.target.value)} className={inp} /></F>
               <F label="Ő (név, opcionális)"><input value={hisName} onChange={(e)=>setHisName(e.target.value)} className={inp} /></F>
-              <F label="Születési dátumod (opcionális)"><input type="date" value={myDob} onChange={(e)=>setMyDob(e.target.value)} className={inp} /></F>
-              <F label="Az ő születési dátuma (opcionális)"><input type="date" value={hisDob} onChange={(e)=>setHisDob(e.target.value)} className={inp} /></F>
+              <HUDateInput label="Születési dátumod (opcionális)" value={myDob} onChange={setMyDob} />
+              <HUDateInput label="Az ő születési dátuma (opcionális)" value={hisDob} onChange={setHisDob} />
             </div>
             <F label="A helyzet">
               <select value={sit} onChange={(e)=>setSit(e.target.value)} className={sel}>{SITUATIONS.map((s)=><option key={s}>{s}</option>)}</select>
