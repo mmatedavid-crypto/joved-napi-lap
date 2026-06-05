@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SzammisztikaRoute = SzammisztikaRouteImport.update({
+  id: '/szammisztika',
+  path: '/szammisztika',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RandiElottRoute = RandiElottRouteImport.update({
   id: '/randi-elott',
   path: '/randi-elott',
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/randi-elott': typeof RandiElottRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/randi-elott': typeof RandiElottRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +70,25 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/mai-lap': typeof MaiLapRoute
   '/randi-elott': typeof RandiElottRoute
+  '/szammisztika': typeof SzammisztikaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dontes-elott' | '/harom-lap' | '/mai-lap' | '/randi-elott'
+  fullPaths:
+    | '/'
+    | '/dontes-elott'
+    | '/harom-lap'
+    | '/mai-lap'
+    | '/randi-elott'
+    | '/szammisztika'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dontes-elott' | '/harom-lap' | '/mai-lap' | '/randi-elott'
+  to:
+    | '/'
+    | '/dontes-elott'
+    | '/harom-lap'
+    | '/mai-lap'
+    | '/randi-elott'
+    | '/szammisztika'
   id:
     | '__root__'
     | '/'
@@ -75,6 +96,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/mai-lap'
     | '/randi-elott'
+    | '/szammisztika'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,10 +105,18 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   MaiLapRoute: typeof MaiLapRoute
   RandiElottRoute: typeof RandiElottRoute
+  SzammisztikaRoute: typeof SzammisztikaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/szammisztika': {
+      id: '/szammisztika'
+      path: '/szammisztika'
+      fullPath: '/szammisztika'
+      preLoaderRoute: typeof SzammisztikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/randi-elott': {
       id: '/randi-elott'
       path: '/randi-elott'
@@ -131,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   MaiLapRoute: MaiLapRoute,
   RandiElottRoute: RandiElottRoute,
+  SzammisztikaRoute: SzammisztikaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
