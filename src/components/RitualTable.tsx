@@ -4,6 +4,7 @@ import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CARDS, dailySeed, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
+import { trackEvent } from "@/lib/analytics";
 import {
   compatPairMeaning,
   compatibilityScore,
@@ -95,6 +96,7 @@ function MaiLapInline() {
       const c = CARDS.find((x) => x.id === stored.cardId) ?? null;
       if (c) { setCard(c); setLocked(true); }
     }
+    trackEvent("daily_card_started");
   }, []);
 
   return (
@@ -111,6 +113,7 @@ function MaiLapInline() {
               setCard(c);
               setLocked(true);
               saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id });
+              trackEvent("daily_card_revealed", { cardId: c.id });
             }}
           />
         </>
@@ -142,6 +145,7 @@ function MaiLapInline() {
 function HaromLapInline() {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [resetKey, setResetKey] = useState(0);
+  useEffect(() => { trackEvent("three_card_started"); }, [resetKey]);
   return (
     <div>
       {!cards && (
@@ -152,7 +156,7 @@ function HaromLapInline() {
             count={3}
             slotLabels={["Múlt", "Jelen", "Jövő"]}
             resetKey={resetKey}
-            onComplete={(c) => setCards(c)}
+            onComplete={(c) => { setCards(c); trackEvent("three_card_completed", { ids: c.map(x => x.id) }); }}
           />
         </>
       )}
@@ -193,7 +197,7 @@ function RandiInline() {
     return (
       <form
         className="space-y-4"
-        onSubmit={(e) => { e.preventDefault(); setStarted(true); }}
+        onSubmit={(e) => { e.preventDefault(); setStarted(true); trackEvent("dating_reading_started", { situation: sit }); }}
       >
         <Eyebrow>Randi előtt</Eyebrow>
         <h2 className="font-display text-2xl text-ivory">Egy lap a kapcsolatról</h2>
@@ -213,7 +217,7 @@ function RandiInline() {
       <div>
         <Eyebrow>Helyzet: {sit}</Eyebrow>
         <h2 className="font-display text-2xl text-ivory mb-4">Válassz egy lapot</h2>
-        <SpreadDeck count={1} onComplete={(c) => setCard(c[0])} />
+        <SpreadDeck count={1} onComplete={(c) => { setCard(c[0]); trackEvent("dating_reading_revealed", { cardId: c[0].id, situation: sit }); }} />
       </div>
     );
   }
@@ -232,7 +236,7 @@ function RandiInline() {
           <button className="btn-ghost-gold" onClick={() => { setCard(null); setStarted(false); }}>
             Új húzás
           </button>
-          <Link to="/randi-elott" className="btn-ghost-gold">Részletes olvasat →</Link>
+          <Link to="/randi-elott" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "randi" })}>Részletes olvasat →</Link>
         </div>
       }
     />
@@ -248,7 +252,7 @@ function DontesInline() {
 
   if (!started) {
     return (
-      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setStarted(true); }}>
+      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setStarted(true); trackEvent("decision_reading_started", { hasQuestion: !!q }); }}>
         <Eyebrow>Döntés előtt</Eyebrow>
         <h2 className="font-display text-2xl text-ivory">Egy lap, mielőtt cselekszel</h2>
         <div>
@@ -265,7 +269,7 @@ function DontesInline() {
     return (
       <div>
         {q && <p className="text-sm text-ivory/55 font-editorial italic mb-3">A kérdésed: „{q}"</p>}
-        <SpreadDeck count={1} onComplete={(c) => setCard(c[0])} />
+        <SpreadDeck count={1} onComplete={(c) => { setCard(c[0]); trackEvent("decision_reading_revealed", { cardId: c[0].id }); }} />
       </div>
     );
   }
@@ -284,7 +288,7 @@ function DontesInline() {
           <button className="btn-ghost-gold" onClick={() => { setCard(null); setStarted(false); setQ(""); }}>
             Új kérdés
           </button>
-          <Link to="/dontes-elott" className="btn-ghost-gold">Részletes olvasat →</Link>
+          <Link to="/dontes-elott" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "dontes" })}>Részletes olvasat →</Link>
         </div>
       }
     />
@@ -303,7 +307,9 @@ function SzamInline() {
   function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!dob) return;
-    setRes(lifePath(dob));
+    const n = lifePath(dob);
+    setRes(n);
+    trackEvent("numerology_completed", { number: n });
   }
 
   return (
@@ -333,7 +339,7 @@ function SzamInline() {
             <Block eyebrow="Szerelemben">{info.love}</Block>
             <Block eyebrow="Munkában">{info.work}</Block>
           </div>
-          <div className="text-center"><Link to="/szammisztika" className="btn-ghost-gold">Bővebb sorsszám-olvasat →</Link></div>
+          <div className="text-center"><Link to="/szammisztika" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "szam" })}>Bővebb sorsszám-olvasat →</Link></div>
         </div>
       )}
     </div>
@@ -351,7 +357,9 @@ function OsszeillunkInline() {
     e.preventDefault();
     if (!a || !b) return;
     const aN = lifePath(a), bN = lifePath(b);
-    setRes({ aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) });
+    const out = { aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) };
+    setRes(out);
+    trackEvent("compatibility_completed", { score: out.score, rel: out.rel });
   }
 
   const pair = res ? compatPairMeaning(res.aN, res.bN) : null;
@@ -394,7 +402,7 @@ function OsszeillunkInline() {
           <Block eyebrow="Miért működhet">{pair.works}</Block>
           <Block eyebrow="Hol lehet nehéz">{pair.tension}</Block>
           <Block eyebrow="Egy mondat, amit vigyetek magatokkal"><em>{pair.advice}</em></Block>
-          <div className="text-center"><Link to="/osszeillunk" className="btn-ghost-gold">Bővebb olvasat →</Link></div>
+          <div className="text-center"><Link to="/osszeillunk" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "osszeillunk" })}>Bővebb olvasat →</Link></div>
         </div>
       )}
     </div>
