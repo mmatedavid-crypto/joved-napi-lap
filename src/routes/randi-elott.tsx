@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { CardBack, CardFace } from "@/components/TarotCard";
+import { CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
 

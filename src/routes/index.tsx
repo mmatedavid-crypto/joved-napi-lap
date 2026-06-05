@@ -18,14 +18,14 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <Layout>
-      <section className="mx-auto max-w-3xl px-4 md:px-6 pt-8 md:pt-12 pb-4 text-center">
-        <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)] mb-3">Napi rituálé</div>
-        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory">
+      <section className="mx-auto max-w-3xl px-4 md:px-6 pt-4 md:pt-10 pb-3 text-center">
+        <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)] mb-2">Napi rituálé</div>
+        <h1 className="font-display text-[28px] leading-[1.1] md:text-5xl lg:text-6xl text-ivory">
           Húzz egy lapot,{" "}
           <span className="text-gold-gradient">mielőtt döntesz.</span>
         </h1>
-        <p className="font-editorial text-lg md:text-xl text-ivory/70 mt-4 leading-relaxed max-w-xl mx-auto">
-          Napi lap, sorsszám, összeillés és döntés előtti tisztánlátás — egy csendes magyar olvasóasztal.
+        <p className="font-editorial text-base md:text-xl text-ivory/70 mt-2 md:mt-4 leading-relaxed max-w-xl mx-auto">
+          Napi lap, sorsszám, összeillés és döntés előtti tisztánlátás.
         </p>
       </section>
 

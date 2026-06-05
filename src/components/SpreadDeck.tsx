@@ -13,7 +13,7 @@ type Props = {
   resetKey?: string | number;
 };
 
-const SPREAD_SIZE = 17;
+const SPREAD_SIZE = 22;
 
 export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Props) {
   // pool of 17 cards arranged in an arc
@@ -47,7 +47,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
 
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
-  const arc = 70; // degrees total
+  const arc = 84; // degrees total — wider fan for 22 cards
 
   return (
     <div className="select-none">
@@ -101,7 +101,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
       )}
 
       {/* Spread (fan) */}
-      <div className="relative mx-auto h-[230px] sm:h-[260px] max-w-[640px] [perspective:1200px]">
+      <div className="relative mx-auto h-[240px] sm:h-[280px] max-w-[720px] [perspective:1200px]">
         {/* parchment glow */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] w-[90%] h-12 rounded-[50%] bg-[radial-gradient(ellipse,oklch(0.78_0.10_80/0.18),transparent_70%)] blur-md pointer-events-none" />
         {pool.map((c, i) => {
