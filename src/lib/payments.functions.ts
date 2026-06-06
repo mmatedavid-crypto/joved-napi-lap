@@ -120,7 +120,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         express: wantsExpress,
         status: "pending_payment",
         stripe_session_id: session.id,
-        input_payload: data.inputPayload ?? null,
+        input_payload: (data.inputPayload ?? null) as any,
         source_route: data.sourceRoute ?? null,
         deliver_by: deliverBy,
       });
