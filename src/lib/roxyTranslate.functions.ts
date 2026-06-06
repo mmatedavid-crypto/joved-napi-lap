@@ -29,6 +29,14 @@ const SignSchema = z.enum([
   "pisces",
 ]);
 
+const AI_TRANSLATION_CACHE_VERSION = "hu-v2";
+const DAY_SECONDS = 60 * 60 * 24;
+const STATIC_AI_TRANSLATION_TTL_SECONDS: number | null = null;
+
+function aiCacheKey(...parts: Array<string | number>): string {
+  return ["aitr", AI_TRANSLATION_CACHE_VERSION, ...parts].join(":");
+}
+
 // Közös fordító system prompt. KULCS: nem talál ki, csak fordít.
 const TRANSLATOR_SYSTEM = [
   "Te a Jövőd.hu magyar fordítója vagy.",
@@ -62,7 +70,7 @@ async function readCache(key: string): Promise<unknown | null> {
   return null;
 }
 
-async function writeCache(key: string, endpoint: string, payload: unknown, ttlSec: number) {
+async function writeCache(key: string, endpoint: string, payload: unknown, ttlSec: number | null) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   try {
     await supabaseAdmin.from("api_cache").upsert(
@@ -72,7 +80,7 @@ async function writeCache(key: string, endpoint: string, payload: unknown, ttlSe
         cache_key: key,
         request_payload: {} as never,
         response_payload: payload as never,
-        expires_at: new Date(Date.now() + ttlSec * 1000).toISOString(),
+        expires_at: ttlSec == null ? null : new Date(Date.now() + ttlSec * 1000).toISOString(),
       },
       { onConflict: "cache_key" },
     );
@@ -128,7 +136,7 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
       reading: HoroscopeHU | null;
       message?: string;
     }> => {
-      const cacheKey = `aitr:horoscope:${data.sign}:${data.dateKey}`;
+      const cacheKey = aiCacheKey("horoscope", data.sign, data.dateKey);
       const cached = guardHoroscopeHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
@@ -137,7 +145,7 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
         endpoint: `/astrology/horoscope/${data.sign}/daily`,
         method: "GET",
         cacheKey: `astro:daily:${data.sign}:${data.dateKey}`,
-        ttlSeconds: 60 * 60 * 24,
+        ttlSeconds: DAY_SECONDS,
       });
       if (!r.ok || !r.data)
         return {
@@ -170,7 +178,7 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
       const reading = guardHoroscopeHU(t.data);
       if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/horoscope", reading, 60 * 60 * 24);
+      await writeCache(cacheKey, "/ai/horoscope", reading, DAY_SECONDS);
       return { ok: true, cached: false, reading };
     },
   );
@@ -210,8 +218,8 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
     }): Promise<{ ok: boolean; cached: boolean; reading: CrystalHU | null; message?: string }> => {
       const cacheKey =
         data.mode === "month"
-          ? `aitr:crystal:month:${data.month}`
-          : `aitr:crystal:zodiac:${data.sign}`;
+          ? aiCacheKey("crystal", "month", data.month)
+          : aiCacheKey("crystal", "zodiac", data.sign);
       const cached = guardCrystalHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
@@ -226,7 +234,7 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
         endpoint,
         method: "GET",
         cacheKey: cacheKeyRoxy,
-        ttlSeconds: 60 * 60 * 24 * 180,
+        ttlSeconds: DAY_SECONDS * 180,
       });
       if (!r.ok || !r.data)
         return {
@@ -258,7 +266,7 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
       const reading = guardCrystalHU(t.data);
       if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/crystal", reading, 60 * 60 * 24 * 30);
+      await writeCache(cacheKey, "/ai/crystal", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
     },
   );
@@ -290,7 +298,7 @@ export const aiAngelHU = createServerFn({ method: "POST" })
     async ({
       data,
     }): Promise<{ ok: boolean; cached: boolean; reading: AngelHU | null; message?: string }> => {
-      const cacheKey = `aitr:angel:${data.number}`;
+      const cacheKey = aiCacheKey("angel", data.number);
       const cached = guardAngelHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
@@ -299,7 +307,7 @@ export const aiAngelHU = createServerFn({ method: "POST" })
         endpoint: `/angel-numbers/lookup?number=${encodeURIComponent(data.number)}`,
         method: "GET",
         cacheKey: `angel:${data.number}`,
-        ttlSeconds: 60 * 60 * 24 * 180,
+        ttlSeconds: DAY_SECONDS * 180,
       });
       if (!r.ok || !r.data)
         return {
@@ -332,7 +340,7 @@ export const aiAngelHU = createServerFn({ method: "POST" })
       const reading = guardAngelHU(t.data);
       if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/angel", reading, 60 * 60 * 24 * 30);
+      await writeCache(cacheKey, "/ai/angel", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
     },
   );
@@ -364,7 +372,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
     async ({
       data,
     }): Promise<{ ok: boolean; cached: boolean; reading: DreamHU | null; message?: string }> => {
-      const cacheKey = `aitr:dream:${data.slug}`;
+      const cacheKey = aiCacheKey("dream", data.slug);
       const cached = guardDreamHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
@@ -373,7 +381,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
         endpoint: `/dreams/symbols/${encodeURIComponent(data.slug)}`,
         method: "GET",
         cacheKey: `dream:sym:${data.slug}`,
-        ttlSeconds: 60 * 60 * 24 * 180,
+        ttlSeconds: DAY_SECONDS * 180,
       });
       if (!r.ok || !r.data)
         return {
@@ -403,7 +411,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
       const reading = guardDreamHU(t.data);
       if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/dream", reading, 60 * 60 * 24 * 30);
+      await writeCache(cacheKey, "/ai/dream", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
     },
   );
@@ -459,7 +467,7 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
       message?: string;
     }> => {
       const nameKey = (data.fullName ?? "").toLowerCase().trim();
-      const cacheKey = `aitr:numerology:${data.birthDate}:${nameKey}`;
+      const cacheKey = aiCacheKey("numerology", data.birthDate, nameKey || "birthdate-only");
       const cached = guardNumerologyHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
@@ -470,13 +478,13 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
             endpoint: "/numerology/chart",
             body: { ...ymd, fullName: data.fullName },
             cacheKey: `num:chart:${data.birthDate}:${nameKey}`,
-            ttlSeconds: 60 * 60 * 24 * 365,
+            ttlSeconds: DAY_SECONDS * 365,
           })
         : await callRoxy<unknown>({
             endpoint: "/numerology/life-path",
             body: ymd,
             cacheKey: `num:lifepath:${data.birthDate}`,
-            ttlSeconds: 60 * 60 * 24 * 365,
+            ttlSeconds: DAY_SECONDS * 365,
           });
       if (!chart.ok || !chart.data)
         return {
@@ -523,7 +531,7 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
       const reading = guardNumerologyHU(t.data);
       if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/numerology", reading, 60 * 60 * 24 * 365);
+      await writeCache(cacheKey, "/ai/numerology", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
     },
   );
