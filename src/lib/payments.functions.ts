@@ -163,3 +163,72 @@ export const getMyOrders = createServerFn({ method: "GET" })
     if (error) throw error;
     return { orders: data ?? [] };
   });
+
+// Generálja az instant olvasat tartalmát Lovable AI-val és megjelöli a rendelést "delivered"-ként.
+// Idempotens: ha már delivered, nem fut újra.
+export const processOrder = createServerFn({ method: "POST" })
+  .inputValidator((data: { sessionId: string }) => {
+    if (!data.sessionId || typeof data.sessionId !== "string") throw new Error("Hiányzó session ID");
+    return data;
+  })
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, product_slug, product_name, category, status, input_payload")
+      .eq("stripe_session_id", data.sessionId)
+      .maybeSingle();
+    if (!order) return { ok: false, error: "Rendelés nem található" };
+    if (order.status === "delivered") return { ok: true, alreadyDone: true };
+    if (order.category !== "instant") return { ok: false, error: "Csak az azonnali rendelés dolgozható fel itt" };
+    if (order.status !== "paid" && order.status !== "processing") {
+      return { ok: false, error: "Még nincs kifizetve" };
+    }
+
+    // Lock as processing
+    await supabaseAdmin.from("orders").update({ status: "processing" }).eq("id", order.id);
+
+    try {
+      const apiKey = process.env.LOVABLE_API_KEY;
+      if (!apiKey) throw new Error("LOVABLE_API_KEY hiányzik");
+
+      const system =
+        "Te egy magyar tarot, asztrológia és numerológia mester vagy. Válaszolj röviden, melegen, csendesen — Roxy stílusban. Mindig magyarul. Adj 4-6 mondatos olvasatot.";
+      const user = `Termék: ${order.product_name}\nFelhasználói input: ${JSON.stringify(order.input_payload ?? {}, null, 2)}\n\nKészíts egy személyre szabott olvasatot. JSON formátumban válaszolj: { "title": "...", "body": "..." }`;
+
+      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: system },
+            { role: "user", content: user },
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
+      if (!res.ok) throw new Error(`AI hiba: ${res.status}`);
+      const json = await res.json();
+      const content = json.choices?.[0]?.message?.content ?? "{}";
+      let parsed: { title?: string; body?: string };
+      try { parsed = JSON.parse(content); } catch { parsed = { body: content }; }
+
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          status: "delivered",
+          response_payload: parsed as any,
+          delivered_at: new Date().toISOString(),
+        })
+        .eq("id", order.id);
+
+      return { ok: true, response: parsed };
+    } catch (e: any) {
+      await supabaseAdmin
+        .from("orders")
+        .update({ status: "failed", error_message: String(e?.message ?? e) })
+        .eq("id", order.id);
+      return { ok: false, error: String(e?.message ?? e) };
+    }
+  });
