@@ -93,57 +93,6 @@ function Block({ eyebrow, children }: { eyebrow: string; children: React.ReactNo
   );
 }
 
-// ─── Mai lap ─────────────────────────────────────────────────
-
-function MaiLapInline() {
-  const [card, setCard] = useState<TarotCard | null>(null);
-  const [resetKey, setResetKey] = useState(0);
-
-  useEffect(() => {
-    trackEvent("daily_card_started");
-  }, [resetKey]);
-
-  return (
-    <div>
-      {!card && (
-        <>
-          <SpreadDeck
-            count={1}
-            resetKey={resetKey}
-            onComplete={(cards) => {
-              const c = cards[0];
-              setCard(c);
-              trackEvent("daily_card_revealed", { cardId: c.id });
-            }}
-          />
-        </>
-      )}
-      {card && (
-        <CardResult
-          card={card}
-          eyebrow="A mai lapod"
-          sections={[
-            { title: "Mit üzen ma?", text: card.general },
-            { title: "Mire figyelj?", text: card.warning },
-          ]}
-          oneLiner={card.daily}
-          footer={
-            <div className="flex flex-wrap gap-2 mt-2">
-              <button
-                type="button"
-                className="btn-ghost-gold"
-                onClick={() => { setCard(null); setResetKey((k) => k + 1); }}
-              >
-                Új lap húzása
-              </button>
-            </div>
-          }
-        />
-      )}
-    </div>
-  );
-}
-
 // ─── 3 lapos ─────────────────────────────────────────────────
 
 function HaromLapInline() {
