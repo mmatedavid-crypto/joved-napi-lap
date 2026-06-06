@@ -24,6 +24,7 @@ import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
 import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
@@ -100,6 +101,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevRoxyRoute = DevRoxyRouteImport.update({
+  id: '/dev/roxy',
+  path: '/dev/roxy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   id:
     | '__root__'
     | '/'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   RandiElottRoute: typeof RandiElottRoute
   RolunkRoute: typeof RolunkRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
+  DevRoxyRoute: typeof DevRoxyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/roxy': {
+      id: '/dev/roxy'
+      path: '/dev/roxy'
+      fullPath: '/dev/roxy'
+      preLoaderRoute: typeof DevRoxyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -351,6 +371,7 @@ const rootRouteChildren: RootRouteChildren = {
   RandiElottRoute: RandiElottRoute,
   RolunkRoute: RolunkRoute,
   SzammisztikaRoute: SzammisztikaRoute,
+  DevRoxyRoute: DevRoxyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
