@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
-import { CARDS, type TarotCard } from "@/data/cards";
-import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
+import { type TarotCard } from "@/data/cards";
+import { saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import {
   roxyNumerologyChart,
@@ -97,20 +97,13 @@ function Block({ eyebrow, children }: { eyebrow: string; children: React.ReactNo
 
 // ─── Mai lap ─────────────────────────────────────────────────
 
-type Daily = { date: string; cardId: string };
-
 function MaiLapInline() {
   const [card, setCard] = useState<TarotCard | null>(null);
-  const [locked, setLocked] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
-    const stored = loadLocal<Daily>("daily");
-    if (stored && stored.date === todayKey()) {
-      const c = CARDS.find((x) => x.id === stored.cardId) ?? null;
-      if (c) { setCard(c); setLocked(true); }
-    }
     trackEvent("daily_card_started");
-  }, []);
+  }, [resetKey]);
 
   return (
     <div>
@@ -118,11 +111,10 @@ function MaiLapInline() {
         <>
           <SpreadDeck
             count={1}
+            resetKey={resetKey}
             onComplete={(cards) => {
               const c = cards[0];
               setCard(c);
-              setLocked(true);
-              saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id });
               trackEvent("daily_card_revealed", { cardId: c.id });
             }}
           />
@@ -138,11 +130,15 @@ function MaiLapInline() {
           ]}
           oneLiner={card.daily}
           footer={
-            locked ? (
-              <p className="text-xs text-ivory/45 font-editorial">
-                A mai lapod megérkezett. Holnap jön a következő.
-              </p>
-            ) : null
+            <div className="flex flex-wrap gap-2 mt-2">
+              <button
+                type="button"
+                className="btn-ghost-gold"
+                onClick={() => { setCard(null); setResetKey((k) => k + 1); }}
+              >
+                Új lap húzása
+              </button>
+            </div>
           }
         />
       )}
