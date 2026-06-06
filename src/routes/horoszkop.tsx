@@ -8,6 +8,8 @@ import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
 import { localHoroscope } from "@/lib/horoscope.hu";
 import { todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
+import { PaywallDialog } from "@/components/PaywallDialog";
+import { useState as useState2 } from "react";
 
 export const Route = createFileRoute("/horoszkop")({
   head: () => ({
@@ -39,6 +41,7 @@ function Page() {
     reading: null,
     fallback: false,
   });
+  const [paywall, setPaywall] = useState2(false);
 
   useEffect(() => {
     trackEvent("horoscope_opened");
@@ -136,9 +139,14 @@ function Page() {
                 <em>{oneLine}</em>
               </Section>
             </div>
+            <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
+              <div className="text-sm text-ivory/70 mb-2">Személyre szabott horoszkóp elemzés a te helyzetedhez?</div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Kérem személyre szabva · 990 Ft</button>
+            </div>
           </>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="horoszkop_szemelyre" sourceRoute="/horoszkop" inputPayload={{ sign: s.sign }} />
     </Layout>
   );
 }

@@ -8,6 +8,7 @@ import { HUDateInput } from "@/components/HUDateInput";
 import { loadLocal } from "@/lib/storage";
 import { aiNumerologyHU, type NumerologyHU } from "@/lib/roxyTranslate.functions";
 import { trackEvent } from "@/lib/analytics";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -29,6 +30,7 @@ function Page() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<NumerologyHU | null>(null);
+  const [paywall, setPaywall] = useState(false);
 
   async function fetchReading(d: string, nm?: string) {
     setLoading(true);
@@ -129,9 +131,14 @@ function Page() {
                   `Ebben az évben a ${result.personalYearNumber} energiája kísér.`}
               </Section>
             )}
+            <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
+              <div className="text-sm text-ivory/70 mb-2">Teljes numerológiai életút elemzést kérsz emailben?</div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Életút elemzés · 2490 Ft</button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="szammisztika_eletut" sourceRoute="/szammisztika" inputPayload={{ dob, name }} />
     </Layout>
   );
 }

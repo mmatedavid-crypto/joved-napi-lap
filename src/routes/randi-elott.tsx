@@ -7,6 +7,7 @@ import { CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -43,6 +44,7 @@ function Page() {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   function draw(e: React.FormEvent) {
@@ -185,16 +187,17 @@ function Page() {
                 <em>{reading?.oneLine ?? cards[cards.length - 1].daily}</em>
               </Section>
             </div>
-            <div className="surface p-5 opacity-60 border-dashed">
+            <div className="surface p-5">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-1">
-                Hamarosan
+                Részletes elemzés
               </div>
               <div className="font-display text-xl text-ivory">
-                Részletes kapcsolatdinamika-jelentés
+                Párkapcsolat — mély elemzés
               </div>
               <p className="font-editorial text-ivory/60 mt-1">
-                Mélyebb olvasat a két ember energiájáról — később lesz elérhető.
+                Két ember energiájának részletes olvasata. 12–24 órán belül emailben.
               </p>
+              <button className="btn-gold mt-3" onClick={() => setPaywall(true)}>Megrendelem · 2490 Ft</button>
             </div>
             <div className="text-center">
               <button className="btn-ghost-gold" onClick={() => setCards(null)}>
@@ -204,6 +207,7 @@ function Page() {
           </>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="parkapcsolat_elemzes" sourceRoute="/randi-elott" inputPayload={{ myName, hisName, myDob, hisDob, sit, q, cards: cards?.map((c) => c.name) }} />
     </Layout>
   );
 }

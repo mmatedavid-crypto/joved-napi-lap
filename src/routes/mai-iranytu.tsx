@@ -28,6 +28,7 @@ import { angelMeaning } from "@/lib/angel.hu";
 import { crystalMeaning, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { todayKey, loadLocal, saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/mai-iranytu")({
   head: () => ({
@@ -75,6 +76,7 @@ function Page() {
   const [sign, setSign] = useState<string>(stored.sign ?? "");
   const [loading, setLoading] = useState(false);
   const [c, setC] = useState<Compass | null>(null);
+  const [paywall, setPaywall] = useState(false);
 
   async function build(e: React.FormEvent) {
     e.preventDefault();
@@ -277,9 +279,14 @@ function Page() {
                 <em>{c.oneLine}</em>
               </Section>
             </div>
+            <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
+              <div className="text-sm text-ivory/70 mb-2">Részletes, személyre szabott AI üzenet a mai napodhoz?</div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Kérem · 590 Ft</button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="mai_iranytu_ai" sourceRoute="/mai-iranytu" inputPayload={{ dob, name, sign, ...(c ?? {}) }} />
     </Layout>
   );
 }

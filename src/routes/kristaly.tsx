@@ -7,6 +7,7 @@ import { aiCrystalHU, type CrystalHU } from "@/lib/roxyTranslate.functions";
 import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
 import { crystalMeaning, MONTH_HU, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { trackEvent } from "@/lib/analytics";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/kristaly")({
   head: () => ({
@@ -37,6 +38,7 @@ function Page() {
   const [sign, setSign] = useState<string>("aries");
   const [loading, setLoading] = useState(false);
   const [r, setR] = useState<CrystalHU | null>(null);
+  const [paywall, setPaywall] = useState(false);
 
   useEffect(() => {
     trackEvent("crystal_opened");
@@ -154,9 +156,13 @@ function Page() {
               A kristályok hagyományosan szimbólumok. Nem gyógyítanak — önismereti jelként
               használjuk.
             </p>
+            <div className="text-center">
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Személyes kristály-ajánlás · 490 Ft</button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="kristaly_ai" sourceRoute="/kristaly" inputPayload={mode === "month" ? { mode, month } : { mode, sign }} />
     </Layout>
   );
 }
