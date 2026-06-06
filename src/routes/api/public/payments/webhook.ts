@@ -1,13 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
 
-let _supabase: ReturnType<typeof createClient> | null = null;
-function getSupabase() {
-  if (!_supabase) {
-    _supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  }
-  return _supabase;
+async function getSupabase() {
+  const mod = await import("@/integrations/supabase/client.server");
+  return mod.supabaseAdmin;
 }
 
 async function handleCheckoutCompleted(session: any) {
@@ -17,7 +13,7 @@ async function handleCheckoutCompleted(session: any) {
       ? session.payment_intent
       : session.payment_intent?.id ?? null;
 
-  const supabase = getSupabase();
+  const supabase = await getSupabase();
   const { data: existing } = await supabase
     .from("orders")
     .select("id, category, status")
