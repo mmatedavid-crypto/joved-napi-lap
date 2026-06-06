@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
-import { CARDS, dailySeed, type TarotCard } from "@/data/cards";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import {
