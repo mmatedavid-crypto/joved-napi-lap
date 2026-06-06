@@ -8,9 +8,18 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-type Envelope<T> = {
+// Serializable JSON envelope — server fns must return a JSON-safe shape.
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [k: string]: JsonValue }
+  | JsonValue[];
+
+export type RoxyEnvelope = {
   ok: boolean;
-  data: T | null;
+  data: JsonValue | null;
   cached: boolean;
   fallbackUsed: boolean;
   providerCode?: string;
@@ -20,15 +29,15 @@ type Envelope<T> = {
 const FAIL_MESSAGE =
   "Most nem sikerült lekérni a háttértudást. Próbáld újra később.";
 
-async function runRoxy<T>(opts: {
+async function runRoxy(opts: {
   endpoint: string;
   method?: "GET" | "POST";
   body?: Record<string, unknown>;
   cacheKey: string;
   ttlSeconds: number | null;
-}): Promise<Envelope<T>> {
+}): Promise<RoxyEnvelope> {
   const { callRoxy } = await import("./roxy.server");
-  const r = await callRoxy<T>(opts);
+  const r = await callRoxy<JsonValue>(opts);
   if (!r.ok) {
     return {
       ok: false,
@@ -39,7 +48,7 @@ async function runRoxy<T>(opts: {
       message: FAIL_MESSAGE,
     };
   }
-  return { ok: true, data: r.data, cached: r.cached, fallbackUsed: false };
+  return { ok: true, data: r.data ?? null, cached: r.cached, fallbackUsed: false };
 }
 
 // ─── Tarot ────────────────────────────────────────────────────────────────
