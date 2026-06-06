@@ -44,9 +44,18 @@ async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
   switch (event.type) {
     case "checkout.session.completed":
-    case "transaction.completed":
+    case "checkout.session.async_payment_succeeded":
       await handleCheckoutCompleted(event.data.object);
       break;
+    case "checkout.session.async_payment_failed":
+    case "checkout.session.expired": {
+      const supabase = await getSupabase();
+      await supabase
+        .from("orders")
+        .update({ status: "failed", error_message: event.type })
+        .eq("stripe_session_id", (event.data.object as any).id);
+      break;
+    }
     default:
       console.log("Unhandled payment event:", event.type);
   }
