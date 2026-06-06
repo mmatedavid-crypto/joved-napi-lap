@@ -19,6 +19,7 @@ import {
   SIGNS_HU_ORDERED, SIGN_HU,
   normalizeRoxyDraw, normalizeRoxyHoroscope, normalizeRoxyBiorhythm,
   normalizeRoxyAngel, normalizeRoxyCrystal, moonPhaseHU, bioPhraseHU,
+  zodiacFromDob,
 } from "@/lib/roxyNormalize";
 import { CARDS } from "@/data/cards";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
@@ -84,7 +85,6 @@ export function PersonalDailyBriefing() {
   const [profile, setProfile] = useState<Profile>({});
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
-  const [sign, setSign] = useState("");
   const [loading, setLoading] = useState(false);
   const [briefing, setBriefing] = useState<Briefing | null>(null);
   const [editing, setEditing] = useState(false);
@@ -100,7 +100,6 @@ export function PersonalDailyBriefing() {
       setProfile(p);
       setName(p.name ?? "");
       setDob(p.dob ?? "");
-      setSign(p.sign ?? "");
     }
     const cached = loadLocal<Briefing>("home:briefing");
     if (cached && cached.generatedFor === todayKey()) {
@@ -110,6 +109,7 @@ export function PersonalDailyBriefing() {
 
   async function build(e?: React.FormEvent) {
     e?.preventDefault();
+    const sign = zodiacFromDob(dob);
     if (!dob || !sign) return;
     setLoading(true);
     trackEvent("daily_compass_opened", { from: "home" });
