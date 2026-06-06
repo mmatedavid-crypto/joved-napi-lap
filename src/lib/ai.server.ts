@@ -2,7 +2,8 @@
 // Used to rewrite raw English Roxy text into short, warm, Hungarian copy.
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-2.5-pro";
+// Rövid magyar fordítási feladathoz a flash modell elég és nagyságrenddel gyorsabb (~2-4s vs 20-30s pro).
+const MODEL = "google/gemini-2.5-flash";
 
 export type AiResult<T> = { ok: boolean; data: T | null; error?: string };
 
