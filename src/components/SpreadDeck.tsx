@@ -16,7 +16,7 @@ type Props = {
 const SPREAD_SIZE = 22;
 
 export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Props) {
-  // pool of 17 cards arranged in an arc
+  // full Major Arcana pool arranged in an arc
   const pool = useMemo(
     () => pickCards(SPREAD_SIZE, (seed ?? Date.now()) + Number(resetKey ?? 0) * 13),
     [seed, resetKey],
@@ -47,67 +47,63 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
 
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
-  const arc = 110; // wider fan
+  const arc = 124;
 
   return (
-    <div className="select-none">
-      {/* Chosen slots */}
-      {count > 0 && (
-        <div
-          className={`grid gap-3 mx-auto mb-4 ${
-            count === 1 ? "max-w-[220px]" : "grid-cols-3 max-w-xl"
-          }`}
-          style={{ minHeight: count === 1 ? 0 : undefined }}
-        >
-          {Array.from({ length: count }).map((_, slot) => {
-            const idx = picked[slot];
-            const card = idx != null ? pool[idx] : null;
-            const isRev = revealed[slot];
-            return (
-              <div key={slot} className="flex flex-col items-center">
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2 h-3">
-                  {slotLabels?.[slot] ?? ""}
-                </div>
-                {!card ? (
-                  <div className="tarot-card opacity-25 border-dashed w-full max-w-[180px]" />
-                ) : isRev ? (
-                  <CardFace card={card} className="w-full max-w-[200px] animate-fade-in" />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => reveal(slot)}
-                    className="w-full max-w-[180px] block transition-transform hover:-translate-y-1"
-                    aria-label="Lap felfedése"
-                  >
-                    <CardBack />
-                    <div className="text-[10px] text-ivory/55 text-center mt-2">koppints a felfedéshez</div>
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Instruction */}
-      {!allPicked && (
-        <div className="text-center mb-2">
-          <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
-            {count === 1
-              ? "Válassz egy lapot a kiterített pakliból"
-              : `Válassz ${count - picked.length} lapot a pakliból`}
-          </div>
-        </div>
-      )}
-
+    <div className="select-none w-full">
       {/* Spread (fan) */}
-      <div className="relative mx-auto h-[260px] sm:h-[340px] md:h-[400px] w-full [perspective:1400px]">
+      <div className="relative mx-auto -mt-1 h-[330px] sm:h-[410px] md:h-[470px] w-full max-w-[1500px] overflow-visible [perspective:1400px]">
+        {!allPicked && (
+          <div className="absolute left-1/2 top-2 z-[80] w-full -translate-x-1/2 px-2 text-center">
+            <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+              {count === 1
+                ? "Válassz egy lapot a kiterített pakliból"
+                : `Válassz ${count - picked.length} lapot a pakliból`}
+            </div>
+          </div>
+        )}
+
+        {picked.length > 0 && (
+          <div
+            className={`absolute left-1/2 top-7 z-[90] grid -translate-x-1/2 gap-2 sm:gap-4 ${
+              count === 1 ? "w-[min(48vw,210px)]" : "w-[min(92vw,700px)] grid-cols-3"
+            }`}
+          >
+            {picked.map((idx, slot) => {
+              const card = pool[idx];
+              const isRev = revealed[slot];
+              return (
+                <div key={`${card.id}-${slot}`} className="min-w-0 text-center">
+                  {slotLabels?.[slot] && (
+                    <div className="mb-1 text-[9px] tracking-[0.25em] uppercase text-[oklch(0.78_0.10_80/0.72)]">
+                      {slotLabels[slot]}
+                    </div>
+                  )}
+                  {isRev ? (
+                    <CardFace card={card} className="w-full animate-fade-in" />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => reveal(slot)}
+                      className="block w-full transition-transform hover:-translate-y-1"
+                      aria-label="Lap felfedése"
+                    >
+                      <CardBack />
+                      <div className="mt-1 text-[10px] text-ivory/55">felfedés</div>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* parchment glow */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] w-[90%] h-12 rounded-[50%] bg-[radial-gradient(ellipse,oklch(0.78_0.10_80/0.18),transparent_70%)] blur-md pointer-events-none" />
         {pool.map((c, i) => {
           const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
-          const lift = Math.sin(t * Math.PI) * 28; // deeper arc bow
+          const lift = Math.sin(t * Math.PI) * 36;
           const isPicked = picked.includes(i);
           const isFaded = allPicked && !isPicked;
           return (
@@ -119,11 +115,11 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               aria-label={isPicked ? "Kiválasztva" : "Lap kiválasztása"}
               className="absolute top-1/2 left-1/2 origin-bottom transition-all duration-500 ease-out group focus:outline-none"
               style={{
-                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(${-lift}px)`,
+                transform: `translate(-50%, -38%) rotate(${angle}deg) translateY(${-lift}px)`,
                 zIndex: isPicked ? 50 - picked.indexOf(i) : 22 - Math.abs(11 - i),
                 opacity: isFaded ? 0.15 : isPicked ? 0 : 1,
                 pointerEvents: isPicked || allPicked ? "none" : "auto",
-                width: "clamp(86px, 11vw, 132px)",
+                width: "clamp(94px, 12vw, 164px)",
               }}
             >
               <div
