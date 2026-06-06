@@ -86,10 +86,24 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
     setRevealed([]);
   }
 
-  function finishShuffle() {
-    buzz(12);
-    setPhase("spread");
-  }
+  // Auto-cycle the shuffle animation a few times, then fan out the deck.
+  // No buttons — the deck shuffles visibly and reveals itself.
+  useEffect(() => {
+    if (phase !== "shuffling") return;
+    let tick = 0;
+    const cycle = window.setInterval(() => {
+      tick += 1;
+      setShuffleTick((t) => t + 1);
+      if (tick >= 3) {
+        window.clearInterval(cycle);
+        window.setTimeout(() => {
+          buzz(10);
+          setPhase("spread");
+        }, 350);
+      }
+    }, 480);
+    return () => window.clearInterval(cycle);
+  }, [phase, arrangementSeed]);
 
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
@@ -143,23 +157,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               </div>
             ))}
           </div>
-          <div className="mt-8 flex gap-3">
-            <button
-              type="button"
-              onClick={shuffleAgain}
-              className="rounded-full border border-[oklch(0.78_0.10_80/0.45)] px-4 py-2 text-[11px] tracking-[0.18em] uppercase text-[oklch(0.92_0.04_85)] hover:bg-[oklch(0.78_0.10_80/0.1)] transition"
-            >
-              Keverj még
-            </button>
-            <button
-              type="button"
-              onClick={finishShuffle}
-              className="rounded-full bg-[oklch(0.78_0.10_80/0.85)] px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-[oklch(0.18_0.03_280)] font-medium hover:bg-[oklch(0.82_0.11_85)] transition shadow-[0_8px_24px_-8px_oklch(0.78_0.10_80/0.6)]"
-            >
-              Kész, teríts ki
-            </button>
-          </div>
-          <div className="mt-3 text-[10px] text-ivory/50 text-center max-w-[280px]">
+          <div className="mt-6 text-[10px] text-ivory/50 text-center max-w-[280px]">
             Vegyél egy lélegzetet, és gondolj a helyzetre, amiben választ keresel.
           </div>
         </div>
