@@ -22,10 +22,13 @@ export function createStripeClient(env: StripeEnv): Stripe {
     // A telepített stripe@22.0.2 SDK alapértelmezett API verziójával dolgozunk.
     // (Felülírás nélkül a SDK a saját pinned verzióját használja.)
     httpClient: Stripe.createFetchHttpClient(((input: RequestInfo | URL, init?: RequestInit) => {
-      const gatewayUrl = (typeof input === "string" ? input : input.url).replace(
-        "https://api.stripe.com",
-        GATEWAY_STRIPE_BASE,
-      );
+      const inputUrl =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.toString()
+            : input.url;
+      const gatewayUrl = inputUrl.replace("https://api.stripe.com", GATEWAY_STRIPE_BASE);
       return fetch(gatewayUrl, {
         ...init,
         headers: {

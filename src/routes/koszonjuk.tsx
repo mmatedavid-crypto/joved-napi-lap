@@ -19,7 +19,7 @@ type OrderView = {
   category: string;
   status: string;
   guest_email?: string | null;
-  response_payload?: OrderResponsePayload | null;
+  response_payload?: unknown;
 };
 
 export const Route = createFileRoute("/koszonjuk")({
@@ -127,17 +127,23 @@ function Page() {
               </Section>
             )}
 
-            {order.status === "delivered" && order.response_payload && (
-              <Section eyebrow="A te olvasatod" title={order.response_payload.title ?? undefined}>
-                {typeof order.response_payload.body === "string" ? (
-                  <div className="whitespace-pre-wrap">{order.response_payload.body}</div>
-                ) : (
-                  <pre className="text-sm whitespace-pre-wrap">
-                    {JSON.stringify(order.response_payload, null, 2)}
-                  </pre>
-                )}
-              </Section>
-            )}
+            {order.status === "delivered" && order.response_payload != null && (() => {
+              const payload =
+                typeof order.response_payload === "object" && order.response_payload !== null
+                  ? (order.response_payload as OrderResponsePayload)
+                  : null;
+              return (
+                <Section eyebrow="A te olvasatod" title={payload?.title ?? undefined}>
+                  {payload && typeof payload.body === "string" ? (
+                    <div className="whitespace-pre-wrap">{payload.body}</div>
+                  ) : (
+                    <pre className="text-sm whitespace-pre-wrap">
+                      {JSON.stringify(order.response_payload, null, 2)}
+                    </pre>
+                  )}
+                </Section>
+              );
+            })()}
 
             {order.status === "failed" && (
               <Section eyebrow="Sajnos hiba történt">
