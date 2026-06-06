@@ -10,7 +10,6 @@ import { trackEvent } from "@/lib/analytics";
 import {
   roxyNumerologyChart,
   roxyNumerologyCompatibility,
-  roxyNumerologyPersonalYear,
 } from "@/lib/roxy.functions";
 import {
   normalizeRoxyChart,
@@ -23,6 +22,7 @@ import {
   compatibilityScore,
   lifePath,
   lifePathInfo,
+  personalYear,
   relationshipNumber,
   threeCardSynthesis,
 } from "@/lib/numerology";
@@ -318,7 +318,6 @@ function SzamInline() {
   const info = useMemo(() => (res != null ? lifePathInfo(res) : null), [res]);
 
   const callChart = useServerFn(roxyNumerologyChart);
-  const callPYear = useServerFn(roxyNumerologyPersonalYear);
 
   async function calc(e: React.FormEvent) {
     e.preventDefault();
@@ -328,27 +327,26 @@ function SzamInline() {
     trackEvent("numerology_completed", { number: n });
     saveLocal("numerology:last", { dob, name });
 
-    // Roxy enrichment (silent fallback)
-    trackEvent("roxy_call_started", { kind: "numerology" });
-    try {
-      const [chartRes, yearRes] = await Promise.all([
-        callChart({ data: { birthDate: dob, fullName: name || undefined } }),
-        callPYear({ data: { birthDate: dob } }),
-      ]);
-      if (chartRes.ok) {
-        setRoxy(normalizeRoxyChart(chartRes.data));
-        trackEvent("roxy_call_succeeded", { endpoint: "numerology/chart", cached: chartRes.cached });
-        trackEvent(chartRes.cached ? "roxy_cache_hit" : "roxy_cache_miss", { endpoint: "numerology/chart" });
-      } else {
-        trackEvent("roxy_call_failed", { endpoint: "numerology/chart", code: chartRes.providerCode });
+    // Personal year is computed locally — no Roxy call needed.
+    setRoxyYear(personalYear(dob));
+
+    // Full chart (Expression / Soul Urge / Personality / Maturity) requires
+    // a birth-certificate full name. Only call Roxy when the user gave one.
+    if (name.trim().length > 0) {
+      trackEvent("roxy_call_started", { kind: "numerology" });
+      try {
+        const r = await callChart({ data: { birthDate: dob, fullName: name.trim() } });
+        if (r.ok) {
+          setRoxy(normalizeRoxyChart(r.data));
+          trackEvent("roxy_call_succeeded", { endpoint: "numerology/chart", cached: r.cached });
+          trackEvent(r.cached ? "roxy_cache_hit" : "roxy_cache_miss", { endpoint: "numerology/chart" });
+        } else {
+          trackEvent("roxy_call_failed", { endpoint: "numerology/chart", code: r.providerCode });
+          trackEvent("roxy_fallback_used", { endpoint: "numerology/chart" });
+        }
+      } catch {
         trackEvent("roxy_fallback_used", { endpoint: "numerology/chart" });
       }
-      if (yearRes.ok) {
-        const py = normalizeRoxyChart(yearRes.data).personalYear ?? null;
-        setRoxyYear(py);
-      }
-    } catch {
-      trackEvent("roxy_fallback_used", { endpoint: "numerology" });
     }
   }
 
@@ -382,26 +380,36 @@ function SzamInline() {
           {(roxy?.expression || roxy?.soulUrge || roxy?.personality) && (
             <div className="grid md:grid-cols-3 gap-3">
               {roxy.expression != null && (
-                <Block eyebrow={`Kifejezés száma · ${roxy.expression}`}>
+                <Block eyebrow={`Kifejeződésed · ${roxy.expression}`}>
                   {lifePathInfo(roxy.expression).meaning}
                 </Block>
               )}
               {roxy.soulUrge != null && (
-                <Block eyebrow={`Lélek vágya · ${roxy.soulUrge}`}>
+                <Block eyebrow={`Belső vágyad · ${roxy.soulUrge}`}>
                   {lifePathInfo(roxy.soulUrge).meaning}
                 </Block>
               )}
               {roxy.personality != null && (
-                <Block eyebrow={`Személyiség · ${roxy.personality}`}>
+                <Block eyebrow={`Külső képed · ${roxy.personality}`}>
                   {lifePathInfo(roxy.personality).meaning}
                 </Block>
               )}
             </div>
           )}
+          {roxy?.maturity != null && (
+            <Block eyebrow={`Érettségi számod · ${roxy.maturity}`}>
+              {lifePathInfo(roxy.maturity).meaning}
+            </Block>
+          )}
           {roxyYear != null && (
             <Block eyebrow={`Az idei személyes éved · ${roxyYear}`}>
               {lifePathInfo(roxyYear).meaning}
             </Block>
+          )}
+          {!roxy && name.trim().length === 0 && (
+            <p className="text-xs text-ivory/45 font-editorial text-center">
+              Tipp: ha megadod a teljes születési neved, mélyebb olvasatot kapsz.
+            </p>
           )}
           {info.purpose && <Block eyebrow="Életfeladat">{info.purpose}</Block>}
           {info.advice && <Block eyebrow="Egy mondat, amit vigyél magaddal"><em>{info.advice}</em></Block>}

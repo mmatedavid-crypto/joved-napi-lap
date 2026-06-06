@@ -88,16 +88,20 @@ export function normalizeRoxyChart(raw: unknown): RoxyChart {
   if (!raw || typeof raw !== "object") return {};
   const obj = raw as Record<string, unknown>;
   const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<string, unknown>;
+  // Roxy /numerology/chart nests numbers under `coreNumbers`, each carrying { number, ... }.
+  const core = (data.coreNumbers && typeof data.coreNumbers === "object"
+    ? data.coreNumbers
+    : data) as Record<string, unknown>;
   return {
-    lifePath: pickNumber(data, ["life_path", "lifePath", "lifepath"]),
-    expression: pickNumber(data, ["expression", "destiny"]),
-    soulUrge: pickNumber(data, ["soul_urge", "soulUrge", "heart_desire", "heartDesire"]),
-    personality: pickNumber(data, ["personality"]),
-    birthDay: pickNumber(data, ["birth_day", "birthDay", "birthday"]),
-    maturity: pickNumber(data, ["maturity"]),
-    personalYear: pickNumber(data, ["personal_year", "personalYear"]),
-    karmic: Array.isArray(data.karmic_lessons) ? (data.karmic_lessons as number[]) :
-            Array.isArray(data.karmicLessons) ? (data.karmicLessons as number[]) : undefined,
+    lifePath: pickNumber(core, ["lifePath", "life_path", "lifepath"]),
+    expression: pickNumber(core, ["expression", "destiny"]),
+    soulUrge: pickNumber(core, ["soulUrge", "soul_urge", "heartDesire", "heart_desire"]),
+    personality: pickNumber(core, ["personality"]),
+    birthDay: pickNumber(core, ["birthDay", "birth_day", "birthday"]),
+    maturity: pickNumber(core, ["maturity"]),
+    personalYear: pickNumber(data, ["personalYear", "personal_year"]),
+    karmic: Array.isArray(data.karmicLessons) ? (data.karmicLessons as number[]) :
+            Array.isArray(data.karmic_lessons) ? (data.karmic_lessons as number[]) : undefined,
   };
 }
 
@@ -115,11 +119,362 @@ export function normalizeRoxyCompat(raw: unknown): RoxyCompat {
   const obj = raw as Record<string, unknown>;
   const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<string, unknown>;
   return {
-    score: pickNumber(data, ["compatibility_score", "compatibilityScore", "score", "overall"]),
-    lifePathA: pickNumber(data, ["life_path_1", "lifePath1", "person1_life_path"]),
-    lifePathB: pickNumber(data, ["life_path_2", "lifePath2", "person2_life_path"]),
+    score: pickNumber(data, ["compatibilityScore", "compatibility_score", "score", "overall", "percentage"]),
+    lifePathA: pickNumber(data, ["lifePath1", "life_path_1", "person1_life_path"]),
+    lifePathB: pickNumber(data, ["lifePath2", "life_path_2", "person2_life_path"]),
     communication: pickNumber(data, ["communication"]),
     attraction: pickNumber(data, ["attraction", "romance"]),
-    longTerm: pickNumber(data, ["long_term", "longTerm", "longevity"]),
+    longTerm: pickNumber(data, ["longTerm", "long_term", "longevity"]),
   };
+}
+
+// ─── Tarot draw ────────────────────────────────────────────────────────────
+// Roxy /tarot/draw -> { cards: [DrawnCard] }
+// Roxy /tarot/spreads/* -> { positions: [{ card: DrawnCard, ... }] }
+// DrawnCard: { id, name, arcana, suit, number, position, reversed, keywords, meaning, imageUrl }
+
+export type RoxyDrawnCard = {
+  roxyId: string;          // e.g. "the-fool", "ace-of-cups"
+  roxyName: string;        // english name
+  arcana: "major" | "minor" | "unknown";
+  suit?: string;
+  number?: number;
+  reversed: boolean;
+  localId: string | null;  // mapped to our card id when Major Arcana
+};
+
+// Roxy Major Arcana ids → our local Hungarian ids.
+const ROXY_MAJOR_ID_TO_LOCAL: Record<string, string> = {
+  "the-fool": "bolond",
+  "the-magician": "mago",
+  "the-high-priestess": "fopapno",
+  "the-empress": "csaszarno",
+  "the-emperor": "csaszar",
+  "the-hierophant": "fopap",
+  "the-lovers": "szeretok",
+  "the-chariot": "diadalszeker",
+  "strength": "ero",
+  "the-hermit": "remete",
+  "wheel-of-fortune": "kerek",
+  "justice": "igazsag",
+  "the-hanged-man": "akasztott",
+  "death": "halal",
+  "temperance": "mertekletesseg",
+  "the-devil": "ordog",
+  "the-tower": "torony",
+  "the-star": "csillag",
+  "the-moon": "hold",
+  "the-sun": "nap",
+  "judgement": "itelet",
+  "judgment": "itelet",
+  "the-world": "vilag",
+};
+
+function normalizeOneDrawn(raw: unknown): RoxyDrawnCard | null {
+  if (!raw || typeof raw !== "object") return null;
+  const c = raw as Record<string, unknown>;
+  const roxyId = typeof c.id === "string" ? c.id : "";
+  const roxyName = typeof c.name === "string" ? c.name : "";
+  const arcanaRaw = typeof c.arcana === "string" ? c.arcana.toLowerCase() : "";
+  const arcana: RoxyDrawnCard["arcana"] =
+    arcanaRaw === "major" ? "major" : arcanaRaw === "minor" ? "minor" : "unknown";
+  return {
+    roxyId,
+    roxyName,
+    arcana,
+    suit: typeof c.suit === "string" ? c.suit : undefined,
+    number: typeof c.number === "number" ? c.number : undefined,
+    reversed: c.reversed === true,
+    localId: arcana === "major" ? (ROXY_MAJOR_ID_TO_LOCAL[roxyId] ?? null) : null,
+  };
+}
+
+export function normalizeRoxyDraw(raw: unknown): RoxyDrawnCard[] {
+  if (!raw || typeof raw !== "object") return [];
+  const r = raw as Record<string, unknown>;
+  if (Array.isArray(r.cards)) {
+    return r.cards.map(normalizeOneDrawn).filter((x): x is RoxyDrawnCard => x !== null);
+  }
+  if (Array.isArray(r.positions)) {
+    return r.positions
+      .map((p) => (p && typeof p === "object" ? (p as Record<string, unknown>).card : null))
+      .map(normalizeOneDrawn)
+      .filter((x): x is RoxyDrawnCard => x !== null);
+  }
+  return [];
+}
+
+// Hungarian suit names for Minor Arcana fallback display.
+export function huSuitName(suit?: string): string {
+  switch ((suit ?? "").toLowerCase()) {
+    case "cups": return "Kelyhek";
+    case "pentacles":
+    case "coins": return "Érmék";
+    case "swords": return "Kardok";
+    case "wands":
+    case "rods": return "Botok";
+    default: return "";
+  }
+}
+
+// ─── I-Ching ───────────────────────────────────────────────────────────────
+
+export type RoxyHexagram = {
+  number?: number;        // 1..64
+  symbol?: string;        // unicode hexagram glyph
+  pinyin?: string;
+  // Raw english fields (judgment, image, interpretation) are NOT shown to
+  // the user. UI uses our local Hungarian text keyed by `number`.
+};
+
+export type RoxyIchingCast = {
+  primary?: RoxyHexagram;
+  resulting?: RoxyHexagram;
+  changingLines?: number[];
+};
+
+function pickHex(obj: unknown): RoxyHexagram | undefined {
+  if (!obj || typeof obj !== "object") return undefined;
+  const o = obj as Record<string, unknown>;
+  return {
+    number: typeof o.number === "number" ? o.number : undefined,
+    symbol: typeof o.symbol === "string" ? o.symbol : undefined,
+    pinyin: typeof o.pinyin === "string" ? o.pinyin : undefined,
+  };
+}
+
+export function normalizeRoxyIching(raw: unknown): RoxyIchingCast {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  return {
+    primary: pickHex(r.hexagram ?? r.primary),
+    resulting: pickHex(r.resultingHexagram ?? r.resulting),
+    changingLines: Array.isArray(r.changingLinePositions) ? (r.changingLinePositions as number[]) :
+                   Array.isArray(r.changingLines) ? (r.changingLines as number[]) : undefined,
+  };
+}
+
+// ─── Biorhythm ─────────────────────────────────────────────────────────────
+
+export type RoxyBiorhythm = {
+  physical?: number;     // -1..1
+  emotional?: number;
+  intellectual?: number;
+};
+
+export function normalizeRoxyBiorhythm(raw: unknown): RoxyBiorhythm {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  const data = (r.data && typeof r.data === "object" ? r.data : r) as Record<string, unknown>;
+  const cycles = (data.cycles && typeof data.cycles === "object" ? data.cycles : data) as Record<string, unknown>;
+  return {
+    physical: pickNumber(cycles, ["physical"]),
+    emotional: pickNumber(cycles, ["emotional"]),
+    intellectual: pickNumber(cycles, ["intellectual"]),
+  };
+}
+
+export function bioPhraseHU(v?: number): string {
+  if (v == null) return "";
+  if (v >= 0.5) return "felfelé tartó hullám — érdemes most belevágni";
+  if (v >= 0) return "stabil, kiegyensúlyozott";
+  if (v >= -0.5) return "lassuló — érdemes több pihenőt beiktatni";
+  return "mélyponton — ne erőltesd, amit halaszthatsz";
+}
+
+// ─── Astrology / daily horoscope ───────────────────────────────────────────
+// Returns moonPhase / moonSign for the "Mai iránytű" compass too.
+
+export type RoxyHoroscope = {
+  date?: string;
+  energyRating?: number;
+  luckyNumber?: number;
+  luckyColor?: string;
+  moonPhase?: string;       // english
+  moonSign?: string;        // english lowercase sign
+};
+
+export function normalizeRoxyHoroscope(raw: unknown): RoxyHoroscope {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  return {
+    date: typeof r.date === "string" ? r.date : undefined,
+    energyRating: typeof r.energyRating === "number" ? r.energyRating : undefined,
+    luckyNumber: typeof r.luckyNumber === "number" ? r.luckyNumber : undefined,
+    luckyColor: typeof r.luckyColor === "string" ? r.luckyColor : undefined,
+    moonPhase: typeof r.moonPhase === "string" ? r.moonPhase : undefined,
+    moonSign: typeof r.moonSign === "string" ? r.moonSign : undefined,
+  };
+}
+
+// Hungarian translations of the small, controlled vocabulary we render.
+
+export const SIGN_HU: Record<string, string> = {
+  aries: "Kos", taurus: "Bika", gemini: "Ikrek", cancer: "Rák",
+  leo: "Oroszlán", virgo: "Szűz", libra: "Mérleg", scorpio: "Skorpió",
+  sagittarius: "Nyilas", capricorn: "Bak", aquarius: "Vízöntő", pisces: "Halak",
+};
+
+export const SIGNS_HU_ORDERED = [
+  "aries", "taurus", "gemini", "cancer", "leo", "virgo",
+  "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+] as const;
+
+const MOON_PHASE_HU: Record<string, string> = {
+  "new moon": "Újhold",
+  "waxing crescent": "Növekvő sarló",
+  "first quarter": "Növekvő félhold",
+  "waxing gibbous": "Növekvő telihold előtt",
+  "full moon": "Telihold",
+  "waning gibbous": "Fogyó telihold után",
+  "last quarter": "Fogyó félhold",
+  "waning crescent": "Fogyó sarló",
+};
+
+export function moonPhaseHU(en?: string): string | null {
+  if (!en) return null;
+  return MOON_PHASE_HU[en.toLowerCase()] ?? null;
+}
+
+// ─── Angel numbers ─────────────────────────────────────────────────────────
+
+export type RoxyAngel = {
+  number?: string;
+  rootNumber?: number;
+  // English narrative ignored; we render local Hungarian copy keyed by rootNumber.
+};
+
+export function normalizeRoxyAngel(raw: unknown): RoxyAngel {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  const data = (r.data && typeof r.data === "object" ? r.data : r) as Record<string, unknown>;
+  return {
+    number: typeof data.number === "string" ? data.number :
+            typeof data.number === "number" ? String(data.number) : undefined,
+    rootNumber: pickNumber(data, ["rootNumber", "root_number", "digitRoot", "digit_root", "reduced"]),
+  };
+}
+
+// ─── Crystals ──────────────────────────────────────────────────────────────
+
+export type RoxyCrystal = {
+  name?: string;        // english crystal name — kept for badge only
+  hungarianName?: string;
+};
+
+const CRYSTAL_NAME_HU: Record<string, string> = {
+  "amethyst": "Ametiszt",
+  "rose quartz": "Rózsakvarc",
+  "clear quartz": "Hegyikristály",
+  "citrine": "Citrin",
+  "carnelian": "Karneol",
+  "obsidian": "Obszidián",
+  "moonstone": "Holdkő",
+  "labradorite": "Labradorit",
+  "lapis lazuli": "Lapis lazuli",
+  "tiger's eye": "Tigrisszem",
+  "tigers eye": "Tigrisszem",
+  "black tourmaline": "Fekete turmalin",
+  "selenite": "Szelenit",
+  "fluorite": "Fluorit",
+  "malachite": "Malachit",
+  "pyrite": "Pirit",
+  "hematite": "Hematit",
+  "jade": "Jade",
+  "agate": "Achát",
+  "garnet": "Gránát",
+  "aquamarine": "Akvamarin",
+  "emerald": "Smaragd",
+  "sapphire": "Zafír",
+  "ruby": "Rubin",
+  "topaz": "Topáz",
+  "opal": "Opál",
+  "turquoise": "Türkiz",
+  "peridot": "Peridot",
+  "onyx": "Ónix",
+  "diamond": "Gyémánt",
+};
+
+export function normalizeRoxyCrystal(raw: unknown): RoxyCrystal {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  const data = (r.data && typeof r.data === "object" ? r.data : r) as Record<string, unknown>;
+  // Roxy can return a single crystal object or an array; we take the first.
+  let candidate: Record<string, unknown> | null = null;
+  if (typeof data.name === "string") candidate = data;
+  else if (Array.isArray(data.crystals) && data.crystals.length > 0 && typeof data.crystals[0] === "object") {
+    candidate = data.crystals[0] as Record<string, unknown>;
+  } else if (Array.isArray(r) && r.length > 0 && typeof (r as unknown[])[0] === "object") {
+    candidate = (r as unknown[])[0] as Record<string, unknown>;
+  }
+  if (!candidate) return {};
+  const name = typeof candidate.name === "string" ? candidate.name : undefined;
+  return {
+    name,
+    hungarianName: name ? (CRYSTAL_NAME_HU[name.toLowerCase()] ?? name) : undefined,
+  };
+}
+
+// ─── Dreams ────────────────────────────────────────────────────────────────
+// Free-text dream interpretation isn't a single Roxy endpoint — we do simple
+// Hungarian keyword → english slug mapping and call /dreams/symbols/{slug}.
+
+const DREAM_KEYWORD_TO_SLUG: Array<[RegExp, string]> = [
+  [/\b(rep[üu]l(?:és|tem|ni|ök)?)\b/i, "flying"],
+  [/\b(esés|esem|estem|leestem|zuhan)\b/i, "falling"],
+  [/\b(v[íi]z|tenger|óceán|folyó|tó)\b/i, "water"],
+  [/\b(k[íi]gy[óo])\b/i, "snake"],
+  [/\b(pók)\b/i, "spider"],
+  [/\b(h[áa]z|otthon|lak[áa]s)\b/i, "house"],
+  [/\b(hal[áa]l|halott|temetés)\b/i, "death"],
+  [/\b(fog|fogam|fogaim)\b/i, "teeth"],
+  [/\b(autó|vez(?:etés|etek|et))\b/i, "car"],
+  [/\b(üldöz|menek[üu]l)\b/i, "chase"],
+  [/\b(t[űu]z|égett|égő)\b/i, "fire"],
+  [/\b(csecsem[őo]|baba|gyerek)\b/i, "baby"],
+  [/\b(eskü?vő|h[áa]zass[áa]g)\b/i, "wedding"],
+  [/\b(meztelen)\b/i, "naked"],
+  [/\b(p[éé]nz)\b/i, "money"],
+  [/\b(lépcs[őo])\b/i, "stairs"],
+  [/\b(macska)\b/i, "cat"],
+  [/\b(kutya)\b/i, "dog"],
+];
+
+export function dreamTextToSlug(text: string): string | null {
+  if (!text) return null;
+  for (const [re, slug] of DREAM_KEYWORD_TO_SLUG) {
+    if (re.test(text)) return slug;
+  }
+  return null;
+}
+
+export type RoxyDreamSymbol = {
+  slug?: string;
+  hungarianName?: string;
+};
+
+const DREAM_HU_NAME: Record<string, string> = {
+  flying: "Repülés",
+  falling: "Esés",
+  water: "Víz",
+  snake: "Kígyó",
+  spider: "Pók",
+  house: "Ház",
+  death: "Halál",
+  teeth: "Fogak",
+  car: "Autó",
+  chase: "Üldözés",
+  fire: "Tűz",
+  baby: "Csecsemő",
+  wedding: "Esküvő",
+  naked: "Meztelenség",
+  money: "Pénz",
+  stairs: "Lépcső",
+  cat: "Macska",
+  dog: "Kutya",
+};
+
+export function normalizeRoxyDreamSymbol(raw: unknown, slug: string): RoxyDreamSymbol {
+  void raw; // english text not shown to user
+  return { slug, hungarianName: DREAM_HU_NAME[slug] ?? slug };
 }

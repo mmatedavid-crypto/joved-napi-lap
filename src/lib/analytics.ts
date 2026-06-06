@@ -19,7 +19,21 @@ export type EventName =
   | "roxy_call_failed"
   | "roxy_cache_hit"
   | "roxy_cache_miss"
-  | "roxy_fallback_used";
+  | "roxy_fallback_used"
+  | "daily_compass_opened"
+  | "daily_compass_completed"
+  | "iching_started"
+  | "iching_completed"
+  | "dream_started"
+  | "dream_completed"
+  | "angel_number_started"
+  | "angel_number_completed"
+  | "crystal_opened"
+  | "horoscope_opened"
+  | "astrology_advanced_enabled"
+  | "roxy_domain_started"
+  | "roxy_domain_succeeded"
+  | "roxy_domain_failed";
 
 export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
