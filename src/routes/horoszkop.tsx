@@ -48,8 +48,20 @@ function Page() {
 
   async function load(next: string) {
     setS({ loading: true, sign: next, reading: null, fallback: false });
+    // 8s soft-timeout: ha az AI lassú, mutassuk a local fallbackot. A háttérben
+    // a kérés a háttérben befejeződhet és cache-elődik a következő megnyitásra.
+    let settled = false;
+    const softTimeout = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      trackEvent("roxy_fallback_used", { domain: "horoscope", reason: "timeout" });
+      setS({ loading: false, sign: next, reading: null, fallback: true });
+    }, 8000);
     try {
       const r = await call({ data: { sign: next as never, dateKey: todayKey() } });
+      if (settled) return; // már timeoutolt; ne írjuk felül a fallbackot
+      settled = true;
+      clearTimeout(softTimeout);
       if (r.ok && r.reading) {
         if (r.cached) trackEvent("roxy_cache_hit", { domain: "horoscope" });
         else trackEvent("roxy_cache_miss", { domain: "horoscope" });
@@ -59,6 +71,9 @@ function Page() {
         setS({ loading: false, sign: next, reading: null, fallback: true });
       }
     } catch {
+      if (settled) return;
+      settled = true;
+      clearTimeout(softTimeout);
       trackEvent("roxy_fallback_used", { domain: "horoscope" });
       setS({ loading: false, sign: next, reading: null, fallback: true });
     }
