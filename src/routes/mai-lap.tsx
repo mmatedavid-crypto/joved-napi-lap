@@ -9,6 +9,7 @@ import { CardBack, CardFace } from "@/components/TarotCard";
 import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/mai-lap")({
   head: () => ({
@@ -31,6 +32,7 @@ function MaiLap() {
   const [revealed, setRevealed] = useState(false);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   useEffect(() => {
@@ -155,11 +157,24 @@ function MaiLap() {
                     eyebrow="A mai lapod"
                   />
                 </div>
+                <div className="pt-3 border-t border-[oklch(0.78_0.10_80/0.15)] mt-4">
+                  <div className="text-sm text-ivory/70 mb-2">Mélyebb, személyre szabott üzenetet szeretnél?</div>
+                  <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
+                    Kérek AI olvasatot · 490 Ft
+                  </button>
+                </div>
               </div>
             )}
           </div>
         )}
       </div>
+      <PaywallDialog
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        productSlug="napi_lap_ai"
+        sourceRoute="/mai-lap"
+        inputPayload={card ? { cardId: card.id, cardName: card.name } : undefined}
+      />
     </Layout>
   );
 }
