@@ -15,10 +15,16 @@ import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
+import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
+import { Route as KristalyRouteImport } from './routes/kristaly'
+import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
+import { Route as AngyalszamRouteImport } from './routes/angyalszam'
+import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
@@ -50,6 +56,21 @@ const MaiLapRoute = MaiLapRouteImport.update({
   path: '/mai-lap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MaiIranytuRoute = MaiIranytuRouteImport.update({
+  id: '/mai-iranytu',
+  path: '/mai-iranytu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KristalyRoute = KristalyRouteImport.update({
+  id: '/kristaly',
+  path: '/kristaly',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HoroszkopRoute = HoroszkopRouteImport.update({
+  id: '/horoszkop',
+  path: '/horoszkop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HaromLapRoute = HaromLapRouteImport.update({
   id: '/harom-lap',
   path: '/harom-lap',
@@ -65,99 +86,156 @@ const BejelentkezesRoute = BejelentkezesRouteImport.update({
   path: '/bejelentkezes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AngyalszamRoute = AngyalszamRouteImport.update({
+  id: '/angyalszam',
+  path: '/angyalszam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlomfejtesRoute = AlomfejtesRouteImport.update({
+  id: '/alomfejtes',
+  path: '/alomfejtes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevRoxyRoute = DevRoxyRouteImport.update({
+  id: '/dev/roxy',
+  path: '/dev/roxy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alomfejtes': typeof AlomfejtesRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
+  '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alomfejtes': typeof AlomfejtesRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
+  '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alomfejtes': typeof AlomfejtesRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
+  '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/dev/roxy': typeof DevRoxyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alomfejtes'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
+    | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alomfejtes'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
+    | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   id:
     | '__root__'
     | '/'
+    | '/alomfejtes'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
+    | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
     | '/rolunk'
     | '/szammisztika'
+    | '/dev/roxy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlomfejtesRoute: typeof AlomfejtesRoute
+  AngyalszamRoute: typeof AngyalszamRoute
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
+  HoroszkopRoute: typeof HoroszkopRoute
+  KristalyRoute: typeof KristalyRoute
+  MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
   RandiElottRoute: typeof RandiElottRoute
   RolunkRoute: typeof RolunkRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
+  DevRoxyRoute: typeof DevRoxyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +282,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaiLapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mai-iranytu': {
+      id: '/mai-iranytu'
+      path: '/mai-iranytu'
+      fullPath: '/mai-iranytu'
+      preLoaderRoute: typeof MaiIranytuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kristaly': {
+      id: '/kristaly'
+      path: '/kristaly'
+      fullPath: '/kristaly'
+      preLoaderRoute: typeof KristalyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/horoszkop': {
+      id: '/horoszkop'
+      path: '/horoszkop'
+      fullPath: '/horoszkop'
+      preLoaderRoute: typeof HoroszkopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/harom-lap': {
       id: '/harom-lap'
       path: '/harom-lap'
@@ -225,6 +324,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BejelentkezesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/angyalszam': {
+      id: '/angyalszam'
+      path: '/angyalszam'
+      fullPath: '/angyalszam'
+      preLoaderRoute: typeof AngyalszamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alomfejtes': {
+      id: '/alomfejtes'
+      path: '/alomfejtes'
+      fullPath: '/alomfejtes'
+      preLoaderRoute: typeof AlomfejtesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -232,20 +345,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/roxy': {
+      id: '/dev/roxy'
+      path: '/dev/roxy'
+      fullPath: '/dev/roxy'
+      preLoaderRoute: typeof DevRoxyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlomfejtesRoute: AlomfejtesRoute,
+  AngyalszamRoute: AngyalszamRoute,
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
+  HoroszkopRoute: HoroszkopRoute,
+  KristalyRoute: KristalyRoute,
+  MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
   RandiElottRoute: RandiElottRoute,
   RolunkRoute: RolunkRoute,
   SzammisztikaRoute: SzammisztikaRoute,
+  DevRoxyRoute: DevRoxyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
