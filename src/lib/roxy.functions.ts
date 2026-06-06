@@ -645,7 +645,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       const idsKey = data.cards.map((c) => c.id).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
       const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-      const cacheKey = `aitarot-v2:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const cacheKey = `aitarot-v3:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
       try {
         const { data: row } = await supabaseAdmin
@@ -675,9 +675,11 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         "Hossz: minden mező 2-3 mondat, semmi felsorolás. 'oneLine' EGY tömör mondat, max 20 szó, ne kezdődjön 'Ma' szóval, és KONKRÉTAN a helyzetre szóljon.",
         "Ha van 'kerdes' mező, töltsd ki a 'questionAnswer' mezőt is: 2 mondatban válaszolj közvetlenül a feltett kérdésre, óvatosan, nem determinisztikusan. Ne kerüld meg a kérdést.",
         "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' is közvetlenül a kérdés tárgyáról szóljon — a lap nyelvén.",
+        "Ha van 'kategoria' mező, minden releváns mezőben nevezd meg vagy érzékeltesd a konkrét helyzetet: randi, találkozó, vissza nem írás, ex-történet, ismerkedés, döntés. A szövegben szerepeljen legalább egy természetes fordulat, például 'ez a randi', 'ez a találkozó', 'ez a csend', 'ez az ismerkedés', 'ez a visszatérő történet', 'ez a döntés'.",
+        "Randi/helyzet olvasatnál mondd el, mit taníthat vagy tükrözhet MOST ez a konkrét helyzet. Példák: 'ez a randi most azt taníthatja…', 'ez a találkozó inkább azt mutatja…', 'ez a csend arra hívhatja fel a figyelmed…'. Ne állítsd, hogy pontosan mi fog történni.",
         "A 'three' spread: past=cards[0] (honnan jött ez a HELYZET), present=cards[1] (mi van most a HELYZETBEN), future=cards[2] (merre mozdul a HELYZET); together=hogyan kapcsolódik a három a helyzethez.",
         "A 'decision' spread: pro/contra a kategóriához konkrétan kötve — mi szól mellette / ellene EBBEN a döntésben, a lap energiája alapján. 'nextStep' egy konkrét, kis lépés ebben a helyzetben.",
-        "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mi van köztetek EBBEN a helyzetben; them=ő hogy érkezik EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
+        "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mit tanít vagy tükröz ez a találkozás/csend/ismerkedés KÖZTETEK; them=ő milyen minőséggel érkezhet EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
         "A 'love-1' / 'decision-1' / 'single' spread esetén a 'cardMessage' EGYÉRTELMŰEN a megadott kategóriára/kérdésre szóljon: 'ebben a helyzetben…', 'ezen a randin…', 'erre a döntésre nézve…' — ne általános laptanulság.",
         "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
       ].join(" ");

@@ -148,10 +148,10 @@ function RandiInline() {
       card={card}
       eyebrow={`Randi előtt · ${sit}`}
       sections={[
-        { title: "Mit mond a lap a kapcsolatról?", text: card.love },
-        { title: "Mire figyelj?", text: card.warning },
+        { title: "Mit mutat ez a helyzet?", text: datingInlineAnswer(sit, card) },
+        { title: "Mire figyelj?", text: datingInlineWarning(sit, card) },
       ]}
-      oneLiner={card.daily}
+      oneLiner={datingInlineOneLine(sit, card)}
       footer={
         <div className="flex flex-wrap gap-2 mt-2">
           <button
@@ -174,6 +174,35 @@ function RandiInline() {
       }
     />
   );
+}
+
+function datingInlineAnswer(situation: string, card: TarotCard): string {
+  return `${datingSituationLead(situation)} most nem kész választ ad, hanem tükröt: a ${card.name} szerint a ${card.keywords[0].toLowerCase()} minősége lehet az, amit ebben a kapcsolódásban észre kell venned. ${card.love}`;
+}
+
+function datingInlineWarning(situation: string, card: TarotCard): string {
+  return `${datingSituationLead(situation)} akkor lesz igazán beszédes, ha nem csak a másik jelzéseit figyeled, hanem azt is, benned mit nyit meg. ${card.warning}`;
+}
+
+function datingInlineOneLine(situation: string, card: TarotCard): string {
+  return `${datingSituationLead(situation)} most ezt taníthatja: ${card.keywords[0].toLowerCase()} nélkül nincs tiszta kapcsolódás.`;
+}
+
+function datingSituationLead(situation: string): string {
+  switch (situation) {
+    case "randi előtt":
+      return "Ez a randi";
+    case "randi után":
+      return "Ez a találkozó";
+    case "most ismerkedünk":
+      return "Ez az ismerkedés";
+    case "nem ír vissza":
+      return "Ez a csend";
+    case "ex / visszatérő történet":
+      return "Ez a visszatérő történet";
+    default:
+      return "Ez a helyzet";
+  }
 }
 
 // ─── Döntés ──────────────────────────────────────────────────

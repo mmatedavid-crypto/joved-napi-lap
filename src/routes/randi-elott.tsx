@@ -174,18 +174,18 @@ function Page() {
               {cards.length === 3 ? (
                 <>
                   <Section eyebrow="Te" title={cards[0].name}>
-                    {reading?.you ?? cards[0].love}
+                    {reading?.you ?? loveSituationFallback(sit, cards[0], "you")}
                   </Section>
-                  <Section eyebrow="A kapcsolat" title={cards[1].name}>
-                    {reading?.between ?? cards[1].love}
+                  <Section eyebrow="A helyzet köztetek" title={cards[1].name}>
+                    {reading?.between ?? loveSituationFallback(sit, cards[1], "between")}
                   </Section>
                   <Section eyebrow="Ő" title={cards[2].name}>
-                    {reading?.them ?? cards[2].love}
+                    {reading?.them ?? loveSituationFallback(sit, cards[2], "them")}
                   </Section>
                 </>
               ) : (
-                <Section eyebrow="A lap üzenete" title={cards[0].name}>
-                  {reading?.cardMessage ?? reading?.intro ?? cards[0].love}
+                <Section eyebrow="A helyzet üzenete" title={cards[0].name}>
+                  {reading?.cardMessage ?? reading?.intro ?? loveSituationFallback(sit, cards[0])}
                 </Section>
               )}
               <Section eyebrow="Egy mondatban">
@@ -237,5 +237,42 @@ function F({ label, children }: { label: string; children: React.ReactNode }) {
 }
 
 function loveQuestionFallback(question: string, card: TarotCard, situation: string): string {
-  return `A „${question}” kérdésre a ${card.name} nem biztos választ ad, inkább irányt: ebben a ${situation} helyzetben ${card.keywords[0].toLowerCase()} minősége lehet a legfontosabb. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
+  return `A „${question}” kérdésre a ${card.name} nem biztos választ ad, inkább irányt: ${loveSituationLead(situation)} most a ${card.keywords[0].toLowerCase()} minőségét taníthatja. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
+}
+
+function loveSituationFallback(
+  situation: string,
+  card: TarotCard,
+  position: "you" | "between" | "them" | "single" = "single",
+): string {
+  const lead = loveSituationLead(situation);
+  if (position === "you") {
+    return `${lead} azt mutathatja, hogy te most a ${card.keywords[0].toLowerCase()} minőségén keresztül érkezel ebbe a kapcsolódásba. ${card.love}`;
+  }
+  if (position === "between") {
+    return `${lead} köztetek most nem kész választ, hanem tükröt ad: a ${card.name} szerint ez a helyzet a ${card.keywords[0].toLowerCase()} témáját hozhatja felszínre. ${card.love}`;
+  }
+  if (position === "them") {
+    return `${lead} arra is rávilágíthat, milyen minőséget érzékelsz a másik oldaláról. A ${card.name} itt óvatosan, nem biztos állításként mutat irányt: ${card.love}`;
+  }
+  return `${lead} most ezt taníthatja: a ${card.name} szerint a ${card.keywords[0].toLowerCase()} minősége lesz az, amit érdemes észrevenned. ${card.love}`;
+}
+
+function loveSituationLead(situation: string): string {
+  switch (situation) {
+    case "randi előtt":
+      return "Ez a randi";
+    case "randi után":
+      return "Ez a találkozó";
+    case "most ismerkedünk":
+      return "Ez az ismerkedés";
+    case "nem ír vissza":
+      return "Ez a csend";
+    case "ex / visszatérő történet":
+      return "Ez a visszatérő történet";
+    case "nem tudom, mit akar":
+      return "Ez a bizonytalanság";
+    default:
+      return "Ez a helyzet";
+  }
 }
