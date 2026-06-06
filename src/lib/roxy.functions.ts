@@ -7,6 +7,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { guardAITextObject, polishCrystalNameHU } from "./huTextGuard";
 
 type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
 
@@ -389,12 +390,15 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           .eq("cache_key", cacheKey)
           .maybeSingle();
         if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
-          return {
-            ok: true,
-            cached: true,
-            fallbackUsed: false,
-            briefing: row.response_payload as PersonalBriefingHU,
-          };
+          const cachedBriefing = guardPersonalBriefingHU(row.response_payload);
+          if (cachedBriefing) {
+            return {
+              ok: true,
+              cached: true,
+              fallbackUsed: false,
+              briefing: cachedBriefing,
+            };
+          }
         }
       } catch {
         /* ignore */
@@ -532,6 +536,17 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
         };
       }
 
+      const briefing = guardPersonalBriefingHU(ai.data);
+      if (!briefing) {
+        return {
+          ok: false,
+          cached: false,
+          fallbackUsed: true,
+          briefing: null,
+          message: "Most nem sikerült természetes magyar olvasatot készíteni.",
+        };
+      }
+
       // 4. Cache 24h.
       try {
         await supabaseAdmin.from("api_cache").upsert(
@@ -540,7 +555,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
             endpoint: "/personal/daily-briefing",
             cache_key: cacheKey,
             request_payload: { sign: data.sign, dateKey: data.dateKey } as never,
-            response_payload: ai.data as never,
+            response_payload: briefing as never,
             expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
           },
           { onConflict: "cache_key" },
@@ -549,9 +564,25 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
         /* ignore */
       }
 
-      return { ok: true, cached: false, fallbackUsed: false, briefing: ai.data };
+      return { ok: true, cached: false, fallbackUsed: false, briefing };
     },
   );
+
+function guardPersonalBriefingHU(value: unknown): PersonalBriefingHU | null {
+  const guarded = guardAITextObject<PersonalBriefingHU>(
+    value,
+    ["oneLine", "horoMood", "horoLove", "horoWork", "horoWarn", "cardTitle", "cardLine"],
+    {
+      oneLine: { oneLine: true },
+      crystalName: { allowCrystalName: true },
+    },
+  );
+  if (!guarded) return null;
+  return {
+    ...guarded,
+    crystalName: polishCrystalNameHU(guarded.crystalName) ?? guarded.crystalName,
+  };
+}
 
 // ─── Generic AI Tarot reading (HU) ───────────────────────────────────────
 // Single helper used by mai-lap, harom-lap, randi-elott, dontes-elott.

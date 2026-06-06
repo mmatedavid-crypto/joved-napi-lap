@@ -7,6 +7,12 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import {
+  controlledColorHU,
+  controlledMoonPhaseHU,
+  guardAITextObject,
+  polishCrystalNameHU,
+} from "./huTextGuard";
 
 const SignSchema = z.enum([
   "aries",
@@ -123,7 +129,7 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
       message?: string;
     }> => {
       const cacheKey = `aitr:horoscope:${data.sign}:${data.dateKey}`;
-      const cached = (await readCache(cacheKey)) as HoroscopeHU | null;
+      const cached = guardHoroscopeHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
       const { callRoxy } = await import("./roxy.server");
@@ -161,12 +167,25 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
         schemaName: "HoroscopeHU",
         schema,
       });
-      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const reading = guardHoroscopeHU(t.data);
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/horoscope", t.data, 60 * 60 * 24);
-      return { ok: true, cached: false, reading: t.data };
+      await writeCache(cacheKey, "/ai/horoscope", reading, 60 * 60 * 24);
+      return { ok: true, cached: false, reading };
     },
   );
+
+function guardHoroscopeHU(value: unknown): HoroscopeHU | null {
+  const guarded = guardAITextObject<HoroscopeHU>(value, ["oneLine"], {
+    oneLine: { oneLine: true },
+  });
+  if (!guarded) return null;
+  return {
+    ...guarded,
+    luckyColor: controlledColorHU(guarded.luckyColor),
+    moonPhase: controlledMoonPhaseHU(guarded.moonPhase),
+  };
+}
 
 // ─── Kristály ─────────────────────────────────────────────────────────────
 
@@ -193,7 +212,7 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
         data.mode === "month"
           ? `aitr:crystal:month:${data.month}`
           : `aitr:crystal:zodiac:${data.sign}`;
-      const cached = (await readCache(cacheKey)) as CrystalHU | null;
+      const cached = guardCrystalHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
       const { callRoxy } = await import("./roxy.server");
@@ -236,12 +255,22 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
         schemaName: "CrystalHU",
         schema,
       });
-      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const reading = guardCrystalHU(t.data);
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/crystal", t.data, 60 * 60 * 24 * 30);
-      return { ok: true, cached: false, reading: t.data };
+      await writeCache(cacheKey, "/ai/crystal", reading, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading };
     },
   );
+
+function guardCrystalHU(value: unknown): CrystalHU | null {
+  const guarded = guardAITextObject<CrystalHU>(value, ["name"], {
+    name: { allowCrystalName: true },
+    oneLine: { oneLine: true },
+  });
+  if (!guarded) return null;
+  return { ...guarded, name: polishCrystalNameHU(guarded.name) ?? guarded.name };
+}
 
 // ─── Angyalszám ───────────────────────────────────────────────────────────
 
@@ -262,7 +291,7 @@ export const aiAngelHU = createServerFn({ method: "POST" })
       data,
     }): Promise<{ ok: boolean; cached: boolean; reading: AngelHU | null; message?: string }> => {
       const cacheKey = `aitr:angel:${data.number}`;
-      const cached = (await readCache(cacheKey)) as AngelHU | null;
+      const cached = guardAngelHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
       const { callRoxy } = await import("./roxy.server");
@@ -300,12 +329,17 @@ export const aiAngelHU = createServerFn({ method: "POST" })
         schemaName: "AngelHU",
         schema,
       });
-      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const reading = guardAngelHU(t.data);
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/angel", t.data, 60 * 60 * 24 * 30);
-      return { ok: true, cached: false, reading: t.data };
+      await writeCache(cacheKey, "/ai/angel", reading, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading };
     },
   );
+
+function guardAngelHU(value: unknown): AngelHU | null {
+  return guardAITextObject<AngelHU>(value, ["title"], { oneLine: { oneLine: true } });
+}
 
 // ─── Álom ─────────────────────────────────────────────────────────────────
 
@@ -331,7 +365,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
       data,
     }): Promise<{ ok: boolean; cached: boolean; reading: DreamHU | null; message?: string }> => {
       const cacheKey = `aitr:dream:${data.slug}`;
-      const cached = (await readCache(cacheKey)) as DreamHU | null;
+      const cached = guardDreamHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
       const { callRoxy } = await import("./roxy.server");
@@ -366,12 +400,17 @@ export const aiDreamHU = createServerFn({ method: "POST" })
         schemaName: "DreamHU",
         schema,
       });
-      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const reading = guardDreamHU(t.data);
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/dream", t.data, 60 * 60 * 24 * 30);
-      return { ok: true, cached: false, reading: t.data };
+      await writeCache(cacheKey, "/ai/dream", reading, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading };
     },
   );
+
+function guardDreamHU(value: unknown): DreamHU | null {
+  return guardAITextObject<DreamHU>(value, ["title"], { oneLine: { oneLine: true } });
+}
 
 // ─── Számmisztika (sorsszám) ──────────────────────────────────────────────
 
@@ -421,7 +460,7 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
     }> => {
       const nameKey = (data.fullName ?? "").toLowerCase().trim();
       const cacheKey = `aitr:numerology:${data.birthDate}:${nameKey}`;
-      const cached = (await readCache(cacheKey)) as NumerologyHU | null;
+      const cached = guardNumerologyHU(await readCache(cacheKey));
       if (cached) return { ok: true, cached: true, reading: cached };
 
       const { callRoxy } = await import("./roxy.server");
@@ -481,9 +520,16 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
         schemaName: "NumerologyHU",
         schema,
       });
-      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const reading = guardNumerologyHU(t.data);
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
-      await writeCache(cacheKey, "/ai/numerology", t.data, 60 * 60 * 24 * 365);
-      return { ok: true, cached: false, reading: t.data };
+      await writeCache(cacheKey, "/ai/numerology", reading, 60 * 60 * 24 * 365);
+      return { ok: true, cached: false, reading };
     },
   );
+
+function guardNumerologyHU(value: unknown): NumerologyHU | null {
+  return guardAITextObject<NumerologyHU>(value, ["lifePathNumber", "title", "meaning"], {
+    oneLine: { oneLine: true },
+  });
+}
