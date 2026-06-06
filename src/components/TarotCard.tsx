@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import type { TarotCard as TCard } from "@/data/cards";
 
 /* ──────────────────────────────────────────────────────────────────────
@@ -408,7 +408,7 @@ function World({ uid }: GlyphProps) {
   );
 }
 
-const GLYPHS: Record<string, (p: GlyphProps) => JSX.Element> = {
+const GLYPHS: Record<string, (p: GlyphProps) => ReactElement> = {
   bolond: Fool, mago: Mage, fopapno: Pillars, csaszarno: Wheat, csaszar: Throne,
   fopap: Keys, szeretok: Lovers, diadalszeker: Chariot, ero: Ouroboros, remete: Lantern,
   kerek: Wheel, igazsag: Scales, akasztott: Hanged, halal: Scythe, mertekletesseg: Hourglass,
