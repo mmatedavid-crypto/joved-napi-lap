@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { RitualTable } from "@/components/RitualTable";
+import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,6 +26,8 @@ function Index() {
           <span className="text-gold-gradient">mielőtt döntesz.</span>
         </h1>
       </section>
+
+      <PersonalDailyBriefing />
 
       <section className="mx-auto max-w-none px-0 md:px-3 pb-12">
         <RitualTable />
