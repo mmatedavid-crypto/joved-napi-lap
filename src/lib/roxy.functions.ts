@@ -312,3 +312,152 @@ export const roxyLocationSearch = createServerFn({ method: "POST" })
       ttlSeconds: 60 * 60 * 24 * 30,
     }),
   );
+
+// ─── Personal Daily Briefing (AI-enriched, Hungarian) ────────────────────
+// Combines tarot/daily, horoscope/daily, biorhythm/daily, angel-numbers
+// and crystals/birthstone, then runs the meaningful English fields through
+// Lovable AI to produce a single warm Hungarian briefing. Cached per
+// (sign, dob, dateKey, name) for 24h in api_cache so repeated visits are free.
+
+export type PersonalBriefingHU = {
+  oneLine: string;            // 1 mondat összegzés
+  horoMood: string;
+  horoLove: string;
+  horoWork: string;
+  horoWarn: string;
+  cardTitle: string;
+  cardLine: string;           // 1-2 mondat a lapról, mai értelemben
+  bioLine?: string;
+  angelTitle?: string;
+  angelMessage?: string;
+  crystalName?: string;
+  crystalLine?: string;
+};
+
+export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      birthDate: BirthDateSchema,
+      sign: SignSchema,
+      name: NameSchema.optional(),
+      dateKey: z.string().min(8).max(20),
+    }).parse,
+  )
+  .handler(async ({ data }): Promise<{
+    ok: boolean;
+    cached: boolean;
+    fallbackUsed: boolean;
+    briefing: PersonalBriefingHU | null;
+    message?: string;
+  }> => {
+    const { callRoxy } = await import("./roxy.server");
+    const { aiJSON } = await import("./ai.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const nameKey = (data.name ?? "").toLowerCase().trim();
+    const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}`;
+
+    // 1. Cache lookup (24h)
+    try {
+      const { data: row } = await supabaseAdmin
+        .from("api_cache")
+        .select("response_payload, expires_at")
+        .eq("cache_key", cacheKey)
+        .maybeSingle();
+      if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
+        return { ok: true, cached: true, fallbackUsed: false, briefing: row.response_payload as PersonalBriefingHU };
+      }
+    } catch { /* ignore */ }
+
+    // 2. Pull raw Roxy data in parallel.
+    const digits = data.dateKey.replace(/-/g, "");
+    const month = Number(data.dateKey.slice(5, 7));
+    const [tarotR, horoR, bioR, angelR, crysR] = await Promise.allSettled([
+      callRoxy({ endpoint: "/tarot/draw", body: { count: 1, seed: `daily:${data.dateKey}`, allowDuplicates: false }, cacheKey: `tarot:daily:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
+      callRoxy({ endpoint: `/astrology/horoscope/${data.sign}/daily`, method: "GET", cacheKey: `astro:daily:${data.sign}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
+      callRoxy({ endpoint: "/biorhythm/daily", body: { birthDate: data.birthDate, date: data.dateKey }, cacheKey: `bio:daily:${data.birthDate}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
+      callRoxy({ endpoint: `/angel-numbers/lookup?number=${digits}`, method: "GET", cacheKey: `angel:${digits}`, ttlSeconds: 60 * 60 * 24 * 180 }),
+      callRoxy({ endpoint: `/crystals/birthstone/${month}`, method: "GET", cacheKey: `crystal:birth:${month}`, ttlSeconds: 60 * 60 * 24 * 180 }),
+    ]);
+
+    const pick = <T>(r: PromiseSettledResult<{ ok: boolean; data: T | null }>): T | null =>
+      r.status === "fulfilled" && r.value.ok ? (r.value.data as T) : null;
+
+    const raw = {
+      tarot: pick(tarotR),
+      horoscope: pick(horoR),
+      biorhythm: pick(bioR),
+      angel: pick(angelR),
+      crystal: pick(crysR),
+    };
+
+    const hasAny = Object.values(raw).some((v) => v != null);
+    if (!hasAny) {
+      return { ok: false, cached: false, fallbackUsed: true, briefing: null, message: "Most nem értem el a háttértudást." };
+    }
+
+    // 3. AI rewrite into warm Hungarian copy.
+    const sys = [
+      "Te a Jövőd.hu spirituális napló írója vagy.",
+      "MINDIG magyarul írj, soha ne hagyj angol szót a kimenetben.",
+      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli; nem közhelyes.",
+      "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj.",
+      "Tartsd rövidre: minden mező 1-2 mondat. 'oneLine' egy mondat.",
+      "Az angol forrásszövegeket NE fordítsd szó szerint, hanem fogalmazd át a saját hangoddal úgy, hogy a lényegük (téma, energia, figyelmeztetés) átjöjjön.",
+      "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül.",
+    ].join(" ");
+
+    const userPayload = {
+      kerdezo: { keresztnev: data.name ?? null, csillagjegy: data.sign, datum: data.dateKey },
+      nyersAdatok: raw,
+    };
+
+    const schema = {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        oneLine: { type: "string" },
+        horoMood: { type: "string" },
+        horoLove: { type: "string" },
+        horoWork: { type: "string" },
+        horoWarn: { type: "string" },
+        cardTitle: { type: "string" },
+        cardLine: { type: "string" },
+        bioLine: { type: "string" },
+        angelTitle: { type: "string" },
+        angelMessage: { type: "string" },
+        crystalName: { type: "string" },
+        crystalLine: { type: "string" },
+      },
+      required: ["oneLine", "horoMood", "horoLove", "horoWork", "horoWarn", "cardTitle", "cardLine"],
+    };
+
+    const ai = await aiJSON<PersonalBriefingHU>({
+      system: sys,
+      user: "Készíts ebből a nyers, vegyes angol forrásból egy mai magyar olvasatot a felhasználónak.\n\n" +
+        JSON.stringify(userPayload),
+      schemaName: "PersonalBriefingHU",
+      schema,
+    });
+
+    if (!ai.ok || !ai.data) {
+      return { ok: false, cached: false, fallbackUsed: true, briefing: null, message: ai.error ?? "AI hiba" };
+    }
+
+    // 4. Cache 24h.
+    try {
+      await supabaseAdmin.from("api_cache").upsert(
+        {
+          provider: "roxy+ai",
+          endpoint: "/personal/daily-briefing",
+          cache_key: cacheKey,
+          request_payload: { sign: data.sign, dateKey: data.dateKey } as never,
+          response_payload: ai.data as never,
+          expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+        },
+        { onConflict: "cache_key" },
+      );
+    } catch { /* ignore */ }
+
+    return { ok: true, cached: false, fallbackUsed: false, briefing: ai.data };
+  });
