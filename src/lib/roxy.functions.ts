@@ -562,6 +562,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
 
 export type TarotReadingHU = {
   oneLine: string;
+  questionAnswer?: string;
   intro?: string;
   past?: string;
   present?: string;
@@ -641,7 +642,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         "Ne használj emojit, angol endpoint- vagy mezőneveket, raw provider-szöveget, determinisztikus jövőállítást.",
         "Soha ne ígérj orvosi, jogi, pénzügyi eredményt. Ne diagnosztizálj.",
         "Hossz: minden mező 2-3 mondat, semmi felsorolás. 'oneLine' EGY tömör mondat, max 20 szó, ne kezdődjön 'Ma' szóval, és KONKRÉTAN a helyzetre szóljon.",
-        "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' közvetlenül a kérdésre válaszoljon — a lap nyelvén, de a kérdés tárgyáról.",
+        "Ha van 'kerdes' mező, töltsd ki a 'questionAnswer' mezőt is: 2 mondatban válaszolj közvetlenül a feltett kérdésre, óvatosan, nem determinisztikusan. Ne kerüld meg a kérdést.",
+        "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' is közvetlenül a kérdés tárgyáról szóljon — a lap nyelvén.",
         "A 'three' spread: past=cards[0] (honnan jött ez a HELYZET), present=cards[1] (mi van most a HELYZETBEN), future=cards[2] (merre mozdul a HELYZET); together=hogyan kapcsolódik a három a helyzethez.",
         "A 'decision' spread: pro/contra a kategóriához konkrétan kötve — mi szól mellette / ellene EBBEN a döntésben, a lap energiája alapján. 'nextStep' egy konkrét, kis lépés ebben a helyzetben.",
         "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mi van köztetek EBBEN a helyzetben; them=ő hogy érkezik EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
@@ -670,6 +672,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         additionalProperties: false,
         properties: {
           oneLine: { type: "string" },
+          questionAnswer: { type: "string" },
           intro: { type: "string" },
           past: { type: "string" },
           present: { type: "string" },

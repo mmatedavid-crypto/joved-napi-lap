@@ -166,6 +166,11 @@ function Page() {
                   Egy pillanat — személyes olvasatot készítek…
                 </div>
               )}
+              {q.trim() && (
+                <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
+                  {reading?.questionAnswer ?? loveQuestionFallback(q, cards[cards.length - 1], sit)}
+                </Section>
+              )}
               {cards.length === 3 ? (
                 <>
                   <Section eyebrow="Te" title={cards[0].name}>
@@ -229,4 +234,8 @@ function F({ label, children }: { label: string; children: React.ReactNode }) {
       {children}
     </div>
   );
+}
+
+function loveQuestionFallback(question: string, card: TarotCard, situation: string): string {
+  return `A „${question}” kérdésre a ${card.name} nem biztos választ ad, inkább irányt: ebben a ${situation} helyzetben ${card.keywords[0].toLowerCase()} minősége lehet a legfontosabb. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
 }

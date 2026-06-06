@@ -161,6 +161,12 @@ function HaromLap() {
                     Egy pillanat — személyes olvasatot készítek…
                   </div>
                 )}
+                {question.trim() && (
+                  <Section eyebrow="A kérdésedre" title={`„${question.trim()}”`}>
+                    {reading?.questionAnswer ??
+                      threeCardQuestionFallback(question, cards[1], category)}
+                  </Section>
+                )}
                 <Section eyebrow="Múlt — honnan jön ez a helyzet?">
                   {reading?.past ?? cards[0].general}
                 </Section>
@@ -216,4 +222,8 @@ function HaromLap() {
       />
     </Layout>
   );
+}
+
+function threeCardQuestionFallback(question: string, card: TarotCard, category: string): string {
+  return `A kérdésedre a ${card.name} azt mutatja, hogy a ${category} témájában most nem a gyors lezárás, hanem a jelen helyzet pontosabb érzékelése visz közelebb. A válasz inkább abban látszik, hogy ${card.keywords[0].toLowerCase()} minősége támogat-e vagy feszít benned.`;
 }

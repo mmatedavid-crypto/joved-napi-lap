@@ -226,6 +226,11 @@ function Page() {
                     Egy pillanat — személyes olvasatot készítek…
                   </div>
                 )}
+                {q.trim() && (
+                  <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
+                    {reading?.questionAnswer ?? decisionQuestionFallback(q, main, cat)}
+                  </Section>
+                )}
                 <Section eyebrow="A lap üzenete">
                   {reading?.intro ?? reading?.cardMessage ?? main.decision}
                 </Section>
@@ -315,4 +320,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {children}
     </div>
   );
+}
+
+function decisionQuestionFallback(question: string, card: TarotCard, category: string): string {
+  return `A „${question}” kérdésre a ${card.name} nem parancsot ad, hanem szempontot: a ${category} témájában akkor mozdulj, ha a döntés mögött nem csak sürgetés, hanem belső tisztaság is van. Ha a kérdésre gondolva inkább szűkületet érzel, érdemes lehet még egy kicsit várni vagy pontosítani a feltételeket.`;
 }
