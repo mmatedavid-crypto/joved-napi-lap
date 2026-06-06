@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
+import { PRODUCTS_BY_SLUG, EXPRESS_HOURS } from "@/lib/products";
 
 async function getSupabase() {
   const mod = await import("@/integrations/supabase/client.server");
@@ -30,14 +31,41 @@ async function handleCheckoutCompleted(session: any) {
   }
 
   const newStatus = existing.category === "instant" ? "processing" : "paid";
+
+  // Late-bind: a deliver_by-t a tényleges fizetés időpontjától számoljuk.
+  const { data: full } = await supabase
+    .from("orders")
+    .select("product_slug, express")
+    .eq("id", existing.id)
+    .maybeSingle();
+  let deliverBy: string | null = null;
+  if (full && existing.category === "delayed") {
+    const p = PRODUCTS_BY_SLUG[full.product_slug as string];
+    const hours = full.express ? EXPRESS_HOURS : (p?.standardHours ?? 24);
+    deliverBy = new Date(Date.now() + hours * 3600_000).toISOString();
+  }
+
   await supabase
     .from("orders")
     .update({
       status: newStatus,
       stripe_payment_intent: paymentIntent,
       paid_at: new Date().toISOString(),
+      ...(deliverBy ? { deliver_by: deliverBy } : {}),
     })
     .eq("id", existing.id);
+
+  // Instant rendelésekhez: szerveroldalon is elindítjuk az AI feldolgozást,
+  // hogy ne csak a köszönő-oldal polling indítsa el (ha a vásárló bezárja a tabot).
+  if (existing.category === "instant") {
+    try {
+      const { processOrder } = await import("@/lib/payments.functions");
+      // Tűzd-és-felejtsd: a vásárló köszönő-oldala újra meghívja idempotensen.
+      processOrder({ data: { sessionId } }).catch((e) => console.error("processOrder failed:", e));
+    } catch (e) {
+      console.error("processOrder import failed:", e);
+    }
+  }
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {
