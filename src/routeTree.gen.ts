@@ -19,6 +19,7 @@ import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
+import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
@@ -71,6 +72,11 @@ const BejelentkezesRoute = BejelentkezesRouteImport.update({
   path: '/bejelentkezes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AngyalszamRoute = AngyalszamRouteImport.update({
+  id: '/angyalszam',
+  path: '/angyalszam',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -79,6 +85,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/angyalszam': typeof AngyalszamRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/angyalszam'
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AngyalszamRoute: typeof AngyalszamRoute
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BejelentkezesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/angyalszam': {
+      id: '/angyalszam'
+      path: '/angyalszam'
+      fullPath: '/angyalszam'
+      preLoaderRoute: typeof AngyalszamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AngyalszamRoute: AngyalszamRoute,
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
