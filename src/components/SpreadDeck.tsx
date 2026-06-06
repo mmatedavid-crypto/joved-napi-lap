@@ -55,12 +55,12 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
 
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
-  const arc = 124;
+  const arc = 150;
 
   return (
     <div className="select-none w-full">
       {/* Spread (fan) */}
-      <div className="relative mx-auto -mt-1 h-[330px] sm:h-[410px] md:h-[470px] w-full max-w-[1500px] overflow-visible [perspective:1400px]">
+      <div className="relative mx-auto -mt-1 h-[340px] sm:h-[440px] md:h-[520px] w-screen max-w-none -ml-[50vw] left-1/2 overflow-visible [perspective:1600px]">
         {!allPicked && (
           <div className="absolute left-1/2 top-2 z-[80] w-full -translate-x-1/2 px-2 text-center">
             <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
@@ -111,7 +111,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
         {pool.map((c, i) => {
           const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
-          const lift = Math.sin(t * Math.PI) * 36;
+          const lift = Math.sin(t * Math.PI) * 48;
           const isPicked = picked.includes(i);
           const isFaded = allPicked && !isPicked;
           return (
@@ -123,11 +123,11 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               aria-label={isPicked ? "Kiválasztva" : "Lap kiválasztása"}
               className="absolute top-1/2 left-1/2 origin-bottom transition-all duration-500 ease-out group focus:outline-none"
               style={{
-                transform: `translate(-50%, -38%) rotate(${angle}deg) translateY(${-lift}px)`,
+                transform: `translate(-50%, -34%) rotate(${angle}deg) translateY(${-lift}px) translateY(-2vw)`,
                 zIndex: isPicked ? 50 - picked.indexOf(i) : 22 - Math.abs(11 - i),
                 opacity: isFaded ? 0.15 : isPicked ? 0 : 1,
                 pointerEvents: isPicked || allPicked ? "none" : "auto",
-                width: "clamp(94px, 12vw, 164px)",
+                width: "clamp(96px, 6.2vw, 170px)",
               }}
             >
               <div
