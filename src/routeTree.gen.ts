@@ -15,6 +15,7 @@ import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
+import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
@@ -50,6 +51,11 @@ const MaiLapRoute = MaiLapRouteImport.update({
   path: '/mai-lap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HoroszkopRoute = HoroszkopRouteImport.update({
+  id: '/horoszkop',
+  path: '/horoszkop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HaromLapRoute = HaromLapRouteImport.update({
   id: '/harom-lap',
   path: '/harom-lap',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
+  '/horoszkop': typeof HoroszkopRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/harom-lap'
+    | '/horoszkop'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
+  HoroszkopRoute: typeof HoroszkopRoute
   MaiLapRoute: typeof MaiLapRoute
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaiLapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/horoszkop': {
+      id: '/horoszkop'
+      path: '/horoszkop'
+      fullPath: '/horoszkop'
+      preLoaderRoute: typeof HoroszkopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/harom-lap': {
       id: '/harom-lap'
       path: '/harom-lap'
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
+  HoroszkopRoute: HoroszkopRoute,
   MaiLapRoute: MaiLapRoute,
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
@@ -250,3 +271,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
