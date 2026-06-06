@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { HUDateInput } from "@/components/HUDateInput";
+import { loadLocal } from "@/lib/storage";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -19,6 +20,16 @@ export const Route = createFileRoute("/szammisztika")({
 function Page() {
   const [dob, setDob] = useState(""); const [name, setName] = useState("");
   const [result, setResult] = useState<{ n: number; py: number } | null>(null);
+
+  // Reuse the dob/name the user already entered on the home page.
+  useEffect(() => {
+    const last = loadLocal<{ dob: string; name?: string }>("numerology:last");
+    if (last?.dob) {
+      setDob(last.dob);
+      if (last.name) setName(last.name);
+      setResult({ n: lifePath(last.dob), py: personalYear(last.dob) });
+    }
+  }, []);
 
   function calc(e: React.FormEvent) {
     e.preventDefault();
