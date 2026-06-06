@@ -543,7 +543,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
     const idsKey = data.cards.map((c) => c.id).join("+");
     const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
     const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-    const cacheKey = `aitarot:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+    const cacheKey = `aitarot-v2:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
     try {
       const { data: row } = await supabaseAdmin
