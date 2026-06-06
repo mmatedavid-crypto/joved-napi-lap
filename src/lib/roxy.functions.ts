@@ -346,6 +346,8 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           id: z.string().min(1).max(64),
           name: z.string().min(1).max(80),
           keywords: z.array(z.string().min(1).max(40)).max(8).optional(),
+          general: z.string().min(1).max(600).optional(),
+          daily: z.string().min(1).max(400).optional(),
         })
         .optional(),
     }).parse,
