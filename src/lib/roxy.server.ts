@@ -39,22 +39,19 @@ async function writeCache(
   responsePayload: unknown,
   ttlSeconds: number | null,
 ): Promise<void> {
-  const expiresAt = ttlSeconds == null
-    ? null
-    : new Date(Date.now() + ttlSeconds * 1000).toISOString();
-  await supabaseAdmin
-    .from("api_cache")
-    .upsert(
-      {
-        provider: "roxy",
-        endpoint,
-        cache_key: cacheKey,
-        request_payload: requestPayload as never,
-        response_payload: responsePayload as never,
-        expires_at: expiresAt,
-      },
-      { onConflict: "cache_key" },
-    );
+  const expiresAt =
+    ttlSeconds == null ? null : new Date(Date.now() + ttlSeconds * 1000).toISOString();
+  await supabaseAdmin.from("api_cache").upsert(
+    {
+      provider: "roxy",
+      endpoint,
+      cache_key: cacheKey,
+      request_payload: requestPayload as never,
+      response_payload: responsePayload as never,
+      expires_at: expiresAt,
+    },
+    { onConflict: "cache_key" },
+  );
 }
 
 /**
@@ -118,11 +115,17 @@ export async function callRoxy<T = unknown>(opts: {
 
   if (!res.ok) {
     const code =
-      res.status === 400 ? "validation_error" :
-      res.status === 401 ? "invalid_api_key" :
-      res.status === 404 ? "not_found" :
-      res.status === 429 ? "rate_limited" :
-      res.status >= 500 ? "provider_error" : `http_${res.status}`;
+      res.status === 400
+        ? "validation_error"
+        : res.status === 401
+          ? "invalid_api_key"
+          : res.status === 404
+            ? "not_found"
+            : res.status === 429
+              ? "rate_limited"
+              : res.status >= 500
+                ? "provider_error"
+                : `http_${res.status}`;
     return {
       ok: false,
       data: null,

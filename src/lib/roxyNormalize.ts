@@ -4,10 +4,28 @@
 
 // Major Arcana canonical order 0..21 maps to our local card ids.
 export const MAJOR_ARCANA_ID_BY_INDEX = [
-  "bolond", "mago", "fopapno", "csaszarno", "csaszar",
-  "fopap", "szeretok", "diadalszeker", "ero", "remete",
-  "kerek", "igazsag", "akasztott", "halal", "mertekletesseg",
-  "ordog", "torony", "csillag", "hold", "nap", "itelet", "vilag",
+  "bolond",
+  "mago",
+  "fopapno",
+  "csaszarno",
+  "csaszar",
+  "fopap",
+  "szeretok",
+  "diadalszeker",
+  "ero",
+  "remete",
+  "kerek",
+  "igazsag",
+  "akasztott",
+  "halal",
+  "mertekletesseg",
+  "ordog",
+  "torony",
+  "csillag",
+  "hold",
+  "nap",
+  "itelet",
+  "vilag",
 ] as const;
 
 // Common English → local id fallbacks if Roxy returns names instead of indices.
@@ -20,20 +38,20 @@ const ENGLISH_NAME_TO_ID: Record<string, string> = {
   "the hierophant": "fopap",
   "the lovers": "szeretok",
   "the chariot": "diadalszeker",
-  "strength": "ero",
+  strength: "ero",
   "the hermit": "remete",
   "wheel of fortune": "kerek",
-  "justice": "igazsag",
+  justice: "igazsag",
   "the hanged man": "akasztott",
-  "death": "halal",
-  "temperance": "mertekletesseg",
+  death: "halal",
+  temperance: "mertekletesseg",
   "the devil": "ordog",
   "the tower": "torony",
   "the star": "csillag",
   "the moon": "hold",
   "the sun": "nap",
-  "judgement": "itelet",
-  "judgment": "itelet",
+  judgement: "itelet",
+  judgment: "itelet",
   "the world": "vilag",
 };
 
@@ -87,11 +105,14 @@ function pickNumber(obj: Record<string, unknown>, keys: string[]): number | unde
 export function normalizeRoxyChart(raw: unknown): RoxyChart {
   if (!raw || typeof raw !== "object") return {};
   const obj = raw as Record<string, unknown>;
-  const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<string, unknown>;
+  const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<
+    string,
+    unknown
+  >;
   // Roxy /numerology/chart nests numbers under `coreNumbers`, each carrying { number, ... }.
-  const core = (data.coreNumbers && typeof data.coreNumbers === "object"
-    ? data.coreNumbers
-    : data) as Record<string, unknown>;
+  const core = (
+    data.coreNumbers && typeof data.coreNumbers === "object" ? data.coreNumbers : data
+  ) as Record<string, unknown>;
   return {
     lifePath: pickNumber(core, ["lifePath", "life_path", "lifepath"]),
     expression: pickNumber(core, ["expression", "destiny"]),
@@ -100,8 +121,11 @@ export function normalizeRoxyChart(raw: unknown): RoxyChart {
     birthDay: pickNumber(core, ["birthDay", "birth_day", "birthday"]),
     maturity: pickNumber(core, ["maturity"]),
     personalYear: pickNumber(data, ["personalYear", "personal_year"]),
-    karmic: Array.isArray(data.karmicLessons) ? (data.karmicLessons as number[]) :
-            Array.isArray(data.karmic_lessons) ? (data.karmic_lessons as number[]) : undefined,
+    karmic: Array.isArray(data.karmicLessons)
+      ? (data.karmicLessons as number[])
+      : Array.isArray(data.karmic_lessons)
+        ? (data.karmic_lessons as number[])
+        : undefined,
   };
 }
 
@@ -117,9 +141,18 @@ export type RoxyCompat = {
 export function normalizeRoxyCompat(raw: unknown): RoxyCompat {
   if (!raw || typeof raw !== "object") return {};
   const obj = raw as Record<string, unknown>;
-  const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<string, unknown>;
+  const data = (obj.data && typeof obj.data === "object" ? obj.data : obj) as Record<
+    string,
+    unknown
+  >;
   return {
-    score: pickNumber(data, ["compatibilityScore", "compatibility_score", "score", "overall", "percentage"]),
+    score: pickNumber(data, [
+      "compatibilityScore",
+      "compatibility_score",
+      "score",
+      "overall",
+      "percentage",
+    ]),
     lifePathA: pickNumber(data, ["lifePath1", "life_path_1", "person1_life_path"]),
     lifePathB: pickNumber(data, ["lifePath2", "life_path_2", "person2_life_path"]),
     communication: pickNumber(data, ["communication"]),
@@ -134,13 +167,13 @@ export function normalizeRoxyCompat(raw: unknown): RoxyCompat {
 // DrawnCard: { id, name, arcana, suit, number, position, reversed, keywords, meaning, imageUrl }
 
 export type RoxyDrawnCard = {
-  roxyId: string;          // e.g. "the-fool", "ace-of-cups"
-  roxyName: string;        // english name
+  roxyId: string; // e.g. "the-fool", "ace-of-cups"
+  roxyName: string; // english name
   arcana: "major" | "minor" | "unknown";
   suit?: string;
   number?: number;
   reversed: boolean;
-  localId: string | null;  // mapped to our card id when Major Arcana
+  localId: string | null; // mapped to our card id when Major Arcana
 };
 
 // Roxy Major Arcana ids → our local Hungarian ids.
@@ -153,20 +186,20 @@ const ROXY_MAJOR_ID_TO_LOCAL: Record<string, string> = {
   "the-hierophant": "fopap",
   "the-lovers": "szeretok",
   "the-chariot": "diadalszeker",
-  "strength": "ero",
+  strength: "ero",
   "the-hermit": "remete",
   "wheel-of-fortune": "kerek",
-  "justice": "igazsag",
+  justice: "igazsag",
   "the-hanged-man": "akasztott",
-  "death": "halal",
-  "temperance": "mertekletesseg",
+  death: "halal",
+  temperance: "mertekletesseg",
   "the-devil": "ordog",
   "the-tower": "torony",
   "the-star": "csillag",
   "the-moon": "hold",
   "the-sun": "nap",
-  "judgement": "itelet",
-  "judgment": "itelet",
+  judgement: "itelet",
+  judgment: "itelet",
   "the-world": "vilag",
 };
 
@@ -207,21 +240,26 @@ export function normalizeRoxyDraw(raw: unknown): RoxyDrawnCard[] {
 // Hungarian suit names for Minor Arcana fallback display.
 export function huSuitName(suit?: string): string {
   switch ((suit ?? "").toLowerCase()) {
-    case "cups": return "Kelyhek";
+    case "cups":
+      return "Kelyhek";
     case "pentacles":
-    case "coins": return "Érmék";
-    case "swords": return "Kardok";
+    case "coins":
+      return "Érmék";
+    case "swords":
+      return "Kardok";
     case "wands":
-    case "rods": return "Botok";
-    default: return "";
+    case "rods":
+      return "Botok";
+    default:
+      return "";
   }
 }
 
 // ─── I-Ching ───────────────────────────────────────────────────────────────
 
 export type RoxyHexagram = {
-  number?: number;        // 1..64
-  symbol?: string;        // unicode hexagram glyph
+  number?: number; // 1..64
+  symbol?: string; // unicode hexagram glyph
   pinyin?: string;
   // Raw english fields (judgment, image, interpretation) are NOT shown to
   // the user. UI uses our local Hungarian text keyed by `number`.
@@ -249,15 +287,18 @@ export function normalizeRoxyIching(raw: unknown): RoxyIchingCast {
   return {
     primary: pickHex(r.hexagram ?? r.primary),
     resulting: pickHex(r.resultingHexagram ?? r.resulting),
-    changingLines: Array.isArray(r.changingLinePositions) ? (r.changingLinePositions as number[]) :
-                   Array.isArray(r.changingLines) ? (r.changingLines as number[]) : undefined,
+    changingLines: Array.isArray(r.changingLinePositions)
+      ? (r.changingLinePositions as number[])
+      : Array.isArray(r.changingLines)
+        ? (r.changingLines as number[])
+        : undefined,
   };
 }
 
 // ─── Biorhythm ─────────────────────────────────────────────────────────────
 
 export type RoxyBiorhythm = {
-  physical?: number;     // -1..1
+  physical?: number; // -1..1
   emotional?: number;
   intellectual?: number;
 };
@@ -266,7 +307,10 @@ export function normalizeRoxyBiorhythm(raw: unknown): RoxyBiorhythm {
   if (!raw || typeof raw !== "object") return {};
   const r = raw as Record<string, unknown>;
   const data = (r.data && typeof r.data === "object" ? r.data : r) as Record<string, unknown>;
-  const cycles = (data.cycles && typeof data.cycles === "object" ? data.cycles : data) as Record<string, unknown>;
+  const cycles = (data.cycles && typeof data.cycles === "object" ? data.cycles : data) as Record<
+    string,
+    unknown
+  >;
   return {
     physical: pickNumber(cycles, ["physical"]),
     emotional: pickNumber(cycles, ["emotional"]),
@@ -290,8 +334,8 @@ export type RoxyHoroscope = {
   energyRating?: number;
   luckyNumber?: number;
   luckyColor?: string;
-  moonPhase?: string;       // english
-  moonSign?: string;        // english lowercase sign
+  moonPhase?: string; // english
+  moonSign?: string; // english lowercase sign
 };
 
 export function normalizeRoxyHoroscope(raw: unknown): RoxyHoroscope {
@@ -310,14 +354,33 @@ export function normalizeRoxyHoroscope(raw: unknown): RoxyHoroscope {
 // Hungarian translations of the small, controlled vocabulary we render.
 
 export const SIGN_HU: Record<string, string> = {
-  aries: "Kos", taurus: "Bika", gemini: "Ikrek", cancer: "Rák",
-  leo: "Oroszlán", virgo: "Szűz", libra: "Mérleg", scorpio: "Skorpió",
-  sagittarius: "Nyilas", capricorn: "Bak", aquarius: "Vízöntő", pisces: "Halak",
+  aries: "Kos",
+  taurus: "Bika",
+  gemini: "Ikrek",
+  cancer: "Rák",
+  leo: "Oroszlán",
+  virgo: "Szűz",
+  libra: "Mérleg",
+  scorpio: "Skorpió",
+  sagittarius: "Nyilas",
+  capricorn: "Bak",
+  aquarius: "Vízöntő",
+  pisces: "Halak",
 };
 
 export const SIGNS_HU_ORDERED = [
-  "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-  "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
 ] as const;
 
 // Determine zodiac sign from an ISO birth date (YYYY-MM-DD). Uses tropical
@@ -371,50 +434,60 @@ export function normalizeRoxyAngel(raw: unknown): RoxyAngel {
   const r = raw as Record<string, unknown>;
   const data = (r.data && typeof r.data === "object" ? r.data : r) as Record<string, unknown>;
   return {
-    number: typeof data.number === "string" ? data.number :
-            typeof data.number === "number" ? String(data.number) : undefined,
-    rootNumber: pickNumber(data, ["rootNumber", "root_number", "digitRoot", "digit_root", "reduced"]),
+    number:
+      typeof data.number === "string"
+        ? data.number
+        : typeof data.number === "number"
+          ? String(data.number)
+          : undefined,
+    rootNumber: pickNumber(data, [
+      "rootNumber",
+      "root_number",
+      "digitRoot",
+      "digit_root",
+      "reduced",
+    ]),
   };
 }
 
 // ─── Crystals ──────────────────────────────────────────────────────────────
 
 export type RoxyCrystal = {
-  name?: string;        // english crystal name — kept for badge only
+  name?: string; // english crystal name — kept for badge only
   hungarianName?: string;
 };
 
 const CRYSTAL_NAME_HU: Record<string, string> = {
-  "amethyst": "Ametiszt",
+  amethyst: "Ametiszt",
   "rose quartz": "Rózsakvarc",
   "clear quartz": "Hegyikristály",
-  "citrine": "Citrin",
-  "carnelian": "Karneol",
-  "obsidian": "Obszidián",
-  "moonstone": "Holdkő",
-  "labradorite": "Labradorit",
+  citrine: "Citrin",
+  carnelian: "Karneol",
+  obsidian: "Obszidián",
+  moonstone: "Holdkő",
+  labradorite: "Labradorit",
   "lapis lazuli": "Lapis lazuli",
   "tiger's eye": "Tigrisszem",
   "tigers eye": "Tigrisszem",
   "black tourmaline": "Fekete turmalin",
-  "selenite": "Szelenit",
-  "fluorite": "Fluorit",
-  "malachite": "Malachit",
-  "pyrite": "Pirit",
-  "hematite": "Hematit",
-  "jade": "Jade",
-  "agate": "Achát",
-  "garnet": "Gránát",
-  "aquamarine": "Akvamarin",
-  "emerald": "Smaragd",
-  "sapphire": "Zafír",
-  "ruby": "Rubin",
-  "topaz": "Topáz",
-  "opal": "Opál",
-  "turquoise": "Türkiz",
-  "peridot": "Peridot",
-  "onyx": "Ónix",
-  "diamond": "Gyémánt",
+  selenite: "Szelenit",
+  fluorite: "Fluorit",
+  malachite: "Malachit",
+  pyrite: "Pirit",
+  hematite: "Hematit",
+  jade: "Jade",
+  agate: "Achát",
+  garnet: "Gránát",
+  aquamarine: "Akvamarin",
+  emerald: "Smaragd",
+  sapphire: "Zafír",
+  ruby: "Rubin",
+  topaz: "Topáz",
+  opal: "Opál",
+  turquoise: "Türkiz",
+  peridot: "Peridot",
+  onyx: "Ónix",
+  diamond: "Gyémánt",
 };
 
 export function normalizeRoxyCrystal(raw: unknown): RoxyCrystal {
@@ -424,7 +497,11 @@ export function normalizeRoxyCrystal(raw: unknown): RoxyCrystal {
   // Roxy can return a single crystal object or an array; we take the first.
   let candidate: Record<string, unknown> | null = null;
   if (typeof data.name === "string") candidate = data;
-  else if (Array.isArray(data.crystals) && data.crystals.length > 0 && typeof data.crystals[0] === "object") {
+  else if (
+    Array.isArray(data.crystals) &&
+    data.crystals.length > 0 &&
+    typeof data.crystals[0] === "object"
+  ) {
     candidate = data.crystals[0] as Record<string, unknown>;
   } else if (Array.isArray(r) && r.length > 0 && typeof (r as unknown[])[0] === "object") {
     candidate = (r as unknown[])[0] as Record<string, unknown>;

@@ -26,9 +26,28 @@ import vilag from "@/assets/tarot/vilag.jpg";
 import backArt from "@/assets/tarot/back.jpg";
 
 export const CARD_ART: Record<string, string> = {
-  bolond, mago, fopapno, csaszarno, csaszar, fopap, szeretok, diadalszeker,
-  ero, remete, kerek, igazsag, akasztott, halal, mertekletesseg, ordog,
-  torony, csillag, hold, nap, itelet, vilag,
+  bolond,
+  mago,
+  fopapno,
+  csaszarno,
+  csaszar,
+  fopap,
+  szeretok,
+  diadalszeker,
+  ero,
+  remete,
+  kerek,
+  igazsag,
+  akasztott,
+  halal,
+  mertekletesseg,
+  ordog,
+  torony,
+  csillag,
+  hold,
+  nap,
+  itelet,
+  vilag,
 };
 
 export const CARD_BACK_ART = backArt;
@@ -54,8 +73,15 @@ export function CardBack({ className = "" }: { className?: string }) {
   );
 }
 
-export function CardFace({ card, label, className = "" }:
-  { card: TCard; label?: string; className?: string }) {
+export function CardFace({
+  card,
+  label,
+  className = "",
+}: {
+  card: TCard;
+  label?: string;
+  className?: string;
+}) {
   const art = CARD_ART[card.id] ?? backArt;
   return (
     <div className={`tarot-card ${className}`} style={{ animation: "reveal-flip .8s ease-out" }}>
@@ -105,13 +131,27 @@ export function CardFace({ card, label, className = "" }:
   );
 }
 
-export function FlipCard({ card, label, autoReveal = false, onReveal }:
-  { card: TCard; label?: string; autoReveal?: boolean; onReveal?: () => void }) {
+export function FlipCard({
+  card,
+  label,
+  autoReveal = false,
+  onReveal,
+}: {
+  card: TCard;
+  label?: string;
+  autoReveal?: boolean;
+  onReveal?: () => void;
+}) {
   const [revealed, setRevealed] = useState(autoReveal);
   return (
     <button
       type="button"
-      onClick={() => { if (!revealed) { setRevealed(true); onReveal?.(); } }}
+      onClick={() => {
+        if (!revealed) {
+          setRevealed(true);
+          onReveal?.();
+        }
+      }}
       className="block w-full text-left focus:outline-none"
       aria-label={revealed ? card.name : "Lap felfedése"}
     >

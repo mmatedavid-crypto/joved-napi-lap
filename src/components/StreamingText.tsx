@@ -17,13 +17,26 @@ type Props = {
  * from the server function — we only stream it visually so the user gets
  * an "alive" feeling instead of a blank wait.
  */
-export function StreamingText({ text, speed = 2, interval = 18, className, as = "div", instant = false }: Props) {
-  const [shown, setShown] = useState(instant ? text ?? "" : "");
+export function StreamingText({
+  text,
+  speed = 2,
+  interval = 18,
+  className,
+  as = "div",
+  instant = false,
+}: Props) {
+  const [shown, setShown] = useState(instant ? (text ?? "") : "");
   const lastText = useRef<string | undefined | null>(null);
 
   useEffect(() => {
-    if (text == null) { setShown(""); return; }
-    if (instant) { setShown(text); return; }
+    if (text == null) {
+      setShown("");
+      return;
+    }
+    if (instant) {
+      setShown(text);
+      return;
+    }
     // restart only when the source text actually changes
     if (lastText.current === text) return;
     lastText.current = text;
@@ -39,10 +52,36 @@ export function StreamingText({ text, speed = 2, interval = 18, className, as = 
 
   const isStreaming = !instant && text != null && shown.length < text.length;
   const caret = isStreaming ? (
-    <span className="inline-block w-[2px] h-[1em] -mb-[2px] ml-[2px] bg-gold/80 align-middle animate-pulse" aria-hidden="true" />
+    <span
+      className="inline-block w-[2px] h-[1em] -mb-[2px] ml-[2px] bg-gold/80 align-middle animate-pulse"
+      aria-hidden="true"
+    />
   ) : null;
-  if (as === "p") return <p className={className}>{shown}{caret}</p>;
-  if (as === "span") return <span className={className}>{shown}{caret}</span>;
-  if (as === "em") return <em className={className}>{shown}{caret}</em>;
-  return <div className={className}>{shown}{caret}</div>;
+  if (as === "p")
+    return (
+      <p className={className}>
+        {shown}
+        {caret}
+      </p>
+    );
+  if (as === "span")
+    return (
+      <span className={className}>
+        {shown}
+        {caret}
+      </span>
+    );
+  if (as === "em")
+    return (
+      <em className={className}>
+        {shown}
+        {caret}
+      </em>
+    );
+  return (
+    <div className={className}>
+      {shown}
+      {caret}
+    </div>
+  );
 }

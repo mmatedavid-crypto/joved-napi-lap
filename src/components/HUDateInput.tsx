@@ -62,7 +62,8 @@ export function HUDateInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [y, mo, d, dim]);
 
-  const inp = "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-3 py-3 text-ivory text-center tabular-nums tracking-wider focus:border-gold outline-none";
+  const inp =
+    "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-3 py-3 text-ivory text-center tabular-nums tracking-wider focus:border-gold outline-none";
 
   function onlyDigits(s: string, max: number) {
     return s.replace(/\D/g, "").slice(0, max);
@@ -72,7 +73,8 @@ export function HUDateInput({
     <div>
       {label && (
         <label className="block text-sm text-ivory/80 mb-2">
-          {label}{required && <span className="text-gold/80"> *</span>}
+          {label}
+          {required && <span className="text-gold/80"> *</span>}
         </label>
       )}
       <div className="grid grid-cols-[1.4fr_1fr_1fr] gap-2">

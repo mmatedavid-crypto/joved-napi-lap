@@ -117,7 +117,9 @@ export function reduceAngel(num: string): number {
   if (n === "11" || n === "22" || n === "33") return Number(n);
   let s = n.split("").reduce((a, b) => a + Number(b), 0);
   while (s > 9 && s !== 11 && s !== 22 && s !== 33) {
-    s = String(s).split("").reduce((a, b) => a + Number(b), 0);
+    s = String(s)
+      .split("")
+      .reduce((a, b) => a + Number(b), 0);
   }
   return s;
 }

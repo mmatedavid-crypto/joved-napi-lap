@@ -8,13 +8,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | { [k: string]: JsonValue }
-  | JsonValue[];
+type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
 
 export type RoxyEnvelope = {
   ok: boolean;
@@ -25,8 +19,7 @@ export type RoxyEnvelope = {
   message?: string;
 };
 
-const FAIL_MESSAGE =
-  "Most nem sikerült lekérni a háttértudást. Próbáld újra később.";
+const FAIL_MESSAGE = "Most nem sikerült lekérni a háttértudást. Próbáld újra később.";
 
 async function runRoxy(opts: {
   endpoint: string;
@@ -55,8 +48,18 @@ async function runRoxy(opts: {
 const BirthDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD");
 const NameSchema = z.string().min(1).max(120);
 const SignSchema = z.enum([
-  "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-  "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
 ]);
 const SeedSchema = z.string().min(1).max(64);
 
@@ -265,7 +268,15 @@ export const roxyAngelNumberLookup = createServerFn({ method: "POST" })
 // ─── Dreams ───────────────────────────────────────────────────────────────
 // GET /dreams/symbols/{slug}  (kebab-case english slug)
 export const roxyDreamSymbol = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ slug: z.string().min(1).max(64).regex(/^[a-z0-9-]+$/) }).parse)
+  .inputValidator(
+    z.object({
+      slug: z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[a-z0-9-]+$/),
+    }).parse,
+  )
   .handler(async ({ data }) =>
     runRoxy({
       endpoint: `/dreams/symbols/${encodeURIComponent(data.slug)}`,
@@ -320,13 +331,13 @@ export const roxyLocationSearch = createServerFn({ method: "POST" })
 // (sign, dob, dateKey, name) for 24h in api_cache so repeated visits are free.
 
 export type PersonalBriefingHU = {
-  oneLine: string;            // 1 mondat összegzés
+  oneLine: string; // 1 mondat összegzés
   horoMood: string;
   horoLove: string;
   horoWork: string;
   horoWarn: string;
   cardTitle: string;
-  cardLine: string;           // 1-2 mondat a lapról, mai értelemben
+  cardLine: string; // 1-2 mondat a lapról, mai értelemben
   bioLine?: string;
   angelTitle?: string;
   angelMessage?: string;
@@ -352,139 +363,193 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
         .optional(),
     }).parse,
   )
-  .handler(async ({ data }): Promise<{
-    ok: boolean;
-    cached: boolean;
-    fallbackUsed: boolean;
-    briefing: PersonalBriefingHU | null;
-    message?: string;
-  }> => {
-    const { callRoxy } = await import("./roxy.server");
-    const { aiJSON } = await import("./ai.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      fallbackUsed: boolean;
+      briefing: PersonalBriefingHU | null;
+      message?: string;
+    }> => {
+      const { callRoxy } = await import("./roxy.server");
+      const { aiJSON } = await import("./ai.server");
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const nameKey = (data.name ?? "").toLowerCase().trim();
-    const cardKey = data.drawnCard?.id ?? "no-card";
-    const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}:${cardKey}`;
+      const nameKey = (data.name ?? "").toLowerCase().trim();
+      const cardKey = data.drawnCard?.id ?? "no-card";
+      const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}:${cardKey}`;
 
-    // 1. Cache lookup (24h)
-    try {
-      const { data: row } = await supabaseAdmin
-        .from("api_cache")
-        .select("response_payload, expires_at")
-        .eq("cache_key", cacheKey)
-        .maybeSingle();
-      if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
-        return { ok: true, cached: true, fallbackUsed: false, briefing: row.response_payload as PersonalBriefingHU };
+      // 1. Cache lookup (24h)
+      try {
+        const { data: row } = await supabaseAdmin
+          .from("api_cache")
+          .select("response_payload, expires_at")
+          .eq("cache_key", cacheKey)
+          .maybeSingle();
+        if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
+          return {
+            ok: true,
+            cached: true,
+            fallbackUsed: false,
+            briefing: row.response_payload as PersonalBriefingHU,
+          };
+        }
+      } catch {
+        /* ignore */
       }
-    } catch { /* ignore */ }
 
-    // 2. Pull raw Roxy data in parallel.
-    const digits = data.dateKey.replace(/-/g, "");
-    const month = Number(data.dateKey.slice(5, 7));
-    // Tarot card: ONLY use what the user personally drew. We never auto-pull
-    // a random card from Roxy for the briefing — that would feel impersonal.
-    const [horoR, bioR, angelR, crysR] = await Promise.allSettled([
-      callRoxy({ endpoint: `/astrology/horoscope/${data.sign}/daily`, method: "GET", cacheKey: `astro:daily:${data.sign}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
-      callRoxy({ endpoint: "/biorhythm/daily", body: { birthDate: data.birthDate, date: data.dateKey }, cacheKey: `bio:daily:${data.birthDate}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
-      callRoxy({ endpoint: `/angel-numbers/lookup?number=${digits}`, method: "GET", cacheKey: `angel:${digits}`, ttlSeconds: 60 * 60 * 24 * 180 }),
-      callRoxy({ endpoint: `/crystals/birthstone/${month}`, method: "GET", cacheKey: `crystal:birth:${month}`, ttlSeconds: 60 * 60 * 24 * 180 }),
-    ]);
+      // 2. Pull raw Roxy data in parallel.
+      const digits = data.dateKey.replace(/-/g, "");
+      const month = Number(data.dateKey.slice(5, 7));
+      // Tarot card: ONLY use what the user personally drew. We never auto-pull
+      // a random card from Roxy for the briefing — that would feel impersonal.
+      const [horoR, bioR, angelR, crysR] = await Promise.allSettled([
+        callRoxy({
+          endpoint: `/astrology/horoscope/${data.sign}/daily`,
+          method: "GET",
+          cacheKey: `astro:daily:${data.sign}:${data.dateKey}`,
+          ttlSeconds: 60 * 60 * 24,
+        }),
+        callRoxy({
+          endpoint: "/biorhythm/daily",
+          body: { birthDate: data.birthDate, date: data.dateKey },
+          cacheKey: `bio:daily:${data.birthDate}:${data.dateKey}`,
+          ttlSeconds: 60 * 60 * 24,
+        }),
+        callRoxy({
+          endpoint: `/angel-numbers/lookup?number=${digits}`,
+          method: "GET",
+          cacheKey: `angel:${digits}`,
+          ttlSeconds: 60 * 60 * 24 * 180,
+        }),
+        callRoxy({
+          endpoint: `/crystals/birthstone/${month}`,
+          method: "GET",
+          cacheKey: `crystal:birth:${month}`,
+          ttlSeconds: 60 * 60 * 24 * 180,
+        }),
+      ]);
 
-    const pick = <T>(r: PromiseSettledResult<{ ok: boolean; data: T | null }>): T | null =>
-      r.status === "fulfilled" && r.value.ok ? (r.value.data as T) : null;
+      const pick = <T>(r: PromiseSettledResult<{ ok: boolean; data: T | null }>): T | null =>
+        r.status === "fulfilled" && r.value.ok ? (r.value.data as T) : null;
 
-    const raw = {
-      tarot: data.drawnCard
-        ? {
-            source: "user-drawn",
-            name: data.drawnCard.name,
-            keywords: data.drawnCard.keywords ?? [],
-            huGeneral: data.drawnCard.general ?? null,
-            huDaily: data.drawnCard.daily ?? null,
-          }
-        : null,
-      horoscope: pick(horoR),
-      biorhythm: pick(bioR),
-      angel: pick(angelR),
-      crystal: pick(crysR),
-    };
+      const raw = {
+        tarot: data.drawnCard
+          ? {
+              source: "user-drawn",
+              name: data.drawnCard.name,
+              keywords: data.drawnCard.keywords ?? [],
+              huGeneral: data.drawnCard.general ?? null,
+              huDaily: data.drawnCard.daily ?? null,
+            }
+          : null,
+        horoscope: pick(horoR),
+        biorhythm: pick(bioR),
+        angel: pick(angelR),
+        crystal: pick(crysR),
+      };
 
-    const hasAny = Object.values(raw).some((v) => v != null);
-    if (!hasAny) {
-      return { ok: false, cached: false, fallbackUsed: true, briefing: null, message: "Most nem értem el a háttértudást." };
-    }
+      const hasAny = Object.values(raw).some((v) => v != null);
+      if (!hasAny) {
+        return {
+          ok: false,
+          cached: false,
+          fallbackUsed: true,
+          briefing: null,
+          message: "Most nem értem el a háttértudást.",
+        };
+      }
 
-    // 3. AI rewrite into warm Hungarian copy.
-    const sys = [
-      "Te a Jövőd.hu spirituális napló írója vagy.",
-      "MINDIG magyarul írj, soha ne hagyj angol szót a kimenetben.",
-      "Te FORDÍTÓ ÉS ÖSSZEFOGLALÓ vagy, NEM költő. Csak abból dolgozz, ami a 'nyersAdatok'-ban szerepel — ne találj ki új helyzetet, új tanácsot, új szimbólumot, új érzelmet.",
-      "Ha egy nyers mező hiányzik vagy üres, HAGYD KI a kimenetből (ne tölts fel közhellyel, ne pótold magadtól).",
-      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt — NEM közhelyes és NEM coachos.",
-      "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz'. Ha a forrás ilyesmit sugall, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
-      "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj. Ne mondj konkrét jövő-eseményt, amit a forrás nem említ.",
-      "Hossz: minden mező 1-2 mondat, semmi felsorolás. 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
-      "A 'cardTitle' SZÓ SZERINT a 'nyersAdatok.tarot.name' értéke. A 'cardLine' a 'nyersAdatok.tarot.huGeneral' és 'huDaily' tartalmából készül — természetes magyar újrafogalmazás, semmi új tartalom.",
-      "A horoMood/Love/Work/Warn mezők a 'nyersAdatok.horoscope' angol mezőiből készülnek — folyékony magyarra fordítva, csak azt, ami a forrásban van.",
-      "Ha bizonytalan vagy egy konkrét részletben, inkább MARADJ ÁLTALÁNOSABB a forrás keretén belül, mintsem hogy kitalálj.",
-      "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
-    ].join(" ");
+      // 3. AI rewrite into warm Hungarian copy.
+      const sys = [
+        "Te a Jövőd.hu spirituális napló írója vagy.",
+        "MINDIG magyarul írj, soha ne hagyj angol szót a kimenetben.",
+        "Te FORDÍTÓ ÉS ÖSSZEFOGLALÓ vagy, NEM költő. Csak abból dolgozz, ami a 'nyersAdatok'-ban szerepel — ne találj ki új helyzetet, új tanácsot, új szimbólumot, új érzelmet.",
+        "Ha egy nyers mező hiányzik vagy üres, HAGYD KI a kimenetből (ne tölts fel közhellyel, ne pótold magadtól).",
+        "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt — NEM közhelyes és NEM coachos.",
+        "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz'. Ha a forrás ilyesmit sugall, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
+        "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj. Ne mondj konkrét jövő-eseményt, amit a forrás nem említ.",
+        "Hossz: minden mező 1-2 mondat, semmi felsorolás. 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
+        "A 'cardTitle' SZÓ SZERINT a 'nyersAdatok.tarot.name' értéke. A 'cardLine' a 'nyersAdatok.tarot.huGeneral' és 'huDaily' tartalmából készül — természetes magyar újrafogalmazás, semmi új tartalom.",
+        "A horoMood/Love/Work/Warn mezők a 'nyersAdatok.horoscope' angol mezőiből készülnek — folyékony magyarra fordítva, csak azt, ami a forrásban van.",
+        "Ha bizonytalan vagy egy konkrét részletben, inkább MARADJ ÁLTALÁNOSABB a forrás keretén belül, mintsem hogy kitalálj.",
+        "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
+      ].join(" ");
 
-    const userPayload = {
-      kerdezo: { keresztnev: data.name ?? null, csillagjegy: data.sign, datum: data.dateKey },
-      nyersAdatok: raw,
-    };
+      const userPayload = {
+        kerdezo: { keresztnev: data.name ?? null, csillagjegy: data.sign, datum: data.dateKey },
+        nyersAdatok: raw,
+      };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        oneLine: { type: "string" },
-        horoMood: { type: "string" },
-        horoLove: { type: "string" },
-        horoWork: { type: "string" },
-        horoWarn: { type: "string" },
-        cardTitle: { type: "string" },
-        cardLine: { type: "string" },
-        bioLine: { type: "string" },
-        angelTitle: { type: "string" },
-        angelMessage: { type: "string" },
-        crystalName: { type: "string" },
-        crystalLine: { type: "string" },
-      },
-      required: ["oneLine", "horoMood", "horoLove", "horoWork", "horoWarn", "cardTitle", "cardLine"],
-    };
-
-    const ai = await aiJSON<PersonalBriefingHU>({
-      system: sys,
-      user: "Készíts ebből a nyers, vegyes angol forrásból egy mai magyar olvasatot a felhasználónak.\n\n" +
-        JSON.stringify(userPayload),
-      schemaName: "PersonalBriefingHU",
-      schema,
-    });
-
-    if (!ai.ok || !ai.data) {
-      return { ok: false, cached: false, fallbackUsed: true, briefing: null, message: ai.error ?? "AI hiba" };
-    }
-
-    // 4. Cache 24h.
-    try {
-      await supabaseAdmin.from("api_cache").upsert(
-        {
-          provider: "roxy+ai",
-          endpoint: "/personal/daily-briefing",
-          cache_key: cacheKey,
-          request_payload: { sign: data.sign, dateKey: data.dateKey } as never,
-          response_payload: ai.data as never,
-          expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          oneLine: { type: "string" },
+          horoMood: { type: "string" },
+          horoLove: { type: "string" },
+          horoWork: { type: "string" },
+          horoWarn: { type: "string" },
+          cardTitle: { type: "string" },
+          cardLine: { type: "string" },
+          bioLine: { type: "string" },
+          angelTitle: { type: "string" },
+          angelMessage: { type: "string" },
+          crystalName: { type: "string" },
+          crystalLine: { type: "string" },
         },
-        { onConflict: "cache_key" },
-      );
-    } catch { /* ignore */ }
+        required: [
+          "oneLine",
+          "horoMood",
+          "horoLove",
+          "horoWork",
+          "horoWarn",
+          "cardTitle",
+          "cardLine",
+        ],
+      };
 
-    return { ok: true, cached: false, fallbackUsed: false, briefing: ai.data };
-  });
+      const ai = await aiJSON<PersonalBriefingHU>({
+        system: sys,
+        user:
+          "Készíts ebből a nyers, vegyes angol forrásból egy mai magyar olvasatot a felhasználónak.\n\n" +
+          JSON.stringify(userPayload),
+        schemaName: "PersonalBriefingHU",
+        schema,
+      });
+
+      if (!ai.ok || !ai.data) {
+        return {
+          ok: false,
+          cached: false,
+          fallbackUsed: true,
+          briefing: null,
+          message: ai.error ?? "AI hiba",
+        };
+      }
+
+      // 4. Cache 24h.
+      try {
+        await supabaseAdmin.from("api_cache").upsert(
+          {
+            provider: "roxy+ai",
+            endpoint: "/personal/daily-briefing",
+            cache_key: cacheKey,
+            request_payload: { sign: data.sign, dateKey: data.dateKey } as never,
+            response_payload: ai.data as never,
+            expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+          },
+          { onConflict: "cache_key" },
+        );
+      } catch {
+        /* ignore */
+      }
+
+      return { ok: true, cached: false, fallbackUsed: false, briefing: ai.data };
+    },
+  );
 
 // ─── Generic AI Tarot reading (HU) ───────────────────────────────────────
 // Single helper used by mai-lap, harom-lap, randi-elott, dontes-elott.
@@ -531,115 +596,123 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       dateKey: z.string().min(8).max(20).optional(),
     }).parse,
   )
-  .handler(async ({ data }): Promise<{
-    ok: boolean;
-    cached: boolean;
-    reading: TarotReadingHU | null;
-    message?: string;
-  }> => {
-    const { aiJSON } = await import("./ai.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: TarotReadingHU | null;
+      message?: string;
+    }> => {
+      const { aiJSON } = await import("./ai.server");
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const idsKey = data.cards.map((c) => c.id).join("+");
-    const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
-    const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-    const cacheKey = `aitarot-v2:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const idsKey = data.cards.map((c) => c.id).join("+");
+      const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
+      const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
+      const cacheKey = `aitarot-v2:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
-    try {
-      const { data: row } = await supabaseAdmin
-        .from("api_cache")
-        .select("response_payload, expires_at")
-        .eq("cache_key", cacheKey)
-        .maybeSingle();
-      if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
-        return { ok: true, cached: true, reading: row.response_payload as TarotReadingHU };
+      try {
+        const { data: row } = await supabaseAdmin
+          .from("api_cache")
+          .select("response_payload, expires_at")
+          .eq("cache_key", cacheKey)
+          .maybeSingle();
+        if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
+          return { ok: true, cached: true, reading: row.response_payload as TarotReadingHU };
+        }
+      } catch {
+        /* ignore */
       }
-    } catch { /* ignore */ }
 
-    const sys = [
-      "Te a Jövőd.hu spirituális napló írója vagy.",
-      "MINDIG magyarul írj, sose maradjon angol szó a kimenetben.",
-      "A FELADATOD: a kihúzott lap(ok) jelentését (general/love/decision/warning/daily forrásmezők) ALKALMAZD a felhasználó konkrét helyzetére (kategória + kérdés). A lap a LENCSE, a helyzet a TÉMA. Minden mondatod a megadott helyzetről szóljon, NE a lapról általában.",
-      "PÉLDA: ha kategória='randi előtt' és a Szeretők lap jött, NE azt írd, hogy 'a Szeretők a választásokról szól', hanem azt, hogy 'a randin most ott lesz egy belső választás — figyelj, melyik részed válaszol amikor megszólal'. Konkrétan a randira vonatkoztatva.",
-      "PÉLDA: ha kategória='nem ír vissza' és a Remete lap jött, ne 'a Remete elvonulást jelent' — hanem 'most lehet, hogy ő épp magában van, nem ellened; ez a csend nem feltétlen elutasítás'. A helyzetre fordítva.",
-      "SOHA ne találj ki új jövő-eseményt, új konkrét tényt a másik emberről (mit gondol, mit fog tenni). A forrás KERETÉT alkalmazd a helyzetre, de tényeket ne állíts a másikról.",
-      "Ha egy forrásmező üres / hiányzik, HAGYD KI az adott kimeneti mezőt. Ne tölts fel közhellyel.",
-      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt. NEM közhelyes és NEM coachos.",
-      "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ezek helyett a forrás konkrét tartalmából építkezz.",
-      "Soha ne ígérj orvosi, jogi, pénzügyi eredményt. Ne diagnosztizálj.",
-      "Hossz: minden mező 2-3 mondat, semmi felsorolás. 'oneLine' EGY tömör mondat, max 20 szó, ne kezdődjön 'Ma' szóval, és KONKRÉTAN a helyzetre szóljon.",
-      "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' közvetlenül a kérdésre válaszoljon — a lap nyelvén, de a kérdés tárgyáról.",
-      "A 'three' spread: past=cards[0] (honnan jött ez a HELYZET), present=cards[1] (mi van most a HELYZETBEN), future=cards[2] (merre mozdul a HELYZET); together=hogyan kapcsolódik a három a helyzethez.",
-      "A 'decision' spread: pro/contra a kategóriához konkrétan kötve — mi szól mellette / ellene EBBEN a döntésben, a lap energiája alapján. 'nextStep' egy konkrét, kis lépés ebben a helyzetben.",
-      "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mi van köztetek EBBEN a helyzetben; them=ő hogy érkezik EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
-      "A 'love-1' / 'decision-1' / 'single' spread esetén a 'cardMessage' EGYÉRTELMŰEN a megadott kategóriára/kérdésre szóljon: 'ebben a helyzetben…', 'ezen a randin…', 'erre a döntésre nézve…' — ne általános laptanulság.",
-      "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
-    ].join(" ");
+      const sys = [
+        "Te a Jövőd.hu spirituális napló írója vagy.",
+        "MINDIG magyarul írj, sose maradjon angol szó a kimenetben.",
+        "A FELADATOD: a kihúzott lap(ok) jelentését (general/love/decision/warning/daily forrásmezők) ALKALMAZD a felhasználó konkrét helyzetére (kategória + kérdés). A lap a LENCSE, a helyzet a TÉMA. Minden mondatod a megadott helyzetről szóljon, NE a lapról általában.",
+        "PÉLDA: ha kategória='randi előtt' és a Szeretők lap jött, NE azt írd, hogy 'a Szeretők a választásokról szól', hanem azt, hogy 'a randin most ott lesz egy belső választás — figyelj, melyik részed válaszol amikor megszólal'. Konkrétan a randira vonatkoztatva.",
+        "PÉLDA: ha kategória='nem ír vissza' és a Remete lap jött, ne 'a Remete elvonulást jelent' — hanem 'most lehet, hogy ő épp magában van, nem ellened; ez a csend nem feltétlen elutasítás'. A helyzetre fordítva.",
+        "SOHA ne találj ki új jövő-eseményt, új konkrét tényt a másik emberről (mit gondol, mit fog tenni). A forrás KERETÉT alkalmazd a helyzetre, de tényeket ne állíts a másikról.",
+        "Ha egy forrásmező üres / hiányzik, HAGYD KI az adott kimeneti mezőt. Ne tölts fel közhellyel.",
+        "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt. NEM közhelyes és NEM coachos.",
+        "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ezek helyett a forrás konkrét tartalmából építkezz.",
+        "Soha ne ígérj orvosi, jogi, pénzügyi eredményt. Ne diagnosztizálj.",
+        "Hossz: minden mező 2-3 mondat, semmi felsorolás. 'oneLine' EGY tömör mondat, max 20 szó, ne kezdődjön 'Ma' szóval, és KONKRÉTAN a helyzetre szóljon.",
+        "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' közvetlenül a kérdésre válaszoljon — a lap nyelvén, de a kérdés tárgyáról.",
+        "A 'three' spread: past=cards[0] (honnan jött ez a HELYZET), present=cards[1] (mi van most a HELYZETBEN), future=cards[2] (merre mozdul a HELYZET); together=hogyan kapcsolódik a három a helyzethez.",
+        "A 'decision' spread: pro/contra a kategóriához konkrétan kötve — mi szól mellette / ellene EBBEN a döntésben, a lap energiája alapján. 'nextStep' egy konkrét, kis lépés ebben a helyzetben.",
+        "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mi van köztetek EBBEN a helyzetben; them=ő hogy érkezik EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
+        "A 'love-1' / 'decision-1' / 'single' spread esetén a 'cardMessage' EGYÉRTELMŰEN a megadott kategóriára/kérdésre szóljon: 'ebben a helyzetben…', 'ezen a randin…', 'erre a döntésre nézve…' — ne általános laptanulság.",
+        "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
+      ].join(" ");
 
-    const userPayload = {
-      spread: data.spread,
-      kerdes: data.question ?? null,
-      kategoria: data.category ?? null,
-      cards: data.cards.map((c, i) => ({
-        sorszam: i,
-        nev: c.name,
-        kulcsszavak: c.keywords ?? [],
-        general: c.general ?? null,
-        love: c.love ?? null,
-        decision: c.decision ?? null,
-        warning: c.warning ?? null,
-        daily: c.daily ?? null,
-      })),
-    };
+      const userPayload = {
+        spread: data.spread,
+        kerdes: data.question ?? null,
+        kategoria: data.category ?? null,
+        cards: data.cards.map((c, i) => ({
+          sorszam: i,
+          nev: c.name,
+          kulcsszavak: c.keywords ?? [],
+          general: c.general ?? null,
+          love: c.love ?? null,
+          decision: c.decision ?? null,
+          warning: c.warning ?? null,
+          daily: c.daily ?? null,
+        })),
+      };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        oneLine: { type: "string" },
-        intro: { type: "string" },
-        past: { type: "string" },
-        present: { type: "string" },
-        future: { type: "string" },
-        together: { type: "string" },
-        warn: { type: "string" },
-        pro: { type: "string" },
-        contra: { type: "string" },
-        nextStep: { type: "string" },
-        you: { type: "string" },
-        between: { type: "string" },
-        them: { type: "string" },
-        cardMessage: { type: "string" },
-      },
-      required: ["oneLine"],
-    };
-
-    const ai = await aiJSON<TarotReadingHU>({
-      system: sys,
-      user:
-        "Írj a felhasználónak egy konkrét, személyes magyar olvasatot a kihúzott lap(ok)ról az alábbi adatokból. Csak azokat a mezőket töltsd ki, amelyek illenek a spread-hez.\n\n" +
-        JSON.stringify(userPayload),
-      schemaName: "TarotReadingHU",
-      schema,
-    });
-
-    if (!ai.ok || !ai.data) {
-      return { ok: false, cached: false, reading: null, message: ai.error ?? "AI hiba" };
-    }
-
-    try {
-      await supabaseAdmin.from("api_cache").upsert(
-        {
-          provider: "ai",
-          endpoint: "/ai/tarot-reading",
-          cache_key: cacheKey,
-          request_payload: { spread: data.spread, ids: idsKey } as never,
-          response_payload: ai.data as never,
-          expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          oneLine: { type: "string" },
+          intro: { type: "string" },
+          past: { type: "string" },
+          present: { type: "string" },
+          future: { type: "string" },
+          together: { type: "string" },
+          warn: { type: "string" },
+          pro: { type: "string" },
+          contra: { type: "string" },
+          nextStep: { type: "string" },
+          you: { type: "string" },
+          between: { type: "string" },
+          them: { type: "string" },
+          cardMessage: { type: "string" },
         },
-        { onConflict: "cache_key" },
-      );
-    } catch { /* ignore */ }
+        required: ["oneLine"],
+      };
 
-    return { ok: true, cached: false, reading: ai.data };
-  });
+      const ai = await aiJSON<TarotReadingHU>({
+        system: sys,
+        user:
+          "Írj a felhasználónak egy konkrét, személyes magyar olvasatot a kihúzott lap(ok)ról az alábbi adatokból. Csak azokat a mezőket töltsd ki, amelyek illenek a spread-hez.\n\n" +
+          JSON.stringify(userPayload),
+        schemaName: "TarotReadingHU",
+        schema,
+      });
+
+      if (!ai.ok || !ai.data) {
+        return { ok: false, cached: false, reading: null, message: ai.error ?? "AI hiba" };
+      }
+
+      try {
+        await supabaseAdmin.from("api_cache").upsert(
+          {
+            provider: "ai",
+            endpoint: "/ai/tarot-reading",
+            cache_key: cacheKey,
+            request_payload: { spread: data.spread, ids: idsKey } as never,
+            response_payload: ai.data as never,
+            expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+          },
+          { onConflict: "cache_key" },
+        );
+      } catch {
+        /* ignore */
+      }
+
+      return { ok: true, cached: false, reading: ai.data };
+    },
+  );

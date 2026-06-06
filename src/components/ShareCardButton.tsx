@@ -20,7 +20,15 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-function wrap(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, maxLines = 5) {
+function wrap(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  maxLines = 5,
+) {
   const words = text.split(/\s+/);
   let line = "";
   let lines: string[] = [];
@@ -93,7 +101,9 @@ async function buildShareImage(card: TarotCard, oneLine?: string, eyebrow?: stri
       ctx.strokeStyle = "rgba(212,175,122,0.65)";
       ctx.lineWidth = 3;
       ctx.strokeRect(cx, cy, cw, ch);
-    } catch { /* skip if image fails */ }
+    } catch {
+      /* skip if image fails */
+    }
   }
 
   // card name
@@ -134,7 +144,10 @@ export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
     try {
       const blob = await buildShareImage(card, oneLine, eyebrow);
       const file = new File([blob], `jovod-${card.id}.png`, { type: "image/png" });
-      const nav = navigator as Navigator & { canShare?: (data: ShareData) => boolean; share?: (data: ShareData) => Promise<void> };
+      const nav = navigator as Navigator & {
+        canShare?: (data: ShareData) => boolean;
+        share?: (data: ShareData) => Promise<void>;
+      };
       if (nav.canShare?.({ files: [file] }) && nav.share) {
         await nav.share({ files: [file], title: card.name, text: oneLine ?? "" });
       } else {
@@ -157,13 +170,28 @@ export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
   }
 
   return (
-    <button type="button" onClick={handle} disabled={busy} className="btn-ghost-gold inline-flex items-center gap-2">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <button
+      type="button"
+      onClick={handle}
+      disabled={busy}
+      className="btn-ghost-gold inline-flex items-center gap-2"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
         <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
         <path d="M16 6l-4-4-4 4" />
         <path d="M12 2v14" />
       </svg>
-      {busy ? "Készítem…" : status ?? "Megosztás / mentés"}
+      {busy ? "Készítem…" : (status ?? "Megosztás / mentés")}
     </button>
   );
 }

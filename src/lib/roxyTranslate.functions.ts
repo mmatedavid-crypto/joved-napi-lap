@@ -9,8 +9,18 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const SignSchema = z.enum([
-  "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-  "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
 ]);
 
 // Közös fordító system prompt. KULCS: nem talál ki, csak fordít.
@@ -38,7 +48,9 @@ async function readCache(key: string): Promise<unknown | null> {
     if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
       return row.response_payload;
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return null;
 }
 
@@ -56,7 +68,9 @@ async function writeCache(key: string, endpoint: string, payload: unknown, ttlSe
       },
       { onConflict: "cache_key" },
     );
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 async function translateWithAI<T>(opts: {
@@ -97,50 +111,65 @@ export type HoroscopeHU = {
 
 export const aiHoroscopeHU = createServerFn({ method: "POST" })
   .inputValidator(z.object({ sign: SignSchema, dateKey: z.string().min(8).max(20) }).parse)
-  .handler(async ({ data }): Promise<{ ok: boolean; cached: boolean; reading: HoroscopeHU | null; message?: string }> => {
-    const cacheKey = `aitr:horoscope:${data.sign}:${data.dateKey}`;
-    const cached = (await readCache(cacheKey)) as HoroscopeHU | null;
-    if (cached) return { ok: true, cached: true, reading: cached };
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: HoroscopeHU | null;
+      message?: string;
+    }> => {
+      const cacheKey = `aitr:horoscope:${data.sign}:${data.dateKey}`;
+      const cached = (await readCache(cacheKey)) as HoroscopeHU | null;
+      if (cached) return { ok: true, cached: true, reading: cached };
 
-    const { callRoxy } = await import("./roxy.server");
-    const r = await callRoxy<unknown>({
-      endpoint: `/astrology/horoscope/${data.sign}/daily`,
-      method: "GET",
-      cacheKey: `astro:daily:${data.sign}:${data.dateKey}`,
-      ttlSeconds: 60 * 60 * 24,
-    });
-    if (!r.ok || !r.data) return { ok: false, cached: false, reading: null, message: "Most nem értem el a horoszkóp adatot." };
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: `/astrology/horoscope/${data.sign}/daily`,
+        method: "GET",
+        cacheKey: `astro:daily:${data.sign}:${data.dateKey}`,
+        ttlSeconds: 60 * 60 * 24,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem értem el a horoszkóp adatot.",
+        };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        oneLine: { type: "string" },
-        mood: { type: "string" },
-        love: { type: "string" },
-        work: { type: "string" },
-        warn: { type: "string" },
-        luckyColor: { type: "string" },
-        moonPhase: { type: "string" },
-      },
-      required: ["oneLine"],
-    };
-    const t = await translateWithAI<HoroscopeHU>({
-      source: r.data,
-      domainHint: "Napi horoszkóp egy csillagjegyre",
-      schemaName: "HoroscopeHU",
-      schema,
-    });
-    if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          oneLine: { type: "string" },
+          mood: { type: "string" },
+          love: { type: "string" },
+          work: { type: "string" },
+          warn: { type: "string" },
+          luckyColor: { type: "string" },
+          moonPhase: { type: "string" },
+        },
+        required: ["oneLine"],
+      };
+      const t = await translateWithAI<HoroscopeHU>({
+        source: r.data,
+        domainHint: "Napi horoszkóp egy csillagjegyre",
+        schemaName: "HoroscopeHU",
+        schema,
+      });
+      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
 
-    await writeCache(cacheKey, "/ai/horoscope", t.data, 60 * 60 * 24);
-    return { ok: true, cached: false, reading: t.data };
-  });
+      await writeCache(cacheKey, "/ai/horoscope", t.data, 60 * 60 * 24);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );
 
 // ─── Kristály ─────────────────────────────────────────────────────────────
 
 export type CrystalHU = {
-  name: string;          // magyar kristály név
+  name: string; // magyar kristály név
   symbol?: string;
   quality?: string;
   when?: string;
@@ -154,46 +183,63 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
       z.object({ mode: z.literal("zodiac"), sign: SignSchema }),
     ]).parse,
   )
-  .handler(async ({ data }): Promise<{ ok: boolean; cached: boolean; reading: CrystalHU | null; message?: string }> => {
-    const cacheKey = data.mode === "month"
-      ? `aitr:crystal:month:${data.month}`
-      : `aitr:crystal:zodiac:${data.sign}`;
-    const cached = (await readCache(cacheKey)) as CrystalHU | null;
-    if (cached) return { ok: true, cached: true, reading: cached };
+  .handler(
+    async ({
+      data,
+    }): Promise<{ ok: boolean; cached: boolean; reading: CrystalHU | null; message?: string }> => {
+      const cacheKey =
+        data.mode === "month"
+          ? `aitr:crystal:month:${data.month}`
+          : `aitr:crystal:zodiac:${data.sign}`;
+      const cached = (await readCache(cacheKey)) as CrystalHU | null;
+      if (cached) return { ok: true, cached: true, reading: cached };
 
-    const { callRoxy } = await import("./roxy.server");
-    const endpoint = data.mode === "month"
-      ? `/crystals/birthstone/${data.month}`
-      : `/crystals/zodiac/${data.sign}`;
-    const cacheKeyRoxy = data.mode === "month"
-      ? `crystal:birth:${data.month}`
-      : `crystal:zodiac:${data.sign}`;
-    const r = await callRoxy<unknown>({ endpoint, method: "GET", cacheKey: cacheKeyRoxy, ttlSeconds: 60 * 60 * 24 * 180 });
-    if (!r.ok || !r.data) return { ok: false, cached: false, reading: null, message: "Most nem értem el a kristály adatot." };
+      const { callRoxy } = await import("./roxy.server");
+      const endpoint =
+        data.mode === "month"
+          ? `/crystals/birthstone/${data.month}`
+          : `/crystals/zodiac/${data.sign}`;
+      const cacheKeyRoxy =
+        data.mode === "month" ? `crystal:birth:${data.month}` : `crystal:zodiac:${data.sign}`;
+      const r = await callRoxy<unknown>({
+        endpoint,
+        method: "GET",
+        cacheKey: cacheKeyRoxy,
+        ttlSeconds: 60 * 60 * 24 * 180,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem értem el a kristály adatot.",
+        };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        name: { type: "string" },
-        symbol: { type: "string" },
-        quality: { type: "string" },
-        when: { type: "string" },
-        oneLine: { type: "string" },
-      },
-      required: ["name"],
-    };
-    const t = await translateWithAI<CrystalHU>({
-      source: r.data,
-      domainHint: "Kristály jelentése (születési kő vagy csillagjegy kristály). A 'name' magyar kristálynév legyen (pl. Ametiszt, Rózsakvarc, Hegyikristály).",
-      schemaName: "CrystalHU",
-      schema,
-    });
-    if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          name: { type: "string" },
+          symbol: { type: "string" },
+          quality: { type: "string" },
+          when: { type: "string" },
+          oneLine: { type: "string" },
+        },
+        required: ["name"],
+      };
+      const t = await translateWithAI<CrystalHU>({
+        source: r.data,
+        domainHint:
+          "Kristály jelentése (születési kő vagy csillagjegy kristály). A 'name' magyar kristálynév legyen (pl. Ametiszt, Rózsakvarc, Hegyikristály).",
+        schemaName: "CrystalHU",
+        schema,
+      });
+      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
 
-    await writeCache(cacheKey, "/ai/crystal", t.data, 60 * 60 * 24 * 30);
-    return { ok: true, cached: false, reading: t.data };
-  });
+      await writeCache(cacheKey, "/ai/crystal", t.data, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );
 
 // ─── Angyalszám ───────────────────────────────────────────────────────────
 
@@ -209,45 +255,55 @@ export type AngelHU = {
 
 export const aiAngelHU = createServerFn({ method: "POST" })
   .inputValidator(z.object({ number: z.string().regex(/^\d{1,12}$/) }).parse)
-  .handler(async ({ data }): Promise<{ ok: boolean; cached: boolean; reading: AngelHU | null; message?: string }> => {
-    const cacheKey = `aitr:angel:${data.number}`;
-    const cached = (await readCache(cacheKey)) as AngelHU | null;
-    if (cached) return { ok: true, cached: true, reading: cached };
+  .handler(
+    async ({
+      data,
+    }): Promise<{ ok: boolean; cached: boolean; reading: AngelHU | null; message?: string }> => {
+      const cacheKey = `aitr:angel:${data.number}`;
+      const cached = (await readCache(cacheKey)) as AngelHU | null;
+      if (cached) return { ok: true, cached: true, reading: cached };
 
-    const { callRoxy } = await import("./roxy.server");
-    const r = await callRoxy<unknown>({
-      endpoint: `/angel-numbers/lookup?number=${encodeURIComponent(data.number)}`,
-      method: "GET",
-      cacheKey: `angel:${data.number}`,
-      ttlSeconds: 60 * 60 * 24 * 180,
-    });
-    if (!r.ok || !r.data) return { ok: false, cached: false, reading: null, message: "Most nem értem el az angyalszám adatot." };
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: `/angel-numbers/lookup?number=${encodeURIComponent(data.number)}`,
+        method: "GET",
+        cacheKey: `angel:${data.number}`,
+        ttlSeconds: 60 * 60 * 24 * 180,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem értem el az angyalszám adatot.",
+        };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        title: { type: "string" },
-        message: { type: "string" },
-        love: { type: "string" },
-        decision: { type: "string" },
-        warn: { type: "string" },
-        oneLine: { type: "string" },
-        rootNumber: { type: "number" },
-      },
-      required: ["title"],
-    };
-    const t = await translateWithAI<AngelHU>({
-      source: r.data,
-      domainHint: `Angyalszám jelentése (a szám: ${data.number}). A 'title' egy rövid magyar cím a szám üzenetéről.`,
-      schemaName: "AngelHU",
-      schema,
-    });
-    if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          title: { type: "string" },
+          message: { type: "string" },
+          love: { type: "string" },
+          decision: { type: "string" },
+          warn: { type: "string" },
+          oneLine: { type: "string" },
+          rootNumber: { type: "number" },
+        },
+        required: ["title"],
+      };
+      const t = await translateWithAI<AngelHU>({
+        source: r.data,
+        domainHint: `Angyalszám jelentése (a szám: ${data.number}). A 'title' egy rövid magyar cím a szám üzenetéről.`,
+        schemaName: "AngelHU",
+        schema,
+      });
+      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
 
-    await writeCache(cacheKey, "/ai/angel", t.data, 60 * 60 * 24 * 30);
-    return { ok: true, cached: false, reading: t.data };
-  });
+      await writeCache(cacheKey, "/ai/angel", t.data, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );
 
 // ─── Álom ─────────────────────────────────────────────────────────────────
 
@@ -259,43 +315,61 @@ export type DreamHU = {
 };
 
 export const aiDreamHU = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ slug: z.string().min(1).max(64).regex(/^[a-z0-9-]+$/) }).parse)
-  .handler(async ({ data }): Promise<{ ok: boolean; cached: boolean; reading: DreamHU | null; message?: string }> => {
-    const cacheKey = `aitr:dream:${data.slug}`;
-    const cached = (await readCache(cacheKey)) as DreamHU | null;
-    if (cached) return { ok: true, cached: true, reading: cached };
+  .inputValidator(
+    z.object({
+      slug: z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[a-z0-9-]+$/),
+    }).parse,
+  )
+  .handler(
+    async ({
+      data,
+    }): Promise<{ ok: boolean; cached: boolean; reading: DreamHU | null; message?: string }> => {
+      const cacheKey = `aitr:dream:${data.slug}`;
+      const cached = (await readCache(cacheKey)) as DreamHU | null;
+      if (cached) return { ok: true, cached: true, reading: cached };
 
-    const { callRoxy } = await import("./roxy.server");
-    const r = await callRoxy<unknown>({
-      endpoint: `/dreams/symbols/${encodeURIComponent(data.slug)}`,
-      method: "GET",
-      cacheKey: `dream:sym:${data.slug}`,
-      ttlSeconds: 60 * 60 * 24 * 180,
-    });
-    if (!r.ok || !r.data) return { ok: false, cached: false, reading: null, message: "Most nem értem el az álom adatot." };
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: `/dreams/symbols/${encodeURIComponent(data.slug)}`,
+        method: "GET",
+        cacheKey: `dream:sym:${data.slug}`,
+        ttlSeconds: 60 * 60 * 24 * 180,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem értem el az álom adatot.",
+        };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        title: { type: "string" },
-        surface: { type: "string" },
-        notice: { type: "string" },
-        oneLine: { type: "string" },
-      },
-      required: ["title"],
-    };
-    const t = await translateWithAI<DreamHU>({
-      source: r.data,
-      domainHint: `Álom-szimbólum jelentése (szimbólum slug: ${data.slug}). A 'title' a szimbólum magyar neve. 'surface' = mit hozhat felszínre, 'notice' = mire érdemes figyelni — belső tükör, nem jóslat.`,
-      schemaName: "DreamHU",
-      schema,
-    });
-    if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          title: { type: "string" },
+          surface: { type: "string" },
+          notice: { type: "string" },
+          oneLine: { type: "string" },
+        },
+        required: ["title"],
+      };
+      const t = await translateWithAI<DreamHU>({
+        source: r.data,
+        domainHint: `Álom-szimbólum jelentése (szimbólum slug: ${data.slug}). A 'title' a szimbólum magyar neve. 'surface' = mit hozhat felszínre, 'notice' = mire érdemes figyelni — belső tükör, nem jóslat.`,
+        schemaName: "DreamHU",
+        schema,
+      });
+      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
 
-    await writeCache(cacheKey, "/ai/dream", t.data, 60 * 60 * 24 * 30);
-    return { ok: true, cached: false, reading: t.data };
-  });
+      await writeCache(cacheKey, "/ai/dream", t.data, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );
 
 // ─── Számmisztika (sorsszám) ──────────────────────────────────────────────
 
@@ -324,54 +398,70 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
       fullName: z.string().min(1).max(120).optional(),
     }).parse,
   )
-  .handler(async ({ data }): Promise<{ ok: boolean; cached: boolean; reading: NumerologyHU | null; message?: string }> => {
-    const nameKey = (data.fullName ?? "").toLowerCase().trim();
-    const cacheKey = `aitr:numerology:${data.birthDate}:${nameKey}`;
-    const cached = (await readCache(cacheKey)) as NumerologyHU | null;
-    if (cached) return { ok: true, cached: true, reading: cached };
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: NumerologyHU | null;
+      message?: string;
+    }> => {
+      const nameKey = (data.fullName ?? "").toLowerCase().trim();
+      const cacheKey = `aitr:numerology:${data.birthDate}:${nameKey}`;
+      const cached = (await readCache(cacheKey)) as NumerologyHU | null;
+      if (cached) return { ok: true, cached: true, reading: cached };
 
-    const { callRoxy } = await import("./roxy.server");
-    const ymd = splitDate(data.birthDate);
-    const chart = data.fullName
-      ? await callRoxy<unknown>({
-          endpoint: "/numerology/chart",
-          body: { ...ymd, fullName: data.fullName },
-          cacheKey: `num:chart:${data.birthDate}:${nameKey}`,
-          ttlSeconds: 60 * 60 * 24 * 365,
-        })
-      : await callRoxy<unknown>({
-          endpoint: "/numerology/life-path",
-          body: ymd,
-          cacheKey: `num:lifepath:${data.birthDate}`,
-          ttlSeconds: 60 * 60 * 24 * 365,
-        });
-    if (!chart.ok || !chart.data) return { ok: false, cached: false, reading: null, message: "Most nem értem el a számmisztika adatot." };
+      const { callRoxy } = await import("./roxy.server");
+      const ymd = splitDate(data.birthDate);
+      const chart = data.fullName
+        ? await callRoxy<unknown>({
+            endpoint: "/numerology/chart",
+            body: { ...ymd, fullName: data.fullName },
+            cacheKey: `num:chart:${data.birthDate}:${nameKey}`,
+            ttlSeconds: 60 * 60 * 24 * 365,
+          })
+        : await callRoxy<unknown>({
+            endpoint: "/numerology/life-path",
+            body: ymd,
+            cacheKey: `num:lifepath:${data.birthDate}`,
+            ttlSeconds: 60 * 60 * 24 * 365,
+          });
+      if (!chart.ok || !chart.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem értem el a számmisztika adatot.",
+        };
 
-    const schema = {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        lifePathNumber: { type: "number" },
-        title: { type: "string" },
-        meaning: { type: "string" },
-        strengths: { type: "string" },
-        shadow: { type: "string" },
-        love: { type: "string" },
-        work: { type: "string" },
-        personalYearNumber: { type: "number" },
-        personalYearMeaning: { type: "string" },
-        oneLine: { type: "string" },
-      },
-      required: ["lifePathNumber", "title", "meaning"],
-    };
-    const t = await translateWithAI<NumerologyHU>({
-      source: chart.data,
-      domainHint: "Sorsszám / számmisztika olvasat. A 'lifePathNumber' a forrásban szereplő sorsszám (Life Path Number). 'title' egy rövid magyar cím (pl. 'A vezető', 'A híd', 'Az álmodó'). A 'personalYearNumber' a forrásból (personal year), ha szerepel.",
-      schemaName: "NumerologyHU",
-      schema,
-    });
-    if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
+      const schema = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          lifePathNumber: { type: "number" },
+          title: { type: "string" },
+          meaning: { type: "string" },
+          strengths: { type: "string" },
+          shadow: { type: "string" },
+          love: { type: "string" },
+          work: { type: "string" },
+          personalYearNumber: { type: "number" },
+          personalYearMeaning: { type: "string" },
+          oneLine: { type: "string" },
+        },
+        required: ["lifePathNumber", "title", "meaning"],
+      };
+      const t = await translateWithAI<NumerologyHU>({
+        source: chart.data,
+        domainHint:
+          "Sorsszám / számmisztika olvasat. A 'lifePathNumber' a forrásban szereplő sorsszám (Life Path Number). 'title' egy rövid magyar cím (pl. 'A vezető', 'A híd', 'Az álmodó'). A 'personalYearNumber' a forrásból (personal year), ha szerepel.",
+        schemaName: "NumerologyHU",
+        schema,
+      });
+      if (!t.ok || !t.data) return { ok: false, cached: false, reading: null, message: t.error };
 
-    await writeCache(cacheKey, "/ai/numerology", t.data, 60 * 60 * 24 * 365);
-    return { ok: true, cached: false, reading: t.data };
-  });
+      await writeCache(cacheKey, "/ai/numerology", t.data, 60 * 60 * 24 * 365);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );

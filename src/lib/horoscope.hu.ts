@@ -102,15 +102,30 @@ const TABLE: Record<Sign, HoroBlock> = {
 };
 
 export function localHoroscope(sign: string): HoroBlock {
-  return TABLE[(sign as Sign)] ?? TABLE.aries;
+  return TABLE[sign as Sign] ?? TABLE.aries;
 }
 
 const LUCKY_COLOR_HU: Record<string, string> = {
-  red: "vörös", crimson: "bíbor", pink: "rózsaszín", orange: "narancs",
-  yellow: "sárga", gold: "arany", green: "zöld", emerald: "smaragdzöld",
-  blue: "kék", navy: "tengerkék", indigo: "indigó", purple: "lila",
-  violet: "ibolya", white: "fehér", silver: "ezüst", black: "fekete",
-  brown: "barna", grey: "szürke", gray: "szürke", turquoise: "türkiz",
+  red: "vörös",
+  crimson: "bíbor",
+  pink: "rózsaszín",
+  orange: "narancs",
+  yellow: "sárga",
+  gold: "arany",
+  green: "zöld",
+  emerald: "smaragdzöld",
+  blue: "kék",
+  navy: "tengerkék",
+  indigo: "indigó",
+  purple: "lila",
+  violet: "ibolya",
+  white: "fehér",
+  silver: "ezüst",
+  black: "fekete",
+  brown: "barna",
+  grey: "szürke",
+  gray: "szürke",
+  turquoise: "türkiz",
 };
 
 export function luckyColorHU(c?: string): string | null {

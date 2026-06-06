@@ -14,7 +14,10 @@ export const Route = createFileRoute("/mai-lap")({
   head: () => ({
     meta: [
       { title: "Mai lap — napi tarot húzás | Jövőd.hu" },
-      { name: "description", content: "Húzz egy napi tarot lapot. Rövid, elegáns magyar üzenet a mai napodra." },
+      {
+        name: "description",
+        content: "Húzz egy napi tarot lapot. Rövid, elegáns magyar üzenet a mai napodra.",
+      },
     ],
     links: [{ rel: "canonical", href: "/mai-lap" }],
   }),
@@ -53,53 +56,91 @@ function MaiLap() {
     aiReading({
       data: {
         spread: "single",
-        cards: [{
-          id: card.id, name: card.name, keywords: card.keywords,
-          general: card.general, love: card.love, decision: card.decision,
-          warning: card.warning, daily: card.daily,
-        }],
+        cards: [
+          {
+            id: card.id,
+            name: card.name,
+            keywords: card.keywords,
+            general: card.general,
+            love: card.love,
+            decision: card.decision,
+            warning: card.warning,
+            daily: card.daily,
+          },
+        ],
         dateKey: todayKey(),
       },
-    }).then((r) => {
-      if (cancelled) return;
-      if (r.ok && r.reading) setReading(r.reading);
-      setLoadingReading(false);
-    }).catch(() => { if (!cancelled) setLoadingReading(false); });
-    return () => { cancelled = true; };
+    })
+      .then((r) => {
+        if (cancelled) return;
+        if (r.ok && r.reading) setReading(r.reading);
+        setLoadingReading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setLoadingReading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [card?.id, revealed]);
 
   return (
     <Layout>
-      <PageHeader eyebrow="Napi rituálé" title="Mai lap" lead="Egy lap, egy üzenet a mai napodra. Engedd, hogy szóljon hozzád." />
+      <PageHeader
+        eyebrow="Napi rituálé"
+        title="Mai lap"
+        lead="Egy lap, egy üzenet a mai napodra. Engedd, hogy szóljon hozzád."
+      />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20">
         {!card && (
           <div className="flex flex-col items-center gap-6">
-            <div className="w-56"><CardBack /></div>
-            <button className="btn-gold" onClick={draw}>Húzom a mai lapom</button>
+            <div className="w-56">
+              <CardBack />
+            </div>
+            <button className="btn-gold" onClick={draw}>
+              Húzom a mai lapom
+            </button>
           </div>
         )}
         {card && (
           <div className="grid md:grid-cols-[260px,1fr] gap-8 md:gap-10 items-start">
             <div className="mx-auto w-full max-w-[260px]">
-              {revealed
-                ? <CardFace card={card} />
-                : <button onClick={() => setRevealed(true)} className="block w-full"><CardBack /></button>}
-              {!revealed && <p className="text-center text-ivory/60 text-sm mt-3">Koppints a lapra a felfedéshez</p>}
+              {revealed ? (
+                <CardFace card={card} />
+              ) : (
+                <button onClick={() => setRevealed(true)} className="block w-full">
+                  <CardBack />
+                </button>
+              )}
+              {!revealed && (
+                <p className="text-center text-ivory/60 text-sm mt-3">
+                  Koppints a lapra a felfedéshez
+                </p>
+              )}
             </div>
             {revealed && (
               <div className="space-y-4">
                 <div>
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A mai lapod</div>
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                    A mai lapod
+                  </div>
                   <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{card.name}</h2>
                   <div className="mt-2 flex flex-wrap gap-x-3 text-sm text-ivory/60">
-                    {card.keywords.map((k) => <span key={k}>· {k}</span>)}
+                    {card.keywords.map((k) => (
+                      <span key={k}>· {k}</span>
+                    ))}
                   </div>
                 </div>
                 {loadingReading && !reading && (
-                  <div className="text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
+                  <div className="text-ivory/55 text-sm font-editorial italic">
+                    Egy pillanat — személyes olvasatot készítek…
+                  </div>
                 )}
                 <Section eyebrow="Mit üzen ma?">
-                  <StreamingText text={reading?.cardMessage ?? reading?.intro ?? card.general} instant={!reading} />
+                  <StreamingText
+                    text={reading?.cardMessage ?? reading?.intro ?? card.general}
+                    instant={!reading}
+                  />
                 </Section>
                 <Section eyebrow="Mire figyelj?">
                   <StreamingText text={reading?.warn ?? card.warning} instant={!reading} />
@@ -108,7 +149,11 @@ function MaiLap() {
                   <StreamingText as="em" text={reading?.oneLine ?? card.daily} instant={!reading} />
                 </Section>
                 <div className="pt-2">
-                  <ShareCardButton card={card} oneLine={reading?.oneLine ?? card.daily} eyebrow="A mai lapod" />
+                  <ShareCardButton
+                    card={card}
+                    oneLine={reading?.oneLine ?? card.daily}
+                    eyebrow="A mai lapod"
+                  />
                 </div>
               </div>
             )}

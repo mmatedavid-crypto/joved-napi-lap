@@ -12,9 +12,16 @@ export const Route = createFileRoute("/kristaly")({
   head: () => ({
     meta: [
       { title: "Kristály jelentése — születési és horoszkóp kristály | Jövőd.hu" },
-      { name: "description", content: "Születési kristály és horoszkóp kristály magyarul. Mit jelképez, milyen minőséget hoz elő — önismereti jelként." },
+      {
+        name: "description",
+        content:
+          "Születési kristály és horoszkóp kristály magyarul. Mit jelképez, milyen minőséget hoz elő — önismereti jelként.",
+      },
       { property: "og:title", content: "Kristály jelentése | Jövőd.hu" },
-      { property: "og:description", content: "Mai kristályod — születési hónap vagy csillagjegy alapján." },
+      {
+        property: "og:description",
+        content: "Mai kristályod — születési hónap vagy csillagjegy alapján.",
+      },
     ],
     links: [{ rel: "canonical", href: "/kristaly" }],
   }),
@@ -31,15 +38,15 @@ function Page() {
   const [loading, setLoading] = useState(false);
   const [r, setR] = useState<CrystalHU | null>(null);
 
-  useEffect(() => { trackEvent("crystal_opened"); }, []);
+  useEffect(() => {
+    trackEvent("crystal_opened");
+  }, []);
 
   async function load() {
     setLoading(true);
     try {
       const res = await callAi({
-        data: mode === "month"
-          ? { mode: "month", month }
-          : { mode: "zodiac", sign: sign as never },
+        data: mode === "month" ? { mode: "month", month } : { mode: "zodiac", sign: sign as never },
       });
       if (res.ok && res.reading) {
         if (res.cached) trackEvent("roxy_cache_hit", { domain: "crystal" });
@@ -68,56 +75,85 @@ function Page() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); /* initial */ /* eslint-disable-next-line */ }, []);
+  useEffect(() => {
+    load(); /* initial */ /* eslint-disable-next-line */
+  }, []);
 
   return (
     <Layout>
-      <PageHeader eyebrow="Kristály" title="Mai kristály" lead="Egy kő, amit hagyományosan ehhez a hónaphoz vagy jegyhez társítanak. Önismereti jelként." />
+      <PageHeader
+        eyebrow="Kristály"
+        title="Mai kristály"
+        lead="Egy kő, amit hagyományosan ehhez a hónaphoz vagy jegyhez társítanak. Önismereti jelként."
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <div className="surface p-5 space-y-4">
           <div className="flex gap-2">
             <button
               onClick={() => setMode("month")}
               className={`px-3 py-1.5 rounded-md border text-sm ${mode === "month" ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-            >Születési hónap</button>
+            >
+              Születési hónap
+            </button>
             <button
               onClick={() => setMode("zodiac")}
               className={`px-3 py-1.5 rounded-md border text-sm ${mode === "zodiac" ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-            >Csillagjegy</button>
+            >
+              Csillagjegy
+            </button>
           </div>
           {mode === "month" ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
               {MONTH_HU.map((mo, i) => (
-                <button key={mo} onClick={() => setMonth(i + 1)}
+                <button
+                  key={mo}
+                  onClick={() => setMonth(i + 1)}
                   className={`px-2 py-2 rounded-md border text-sm ${month === i + 1 ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-                >{mo}</button>
+                >
+                  {mo}
+                </button>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
               {SIGNS_HU_ORDERED.map((sg) => (
-                <button key={sg} onClick={() => setSign(sg)}
+                <button
+                  key={sg}
+                  onClick={() => setSign(sg)}
                   className={`px-2 py-2 rounded-md border text-sm ${sign === sg ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-                >{SIGN_HU[sg]}</button>
+                >
+                  {SIGN_HU[sg]}
+                </button>
               ))}
             </div>
           )}
-          <button className="btn-gold" onClick={load} disabled={loading}>{loading ? "Egy pillanat…" : "Megnézem"}</button>
+          <button className="btn-gold" onClick={load} disabled={loading}>
+            {loading ? "Egy pillanat…" : "Megnézem"}
+          </button>
         </div>
 
         {r && (
           <div className="space-y-4">
             <div className="text-center">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">Mai kristály</div>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                Mai kristály
+              </div>
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{r.name}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {r.symbol && <Section eyebrow="Mit jelképez?">{r.symbol}</Section>}
               {r.quality && <Section eyebrow="Milyen minőséget hoz elő?">{r.quality}</Section>}
               {r.when && <Section eyebrow="Mikor érdemes figyelni rá?">{r.when}</Section>}
-              {r.oneLine && <Section eyebrow="Egy mondatban"><em>{r.oneLine}</em></Section>}
+              {r.oneLine && (
+                <Section eyebrow="Egy mondatban">
+                  <em>{r.oneLine}</em>
+                </Section>
+              )}
             </div>
-            <p className="text-xs text-ivory/45 font-editorial text-center">A kristályok hagyományosan szimbólumok. Nem gyógyítanak — önismereti jelként használjuk.</p>
+            <p className="text-xs text-ivory/45 font-editorial text-center">
+              A kristályok hagyományosan szimbólumok. Nem gyógyítanak — önismereti jelként
+              használjuk.
+            </p>
           </div>
         )}
       </div>

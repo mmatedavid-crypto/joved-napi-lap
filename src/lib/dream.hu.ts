@@ -124,6 +124,6 @@ export function dreamMeaning(slug: string | null): DreamMeaning | null {
   return DREAM_HU[slug] ?? null;
 }
 
-export const DREAM_SLUG_OPTIONS: Array<{ slug: string; label: string }> = Object.entries(DREAM_HU).map(
-  ([slug, m]) => ({ slug, label: m.title }),
-);
+export const DREAM_SLUG_OPTIONS: Array<{ slug: string; label: string }> = Object.entries(
+  DREAM_HU,
+).map(([slug, m]) => ({ slug, label: m.title }));

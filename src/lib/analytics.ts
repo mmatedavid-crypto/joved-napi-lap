@@ -41,5 +41,7 @@ export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
     // For now: structured console log. Replace with real provider later.
     // eslint-disable-next-line no-console
     console.log("[jovod:event]", name, payload ?? {});
-  } catch { /* no-op */ }
+  } catch {
+    /* no-op */
+  }
 }

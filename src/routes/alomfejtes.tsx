@@ -12,7 +12,11 @@ export const Route = createFileRoute("/alomfejtes")({
   head: () => ({
     meta: [
       { title: "Álomfejtés magyarul — mit jelent az álmom? | Jövőd.hu" },
-      { name: "description", content: "Álomfejtés magyarul. Visszatérő álom, álom jelentése, mit jelent az álmom — csendes belső tükör." },
+      {
+        name: "description",
+        content:
+          "Álomfejtés magyarul. Visszatérő álom, álom jelentése, mit jelent az álmom — csendes belső tükör.",
+      },
       { property: "og:title", content: "Álomfejtés | Jövőd.hu" },
       { property: "og:description", content: "Mit jelent az álmod? Belső tükör, nem jóslat." },
     ],
@@ -79,7 +83,10 @@ function Page() {
     e.preventDefault();
     trackEvent("dream_started", { emotion });
     const slug = dreamTextToSlug(text);
-    if (slug) { await run(slug); return; }
+    if (slug) {
+      await run(slug);
+      return;
+    }
     // fall back to manual symbol picker
     setResult(null);
     setNoSymbol(true);
@@ -87,7 +94,11 @@ function Page() {
 
   return (
     <Layout>
-      <PageHeader eyebrow="Álomfejtés" title="Mit álmodtál?" lead="Egy belső tükör, nem jóslat. Írd le röviden — egy fő jelet keresünk benne." />
+      <PageHeader
+        eyebrow="Álomfejtés"
+        title="Mit álmodtál?"
+        lead="Egy belső tükör, nem jóslat. Írd le röviden — egy fő jelet keresünk benne."
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={submit} className="surface p-6 space-y-4">
           <div>
@@ -101,7 +112,9 @@ function Page() {
             />
           </div>
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">Milyen érzés volt? <span className="text-ivory/45">(opcionális)</span></label>
+            <label className="block text-sm text-ivory/80 mb-2">
+              Milyen érzés volt? <span className="text-ivory/45">(opcionális)</span>
+            </label>
             <div className="flex flex-wrap gap-2">
               {EMOTIONS.map((em) => (
                 <button
@@ -109,25 +122,38 @@ function Page() {
                   key={em.v}
                   onClick={() => setEmotion(em.v)}
                   className={`px-3 py-1.5 rounded-md border text-sm ${emotion === em.v ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-                >{em.l}</button>
+                >
+                  {em.l}
+                </button>
               ))}
             </div>
           </div>
-          <button className="btn-gold" disabled={loading}>{loading ? "Egy pillanat…" : "Megfejtem"}</button>
+          <button className="btn-gold" disabled={loading}>
+            {loading ? "Egy pillanat…" : "Megfejtem"}
+          </button>
         </form>
 
         {noSymbol && !result && (
           <div className="surface p-6 space-y-3">
-            <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">Nem találtunk fő jelet</div>
-            <p className="font-editorial text-ivory/80">Válaszd ki, mi volt a legerősebb kép az álomban:</p>
+            <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+              Nem találtunk fő jelet
+            </div>
+            <p className="font-editorial text-ivory/80">
+              Válaszd ki, mi volt a legerősebb kép az álomban:
+            </p>
             <div className="flex flex-wrap gap-2">
               {DREAM_SLUG_OPTIONS.map((o) => (
                 <button
                   key={o.slug}
                   type="button"
-                  onClick={() => { setChosen(o.slug); run(o.slug); }}
+                  onClick={() => {
+                    setChosen(o.slug);
+                    run(o.slug);
+                  }}
                   className={`px-3 py-1.5 rounded-md border text-sm ${chosen === o.slug ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80"}`}
-                >{o.label}</button>
+                >
+                  {o.label}
+                </button>
               ))}
             </div>
           </div>
@@ -136,14 +162,25 @@ function Page() {
         {result && (
           <div className="space-y-4">
             <div className="text-center">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">Az álom fő jele</div>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                Az álom fő jele
+              </div>
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{result.title}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {result.surface && <Section eyebrow="Mit hozhat felszínre?">{result.surface}</Section>}
+              {result.surface && (
+                <Section eyebrow="Mit hozhat felszínre?">{result.surface}</Section>
+              )}
               {result.notice && <Section eyebrow="Mire figyelhetsz?">{result.notice}</Section>}
-              <Section eyebrow="Nem jóslat, inkább belső tükör">Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó szerint venni.</Section>
-              {result.oneLine && <Section eyebrow="Egy mondatban"><em>{result.oneLine}</em></Section>}
+              <Section eyebrow="Nem jóslat, inkább belső tükör">
+                Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó
+                szerint venni.
+              </Section>
+              {result.oneLine && (
+                <Section eyebrow="Egy mondatban">
+                  <em>{result.oneLine}</em>
+                </Section>
+              )}
             </div>
           </div>
         )}

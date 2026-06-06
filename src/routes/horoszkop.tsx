@@ -13,9 +13,15 @@ export const Route = createFileRoute("/horoszkop")({
   head: () => ({
     meta: [
       { title: "Napi horoszkóp magyarul | Jövőd.hu" },
-      { name: "description", content: "Mai horoszkóp magyarul — rövid, elegáns napi útmutató minden csillagjegyre." },
+      {
+        name: "description",
+        content: "Mai horoszkóp magyarul — rövid, elegáns napi útmutató minden csillagjegyre.",
+      },
       { property: "og:title", content: "Napi horoszkóp magyarul | Jövőd.hu" },
-      { property: "og:description", content: "Mai horoszkóp magyarul, csendesen, lényegre törően." },
+      {
+        property: "og:description",
+        content: "Mai horoszkóp magyarul, csendesen, lényegre törően.",
+      },
     ],
     links: [{ rel: "canonical", href: "/horoszkop" }],
   }),
@@ -27,9 +33,16 @@ type State = { loading: boolean; sign: string; reading: HoroscopeHU | null; fall
 function Page() {
   const call = useServerFn(aiHoroscopeHU);
   const [sign, setSign] = useState<string>("aries");
-  const [s, setS] = useState<State>({ loading: false, sign: "aries", reading: null, fallback: false });
+  const [s, setS] = useState<State>({
+    loading: false,
+    sign: "aries",
+    reading: null,
+    fallback: false,
+  });
 
-  useEffect(() => { trackEvent("horoscope_opened"); }, []);
+  useEffect(() => {
+    trackEvent("horoscope_opened");
+  }, []);
 
   async function load(next: string) {
     setS({ loading: true, sign: next, reading: null, fallback: false });
@@ -67,7 +80,11 @@ function Page() {
 
   return (
     <Layout>
-      <PageHeader eyebrow="Napi horoszkóp" title="Mai horoszkóp" lead="Válaszd ki a jegyed — egy rövid, csendes olvasat a mai napodra." />
+      <PageHeader
+        eyebrow="Napi horoszkóp"
+        title="Mai horoszkóp"
+        lead="Válaszd ki a jegyed — egy rövid, csendes olvasat a mai napodra."
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <div className="surface p-5">
           <label className="block text-sm text-ivory/80 mb-2">Csillagjegy</label>
@@ -77,20 +94,32 @@ function Page() {
                 key={sg}
                 onClick={() => onPick(sg)}
                 className={`px-2 py-2 rounded-md border text-sm transition ${sign === sg ? "border-gold text-gold" : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80 hover:text-gold"}`}
-              >{SIGN_HU[sg]}</button>
+              >
+                {SIGN_HU[sg]}
+              </button>
             ))}
           </div>
           {!s.reading && !s.loading && !s.fallback && (
-            <p className="text-xs text-ivory/55 mt-3 font-editorial">Válassz egy jegyet a mai olvasathoz.</p>
+            <p className="text-xs text-ivory/55 mt-3 font-editorial">
+              Válassz egy jegyet a mai olvasathoz.
+            </p>
           )}
-          {s.loading && <p className="text-xs text-ivory/55 mt-3 font-editorial">Egy pillanat — most kérjük le.</p>}
+          {s.loading && (
+            <p className="text-xs text-ivory/55 mt-3 font-editorial">
+              Egy pillanat — most kérjük le.
+            </p>
+          )}
         </div>
 
         {(s.reading || s.fallback) && (
           <>
             <div className="text-center">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A mai jegyed</div>
-              <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{SIGN_HU[s.sign]}</h2>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                A mai jegyed
+              </div>
+              <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">
+                {SIGN_HU[s.sign]}
+              </h2>
               {(moon || color) && (
                 <div className="mt-2 flex flex-wrap justify-center gap-x-4 text-sm text-ivory/60">
                   {moon && <span>· holdfázis: {moon}</span>}
@@ -103,7 +132,9 @@ function Page() {
               <Section eyebrow="Szerelem">{love}</Section>
               <Section eyebrow="Munka">{work}</Section>
               <Section eyebrow="Mire figyelj?">{warn}</Section>
-              <Section eyebrow="Egy mondatban"><em>{oneLine}</em></Section>
+              <Section eyebrow="Egy mondatban">
+                <em>{oneLine}</em>
+              </Section>
             </div>
           </>
         )}

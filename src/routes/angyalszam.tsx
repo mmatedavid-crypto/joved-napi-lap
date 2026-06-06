@@ -11,9 +11,16 @@ export const Route = createFileRoute("/angyalszam")({
   head: () => ({
     meta: [
       { title: "Angyalszám jelentése — 111, 222, 777, 1111 | Jövőd.hu" },
-      { name: "description", content: "Angyalszám jelentése magyarul. Mit üzen a 111, 222, 333, 777, 1111 szám? Rövid, mély olvasat." },
+      {
+        name: "description",
+        content:
+          "Angyalszám jelentése magyarul. Mit üzen a 111, 222, 333, 777, 1111 szám? Rövid, mély olvasat.",
+      },
       { property: "og:title", content: "Angyalszám jelentése | Jövőd.hu" },
-      { property: "og:description", content: "Mit üzen az angyalszámod? 111, 222, 333, 777, 1111 jelentése." },
+      {
+        property: "og:description",
+        content: "Mit üzen az angyalszámod? 111, 222, 333, 777, 1111 jelentése.",
+      },
     ],
     links: [{ rel: "canonical", href: "/angyalszam" }],
   }),
@@ -30,7 +37,10 @@ function Page() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const clean = num.replace(/\D/g, "").slice(0, 12);
-    if (!clean) { setErr("Adj meg egy számot — például 111, 222, 777 vagy 1111."); return; }
+    if (!clean) {
+      setErr("Adj meg egy számot — például 111, 222, 777 vagy 1111.");
+      return;
+    }
     setErr(null);
     setLoading(true);
     trackEvent("angel_number_started", { number: clean });
@@ -68,7 +78,11 @@ function Page() {
 
   return (
     <Layout>
-      <PageHeader eyebrow="Angyalszám" title="Mit üzen a számod?" lead="Add meg az ismétlődő számot, amit látsz. Egy csendes olvasat következik." />
+      <PageHeader
+        eyebrow="Angyalszám"
+        title="Mit üzen a számod?"
+        lead="Add meg az ismétlődő számot, amit látsz. Egy csendes olvasat következik."
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={submit} className="surface p-6 space-y-3">
           <label className="block text-sm text-ivory/80">A szám</label>
@@ -81,22 +95,34 @@ function Page() {
           />
           <p className="text-xs text-ivory/45 font-editorial">Példa: 111, 222, 333, 777, 1111</p>
           {err && <p className="text-sm text-gold">{err}</p>}
-          <button className="btn-gold" disabled={loading}>{loading ? "Egy pillanat…" : "Megnézem"}</button>
+          <button className="btn-gold" disabled={loading}>
+            {loading ? "Egy pillanat…" : "Megnézem"}
+          </button>
         </form>
 
         {m && (
           <div className="space-y-4">
             <div className="text-center">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A számod</div>
-              <h2 className="font-display text-4xl md:text-5xl text-ivory mt-1 tabular-nums">{m.number}</h2>
-              <div className="mt-2 text-sm text-ivory/60">{m.meaning.title} · gyökér: {m.root}</div>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                A számod
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl text-ivory mt-1 tabular-nums">
+                {m.number}
+              </h2>
+              <div className="mt-2 text-sm text-ivory/60">
+                {m.meaning.title} · gyökér: {m.root}
+              </div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {m.meaning.message && <Section eyebrow="A szám üzenete">{m.meaning.message}</Section>}
               {m.meaning.love && <Section eyebrow="Szerelemben">{m.meaning.love}</Section>}
               {m.meaning.decision && <Section eyebrow="Döntés előtt">{m.meaning.decision}</Section>}
               {m.meaning.warn && <Section eyebrow="Mire figyelj?">{m.meaning.warn}</Section>}
-              {m.meaning.oneLine && <Section eyebrow="Egy mondatban"><em>{m.meaning.oneLine}</em></Section>}
+              {m.meaning.oneLine && (
+                <Section eyebrow="Egy mondatban">
+                  <em>{m.meaning.oneLine}</em>
+                </Section>
+              )}
             </div>
           </div>
         )}

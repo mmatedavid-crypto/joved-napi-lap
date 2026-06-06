@@ -118,7 +118,9 @@ export function PersonalDailyBriefing() {
     });
 
     if (!res.ok || !res.briefing) {
-      setError(res.message ?? "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.");
+      setError(
+        res.message ?? "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.",
+      );
       setLoading(false);
       trackEvent("roxy_fallback_used", { domain: "daily_briefing" });
       return;
@@ -162,7 +164,9 @@ export function PersonalDailyBriefing() {
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-6 pt-2 pb-8">
       <div className="text-center mb-4">
-        <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.8)]">Mai személyes olvasatod</div>
+        <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.8)]">
+          Mai személyes olvasatod
+        </div>
         <p className="font-editorial text-ivory/70 mt-2 max-w-xl mx-auto text-sm">
           {showResult
             ? "A mai jeleid egy helyen, neked összeállítva."
@@ -198,10 +202,14 @@ export function PersonalDailyBriefing() {
             </div>
           </div>
 
-          <form onSubmit={enrichWithProfile} className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto">
+          <form
+            onSubmit={enrichWithProfile}
+            className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto"
+          >
             <Eyebrow>Személyre szabás (opcionális)</Eyebrow>
             <p className="font-editorial text-ivory/70 text-sm">
-              Add meg a születési dátumod, és ezt a lapot a horoszkópoddal, belső ritmusoddal és a mai kristályoddal együtt fűzöm össze.
+              Add meg a születési dátumod, és ezt a lapot a horoszkópoddal, belső ritmusoddal és a
+              mai kristályoddal együtt fűzöm össze.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -247,8 +255,8 @@ export function PersonalDailyBriefing() {
         <div className="space-y-5">
           <div className="surface p-5 md:p-6 text-center">
             <Eyebrow>
-              {profile.name ? `${profile.name}, a mai napod` : "A mai napod"}{" "}
-              · {SIGN_HU[profile.sign ?? "aries"]}
+              {profile.name ? `${profile.name}, a mai napod` : "A mai napod"} ·{" "}
+              {SIGN_HU[profile.sign ?? "aries"]}
             </Eyebrow>
             <StreamingText
               as="p"
@@ -270,7 +278,11 @@ export function PersonalDailyBriefing() {
                   className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed"
                 />
                 <div className="pt-2">
-                  <ShareCardButton card={drawnCard} oneLine={briefing.oneLine} eyebrow="A mai lapod" />
+                  <ShareCardButton
+                    card={drawnCard}
+                    oneLine={briefing.oneLine}
+                    eyebrow="A mai lapod"
+                  />
                 </div>
               </div>
             </div>
@@ -281,26 +293,31 @@ export function PersonalDailyBriefing() {
             <Tile eyebrow="Szerelemben">{briefing.horoLove}</Tile>
             <Tile eyebrow="Munkában, ügyekben">{briefing.horoWork}</Tile>
             <Tile eyebrow="Mire figyelj">{briefing.horoWarn}</Tile>
-            {briefing.bioLine && (
-              <Tile eyebrow="Belső ritmus">{briefing.bioLine}</Tile>
-            )}
+            {briefing.bioLine && <Tile eyebrow="Belső ritmus">{briefing.bioLine}</Tile>}
             {briefing.angelTitle && (
               <Tile eyebrow="Mai szám">
                 <div className="font-display text-ivory text-lg mb-1">{briefing.angelTitle}</div>
-                {briefing.angelMessage && <div className="text-ivory/85">{briefing.angelMessage}</div>}
+                {briefing.angelMessage && (
+                  <div className="text-ivory/85">{briefing.angelMessage}</div>
+                )}
               </Tile>
             )}
             {briefing.crystalName && (
               <Tile eyebrow="Mai kristály">
                 <div className="font-display text-ivory text-lg mb-1">{briefing.crystalName}</div>
-                {briefing.crystalLine && <div className="text-ivory/75 italic">{briefing.crystalLine}</div>}
+                {briefing.crystalLine && (
+                  <div className="text-ivory/75 italic">{briefing.crystalLine}</div>
+                )}
               </Tile>
             )}
             <Tile eyebrow={`Sorsszámod · ${briefing.lifePathNum}`}>
               <div className="font-display text-ivory text-lg mb-1">{briefing.lifePathTitle}</div>
               <div className="text-ivory/75 text-[14px]">
                 Bővebb olvasat:{" "}
-                <Link to="/szammisztika" className="text-gold hover:underline">sorsszám</Link>.
+                <Link to="/szammisztika" className="text-gold hover:underline">
+                  sorsszám
+                </Link>
+                .
               </div>
             </Tile>
             <Tile eyebrow={`Idei személyes éved · ${briefing.personalYearNum}`}>
@@ -312,8 +329,12 @@ export function PersonalDailyBriefing() {
             <button className="btn-ghost-gold" onClick={resetAll}>
               Új lap húzása
             </button>
-            <Link to="/mai-iranytu" className="btn-ghost-gold">Bővebb napi iránytű →</Link>
-            <Link to="/szammisztika" className="btn-ghost-gold">Bővebb sorsszám →</Link>
+            <Link to="/mai-iranytu" className="btn-ghost-gold">
+              Bővebb napi iránytű →
+            </Link>
+            <Link to="/szammisztika" className="btn-ghost-gold">
+              Bővebb sorsszám →
+            </Link>
           </div>
         </div>
       )}

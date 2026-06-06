@@ -15,18 +15,24 @@ type Props = {
 
 const SPREAD_SIZE = 22;
 
+function cssNumber(value: number) {
+  return Number(value.toFixed(5));
+}
+
 function buzz(ms = 8) {
   try {
     if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       (navigator as Navigator & { vibrate?: (p: number | number[]) => boolean }).vibrate?.(ms);
     }
-  } catch {}
+  } catch {
+    // Vibration is optional and may be unavailable in some browsers.
+  }
 }
 
 export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Props) {
   // Always randomise the live shuffle session so two consecutive draws
   // can yield different cards even with the same daily seed.
-  const [sessionSeed, setSessionSeed] = useState(() => Math.floor(Math.random() * 1_000_000));
+  const [sessionSeed, setSessionSeed] = useState(0);
   const [phase, setPhase] = useState<"shuffling" | "spread">("shuffling");
   const [shuffleTick, setShuffleTick] = useState(0);
 
@@ -46,7 +52,10 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
   const [picked, setPicked] = useState<number[]>([]);
   const [revealed, setRevealed] = useState<boolean[]>([]);
 
-  useEffect(() => { setPicked([]); setRevealed([]); }, [resetKey, arrangementSeed]);
+  useEffect(() => {
+    setPicked([]);
+    setRevealed([]);
+  }, [resetKey, arrangementSeed]);
 
   function pick(i: number) {
     if (picked.includes(i)) return;
@@ -109,13 +118,16 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
           <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.75)] mb-4 animate-pulse">
             Keverem a paklit
           </div>
-          <div className="relative" style={{ width: "clamp(120px, 28vw, 180px)", aspectRatio: "2 / 3.4" }}>
+          <div
+            className="relative"
+            style={{ width: "clamp(120px, 28vw, 180px)", aspectRatio: "2 / 3.4" }}
+          >
             {stack.map((c) => (
               <div
                 key={`${c.i}-${shuffleTick}`}
                 className="absolute inset-0 rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.45)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)]"
                 style={{
-                  transform: `translate(${c.x}px, ${c.y}px) rotate(${c.rot}deg)`,
+                  transform: `translate(${cssNumber(c.x)}px, ${cssNumber(c.y)}px) rotate(${cssNumber(c.rot)}deg)`,
                   transition: `transform 520ms cubic-bezier(.4,.0,.2,1) ${c.delay}ms`,
                   zIndex: c.i,
                 }}
@@ -169,7 +181,10 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
             {picked.length === 0 && (
               <button
                 type="button"
-                onClick={() => { setPhase("shuffling"); shuffleAgain(); }}
+                onClick={() => {
+                  setPhase("shuffling");
+                  shuffleAgain();
+                }}
                 className="mt-1 text-[10px] tracking-[0.2em] uppercase text-ivory/55 hover:text-[oklch(0.85_0.10_80)] underline-offset-4 hover:underline"
               >
                 újrakeverés
@@ -238,9 +253,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
                 width: "clamp(96px, 6.2vw, 170px)",
               }}
             >
-              <div
-                className="relative w-full aspect-[2/3.4] rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.55)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)] transition-transform duration-300 group-hover:-translate-y-4 group-hover:shadow-[0_22px_50px_-10px_oklch(0.78_0.10_80/0.45)]"
-              >
+              <div className="relative w-full aspect-[2/3.4] rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.55)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)] transition-transform duration-300 group-hover:-translate-y-4 group-hover:shadow-[0_22px_50px_-10px_oklch(0.78_0.10_80/0.45)]">
                 <img
                   src={CARD_BACK_ART}
                   alt=""

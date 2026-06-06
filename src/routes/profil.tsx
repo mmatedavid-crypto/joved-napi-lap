@@ -12,9 +12,15 @@ export const Route = createFileRoute("/profil")({
   }),
   component: () => (
     <Layout>
-      <PageHeader eyebrow="Profil" title="A te oldalad" lead="Itt fognak megjelenni a mentett húzásaid és sorsszámod." />
+      <PageHeader
+        eyebrow="Profil"
+        title="A te oldalad"
+        lead="Itt fognak megjelenni a mentett húzásaid és sorsszámod."
+      />
       <div className="mx-auto max-w-md px-4 pb-20">
-        <Section eyebrow="Hamarosan">A profil és a mentett előzmények a bejelentkezés bevezetésével együtt érkeznek.</Section>
+        <Section eyebrow="Hamarosan">
+          A profil és a mentett előzmények a bejelentkezés bevezetésével együtt érkeznek.
+        </Section>
       </div>
     </Layout>
   ),
