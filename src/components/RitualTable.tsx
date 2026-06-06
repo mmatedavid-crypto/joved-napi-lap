@@ -5,7 +5,7 @@ import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
 import { type TarotCard } from "@/data/cards";
-import { saveLocal, loadLocal } from "@/lib/storage";
+import { saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import {
   roxyNumerologyChart,
