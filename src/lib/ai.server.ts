@@ -2,7 +2,7 @@
 // Used to rewrite raw English Roxy text into short, warm, Hungarian copy.
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-2.5-flash";
+const MODEL = "google/gemini-2.5-pro";
 
 export type AiResult<T> = { ok: boolean; data: T | null; error?: string };
 

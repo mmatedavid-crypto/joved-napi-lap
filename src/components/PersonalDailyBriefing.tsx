@@ -105,7 +105,13 @@ export function PersonalDailyBriefing() {
         sign: sign as never,
         name: name.trim() || undefined,
         dateKey,
-        drawnCard: { id: drawnCard.id, name: drawnCard.name, keywords: drawnCard.keywords },
+        drawnCard: {
+          id: drawnCard.id,
+          name: drawnCard.name,
+          keywords: drawnCard.keywords,
+          general: drawnCard.general,
+          daily: drawnCard.daily,
+        },
       },
     });
 
