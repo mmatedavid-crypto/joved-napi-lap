@@ -16,9 +16,10 @@ import {
   roxyAngelNumberLookup, roxyCrystalBirthstone,
 } from "@/lib/roxy.functions";
 import {
-  SIGNS_HU_ORDERED, SIGN_HU,
+  SIGN_HU,
   normalizeRoxyDraw, normalizeRoxyHoroscope, normalizeRoxyBiorhythm,
   normalizeRoxyAngel, normalizeRoxyCrystal, moonPhaseHU, bioPhraseHU,
+  zodiacFromDob,
 } from "@/lib/roxyNormalize";
 import { CARDS } from "@/data/cards";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
@@ -84,7 +85,6 @@ export function PersonalDailyBriefing() {
   const [profile, setProfile] = useState<Profile>({});
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
-  const [sign, setSign] = useState("");
   const [loading, setLoading] = useState(false);
   const [briefing, setBriefing] = useState<Briefing | null>(null);
   const [editing, setEditing] = useState(false);
@@ -100,7 +100,6 @@ export function PersonalDailyBriefing() {
       setProfile(p);
       setName(p.name ?? "");
       setDob(p.dob ?? "");
-      setSign(p.sign ?? "");
     }
     const cached = loadLocal<Briefing>("home:briefing");
     if (cached && cached.generatedFor === todayKey()) {
@@ -110,6 +109,7 @@ export function PersonalDailyBriefing() {
 
   async function build(e?: React.FormEvent) {
     e?.preventDefault();
+    const sign = zodiacFromDob(dob);
     if (!dob || !sign) return;
     setLoading(true);
     trackEvent("daily_compass_opened", { from: "home" });
@@ -256,7 +256,7 @@ export function PersonalDailyBriefing() {
         <p className="font-editorial text-ivory/70 mt-2 max-w-xl mx-auto text-sm">
           {hasProfile && briefing
             ? "A mai jeleid egy helyen, neked összeállítva."
-            : "Add meg a születési dátumod és a csillagjegyed — összeállítok egy mai olvasatot rád szabva."}
+            : "Add meg a születési dátumod — a csillagjegyed ebből kiszámolom, és összeállítok egy mai olvasatot rád szabva."}
         </p>
       </div>
 
@@ -276,27 +276,13 @@ export function PersonalDailyBriefing() {
             </div>
             <HUDateInput value={dob} onChange={setDob} label="Születési dátum" required />
           </div>
-          <div>
-            <label className="block text-sm text-ivory/80 mb-2">Csillagjegy</label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-              {SIGNS_HU_ORDERED.map((sg) => (
-                <button
-                  type="button"
-                  key={sg}
-                  onClick={() => setSign(sg)}
-                  className={`px-2 py-2 rounded-md border text-sm ${
-                    sign === sg
-                      ? "border-gold text-gold"
-                      : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/80 hover:text-ivory"
-                  }`}
-                >
-                  {SIGN_HU[sg]}
-                </button>
-              ))}
+          {dob && zodiacFromDob(dob) && (
+            <div className="text-xs text-ivory/60 font-editorial">
+              Csillagjegyed: <span className="text-gold">{SIGN_HU[zodiacFromDob(dob)!]}</span>
             </div>
-          </div>
+          )}
           <div className="flex flex-wrap items-center gap-3">
-            <button className="btn-gold" disabled={loading || !dob || !sign}>
+            <button className="btn-gold" disabled={loading || !dob}>
               {loading ? "Egy pillanat…" : briefing ? "Frissítem az olvasatot" : "Mai személyes olvasatom"}
             </button>
             {hasProfile && (

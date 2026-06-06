@@ -320,6 +320,28 @@ export const SIGNS_HU_ORDERED = [
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
 ] as const;
 
+// Determine zodiac sign from an ISO birth date (YYYY-MM-DD). Uses tropical
+// date ranges. Returns one of SIGNS_HU_ORDERED, or null if input is invalid.
+export function zodiacFromDob(iso?: string): string | null {
+  if (!iso || iso.length < 10) return null;
+  const m = Number(iso.slice(5, 7));
+  const d = Number(iso.slice(8, 10));
+  if (!m || !d) return null;
+  const md = m * 100 + d;
+  if (md >= 321 && md <= 419) return "aries";
+  if (md >= 420 && md <= 520) return "taurus";
+  if (md >= 521 && md <= 620) return "gemini";
+  if (md >= 621 && md <= 722) return "cancer";
+  if (md >= 723 && md <= 822) return "leo";
+  if (md >= 823 && md <= 922) return "virgo";
+  if (md >= 923 && md <= 1022) return "libra";
+  if (md >= 1023 && md <= 1121) return "scorpio";
+  if (md >= 1122 && md <= 1221) return "sagittarius";
+  if (md >= 1222 || md <= 119) return "capricorn";
+  if (md >= 120 && md <= 218) return "aquarius";
+  return "pisces";
+}
+
 const MOON_PHASE_HU: Record<string, string> = {
   "new moon": "Újhold",
   "waxing crescent": "Növekvő sarló",
