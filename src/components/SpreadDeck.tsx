@@ -16,15 +16,23 @@ type Props = {
 const SPREAD_SIZE = 22;
 
 export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Props) {
+  const [sessionSeed, setSessionSeed] = useState(seed ?? 1);
+
+  useEffect(() => {
+    if (seed == null) setSessionSeed(Math.floor(Math.random() * 1_000_000));
+  }, [seed, resetKey]);
+
+  const arrangementSeed = seed ?? sessionSeed;
+
   // full Major Arcana pool arranged in an arc
   const pool = useMemo(
-    () => pickCards(SPREAD_SIZE, (seed ?? Date.now()) + Number(resetKey ?? 0) * 13),
-    [seed, resetKey],
+    () => pickCards(SPREAD_SIZE, arrangementSeed + Number(resetKey ?? 0) * 13),
+    [arrangementSeed, resetKey],
   );
   const [picked, setPicked] = useState<number[]>([]);
   const [revealed, setRevealed] = useState<boolean[]>([]);
 
-  useEffect(() => { setPicked([]); setRevealed([]); }, [resetKey, seed]);
+  useEffect(() => { setPicked([]); setRevealed([]); }, [resetKey, arrangementSeed]);
 
   function pick(i: number) {
     if (picked.includes(i)) return;
