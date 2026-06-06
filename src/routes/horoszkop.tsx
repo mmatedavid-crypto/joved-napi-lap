@@ -5,7 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { aiHoroscopeHU, type HoroscopeHU } from "@/lib/roxyTranslate.functions";
 import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
-import { localHoroscope, luckyColorHU, energyPhraseHU } from "@/lib/horoscope.hu";
+import { localHoroscope } from "@/lib/horoscope.hu";
 import { todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 
@@ -58,14 +58,12 @@ function Page() {
   const r = s.reading;
   const moon = r?.moonPhase ?? null;
   const color = r?.luckyColor ?? null;
-  const energy = null as string | null;
   // Prefer AI HU output; fall back to local copy when a given field is missing or AI failed.
   const mood = r?.mood ?? local.mood;
   const love = r?.love ?? local.love;
   const work = r?.work ?? local.work;
   const warn = r?.warn ?? local.warn;
   const oneLine = r?.oneLine ?? local.oneLine;
-  void luckyColorHU; void energyPhraseHU;
 
   return (
     <Layout>
@@ -93,9 +91,8 @@ function Page() {
             <div className="text-center">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A mai jegyed</div>
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{SIGN_HU[s.sign]}</h2>
-              {(moon || color || energy) && (
+              {(moon || color) && (
                 <div className="mt-2 flex flex-wrap justify-center gap-x-4 text-sm text-ivory/60">
-                  {energy && <span>· {energy}</span>}
                   {moon && <span>· holdfázis: {moon}</span>}
                   {color && <span>· szerencsés szín: {color}</span>}
                 </div>
