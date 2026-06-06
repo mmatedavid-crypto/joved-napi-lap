@@ -37,7 +37,7 @@ export const Route = createFileRoute("/mai-iranytu")({
       {
         name: "description",
         content:
-          "Mai iránytűd: napi lap, mai szám, holdjel, belső ritmus és egy kristály — rövid, csendes napi ritual.",
+          "Mai iránytűd: napi lap, mai szám, holdjel, belső ritmus és egy kristály — rövid, csendes napi rituálé.",
       },
       { property: "og:title", content: "Mai iránytű | Jövőd.hu" },
       {
@@ -210,7 +210,7 @@ function Page() {
       <PageHeader
         eyebrow="Mai iránytű"
         title="A mai napod röviden"
-        lead="Egy összefogott napi ritual. Add meg, amit szeretnél — a többit kihagyjuk."
+        lead="Egy összefogott napi rituálé. Add meg, amit szeretnél — a többit kihagyjuk."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={build} className="surface p-6 space-y-4">
@@ -281,7 +281,7 @@ function Page() {
             </div>
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
               <div className="text-sm text-ivory/70 mb-2">
-                Részletes, személyre szabott AI üzenet a mai napodhoz?
+                Részletes, személyre szabott üzenet a mai napodhoz?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
                 Kérem · 590 Ft

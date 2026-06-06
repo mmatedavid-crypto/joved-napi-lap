@@ -102,7 +102,7 @@ export function PaywallDialog({
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
             <p className="text-[10px] text-ivory/40 text-center">
-              Biztonságos Stripe fizetés. Bankkártya, Apple Pay, Google Pay.
+              Biztonságos kártyás fizetés. Bankkártya, Apple Pay, Google Pay.
             </p>
           </div>
         ) : (

@@ -162,7 +162,7 @@ function MaiLap() {
                     Mélyebb, személyre szabott üzenetet szeretnél?
                   </div>
                   <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
-                    Kérek AI olvasatot · 490 Ft
+                    Kérek személyes olvasatot · 490 Ft
                   </button>
                 </div>
               </div>

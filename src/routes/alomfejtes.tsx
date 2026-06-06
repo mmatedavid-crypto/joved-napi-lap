@@ -186,7 +186,7 @@ function Page() {
             </div>
             <div className="text-center pt-2">
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Rövid AI álomfejtés · 790 Ft
+                Rövid személyes álomfejtés · 790 Ft
               </button>
             </div>
           </div>

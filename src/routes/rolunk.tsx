@@ -18,7 +18,7 @@ export const Route = createFileRoute("/rolunk")({
     <Layout>
       <PageHeader
         eyebrow="Rólunk"
-        title="Egy csendes ritual"
+        title="Egy csendes rituálé"
         lead="A Jövőd.hu nem jóslat. Egy tükör, amit napi öt percre felemelsz."
       />
       <div className="mx-auto max-w-2xl px-4 md:px-6 pb-20 space-y-4">

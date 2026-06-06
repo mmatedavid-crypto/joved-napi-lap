@@ -127,23 +127,25 @@ function Page() {
               </Section>
             )}
 
-            {order.status === "delivered" && order.response_payload != null && (() => {
-              const payload =
-                typeof order.response_payload === "object" && order.response_payload !== null
-                  ? (order.response_payload as OrderResponsePayload)
-                  : null;
-              return (
-                <Section eyebrow="A te olvasatod" title={payload?.title ?? undefined}>
-                  {payload && typeof payload.body === "string" ? (
-                    <div className="whitespace-pre-wrap">{payload.body}</div>
-                  ) : (
-                    <pre className="text-sm whitespace-pre-wrap">
-                      {JSON.stringify(order.response_payload, null, 2)}
-                    </pre>
-                  )}
-                </Section>
-              );
-            })()}
+            {order.status === "delivered" &&
+              order.response_payload != null &&
+              (() => {
+                const payload =
+                  typeof order.response_payload === "object" && order.response_payload !== null
+                    ? (order.response_payload as OrderResponsePayload)
+                    : null;
+                return (
+                  <Section eyebrow="A te olvasatod" title={payload?.title ?? undefined}>
+                    {payload && typeof payload.body === "string" ? (
+                      <div className="whitespace-pre-wrap">{payload.body}</div>
+                    ) : (
+                      <pre className="text-sm whitespace-pre-wrap">
+                        {JSON.stringify(order.response_payload, null, 2)}
+                      </pre>
+                    )}
+                  </Section>
+                );
+              })()}
 
             {order.status === "failed" && (
               <Section eyebrow="Sajnos hiba történt">

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Napi tarot lap, számmisztika, párkapcsolati összeillés és döntés előtti útmutatás. Egy csendes magyar ritual minden napra.",
+          "Napi tarot lap, számmisztika, párkapcsolati összeillés és döntés előtti útmutatás. Egy csendes magyar rituálé minden napra.",
       },
       { property: "og:title", content: "Jövőd.hu — Húzz egy lapot, mielőtt döntesz" },
       {

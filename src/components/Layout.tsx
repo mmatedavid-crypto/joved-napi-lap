@@ -115,7 +115,7 @@ export function Layout({ children }: { children?: ReactNode }) {
               </span>
             </div>
             <p className="font-editorial text-ivory/60 leading-relaxed">
-              Napi lap. Sorsszám. Összeillés. Egy csendes ritual, mielőtt döntesz.
+              Napi lap. Sorsszám. Összeillés. Egy csendes rituálé, mielőtt döntesz.
             </p>
           </div>
           <div>

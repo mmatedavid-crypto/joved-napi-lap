@@ -24,7 +24,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "napi_lap_ai",
     priceId: "napi_lap_ai_price",
-    name: "Napi lap — AI értelmezés",
+    name: "Napi lap — személyes olvasat",
     short: "Személyre szabott elemzés a mai lapodhoz.",
     priceHuf: 490,
     category: "instant",
@@ -33,7 +33,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "mai_iranytu_ai",
     priceId: "mai_iranytu_ai_price",
-    name: "Mai iránytű — AI üzenet",
+    name: "Mai iránytű — személyes üzenet",
     short: "Mit üzen a mai napod neked személyesen.",
     priceHuf: 590,
     category: "instant",
@@ -42,7 +42,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "angyalszam_ai",
     priceId: "angyalszam_ai_price",
-    name: "Angyalszám — AI elemzés",
+    name: "Angyalszám — mélyebb olvasat",
     short: "Az angyalszámod személyre szabott jelentése.",
     priceHuf: 490,
     category: "instant",
@@ -51,7 +51,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "kristaly_ai",
     priceId: "kristaly_ai_price",
-    name: "Kristály ajánlás — AI",
+    name: "Kristály ajánlás — személyesen",
     short: "A mostani helyzetedhez illő kristály.",
     priceHuf: 490,
     category: "instant",
@@ -60,7 +60,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "alomfejtes_rovid",
     priceId: "alomfejtes_rovid_price",
-    name: "Álomfejtés — rövid AI",
+    name: "Álomfejtés — rövid olvasat",
     short: "Az álmod szimbólumainak rövid értelmezése.",
     priceHuf: 790,
     category: "instant",

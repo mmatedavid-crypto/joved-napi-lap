@@ -23,11 +23,7 @@ export function createStripeClient(env: StripeEnv): Stripe {
     // (Felülírás nélkül a SDK a saját pinned verzióját használja.)
     httpClient: Stripe.createFetchHttpClient(((input: RequestInfo | URL, init?: RequestInit) => {
       const inputUrl =
-        typeof input === "string"
-          ? input
-          : input instanceof URL
-            ? input.toString()
-            : input.url;
+        typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
       const gatewayUrl = inputUrl.replace("https://api.stripe.com", GATEWAY_STRIPE_BASE);
       return fetch(gatewayUrl, {
         ...init,
