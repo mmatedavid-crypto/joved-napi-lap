@@ -326,6 +326,7 @@ function SzamInline() {
     const n = lifePath(dob);
     setRes(n);
     trackEvent("numerology_completed", { number: n });
+    saveLocal("numerology:last", { dob, name });
 
     // Roxy enrichment (silent fallback)
     trackEvent("roxy_call_started", { kind: "numerology" });
