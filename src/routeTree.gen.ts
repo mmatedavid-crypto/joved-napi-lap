@@ -17,6 +17,7 @@ import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
 import { Route as KristalyRouteImport } from './routes/kristaly'
+import { Route as KoszonjukRouteImport } from './routes/koszonjuk'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
@@ -65,6 +66,11 @@ const MaiIranytuRoute = MaiIranytuRouteImport.update({
 const KristalyRoute = KristalyRouteImport.update({
   id: '/kristaly',
   path: '/kristaly',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoszonjukRoute = KoszonjukRouteImport.update({
+  id: '/koszonjuk',
+  path: '/koszonjuk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HoroszkopRoute = HoroszkopRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
+  '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
+  '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
+  '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/dontes-elott'
     | '/harom-lap'
     | '/horoszkop'
+    | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/dontes-elott'
     | '/harom-lap'
     | '/horoszkop'
+    | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/dontes-elott'
     | '/harom-lap'
     | '/horoszkop'
+    | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRoute
+  KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
   MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
@@ -308,6 +321,13 @@ declare module '@tanstack/react-router' {
       path: '/kristaly'
       fullPath: '/kristaly'
       preLoaderRoute: typeof KristalyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/koszonjuk': {
+      id: '/koszonjuk'
+      path: '/koszonjuk'
+      fullPath: '/koszonjuk'
+      preLoaderRoute: typeof KoszonjukRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/horoszkop': {
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRoute,
+  KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
   MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
@@ -398,3 +419,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
