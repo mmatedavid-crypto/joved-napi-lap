@@ -13,7 +13,13 @@ export type EventName =
   | "numerology_completed"
   | "compatibility_completed"
   | "compatibility_invite_clicked"
-  | "detailed_reading_cta_clicked";
+  | "detailed_reading_cta_clicked"
+  | "roxy_call_started"
+  | "roxy_call_succeeded"
+  | "roxy_call_failed"
+  | "roxy_cache_hit"
+  | "roxy_cache_miss"
+  | "roxy_fallback_used";
 
 export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
