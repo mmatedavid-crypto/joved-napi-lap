@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      api_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          endpoint: string
+          expires_at: string | null
+          id: string
+          provider: string
+          request_payload: Json | null
+          response_payload: Json
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          endpoint: string
+          expires_at?: string | null
+          id?: string
+          provider?: string
+          request_payload?: Json | null
+          response_payload: Json
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          endpoint?: string
+          expires_at?: string | null
+          id?: string
+          provider?: string
+          request_payload?: Json | null
+          response_payload?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
