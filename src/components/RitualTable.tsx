@@ -380,26 +380,36 @@ function SzamInline() {
           {(roxy?.expression || roxy?.soulUrge || roxy?.personality) && (
             <div className="grid md:grid-cols-3 gap-3">
               {roxy.expression != null && (
-                <Block eyebrow={`Kifejezés száma · ${roxy.expression}`}>
+                <Block eyebrow={`Kifejeződésed · ${roxy.expression}`}>
                   {lifePathInfo(roxy.expression).meaning}
                 </Block>
               )}
               {roxy.soulUrge != null && (
-                <Block eyebrow={`Lélek vágya · ${roxy.soulUrge}`}>
+                <Block eyebrow={`Belső vágyad · ${roxy.soulUrge}`}>
                   {lifePathInfo(roxy.soulUrge).meaning}
                 </Block>
               )}
               {roxy.personality != null && (
-                <Block eyebrow={`Személyiség · ${roxy.personality}`}>
+                <Block eyebrow={`Külső képed · ${roxy.personality}`}>
                   {lifePathInfo(roxy.personality).meaning}
                 </Block>
               )}
             </div>
           )}
+          {roxy?.maturity != null && (
+            <Block eyebrow={`Érettségi számod · ${roxy.maturity}`}>
+              {lifePathInfo(roxy.maturity).meaning}
+            </Block>
+          )}
           {roxyYear != null && (
             <Block eyebrow={`Az idei személyes éved · ${roxyYear}`}>
               {lifePathInfo(roxyYear).meaning}
             </Block>
+          )}
+          {!roxy && name.trim().length === 0 && (
+            <p className="text-xs text-ivory/45 font-editorial text-center">
+              Tipp: ha megadod a teljes születési neved, mélyebb olvasatot kapsz.
+            </p>
           )}
           {info.purpose && <Block eyebrow="Életfeladat">{info.purpose}</Block>}
           {info.advice && <Block eyebrow="Egy mondat, amit vigyél magaddal"><em>{info.advice}</em></Block>}
