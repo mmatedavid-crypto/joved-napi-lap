@@ -47,15 +47,15 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
 
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
-  const arc = 84; // degrees total — wider fan for 22 cards
+  const arc = 110; // wider fan
 
   return (
     <div className="select-none">
       {/* Chosen slots */}
       {count > 0 && (
         <div
-          className={`grid gap-3 mx-auto mb-6 ${
-            count === 1 ? "max-w-[180px]" : "grid-cols-3 max-w-md"
+          className={`grid gap-3 mx-auto mb-4 ${
+            count === 1 ? "max-w-[220px]" : "grid-cols-3 max-w-xl"
           }`}
           style={{ minHeight: count === 1 ? 0 : undefined }}
         >
@@ -69,14 +69,14 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
                   {slotLabels?.[slot] ?? ""}
                 </div>
                 {!card ? (
-                  <div className="tarot-card opacity-25 border-dashed w-full max-w-[140px]" />
+                  <div className="tarot-card opacity-25 border-dashed w-full max-w-[180px]" />
                 ) : isRev ? (
-                  <CardFace card={card} className="w-full max-w-[140px] animate-fade-in" />
+                  <CardFace card={card} className="w-full max-w-[200px] animate-fade-in" />
                 ) : (
                   <button
                     type="button"
                     onClick={() => reveal(slot)}
-                    className="w-full max-w-[140px] block transition-transform hover:-translate-y-1"
+                    className="w-full max-w-[180px] block transition-transform hover:-translate-y-1"
                     aria-label="Lap felfedése"
                   >
                     <CardBack />
@@ -91,7 +91,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
 
       {/* Instruction */}
       {!allPicked && (
-        <div className="text-center mb-3">
+        <div className="text-center mb-2">
           <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
             {count === 1
               ? "Válassz egy lapot a kiterített pakliból"
@@ -101,13 +101,13 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
       )}
 
       {/* Spread (fan) */}
-      <div className="relative mx-auto h-[240px] sm:h-[280px] max-w-[720px] [perspective:1200px]">
+      <div className="relative mx-auto h-[260px] sm:h-[340px] md:h-[400px] w-full [perspective:1400px]">
         {/* parchment glow */}
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] w-[90%] h-12 rounded-[50%] bg-[radial-gradient(ellipse,oklch(0.78_0.10_80/0.18),transparent_70%)] blur-md pointer-events-none" />
         {pool.map((c, i) => {
           const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
-          const lift = Math.sin(t * Math.PI) * 12; // arc bow
+          const lift = Math.sin(t * Math.PI) * 28; // deeper arc bow
           const isPicked = picked.includes(i);
           const isFaded = allPicked && !isPicked;
           return (
@@ -119,17 +119,15 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               aria-label={isPicked ? "Kiválasztva" : "Lap kiválasztása"}
               className="absolute top-1/2 left-1/2 origin-bottom transition-all duration-500 ease-out group focus:outline-none"
               style={{
-                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(${-lift}px) ${
-                  isPicked ? "translateY(-160px) rotate(0deg) scale(0.95)" : ""
-                } ${isPicked ? `translate(${(picked.indexOf(i) - (count - 1) / 2) * 90}px, -160px)` : ""}`,
-                zIndex: isPicked ? 50 - picked.indexOf(i) : Math.abs(8 - i),
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(${-lift}px)`,
+                zIndex: isPicked ? 50 - picked.indexOf(i) : 22 - Math.abs(11 - i),
                 opacity: isFaded ? 0.15 : isPicked ? 0 : 1,
                 pointerEvents: isPicked || allPicked ? "none" : "auto",
-                width: 78,
+                width: "clamp(86px, 11vw, 132px)",
               }}
             >
               <div
-                className="relative w-[78px] aspect-[2/3.4] rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.55)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)] transition-transform duration-300 group-hover:-translate-y-3 group-hover:shadow-[0_18px_40px_-10px_oklch(0.78_0.10_80/0.4)]"
+                className="relative w-full aspect-[2/3.4] rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.55)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)] transition-transform duration-300 group-hover:-translate-y-4 group-hover:shadow-[0_22px_50px_-10px_oklch(0.78_0.10_80/0.45)]"
               >
                 <img
                   src={CARD_BACK_ART}

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
-import { CARDS, dailySeed, type TarotCard } from "@/data/cards";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -32,13 +32,13 @@ export function RitualTable() {
   return (
     <div>
       {/* Tabs */}
-      <div className="surface px-2 py-2 mb-6 overflow-x-auto">
+      <div className="px-1 py-1 mb-3 overflow-x-auto">
         <div className="flex gap-1 min-w-max md:justify-center">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setMode(t.id)}
-              className={`px-3.5 md:px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors ${
+              className={`px-3 md:px-4 py-1.5 rounded-full text-[13px] whitespace-nowrap transition-colors ${
                 mode === t.id
                   ? "bg-[oklch(0.78_0.10_80/0.18)] text-gold border border-[oklch(0.78_0.10_80/0.4)]"
                   : "text-ivory/70 hover:text-ivory border border-transparent"
@@ -52,7 +52,7 @@ export function RitualTable() {
         </div>
       </div>
 
-      <div className="surface p-4 md:p-7">
+      <div className={mode === "mai" || mode === "harom" ? "pt-1" : "surface p-4 md:p-7"}>
         {mode === "mai" && <MaiLapInline />}
         {mode === "harom" && <HaromLapInline />}
         {mode === "randi" && <RandiInline />}
@@ -104,11 +104,8 @@ function MaiLapInline() {
     <div>
       {!card && (
         <>
-          <Eyebrow>Mai lap</Eyebrow>
-          <h2 className="font-display text-2xl text-ivory mb-4">Egy lap a mai napodra</h2>
           <SpreadDeck
             count={1}
-            seed={dailySeed()}
             onComplete={(cards) => {
               const c = cards[0];
               setCard(c);
@@ -151,8 +148,9 @@ function HaromLapInline() {
     <div>
       {!cards && (
         <>
-          <Eyebrow>3 lapos húzás · Múlt · Jelen · Jövő</Eyebrow>
-          <h2 className="font-display text-2xl text-ivory mb-4">Válassz három lapot</h2>
+          <div className="text-center mb-2">
+            <Eyebrow>3 lapos húzás · Múlt · Jelen · Jövő</Eyebrow>
+          </div>
           <SpreadDeck
             count={3}
             slotLabels={["Múlt", "Jelen", "Jövő"]}
