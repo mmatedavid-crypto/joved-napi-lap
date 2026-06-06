@@ -9,7 +9,6 @@ import { localHoroscope } from "@/lib/horoscope.hu";
 import { todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
-import { useState as useState2 } from "react";
 
 export const Route = createFileRoute("/horoszkop")({
   head: () => ({
@@ -41,7 +40,7 @@ function Page() {
     reading: null,
     fallback: false,
   });
-  const [paywall, setPaywall] = useState2(false);
+  const [paywall, setPaywall] = useState(false);
 
   useEffect(() => {
     trackEvent("horoscope_opened");
