@@ -166,6 +166,15 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
                 ? "Válassz egy lapot a kiterített pakliból"
                 : `Válassz ${count - picked.length} lapot a pakliból`}
             </div>
+            {picked.length === 0 && (
+              <button
+                type="button"
+                onClick={() => { setPhase("shuffling"); shuffleAgain(); }}
+                className="mt-1 text-[10px] tracking-[0.2em] uppercase text-ivory/55 hover:text-[oklch(0.85_0.10_80)] underline-offset-4 hover:underline"
+              >
+                újrakeverés
+              </button>
+            )}
           </div>
         )}
 
