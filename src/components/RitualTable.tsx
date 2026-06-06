@@ -32,7 +32,7 @@ export function RitualTable() {
   return (
     <div>
       {/* Tabs */}
-      <div className="px-1 py-1 mb-3 overflow-x-auto">
+      <div className="px-2 py-1 mb-0 overflow-x-auto">
         <div className="flex gap-1 min-w-max md:justify-center">
           {TABS.map((t) => (
             <button
@@ -52,7 +52,7 @@ export function RitualTable() {
         </div>
       </div>
 
-      <div className={mode === "mai" || mode === "harom" ? "pt-1" : "surface p-4 md:p-7"}>
+      <div className={mode === "mai" || mode === "harom" ? "pt-0" : "surface p-4 md:p-7"}>
         {mode === "mai" && <MaiLapInline />}
         {mode === "harom" && <HaromLapInline />}
         {mode === "randi" && <RandiInline />}
