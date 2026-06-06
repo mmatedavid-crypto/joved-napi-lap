@@ -6,6 +6,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
@@ -41,6 +42,7 @@ function HaromLap() {
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   function draw() {
@@ -188,6 +190,10 @@ function HaromLap() {
               <button onClick={() => setCards(null)} className="btn-ghost-gold">
                 Új húzás
               </button>
+              <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
+                <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz emailben?</div>
+                <button className="btn-gold" onClick={() => setPaywall(true)}>Három lap — mély elemzés · 1990 Ft</button>
+              </div>
             </div>
             {question && (
               <p className="text-center text-ivory/50 text-sm font-editorial italic">
@@ -197,6 +203,7 @@ function HaromLap() {
           </>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="harom_lap_mely" sourceRoute="/harom-lap" inputPayload={{ cards: cards?.map((c) => c.name), question, category }} />
     </Layout>
   );
 }

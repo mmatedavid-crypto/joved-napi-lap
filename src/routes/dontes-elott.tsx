@@ -10,6 +10,7 @@ import { normalizeRoxyIching } from "@/lib/roxyNormalize";
 import { hexHU } from "@/lib/iching.hu";
 import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/dontes-elott")({
   head: () => ({
@@ -45,6 +46,7 @@ function Page() {
   const [ichingFailed, setIchingFailed] = useState(false);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   async function draw() {
@@ -282,9 +284,14 @@ function Page() {
             >
               Új húzás
             </button>
+            <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
+              <div className="text-sm text-ivory/70 mb-2">Komplex döntéselőkészítő elemzés emailben?</div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Komplex elemzés · 2490 Ft</button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="dontes_komplex" sourceRoute="/dontes-elott" inputPayload={{ q, cat, mode, cards: cards?.map((c) => c.name), hex: hex?.name }} />
     </Layout>
   );
 }

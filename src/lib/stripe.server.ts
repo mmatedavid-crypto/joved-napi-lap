@@ -21,7 +21,8 @@ export function createStripeClient(env: StripeEnv): Stripe {
   const lovableApiKey = getEnv("LOVABLE_API_KEY");
 
   return new Stripe(connectionApiKey, {
-    apiVersion: "2026-03-25.dahlia",
+    // A telepített stripe@22.0.2 SDK alapértelmezett API verziójával dolgozunk.
+    // (Felülírás nélkül a SDK a saját pinned verzióját használja.)
     httpClient: Stripe.createFetchHttpClient(((input: any, init?: RequestInit) => {
       const gatewayUrl = (typeof input === "string" ? input : input?.url ?? String(input)).replace(
         "https://api.stripe.com",

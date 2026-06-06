@@ -7,6 +7,7 @@ import { aiDreamHU, type DreamHU } from "@/lib/roxyTranslate.functions";
 import { dreamTextToSlug } from "@/lib/roxyNormalize";
 import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
+import { PaywallDialog } from "@/components/PaywallDialog";
 
 export const Route = createFileRoute("/alomfejtes")({
   head: () => ({
@@ -42,6 +43,7 @@ function Page() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<DreamHU | null>(null);
   const [noSymbol, setNoSymbol] = useState(false);
+  const [paywall, setPaywall] = useState(false);
 
   async function run(slug: string) {
     setLoading(true);
@@ -182,9 +184,13 @@ function Page() {
                 </Section>
               )}
             </div>
+            <div className="text-center pt-2">
+              <button className="btn-gold" onClick={() => setPaywall(true)}>Rövid AI álomfejtés · 790 Ft</button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="alomfejtes_rovid" sourceRoute="/alomfejtes" inputPayload={result ? { title: result.title, text } : { text }} />
     </Layout>
   );
 }

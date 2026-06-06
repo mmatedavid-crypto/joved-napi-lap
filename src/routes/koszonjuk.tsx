@@ -29,7 +29,10 @@ function Page() {
     if (!session_id) { setLoading(false); return; }
     let stop = false;
     let triggered = false;
+    let attempts = 0;
+    const MAX_ATTEMPTS = 60; // ~2.5 perc 2.5s intervallumonként
     async function tick() {
+      attempts++;
       try {
         const r = await fetchOrder({ data: { sessionId: session_id! } });
         if (stop) return;
@@ -40,7 +43,12 @@ function Page() {
           triggered = true;
           runProcess({ data: { sessionId: session_id! } }).catch(() => {});
         }
-        if (r.order.status === "processing" || r.order.status === "paid" || r.order.status === "pending_payment") {
+        if (
+          attempts < MAX_ATTEMPTS &&
+          (r.order.status === "processing" ||
+            r.order.status === "paid" ||
+            r.order.status === "pending_payment")
+        ) {
           setTimeout(tick, 2500);
         }
       } catch (e: any) {
