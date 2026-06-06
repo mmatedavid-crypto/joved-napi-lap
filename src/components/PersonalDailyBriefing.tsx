@@ -55,7 +55,6 @@ export function PersonalDailyBriefing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [briefing, setBriefing] = useState<StoredBriefing | null>(null);
-  const [editing, setEditing] = useState(false);
   const [phase, setPhase] = useState<"draw" | "card" | "result">("draw");
   const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
   const [drawResetKey, setDrawResetKey] = useState(0);
@@ -145,7 +144,6 @@ export function PersonalDailyBriefing() {
     setBriefing(null);
     setDrawnCard(null);
     setError(null);
-    setEditing(false);
     setDrawResetKey((k) => k + 1);
     setPhase("draw");
   }
