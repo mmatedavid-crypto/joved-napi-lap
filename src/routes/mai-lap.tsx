@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
+import { StreamingText } from "@/components/StreamingText";
+import { ShareCardButton } from "@/components/ShareCardButton";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
@@ -96,9 +98,18 @@ function MaiLap() {
                 {loadingReading && !reading && (
                   <div className="text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
                 )}
-                <Section eyebrow="Mit üzen ma?">{reading?.cardMessage ?? reading?.intro ?? card.general}</Section>
-                <Section eyebrow="Mire figyelj?">{reading?.warn ?? card.warning}</Section>
-                <Section eyebrow="Egy mondat, amit vigyél magaddal"><em>{reading?.oneLine ?? card.daily}</em></Section>
+                <Section eyebrow="Mit üzen ma?">
+                  <StreamingText text={reading?.cardMessage ?? reading?.intro ?? card.general} instant={!reading} />
+                </Section>
+                <Section eyebrow="Mire figyelj?">
+                  <StreamingText text={reading?.warn ?? card.warning} instant={!reading} />
+                </Section>
+                <Section eyebrow="Egy mondat, amit vigyél magaddal">
+                  <StreamingText as="em" text={reading?.oneLine ?? card.daily} instant={!reading} />
+                </Section>
+                <div className="pt-2">
+                  <ShareCardButton card={card} oneLine={reading?.oneLine ?? card.daily} eyebrow="A mai lapod" />
+                </div>
               </div>
             )}
           </div>
