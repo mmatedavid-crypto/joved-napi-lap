@@ -2,11 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 export type HUDateValue = string; // YYYY-MM-DD or ""
 
-const MONTHS_HU = [
-  "január", "február", "március", "április", "május", "június",
-  "július", "augusztus", "szeptember", "október", "november", "december",
-];
-
 function daysInMonth(y: number, m: number) {
   if (!y || !m) return 31;
   return new Date(y, m, 0).getDate();
@@ -34,22 +29,30 @@ export function HUDateInput({
     return m ? { y: Number(m[1]), mo: Number(m[2]), d: Number(m[3]) } : { y: 0, mo: 0, d: 0 };
   }, [value]);
 
-  const [y, setY] = useState(parsed.y || 0);
-  const [mo, setMo] = useState(parsed.mo || 0);
-  const [d, setD] = useState(parsed.d || 0);
+  const [yStr, setYStr] = useState(parsed.y ? String(parsed.y) : "");
+  const [moStr, setMoStr] = useState(parsed.mo ? String(parsed.mo) : "");
+  const [dStr, setDStr] = useState(parsed.d ? String(parsed.d) : "");
 
-  const moRef = useRef<HTMLSelectElement>(null);
-  const dRef = useRef<HTMLSelectElement>(null);
+  const moRef = useRef<HTMLInputElement>(null);
+  const dRef = useRef<HTMLInputElement>(null);
 
   // keep internal in sync if value changes externally
   useEffect(() => {
-    setY(parsed.y || 0); setMo(parsed.mo || 0); setD(parsed.d || 0);
+    setYStr(parsed.y ? String(parsed.y) : "");
+    setMoStr(parsed.mo ? String(parsed.mo) : "");
+    setDStr(parsed.d ? String(parsed.d) : "");
   }, [parsed.y, parsed.mo, parsed.d]);
 
+  const y = Number(yStr) || 0;
+  const mo = Number(moStr) || 0;
+  const d = Number(dStr) || 0;
   const dim = daysInMonth(y, mo);
 
   useEffect(() => {
-    if (y && mo && d) {
+    const yValid = y >= minYear && y <= maxYear;
+    const moValid = mo >= 1 && mo <= 12;
+    const dValid = d >= 1 && d <= dim;
+    if (yValid && moValid && dValid) {
       const safeDay = Math.min(d, dim);
       const v = `${y}-${String(mo).padStart(2, "0")}-${String(safeDay).padStart(2, "0")}`;
       if (v !== value) onChange(v);
@@ -59,10 +62,11 @@ export function HUDateInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [y, mo, d, dim]);
 
-  const years: number[] = [];
-  for (let i = maxYear; i >= minYear; i--) years.push(i);
+  const inp = "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-3 py-3 text-ivory text-center tabular-nums tracking-wider focus:border-gold outline-none";
 
-  const sel = "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-3 py-3 text-ivory focus:border-gold outline-none appearance-none";
+  function onlyDigits(s: string, max: number) {
+    return s.replace(/\D/g, "").slice(0, max);
+  }
 
   return (
     <div>
@@ -71,53 +75,53 @@ export function HUDateInput({
           {label}{required && <span className="text-gold/80"> *</span>}
         </label>
       )}
-      <div className="grid grid-cols-[1.2fr_1.4fr_1fr] gap-2">
-        <select
+      <div className="grid grid-cols-[1.4fr_1fr_1fr] gap-2">
+        <input
+          inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete="bday-year"
           aria-label="Év"
+          placeholder="ÉÉÉÉ"
           required={required}
-          value={y || ""}
+          value={yStr}
+          maxLength={4}
           onChange={(e) => {
-            const v = Number(e.target.value);
-            setY(v);
-            if (v && !mo) moRef.current?.focus();
+            const v = onlyDigits(e.target.value, 4);
+            setYStr(v);
+            if (v.length === 4) moRef.current?.focus();
           }}
-          className={sel}
-        >
-          <option value="">Év</option>
-          {years.map((yy) => <option key={yy} value={yy}>{yy}</option>)}
-        </select>
-        <select
+          className={inp}
+        />
+        <input
           ref={moRef}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete="bday-month"
           aria-label="Hónap"
+          placeholder="HH"
           required={required}
-          value={mo || ""}
+          value={moStr}
+          maxLength={2}
           onChange={(e) => {
-            const v = Number(e.target.value);
-            setMo(v);
-            if (v && !d) dRef.current?.focus();
+            const v = onlyDigits(e.target.value, 2);
+            setMoStr(v);
+            if (v.length === 2 || (v.length === 1 && Number(v) > 1)) dRef.current?.focus();
           }}
-          className={sel}
-        >
-          <option value="">Hónap</option>
-          {MONTHS_HU.map((name, i) => (
-            <option key={i + 1} value={i + 1}>
-              {String(i + 1).padStart(2, "0")} — {name}
-            </option>
-          ))}
-        </select>
-        <select
+          className={inp}
+        />
+        <input
           ref={dRef}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete="bday-day"
           aria-label="Nap"
+          placeholder="NN"
           required={required}
-          value={d || ""}
-          onChange={(e) => setD(Number(e.target.value))}
-          className={sel}
-        >
-          <option value="">Nap</option>
-          {Array.from({ length: dim }).map((_, i) => (
-            <option key={i + 1} value={i + 1}>{String(i + 1).padStart(2, "0")}</option>
-          ))}
-        </select>
+          value={dStr}
+          maxLength={2}
+          onChange={(e) => setDStr(onlyDigits(e.target.value, 2))}
+          className={inp}
+        />
       </div>
       {helper && <p className="text-xs text-ivory/45 mt-1.5 font-editorial">{helper}</p>}
     </div>
