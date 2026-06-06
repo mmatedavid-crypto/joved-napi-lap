@@ -400,6 +400,8 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
             source: "user-drawn",
             name: data.drawnCard.name,
             keywords: data.drawnCard.keywords ?? [],
+            huGeneral: data.drawnCard.general ?? null,
+            huDaily: data.drawnCard.daily ?? null,
           }
         : null,
       horoscope: pick(horoR),
@@ -417,11 +419,14 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
     const sys = [
       "Te a Jövőd.hu spirituális napló írója vagy.",
       "MINDIG magyarul írj, soha ne hagyj angol szót a kimenetben.",
-      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli; nem közhelyes.",
+      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt — soha nem közhelyes és nem coachos.",
+      "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre'. Ha ilyenre csábulnál, írj helyette KONKRÉT, mai helyzetet (egy beszélgetés, egy döntés, egy pillanat).",
+      "Minden mondat legyen KONKRÉT és KÉPSZERŰ: utalj a kihúzott lap szimbólumára (pl. a Bolond szakadékpereme, a Mágus asztala, a Halál küszöbe) és a mai napra. Ne általánosíts.",
       "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj.",
-      "Tartsd rövidre: minden mező 1-2 mondat. 'oneLine' egy mondat.",
-      "A 'cardTitle' mindig pontosan az a magyar lapnév, amit a 'nyersAdatok.tarot.name' mezőben kapsz — sose találj ki másikat. A 'cardLine' annak a lapnak a mai értelmét írja le a felhasználónak, a kulcsszavakra építve.",
-      "Az angol forrásszövegeket NE fordítsd szó szerint, hanem fogalmazd át a saját hangoddal úgy, hogy a lényegük (téma, energia, figyelmeztetés) átjöjjön.",
+      "Hossz: minden mező 1-2 mondat, semmi felsorolás. 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval és ne legyen jóslat-szerű.",
+      "A 'cardTitle' SZÓ SZERINT a 'nyersAdatok.tarot.name' értéke. A 'cardLine' a kihúzott lap MAI üzenete a felhasználónak — építsd a 'nyersAdatok.tarot.huGeneral' és 'huDaily' tartalmára, de fogalmazd újra úgy, hogy a felhasználó keresztnevére / csillagjegyére is reflektáljon, ha kaptál ilyet. Soha ne mondj olyat a lapról, ami ellentmond a magyar forrásszövegnek.",
+      "A horoszkóp mezőket (horoMood/Love/Work/Warn) az angol forrásból írd át — NE szó szerint fordítsd, hanem emeld ki a konkrét témát (pl. 'egy régi kolléga újra megkeres', 'pénzügyi döntés halasztása'), és kapcsold össze a kihúzott lap energiájával egy rövid, érzékletes mondatban.",
+      "Ha valamelyik nyers adat hiányzik vagy üres, hagyd ki az adott mezőt — ne tölts fel közhellyel.",
       "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül.",
     ].join(" ");
 
