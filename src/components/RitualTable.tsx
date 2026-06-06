@@ -312,15 +312,43 @@ function SzamInline() {
   const [dob, setDob] = useState("");
   const [name, setName] = useState("");
   const [res, setRes] = useState<number | null>(null);
+  const [roxy, setRoxy] = useState<RoxyChart | null>(null);
+  const [roxyYear, setRoxyYear] = useState<number | null>(null);
 
   const info = useMemo(() => (res != null ? lifePathInfo(res) : null), [res]);
 
-  function calc(e: React.FormEvent) {
+  const callChart = useServerFn(roxyNumerologyChart);
+  const callPYear = useServerFn(roxyNumerologyPersonalYear);
+
+  async function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!dob) return;
     const n = lifePath(dob);
     setRes(n);
     trackEvent("numerology_completed", { number: n });
+
+    // Roxy enrichment (silent fallback)
+    trackEvent("roxy_call_started", { kind: "numerology" });
+    try {
+      const [chartRes, yearRes] = await Promise.all([
+        callChart({ data: { birthDate: dob, fullName: name || undefined } }),
+        callPYear({ data: { birthDate: dob } }),
+      ]);
+      if (chartRes.ok) {
+        setRoxy(normalizeRoxyChart(chartRes.data));
+        trackEvent("roxy_call_succeeded", { endpoint: "numerology/chart", cached: chartRes.cached });
+        trackEvent(chartRes.cached ? "roxy_cache_hit" : "roxy_cache_miss", { endpoint: "numerology/chart" });
+      } else {
+        trackEvent("roxy_call_failed", { endpoint: "numerology/chart", code: chartRes.providerCode });
+        trackEvent("roxy_fallback_used", { endpoint: "numerology/chart" });
+      }
+      if (yearRes.ok) {
+        const py = normalizeRoxyChart(yearRes.data).personalYear ?? null;
+        setRoxyYear(py);
+      }
+    } catch {
+      trackEvent("roxy_fallback_used", { endpoint: "numerology" });
+    }
   }
 
   return (
@@ -350,6 +378,30 @@ function SzamInline() {
             <Block eyebrow="Szerelemben">{info.love}</Block>
             <Block eyebrow="Munkában">{info.work}</Block>
           </div>
+          {(roxy?.expression || roxy?.soulUrge || roxy?.personality) && (
+            <div className="grid md:grid-cols-3 gap-3">
+              {roxy.expression != null && (
+                <Block eyebrow={`Kifejezés száma · ${roxy.expression}`}>
+                  {lifePathInfo(roxy.expression).meaning}
+                </Block>
+              )}
+              {roxy.soulUrge != null && (
+                <Block eyebrow={`Lélek vágya · ${roxy.soulUrge}`}>
+                  {lifePathInfo(roxy.soulUrge).meaning}
+                </Block>
+              )}
+              {roxy.personality != null && (
+                <Block eyebrow={`Személyiség · ${roxy.personality}`}>
+                  {lifePathInfo(roxy.personality).meaning}
+                </Block>
+              )}
+            </div>
+          )}
+          {roxyYear != null && (
+            <Block eyebrow={`Az idei személyes éved · ${roxyYear}`}>
+              {lifePathInfo(roxyYear).meaning}
+            </Block>
+          )}
           {info.purpose && <Block eyebrow="Életfeladat">{info.purpose}</Block>}
           {info.advice && <Block eyebrow="Egy mondat, amit vigyél magaddal"><em>{info.advice}</em></Block>}
           <div className="text-center"><Link to="/szammisztika" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "szam" })}>Bővebb sorsszám-olvasat →</Link></div>
@@ -365,14 +417,36 @@ function OsszeillunkInline() {
   const [a, setA] = useState(""); const [b, setB] = useState("");
   const [na, setNa] = useState(""); const [nb, setNb] = useState("");
   const [res, setRes] = useState<null | { aN: number; bN: number; rel: number; score: number }>(null);
+  const [roxyC, setRoxyC] = useState<RoxyCompat | null>(null);
+  const callCompat = useServerFn(roxyNumerologyCompatibility);
 
-  function calc(e: React.FormEvent) {
+  async function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!a || !b) return;
     const aN = lifePath(a), bN = lifePath(b);
     const out = { aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) };
     setRes(out);
     trackEvent("compatibility_completed", { score: out.score, rel: out.rel });
+
+    trackEvent("roxy_call_started", { kind: "compatibility" });
+    try {
+      const r = await callCompat({
+        data: {
+          birthDate1: a, birthDate2: b,
+          fullName1: na || undefined, fullName2: nb || undefined,
+        },
+      });
+      if (r.ok) {
+        setRoxyC(normalizeRoxyCompat(r.data));
+        trackEvent("roxy_call_succeeded", { endpoint: "numerology/compatibility", cached: r.cached });
+        trackEvent(r.cached ? "roxy_cache_hit" : "roxy_cache_miss", { endpoint: "numerology/compatibility" });
+      } else {
+        trackEvent("roxy_call_failed", { endpoint: "numerology/compatibility", code: r.providerCode });
+        trackEvent("roxy_fallback_used", { endpoint: "numerology/compatibility" });
+      }
+    } catch {
+      trackEvent("roxy_fallback_used", { endpoint: "numerology/compatibility" });
+    }
   }
 
   const pair = res ? compatPairMeaning(res.aN, res.bN) : null;
@@ -414,6 +488,25 @@ function OsszeillunkInline() {
           </div>
           <Block eyebrow="Miért működhet">{pair.works}</Block>
           <Block eyebrow="Hol lehet nehéz">{pair.tension}</Block>
+          {roxyC && (roxyC.communication != null || roxyC.attraction != null || roxyC.longTerm != null) && (
+            <div className="grid md:grid-cols-3 gap-3">
+              {roxyC.communication != null && (
+                <Block eyebrow="Kommunikáció">
+                  {roxyC.communication}% — {roxyC.communication >= 70 ? "Természetesen értitek egymást." : roxyC.communication >= 50 ? "Megérthetitek egymást, ha kimondjátok, amit éreztek." : "Ki kell dolgozni a közös nyelvet."}
+                </Block>
+              )}
+              {roxyC.attraction != null && (
+                <Block eyebrow="Vonzalom">
+                  {roxyC.attraction}% — {roxyC.attraction >= 70 ? "Erős a kettőtök közötti húzás." : roxyC.attraction >= 50 ? "Van vonzás, de táplálni kell." : "Lassabban épülő érzés."}
+                </Block>
+              )}
+              {roxyC.longTerm != null && (
+                <Block eyebrow="Hosszú táv">
+                  {roxyC.longTerm}% — {roxyC.longTerm >= 70 ? "Olyan kapocs, ami meg tud állni az időben." : roxyC.longTerm >= 50 ? "Hosszan tartható, ha mindketten dolgoztok rajta." : "Inkább egy fejezet, mint egy egész történet."}
+                </Block>
+              )}
+            </div>
+          )}
           <Block eyebrow="Egy mondat, amit vigyetek magatokkal"><em>{pair.advice}</em></Block>
           <div className="text-center"><Link to="/osszeillunk" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "osszeillunk" })}>Bővebb olvasat →</Link></div>
         </div>
