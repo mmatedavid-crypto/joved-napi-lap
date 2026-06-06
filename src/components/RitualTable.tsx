@@ -340,6 +340,8 @@ function SzamInline() {
             <Block eyebrow="Szerelemben">{info.love}</Block>
             <Block eyebrow="Munkában">{info.work}</Block>
           </div>
+          {info.purpose && <Block eyebrow="Életfeladat">{info.purpose}</Block>}
+          {info.advice && <Block eyebrow="Egy mondat, amit vigyél magaddal"><em>{info.advice}</em></Block>}
           <div className="text-center"><Link to="/szammisztika" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "szam" })}>Bővebb sorsszám-olvasat →</Link></div>
         </div>
       )}
