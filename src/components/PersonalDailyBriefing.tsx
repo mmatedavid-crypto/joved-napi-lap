@@ -55,8 +55,7 @@ export function PersonalDailyBriefing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [briefing, setBriefing] = useState<StoredBriefing | null>(null);
-  const [editing, setEditing] = useState(false);
-  const [phase, setPhase] = useState<"form" | "draw" | "result">("form");
+  const [phase, setPhase] = useState<"draw" | "card" | "result">("draw");
   const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
   const [drawResetKey, setDrawResetKey] = useState(0);
 
@@ -80,27 +79,23 @@ export function PersonalDailyBriefing() {
     }
   }, []);
 
-  function startDraw(e?: React.FormEvent) {
+  function onCardDrawn(card: TarotCard) {
+    setDrawnCard(card);
+    setPhase("card");
+    trackEvent("daily_card_revealed", { cardId: card.id, from: "home" });
+  }
+
+  async function enrichWithProfile(e?: React.FormEvent) {
     e?.preventDefault();
+    if (!drawnCard) return;
     const sign = zodiacFromDob(dob);
     if (!dob || !sign) return;
+    setLoading(true);
     setError(null);
     const nextProfile: Profile = { name: name.trim() || undefined, dob, sign };
     setProfile(nextProfile);
     saveLocal("home:profile", nextProfile);
-    setPhase("draw");
-    setDrawnCard(null);
-    setDrawResetKey((k) => k + 1);
     trackEvent("daily_compass_opened", { from: "home" });
-  }
-
-  async function buildWithCard(card: TarotCard) {
-    const sign = profile.sign ?? zodiacFromDob(dob);
-    if (!dob || !sign) return;
-    setDrawnCard(card);
-    setLoading(true);
-    setError(null);
-    trackEvent("daily_card_revealed", { cardId: card.id, from: "home" });
 
     const dateKey = todayKey();
 
@@ -110,7 +105,7 @@ export function PersonalDailyBriefing() {
         sign: sign as never,
         name: name.trim() || undefined,
         dateKey,
-        drawnCard: { id: card.id, name: card.name, keywords: card.keywords },
+        drawnCard: { id: drawnCard.id, name: drawnCard.name, keywords: drawnCard.keywords },
       },
     });
 
@@ -134,21 +129,27 @@ export function PersonalDailyBriefing() {
       lifePathTitle: lpInfo.title,
       personalYearNum: py,
       personalYearMeaning: pyInfo.meaning,
-      drawnCardId: card.id,
+      drawnCardId: drawnCard.id,
     };
 
     setBriefing(stored);
     saveLocal("home:briefing", stored);
-    setEditing(false);
     setLoading(false);
     setPhase("result");
     trackEvent("daily_compass_completed", { from: "home" });
   }
 
-  const hasProfile = !!(profile.dob && profile.sign);
-  const showForm = phase === "form" && (!hasProfile || editing);
+  function resetAll() {
+    setBriefing(null);
+    setDrawnCard(null);
+    setError(null);
+    setDrawResetKey((k) => k + 1);
+    setPhase("draw");
+  }
+
   const showDraw = phase === "draw";
-  const showResult = phase === "result" && !!briefing;
+  const showCardOnly = phase === "card" && !!drawnCard;
+  const showResult = phase === "result" && !!briefing && !!drawnCard;
 
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-6 pt-2 pb-8">
@@ -157,89 +158,80 @@ export function PersonalDailyBriefing() {
         <p className="font-editorial text-ivory/70 mt-2 max-w-xl mx-auto text-sm">
           {showResult
             ? "A mai jeleid egy helyen, neked összeállítva."
-            : showDraw
-              ? "Húzz egy lapot — ez lesz a mai lapod, és köré épül az olvasat."
-              : "Add meg a születési dátumod — a csillagjegyed ebből kiszámolom, és utána húzz egy lapot magadnak."}
+            : showCardOnly
+              ? "Itt a mai lapod. Ha szeretnél személyre szabottabb olvasatot, add meg a születési dátumod."
+              : "Húzz egy lapot — ez lesz a mai lapod. Utána, ha szeretnéd, személyre szabhatod."}
         </p>
       </div>
 
-      {showForm && (
-        <form onSubmit={startDraw} className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-ivory/80 mb-2">
-                Keresztnév <span className="text-ivory/45">(opcionális)</span>
-              </label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Pl. Anna"
-                className="w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
-              />
+      {showDraw && (
+        <SpreadDeck
+          count={1}
+          resetKey={drawResetKey}
+          onComplete={(cards) => onCardDrawn(cards[0])}
+        />
+      )}
+
+      {showCardOnly && drawnCard && (
+        <div className="space-y-5">
+          <div className="grid md:grid-cols-[200px,1fr] gap-5 items-start surface p-5 md:p-6 max-w-3xl mx-auto">
+            <div className="mx-auto w-full max-w-[200px]">
+              <CardFace card={drawnCard} />
             </div>
-            <HUDateInput value={dob} onChange={setDob} label="Születési dátum" required />
+            <div className="space-y-3">
+              <Eyebrow>A mai lapod</Eyebrow>
+              <div className="font-display text-ivory text-2xl">{drawnCard.name}</div>
+              <div className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed">
+                {drawnCard.general}
+              </div>
+              <div className="text-ivory/75 font-editorial text-[14.5px] italic">
+                {drawnCard.daily}
+              </div>
+            </div>
           </div>
-          {dob && zodiacFromDob(dob) && (
-            <div className="text-xs text-ivory/60 font-editorial">
-              Csillagjegyed: <span className="text-gold">{SIGN_HU[zodiacFromDob(dob)!]}</span>
+
+          <form onSubmit={enrichWithProfile} className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto">
+            <Eyebrow>Személyre szabás (opcionális)</Eyebrow>
+            <p className="font-editorial text-ivory/70 text-sm">
+              Add meg a születési dátumod, és ezt a lapot a horoszkópoddal, belső ritmusoddal és a mai kristályoddal együtt fűzöm össze.
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-ivory/80 mb-2">
+                  Keresztnév <span className="text-ivory/45">(opcionális)</span>
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Pl. Anna"
+                  className="w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
+                />
+              </div>
+              <HUDateInput value={dob} onChange={setDob} label="Születési dátum" required />
             </div>
-          )}
-          <div className="flex flex-wrap items-center gap-3">
-            <button className="btn-gold" disabled={!dob}>
-              Tovább a laphúzáshoz
-            </button>
-            {hasProfile && (
+            {dob && zodiacFromDob(dob) && (
+              <div className="text-xs text-ivory/60 font-editorial">
+                Csillagjegyed: <span className="text-gold">{SIGN_HU[zodiacFromDob(dob)!]}</span>
+              </div>
+            )}
+            <div className="flex flex-wrap items-center gap-3">
+              <button className="btn-gold" disabled={loading || !dob}>
+                {loading ? "Egy pillanat…" : "Személyes olvasatom"}
+              </button>
               <button
                 type="button"
                 className="text-xs text-ivory/55 hover:text-gold"
-                onClick={() => { setEditing(false); setError(null); if (briefing) setPhase("result"); }}
+                onClick={resetAll}
               >
-                Mégse
+                Új lap húzása
               </button>
-            )}
-            <span className="text-xs text-ivory/45 font-editorial">
-              Az adataidat csak a böngésződben tároljuk.
-            </span>
-          </div>
-          {error && (
-            <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3">
-              {error}
             </div>
-          )}
-        </form>
-      )}
-
-      {showDraw && (
-        <div className="space-y-4">
-          {!drawnCard && (
-            <SpreadDeck
-              count={1}
-              resetKey={drawResetKey}
-              onComplete={(cards) => { void buildWithCard(cards[0]); }}
-            />
-          )}
-          {drawnCard && loading && (
-            <div className="max-w-xs mx-auto text-center space-y-3">
-              <CardFace card={drawnCard} />
-              <p className="font-editorial text-ivory/70 text-sm">
-                A {drawnCard.name} lapod megérkezett. Összeállítom köré a mai olvasatod…
-              </p>
-            </div>
-          )}
-          {error && (
-            <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3 max-w-2xl mx-auto">
-              {error}
-              <div className="mt-2">
-                <button
-                  type="button"
-                  className="text-xs text-gold hover:underline"
-                  onClick={() => { setError(null); setDrawnCard(null); setDrawResetKey((k) => k + 1); }}
-                >
-                  Húzok újra
-                </button>
+            {error && (
+              <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3">
+                {error}
               </div>
-            </div>
-          )}
+            )}
+          </form>
         </div>
       )}
 
@@ -303,18 +295,7 @@ export function PersonalDailyBriefing() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 pt-1">
-            <button className="btn-ghost-gold" onClick={() => { setEditing(true); setPhase("form"); }}>
-              Adatok módosítása
-            </button>
-            <button
-              className="btn-ghost-gold"
-              onClick={() => {
-                setBriefing(null);
-                setDrawnCard(null);
-                setDrawResetKey((k) => k + 1);
-                setPhase("draw");
-              }}
-            >
+            <button className="btn-ghost-gold" onClick={resetAll}>
               Új lap húzása
             </button>
             <Link to="/mai-iranytu" className="btn-ghost-gold">Bővebb napi iránytű →</Link>

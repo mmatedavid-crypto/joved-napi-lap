@@ -27,10 +27,9 @@ import {
   threeCardSynthesis,
 } from "@/lib/numerology";
 
-type Mode = "mai" | "harom" | "randi" | "dontes" | "szam" | "osszeillunk";
+type Mode = "harom" | "randi" | "dontes" | "szam" | "osszeillunk";
 
 const TABS: { id: Mode; label: string; short: string }[] = [
-  { id: "mai", label: "Mai lap", short: "Mai" },
   { id: "harom", label: "3 lapos húzás", short: "3 lap" },
   { id: "randi", label: "Randi előtt", short: "Randi" },
   { id: "dontes", label: "Döntés előtt", short: "Döntés" },
@@ -39,7 +38,7 @@ const TABS: { id: Mode; label: string; short: string }[] = [
 ];
 
 export function RitualTable() {
-  const [mode, setMode] = useState<Mode>("mai");
+  const [mode, setMode] = useState<Mode>("harom");
 
   return (
     <div>
@@ -64,8 +63,7 @@ export function RitualTable() {
         </div>
       </div>
 
-      <div className={mode === "mai" || mode === "harom" ? "pt-0" : "surface p-4 md:p-7"}>
-        {mode === "mai" && <MaiLapInline />}
+      <div className={mode === "harom" ? "pt-0" : "surface p-4 md:p-7"}>
         {mode === "harom" && <HaromLapInline />}
         {mode === "randi" && <RandiInline />}
         {mode === "dontes" && <DontesInline />}
@@ -91,57 +89,6 @@ function Block({ eyebrow, children }: { eyebrow: string; children: React.ReactNo
     <div className="border-t border-[oklch(0.78_0.10_80/0.12)] pt-4">
       <Eyebrow>{eyebrow}</Eyebrow>
       <div className="font-editorial text-ivory/90 text-[17px] leading-relaxed">{children}</div>
-    </div>
-  );
-}
-
-// ─── Mai lap ─────────────────────────────────────────────────
-
-function MaiLapInline() {
-  const [card, setCard] = useState<TarotCard | null>(null);
-  const [resetKey, setResetKey] = useState(0);
-
-  useEffect(() => {
-    trackEvent("daily_card_started");
-  }, [resetKey]);
-
-  return (
-    <div>
-      {!card && (
-        <>
-          <SpreadDeck
-            count={1}
-            resetKey={resetKey}
-            onComplete={(cards) => {
-              const c = cards[0];
-              setCard(c);
-              trackEvent("daily_card_revealed", { cardId: c.id });
-            }}
-          />
-        </>
-      )}
-      {card && (
-        <CardResult
-          card={card}
-          eyebrow="A mai lapod"
-          sections={[
-            { title: "Mit üzen ma?", text: card.general },
-            { title: "Mire figyelj?", text: card.warning },
-          ]}
-          oneLiner={card.daily}
-          footer={
-            <div className="flex flex-wrap gap-2 mt-2">
-              <button
-                type="button"
-                className="btn-ghost-gold"
-                onClick={() => { setCard(null); setResetKey((k) => k + 1); }}
-              >
-                Új lap húzása
-              </button>
-            </div>
-          }
-        />
-      )}
     </div>
   );
 }
