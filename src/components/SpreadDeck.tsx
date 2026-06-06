@@ -112,6 +112,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
           const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
           const lift = Math.sin(t * Math.PI) * 48;
+          const spreadX = (t - 0.5) * 92; // vw, horizontal spread across viewport
           const isPicked = picked.includes(i);
           const isFaded = allPicked && !isPicked;
           return (
@@ -123,7 +124,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               aria-label={isPicked ? "Kiválasztva" : "Lap kiválasztása"}
               className="absolute top-1/2 left-1/2 origin-bottom transition-all duration-500 ease-out group focus:outline-none"
               style={{
-                transform: `translate(-50%, -34%) rotate(${angle}deg) translateY(${-lift}px) translateY(-2vw)`,
+                transform: `translate(-50%, -34%) translateX(${spreadX}vw) rotate(${angle}deg) translateY(${-lift}px)`,
                 zIndex: isPicked ? 50 - picked.indexOf(i) : 22 - Math.abs(11 - i),
                 opacity: isFaded ? 0.15 : isPicked ? 0 : 1,
                 pointerEvents: isPicked || allPicked ? "none" : "auto",
