@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
-import { roxyIchingDailyCast } from "@/lib/roxy.functions";
+import { roxyIchingDailyCast, aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { normalizeRoxyIching } from "@/lib/roxyNormalize";
 import { hexHU } from "@/lib/iching.hu";
 import { trackEvent } from "@/lib/analytics";
@@ -36,9 +36,13 @@ function Page() {
   const [revealed, setRevealed] = useState<boolean[]>([]);
   const [hex, setHex] = useState<{ number?: number; name: string; m: ReturnType<typeof hexHU>["m"] } | null>(null);
   const [ichingFailed, setIchingFailed] = useState(false);
+  const [reading, setReading] = useState<TarotReadingHU | null>(null);
+  const [loadingReading, setLoadingReading] = useState(false);
+  const aiReading = useServerFn(aiTarotReadingHU);
 
   async function draw() {
     setIchingFailed(false);
+    setReading(null);
     if (mode === "tarot" || mode === "both") {
       const c = pickCards(type);
       setCards(c);
@@ -73,6 +77,29 @@ function Page() {
       setHex(null);
     }
   }
+
+  useEffect(() => {
+    if (!cards || !revealed.length || !revealed.every(Boolean)) return;
+    let cancelled = false;
+    setLoadingReading(true);
+    aiReading({
+      data: {
+        spread: cards.length === 3 ? "decision-3" : "decision-1",
+        cards: cards.map((c) => ({
+          id: c.id, name: c.name, keywords: c.keywords,
+          general: c.general, love: c.love, decision: c.decision,
+          warning: c.warning, daily: c.daily,
+        })),
+        question: q || undefined,
+        category: cat,
+      },
+    }).then((r) => {
+      if (cancelled) return;
+      if (r.ok && r.reading) setReading(r.reading);
+      setLoadingReading(false);
+    }).catch(() => { if (!cancelled) setLoadingReading(false); });
+    return () => { cancelled = true; };
+  }, [cards, revealed]);
 
   const main = cards?.[Math.min(1, (cards?.length ?? 1) - 1)];
 
@@ -129,12 +156,15 @@ function Page() {
             </div>
             {revealed.every(Boolean) && main && (
               <div className="grid md:grid-cols-2 gap-4">
-                <Section eyebrow="A lap üzenete">{main.decision}</Section>
-                <Section eyebrow="Amit most nem látsz tisztán">{main.warning}</Section>
-                <Section eyebrow="Mi szól mellette?">A {main.keywords[0]} energia most veled van — érdemes lehet erre építeni, ha valódi belső igen van mögötte.</Section>
-                <Section eyebrow="Mi szól ellene?">Ha a lépés csak elhárít egy kényelmetlenséget, valószínűleg nem oldja meg, csak elhalasztja.</Section>
-                <Section eyebrow="Mire figyelj?">{main.warning}</Section>
-                <Section eyebrow="Következő lépés"><em>{main.daily}</em></Section>
+                {loadingReading && !reading && (
+                  <div className="md:col-span-2 text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
+                )}
+                <Section eyebrow="A lap üzenete">{reading?.intro ?? reading?.cardMessage ?? main.decision}</Section>
+                <Section eyebrow="Amit most nem látsz tisztán">{reading?.warn ?? main.warning}</Section>
+                <Section eyebrow="Mi szól mellette?">{reading?.pro ?? `A ${main.keywords[0]} energia most veled van — érdemes lehet erre építeni, ha valódi belső igen van mögötte.`}</Section>
+                <Section eyebrow="Mi szól ellene?">{reading?.contra ?? "Ha a lépés csak elhárít egy kényelmetlenséget, valószínűleg nem oldja meg, csak elhalasztja."}</Section>
+                <Section eyebrow="Mire figyelj?">{reading?.warn ?? main.warning}</Section>
+                <Section eyebrow="Következő lépés"><em>{reading?.nextStep ?? reading?.oneLine ?? main.daily}</em></Section>
               </div>
             )}
           </>

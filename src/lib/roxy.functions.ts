@@ -484,3 +484,156 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
 
     return { ok: true, cached: false, fallbackUsed: false, briefing: ai.data };
   });
+
+// ─── Generic AI Tarot reading (HU) ───────────────────────────────────────
+// Single helper used by mai-lap, harom-lap, randi-elott, dontes-elott.
+// Takes the user's actually drawn cards + question/category and returns
+// a concrete, personal Hungarian reading. The AI ANCHORS on the magyar
+// szövegekre (general/decision/love/warning/daily) — nem talál ki új
+// jelentést. Cache: per (spread, card ids, question, category, dateKey).
+
+export type TarotReadingHU = {
+  oneLine: string;
+  intro?: string;
+  past?: string;
+  present?: string;
+  future?: string;
+  together?: string;
+  warn?: string;
+  pro?: string;
+  contra?: string;
+  nextStep?: string;
+  you?: string;
+  between?: string;
+  them?: string;
+  cardMessage?: string;
+};
+
+const TarotCardInput = z.object({
+  id: z.string().min(1).max(64),
+  name: z.string().min(1).max(80),
+  keywords: z.array(z.string().min(1).max(40)).max(8).optional(),
+  general: z.string().max(600).optional(),
+  love: z.string().max(600).optional(),
+  decision: z.string().max(600).optional(),
+  warning: z.string().max(600).optional(),
+  daily: z.string().max(400).optional(),
+});
+
+export const aiTarotReadingHU = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      spread: z.enum(["single", "three", "decision-1", "decision-3", "love-1", "love-3"]),
+      cards: z.array(TarotCardInput).min(1).max(5),
+      question: z.string().max(500).optional(),
+      category: z.string().max(60).optional(),
+      dateKey: z.string().min(8).max(20).optional(),
+    }).parse,
+  )
+  .handler(async ({ data }): Promise<{
+    ok: boolean;
+    cached: boolean;
+    reading: TarotReadingHU | null;
+    message?: string;
+  }> => {
+    const { aiJSON } = await import("./ai.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const idsKey = data.cards.map((c) => c.id).join("+");
+    const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
+    const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
+    const cacheKey = `aitarot:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+
+    try {
+      const { data: row } = await supabaseAdmin
+        .from("api_cache")
+        .select("response_payload, expires_at")
+        .eq("cache_key", cacheKey)
+        .maybeSingle();
+      if (row && (!row.expires_at || new Date(row.expires_at as string).getTime() > Date.now())) {
+        return { ok: true, cached: true, reading: row.response_payload as TarotReadingHU };
+      }
+    } catch { /* ignore */ }
+
+    const sys = [
+      "Te a Jövőd.hu spirituális napló írója vagy.",
+      "MINDIG magyarul írj, sose maradjon angol szó a kimenetben.",
+      "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt. Soha nem közhelyes és nem coachos.",
+      "SZIGORÚAN TILOS panelmondat: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ehelyett KONKRÉT, hétköznapi helyzetet írj (egy beszélgetés, egy határidő, egy ki nem mondott mondat, egy döntés).",
+      "Minden mondat KÉPSZERŰ és KONKRÉT: utalj a lap szimbólumára (Bolond szakadékperem, Mágus asztala, Szeretők kettős útja, Halál küszöbe, stb.) ÉS a felhasználó valós helyzetére (a kérdésre / kategóriára).",
+      "Soha ne ígérj orvosi, jogi, pénzügyi vagy konkrét jövő-eseményt. Ne diagnosztizálj.",
+      "Hossz: minden mező 1-2 mondat, semmi felsorolás. 'oneLine' EGY tömör mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
+      "FORRÁSHŰSÉG: minden lap üzenetét a kapott magyar 'general/love/decision/warning/daily' szövegre építsd. Ne mondj olyat, ami ezeknek ellentmond — csak újrafogalmazod, élesíted, és a felhasználó kérdéséhez kötöd.",
+      "A 'three' spread esetén a past/present/future MINDIG abban a sorrendben a cards[0]/cards[1]/cards[2] lap, a 'together' a három együtt egy ívben.",
+      "A 'decision' spread esetén a 'pro' és 'contra' a fő lap (utolsó) keywords-ére és general/decision szövegére épüljön, NE találj ki új szempontot.",
+      "A 'love' 3-as spread esetén a you=cards[0], between=cards[1], them=cards[2], mind a 'love' szövegre építve.",
+      "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül.",
+    ].join(" ");
+
+    const userPayload = {
+      spread: data.spread,
+      kerdes: data.question ?? null,
+      kategoria: data.category ?? null,
+      cards: data.cards.map((c, i) => ({
+        sorszam: i,
+        nev: c.name,
+        kulcsszavak: c.keywords ?? [],
+        general: c.general ?? null,
+        love: c.love ?? null,
+        decision: c.decision ?? null,
+        warning: c.warning ?? null,
+        daily: c.daily ?? null,
+      })),
+    };
+
+    const schema = {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        oneLine: { type: "string" },
+        intro: { type: "string" },
+        past: { type: "string" },
+        present: { type: "string" },
+        future: { type: "string" },
+        together: { type: "string" },
+        warn: { type: "string" },
+        pro: { type: "string" },
+        contra: { type: "string" },
+        nextStep: { type: "string" },
+        you: { type: "string" },
+        between: { type: "string" },
+        them: { type: "string" },
+        cardMessage: { type: "string" },
+      },
+      required: ["oneLine"],
+    };
+
+    const ai = await aiJSON<TarotReadingHU>({
+      system: sys,
+      user:
+        "Írj a felhasználónak egy konkrét, személyes magyar olvasatot a kihúzott lap(ok)ról az alábbi adatokból. Csak azokat a mezőket töltsd ki, amelyek illenek a spread-hez.\n\n" +
+        JSON.stringify(userPayload),
+      schemaName: "TarotReadingHU",
+      schema,
+    });
+
+    if (!ai.ok || !ai.data) {
+      return { ok: false, cached: false, reading: null, message: ai.error ?? "AI hiba" };
+    }
+
+    try {
+      await supabaseAdmin.from("api_cache").upsert(
+        {
+          provider: "ai",
+          endpoint: "/ai/tarot-reading",
+          cache_key: cacheKey,
+          request_payload: { spread: data.spread, ids: idsKey } as never,
+          response_payload: ai.data as never,
+          expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+        },
+        { onConflict: "cache_key" },
+      );
+    } catch { /* ignore */ }
+
+    return { ok: true, cached: false, reading: ai.data };
+  });

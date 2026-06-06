@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
+import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -26,8 +28,34 @@ function Page() {
   const [q, setQ] = useState("");
   const [type, setType] = useState<1 | 3>(1);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const [reading, setReading] = useState<TarotReadingHU | null>(null);
+  const [loadingReading, setLoadingReading] = useState(false);
+  const aiReading = useServerFn(aiTarotReadingHU);
 
-  function draw(e: React.FormEvent) { e.preventDefault(); setCards(pickCards(type)); }
+  function draw(e: React.FormEvent) { e.preventDefault(); setCards(pickCards(type)); setReading(null); }
+
+  useEffect(() => {
+    if (!cards) return;
+    let cancelled = false;
+    setLoadingReading(true);
+    aiReading({
+      data: {
+        spread: cards.length === 3 ? "love-3" : "love-1",
+        cards: cards.map((c) => ({
+          id: c.id, name: c.name, keywords: c.keywords,
+          general: c.general, love: c.love, decision: c.decision,
+          warning: c.warning, daily: c.daily,
+        })),
+        question: q || sit,
+        category: sit,
+      },
+    }).then((r) => {
+      if (cancelled) return;
+      if (r.ok && r.reading) setReading(r.reading);
+      setLoadingReading(false);
+    }).catch(() => { if (!cancelled) setLoadingReading(false); });
+    return () => { cancelled = true; };
+  }, [cards]);
 
   return (
     <Layout>
@@ -62,10 +90,19 @@ function Page() {
               {cards.map((c, i) => <CardFace key={i} card={c} label={cards.length === 3 ? ["Te","Köztetek","Ő"][i] : undefined} />)}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {cards.map((c, i) => (
-                <Section key={i} eyebrow={cards.length === 3 ? ["Te","A kapcsolat","Ő"][i] : "A lap üzenete"} title={c.name}>{c.love}</Section>
-              ))}
-              <Section eyebrow="Egy mondatban"><em>{cards[cards.length - 1].daily}</em></Section>
+              {loadingReading && !reading && (
+                <div className="md:col-span-2 text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
+              )}
+              {cards.length === 3 ? (
+                <>
+                  <Section eyebrow="Te" title={cards[0].name}>{reading?.you ?? cards[0].love}</Section>
+                  <Section eyebrow="A kapcsolat" title={cards[1].name}>{reading?.between ?? cards[1].love}</Section>
+                  <Section eyebrow="Ő" title={cards[2].name}>{reading?.them ?? cards[2].love}</Section>
+                </>
+              ) : (
+                <Section eyebrow="A lap üzenete" title={cards[0].name}>{reading?.cardMessage ?? reading?.intro ?? cards[0].love}</Section>
+              )}
+              <Section eyebrow="Egy mondatban"><em>{reading?.oneLine ?? cards[cards.length - 1].daily}</em></Section>
             </div>
             <div className="surface p-5 opacity-60 border-dashed">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-1">Hamarosan</div>
