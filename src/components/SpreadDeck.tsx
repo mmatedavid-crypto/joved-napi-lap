@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { CardBack, CardFace } from "./TarotCard";
+import { CARD_BACK_ART, CardBack, CardFace } from "./TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 
 type Props = {
@@ -131,47 +131,15 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
               <div
                 className="relative w-[78px] aspect-[2/3.4] rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.55)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)] transition-transform duration-300 group-hover:-translate-y-3 group-hover:shadow-[0_18px_40px_-10px_oklch(0.78_0.10_80/0.4)]"
               >
-                <svg viewBox="0 0 200 340" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-                  <defs>
-                    <linearGradient id={`mg-${i}`} x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#F4D9A6" />
-                      <stop offset="60%" stopColor="#D4AF7A" />
-                      <stop offset="100%" stopColor="#7A5326" />
-                    </linearGradient>
-                    <radialGradient id={`mp-${i}`} cx="50%" cy="45%" r="70%">
-                      <stop offset="0%" stopColor="#2A1A3E" />
-                      <stop offset="60%" stopColor="#150B23" />
-                      <stop offset="100%" stopColor="#070310" />
-                    </radialGradient>
-                  </defs>
-                  <rect width="200" height="340" fill={`url(#mp-${i})`} />
-                  {/* astrolabe rings */}
-                  <g transform="translate(100 170)" fill="none" stroke={`url(#mg-${i})`}>
-                    <circle r="74" strokeWidth="0.6" opacity="0.55" />
-                    <circle r="58" strokeWidth="0.8" opacity="0.75" />
-                    <circle r="42" strokeWidth="0.4" opacity="0.5" />
-                    {Array.from({ length: 24 }).map((_, k) => {
-                      const a = (k * Math.PI * 2) / 24;
-                      return (
-                        <path key={k}
-                          d={`M${Math.cos(a) * 74} ${Math.sin(a) * 74} L${Math.cos(a) * 70} ${Math.sin(a) * 70}`}
-                          strokeWidth="0.5" opacity="0.7" />
-                      );
-                    })}
-                    {/* portal */}
-                    <g transform="scale(2.4)" stroke={`url(#mg-${i})`} fill="none">
-                      <path d="M-10 16 L-10 0 Q-10 -14 0 -14 Q10 -14 10 0 L10 16 Z" strokeWidth="1" fill="#0B0716" />
-                      <path d="M-12 16 L12 16" strokeWidth="1" />
-                      <path d="M-5 -2 A6 6 0 1 0 5 -2 A4.5 4.5 0 1 1 -5 -2 Z" fill={`url(#mg-${i})`} stroke="none" />
-                      <path d="M0 -10 L1.3 -6.2 L5.2 -6.2 L2 -3.9 L3.3 -0.1 L0 -2.5 L-3.3 -0.1 L-2 -3.9 L-5.2 -6.2 L-1.3 -6.2 Z" fill={`url(#mg-${i})`} stroke="none" />
-                    </g>
-                  </g>
-                  {/* frame */}
-                  <g fill="none" stroke={`url(#mg-${i})`}>
-                    <rect x="8" y="8" width="184" height="324" rx="8" strokeWidth="1.4" />
-                    <rect x="12" y="12" width="176" height="316" rx="6" strokeWidth="0.5" opacity="0.6" />
-                  </g>
-                </svg>
+                <img
+                  src={CARD_BACK_ART}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_55%,oklch(0_0_0/0.55)_100%)]" />
               </div>
             </button>
           );
