@@ -14,11 +14,25 @@ const NAV = [
 
 export function Layout({ children }: { children?: ReactNode }) {
   const [open, setOpen] = useState(false);
+  function goHomeFresh(e: React.MouseEvent) {
+    e.preventDefault();
+    try {
+      // a húzásokhoz kötött átmeneti adatok törlése (a profilt és napi briefinget megtartjuk)
+      const drop = ["daily", "tarot:last", "spread:last", "draw:last"];
+      drop.forEach((k) => {
+        window.localStorage.removeItem("jvd:" + k);
+        window.localStorage.removeItem(k);
+      });
+      window.sessionStorage.clear();
+    } catch {}
+    // teljes újratöltés → minden komponens state friss lesz
+    window.location.assign("/");
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 border-b border-[oklch(0.78_0.10_80/0.12)] backdrop-blur-md bg-[oklch(0.12_0.02_290/0.7)]">
         <div className="mx-auto max-w-6xl px-4 md:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" onClick={goHomeFresh} className="flex items-center gap-2" aria-label="Főoldal — friss kezdés">
             <Logo className="h-8 w-auto" />
             <span className="font-display text-xl tracking-wide">
               <span className="text-gold-gradient">Jövőd</span>
