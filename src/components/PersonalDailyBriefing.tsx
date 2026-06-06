@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { HUDateInput } from "./HUDateInput";
+import { SpreadDeck } from "./SpreadDeck";
+import { CardFace } from "./TarotCard";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { roxyPersonalDailyBriefing, type PersonalBriefingHU } from "@/lib/roxy.functions";
 import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
@@ -23,6 +26,7 @@ type StoredBriefing = PersonalBriefingHU & {
   lifePathTitle: string;
   personalYearNum: number;
   personalYearMeaning: string;
+  drawnCardId: string;
 };
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -52,6 +56,9 @@ export function PersonalDailyBriefing() {
   const [error, setError] = useState<string | null>(null);
   const [briefing, setBriefing] = useState<StoredBriefing | null>(null);
   const [editing, setEditing] = useState(false);
+  const [phase, setPhase] = useState<"form" | "draw" | "result">("form");
+  const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
+  const [drawResetKey, setDrawResetKey] = useState(0);
 
   useEffect(() => {
     const p =
@@ -65,20 +72,35 @@ export function PersonalDailyBriefing() {
       setDob(p.dob ?? "");
     }
     const cached = loadLocal<StoredBriefing>("home:briefing");
-    if (cached && cached.generatedFor === todayKey()) setBriefing(cached);
+    if (cached && cached.generatedFor === todayKey()) {
+      setBriefing(cached);
+      const c = CARDS.find((x) => x.id === cached.drawnCardId) ?? null;
+      if (c) setDrawnCard(c);
+      setPhase("result");
+    }
   }, []);
 
-  async function build(e?: React.FormEvent) {
+  function startDraw(e?: React.FormEvent) {
     e?.preventDefault();
     const sign = zodiacFromDob(dob);
     if (!dob || !sign) return;
-    setLoading(true);
     setError(null);
-    trackEvent("daily_compass_opened", { from: "home" });
-
     const nextProfile: Profile = { name: name.trim() || undefined, dob, sign };
     setProfile(nextProfile);
     saveLocal("home:profile", nextProfile);
+    setPhase("draw");
+    setDrawnCard(null);
+    setDrawResetKey((k) => k + 1);
+    trackEvent("daily_compass_opened", { from: "home" });
+  }
+
+  async function buildWithCard(card: TarotCard) {
+    const sign = profile.sign ?? zodiacFromDob(dob);
+    if (!dob || !sign) return;
+    setDrawnCard(card);
+    setLoading(true);
+    setError(null);
+    trackEvent("daily_card_revealed", { cardId: card.id, from: "home" });
 
     const dateKey = todayKey();
 
@@ -88,6 +110,7 @@ export function PersonalDailyBriefing() {
         sign: sign as never,
         name: name.trim() || undefined,
         dateKey,
+        drawnCard: { id: card.id, name: card.name, keywords: card.keywords },
       },
     });
 
@@ -111,31 +134,37 @@ export function PersonalDailyBriefing() {
       lifePathTitle: lpInfo.title,
       personalYearNum: py,
       personalYearMeaning: pyInfo.meaning,
+      drawnCardId: card.id,
     };
 
     setBriefing(stored);
     saveLocal("home:briefing", stored);
     setEditing(false);
     setLoading(false);
+    setPhase("result");
     trackEvent("daily_compass_completed", { from: "home" });
   }
 
   const hasProfile = !!(profile.dob && profile.sign);
-  const showForm = !hasProfile || editing;
+  const showForm = phase === "form" && (!hasProfile || editing);
+  const showDraw = phase === "draw";
+  const showResult = phase === "result" && !!briefing;
 
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-6 pt-2 pb-8">
       <div className="text-center mb-4">
         <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.8)]">Mai személyes olvasatod</div>
         <p className="font-editorial text-ivory/70 mt-2 max-w-xl mx-auto text-sm">
-          {hasProfile && briefing
+          {showResult
             ? "A mai jeleid egy helyen, neked összeállítva."
-            : "Add meg a születési dátumod — a csillagjegyed ebből kiszámolom, és összeállítok egy mai olvasatot rád szabva."}
+            : showDraw
+              ? "Húzz egy lapot — ez lesz a mai lapod, és köré épül az olvasat."
+              : "Add meg a születési dátumod — a csillagjegyed ebből kiszámolom, és utána húzz egy lapot magadnak."}
         </p>
       </div>
 
       {showForm && (
-        <form onSubmit={build} className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto">
+        <form onSubmit={startDraw} className="surface p-5 md:p-6 space-y-4 max-w-2xl mx-auto">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-ivory/80 mb-2">
@@ -156,14 +185,14 @@ export function PersonalDailyBriefing() {
             </div>
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <button className="btn-gold" disabled={loading || !dob}>
-              {loading ? "Egy pillanat…" : briefing ? "Frissítem az olvasatot" : "Mai személyes olvasatom"}
+            <button className="btn-gold" disabled={!dob}>
+              Tovább a laphúzáshoz
             </button>
             {hasProfile && (
               <button
                 type="button"
                 className="text-xs text-ivory/55 hover:text-gold"
-                onClick={() => { setEditing(false); setError(null); }}
+                onClick={() => { setEditing(false); setError(null); if (briefing) setPhase("result"); }}
               >
                 Mégse
               </button>
@@ -180,7 +209,41 @@ export function PersonalDailyBriefing() {
         </form>
       )}
 
-      {!showForm && briefing && (
+      {showDraw && (
+        <div className="space-y-4">
+          {!drawnCard && (
+            <SpreadDeck
+              count={1}
+              resetKey={drawResetKey}
+              onComplete={(cards) => { void buildWithCard(cards[0]); }}
+            />
+          )}
+          {drawnCard && loading && (
+            <div className="max-w-xs mx-auto text-center space-y-3">
+              <CardFace card={drawnCard} />
+              <p className="font-editorial text-ivory/70 text-sm">
+                A {drawnCard.name} lapod megérkezett. Összeállítom köré a mai olvasatod…
+              </p>
+            </div>
+          )}
+          {error && (
+            <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3 max-w-2xl mx-auto">
+              {error}
+              <div className="mt-2">
+                <button
+                  type="button"
+                  className="text-xs text-gold hover:underline"
+                  onClick={() => { setError(null); setDrawnCard(null); setDrawResetKey((k) => k + 1); }}
+                >
+                  Húzok újra
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {showResult && briefing && (
         <div className="space-y-5">
           <div className="surface p-5 md:p-6 text-center">
             <Eyebrow>
@@ -192,11 +255,22 @@ export function PersonalDailyBriefing() {
             </p>
           </div>
 
+          {drawnCard && (
+            <div className="grid md:grid-cols-[200px,1fr] gap-5 items-start surface p-5 md:p-6">
+              <div className="mx-auto w-full max-w-[200px]">
+                <CardFace card={drawnCard} />
+              </div>
+              <div className="space-y-2">
+                <Eyebrow>A mai lapod</Eyebrow>
+                <div className="font-display text-ivory text-2xl">{briefing.cardTitle}</div>
+                <div className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed">
+                  {briefing.cardLine}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="grid md:grid-cols-2 gap-4">
-            <Tile eyebrow="Mai lapod">
-              <div className="font-display text-ivory text-lg mb-1">{briefing.cardTitle}</div>
-              <div className="text-ivory/85">{briefing.cardLine}</div>
-            </Tile>
             <Tile eyebrow="Hangulat">{briefing.horoMood}</Tile>
             <Tile eyebrow="Szerelemben">{briefing.horoLove}</Tile>
             <Tile eyebrow="Munkában, ügyekben">{briefing.horoWork}</Tile>
@@ -229,8 +303,19 @@ export function PersonalDailyBriefing() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 pt-1">
-            <button className="btn-ghost-gold" onClick={() => setEditing(true)}>
+            <button className="btn-ghost-gold" onClick={() => { setEditing(true); setPhase("form"); }}>
               Adatok módosítása
+            </button>
+            <button
+              className="btn-ghost-gold"
+              onClick={() => {
+                setBriefing(null);
+                setDrawnCard(null);
+                setDrawResetKey((k) => k + 1);
+                setPhase("draw");
+              }}
+            >
+              Új lap húzása
             </button>
             <Link to="/mai-iranytu" className="btn-ghost-gold">Bővebb napi iránytű →</Link>
             <Link to="/szammisztika" className="btn-ghost-gold">Bővebb sorsszám →</Link>
