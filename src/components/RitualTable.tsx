@@ -1,11 +1,23 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
+import {
+  roxyNumerologyChart,
+  roxyNumerologyCompatibility,
+  roxyNumerologyPersonalYear,
+} from "@/lib/roxy.functions";
+import {
+  normalizeRoxyChart,
+  normalizeRoxyCompat,
+  type RoxyChart,
+  type RoxyCompat,
+} from "@/lib/roxyNormalize";
 import {
   compatPairMeaning,
   compatibilityScore,
