@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
+import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 
 export const Route = createFileRoute("/mai-lap")({
   head: () => ({
@@ -22,6 +24,9 @@ type Daily = { date: string; cardId: string };
 function MaiLap() {
   const [card, setCard] = useState<TarotCard | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const [reading, setReading] = useState<TarotReadingHU | null>(null);
+  const [loadingReading, setLoadingReading] = useState(false);
+  const aiReading = useServerFn(aiTarotReadingHU);
 
   useEffect(() => {
     const stored = loadLocal<Daily>("daily");
@@ -35,8 +40,31 @@ function MaiLap() {
   function draw() {
     const c = pickCards(1, dailySeed() + Math.floor(Math.random() * 1000))[0];
     setCard(c);
+    setReading(null);
     saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id });
   }
+
+  useEffect(() => {
+    if (!card || !revealed) return;
+    let cancelled = false;
+    setLoadingReading(true);
+    aiReading({
+      data: {
+        spread: "single",
+        cards: [{
+          id: card.id, name: card.name, keywords: card.keywords,
+          general: card.general, love: card.love, decision: card.decision,
+          warning: card.warning, daily: card.daily,
+        }],
+        dateKey: todayKey(),
+      },
+    }).then((r) => {
+      if (cancelled) return;
+      if (r.ok && r.reading) setReading(r.reading);
+      setLoadingReading(false);
+    }).catch(() => { if (!cancelled) setLoadingReading(false); });
+    return () => { cancelled = true; };
+  }, [card?.id, revealed]);
 
   return (
     <Layout>
@@ -65,9 +93,12 @@ function MaiLap() {
                     {card.keywords.map((k) => <span key={k}>· {k}</span>)}
                   </div>
                 </div>
-                <Section eyebrow="Mit üzen ma?">{card.general}</Section>
-                <Section eyebrow="Mire figyelj?">{card.warning}</Section>
-                <Section eyebrow="Egy mondat, amit vigyél magaddal"><em>{card.daily}</em></Section>
+                {loadingReading && !reading && (
+                  <div className="text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
+                )}
+                <Section eyebrow="Mit üzen ma?">{reading?.cardMessage ?? reading?.intro ?? card.general}</Section>
+                <Section eyebrow="Mire figyelj?">{reading?.warn ?? card.warning}</Section>
+                <Section eyebrow="Egy mondat, amit vigyél magaddal"><em>{reading?.oneLine ?? card.daily}</em></Section>
               </div>
             )}
           </div>
