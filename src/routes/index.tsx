@@ -18,15 +18,15 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <Layout>
-      <section className="mx-auto max-w-3xl px-4 md:px-6 pt-2 md:pt-4 pb-1 text-center">
-        <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)] mb-1">Napi rituálé</div>
-        <h1 className="font-display text-[22px] leading-[1.1] md:text-4xl lg:text-5xl text-ivory">
+      <section className="mx-auto max-w-5xl px-3 md:px-6 pt-1 pb-0 text-center">
+        <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)]">Napi rituálé</div>
+        <h1 className="font-display text-[22px] leading-[1.05] md:text-4xl lg:text-5xl text-ivory">
           Húzz egy lapot,{" "}
           <span className="text-gold-gradient">mielőtt döntesz.</span>
         </h1>
       </section>
 
-      <section className="mx-auto max-w-[1400px] px-2 md:px-4 pb-12">
+      <section className="mx-auto max-w-none px-0 md:px-3 pb-12">
         <RitualTable />
       </section>
 
