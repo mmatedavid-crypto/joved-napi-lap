@@ -11,6 +11,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { HUDateInput } from "./HUDateInput";
 import { SpreadDeck } from "./SpreadDeck";
 import { CardFace } from "./TarotCard";
+import { StreamingText } from "./StreamingText";
+import { ShareCardButton } from "./ShareCardButton";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { roxyPersonalDailyBriefing, type PersonalBriefingHU } from "@/lib/roxy.functions";
 import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
@@ -248,9 +250,11 @@ export function PersonalDailyBriefing() {
               {profile.name ? `${profile.name}, a mai napod` : "A mai napod"}{" "}
               · {SIGN_HU[profile.sign ?? "aries"]}
             </Eyebrow>
-            <p className="font-display text-2xl md:text-3xl text-gold-gradient leading-snug mt-1">
-              {briefing.oneLine}
-            </p>
+            <StreamingText
+              as="p"
+              text={briefing.oneLine}
+              className="font-display text-2xl md:text-3xl text-gold-gradient leading-snug mt-1"
+            />
           </div>
 
           {drawnCard && (
@@ -261,8 +265,12 @@ export function PersonalDailyBriefing() {
               <div className="space-y-2">
                 <Eyebrow>A mai lapod</Eyebrow>
                 <div className="font-display text-ivory text-2xl">{briefing.cardTitle}</div>
-                <div className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed">
-                  {briefing.cardLine}
+                <StreamingText
+                  text={briefing.cardLine}
+                  className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed"
+                />
+                <div className="pt-2">
+                  <ShareCardButton card={drawnCard} oneLine={briefing.oneLine} eyebrow="A mai lapod" />
                 </div>
               </div>
             </div>
