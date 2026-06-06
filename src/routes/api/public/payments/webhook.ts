@@ -84,7 +84,7 @@ async function handleWebhook(req: Request, env: StripeEnv) {
   switch (event.type) {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded":
-      await handleCheckoutCompleted(event.data.object);
+      await handleCheckoutCompleted(event.data.object as CheckoutSessionLike);
       break;
     case "checkout.session.async_payment_failed":
     case "checkout.session.expired": {
