@@ -134,7 +134,6 @@ export function PersonalDailyBriefing() {
 
     setBriefing(stored);
     saveLocal("home:briefing", stored);
-    setEditing(false);
     setLoading(false);
     setPhase("result");
     trackEvent("daily_compass_completed", { from: "home" });
