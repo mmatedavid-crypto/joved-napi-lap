@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
+import { CardFace } from "./TarotCard";
 import { CARDS, dailySeed, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
@@ -339,6 +340,8 @@ function SzamInline() {
             <Block eyebrow="Szerelemben">{info.love}</Block>
             <Block eyebrow="Munkában">{info.work}</Block>
           </div>
+          {info.purpose && <Block eyebrow="Életfeladat">{info.purpose}</Block>}
+          {info.advice && <Block eyebrow="Egy mondat, amit vigyél magaddal"><em>{info.advice}</em></Block>}
           <div className="text-center"><Link to="/szammisztika" className="btn-ghost-gold" onClick={() => trackEvent("detailed_reading_cta_clicked", { from: "szam" })}>Bővebb sorsszám-olvasat →</Link></div>
         </div>
       )}
@@ -424,16 +427,7 @@ function CardResult({
     <div className="space-y-4 animate-fade-in">
       <div className="grid md:grid-cols-[180px,1fr] gap-5 items-start">
         <div className="mx-auto w-full max-w-[180px]">
-          <div className="tarot-card relative">
-            <div className="absolute inset-2 rounded-[10px] border border-[oklch(0.78_0.10_80/0.4)]" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2">Lap</div>
-              <svg viewBox="0 0 100 120" className="w-16 h-20">
-                <path d="M50 25 L53 50 L78 53 L57 60 L62 85 L50 70 L38 85 L43 60 L22 53 L47 50 Z" fill="oklch(0.78 0.10 80)" />
-              </svg>
-              <div className="font-display text-lg text-ivory leading-tight mt-2">{card.name}</div>
-            </div>
-          </div>
+          <CardFace card={card} />
         </div>
         <div>
           <Eyebrow>{eyebrow}</Eyebrow>
