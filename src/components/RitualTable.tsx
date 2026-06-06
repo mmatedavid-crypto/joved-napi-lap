@@ -21,7 +21,6 @@ import {
   lifePathInfo,
   personalYear,
   relationshipNumber,
-  threeCardSynthesis,
 } from "@/lib/numerology";
 
 type Mode = "randi" | "dontes" | "szam" | "osszeillunk";
@@ -84,61 +83,6 @@ function Block({ eyebrow, children }: { eyebrow: string; children: React.ReactNo
     <div className="border-t border-[oklch(0.78_0.10_80/0.12)] pt-4">
       <Eyebrow>{eyebrow}</Eyebrow>
       <div className="font-editorial text-ivory/90 text-[17px] leading-relaxed">{children}</div>
-    </div>
-  );
-}
-
-// ─── 3 lapos ─────────────────────────────────────────────────
-
-function HaromLapInline() {
-  const [cards, setCards] = useState<TarotCard[] | null>(null);
-  const [resetKey, setResetKey] = useState(0);
-  useEffect(() => {
-    trackEvent("three_card_started");
-  }, [resetKey]);
-  return (
-    <div>
-      {!cards && (
-        <>
-          <div className="text-center mb-2">
-            <Eyebrow>3 lapos húzás · Múlt · Jelen · Jövő</Eyebrow>
-          </div>
-          <SpreadDeck
-            count={3}
-            slotLabels={["Múlt", "Jelen", "Jövő"]}
-            resetKey={resetKey}
-            onComplete={(c) => {
-              setCards(c);
-              trackEvent("three_card_completed", { ids: c.map((x) => x.id) });
-            }}
-          />
-        </>
-      )}
-      {cards && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Eyebrow>A te három lapod</Eyebrow>
-            <button
-              className="text-xs text-ivory/55 hover:text-gold"
-              onClick={() => {
-                setCards(null);
-                setResetKey((k) => k + 1);
-              }}
-            >
-              Új húzás
-            </button>
-          </div>
-          <Block eyebrow="Múlt — honnan jön ez a helyzet?">{cards[0].general}</Block>
-          <Block eyebrow="Jelen — mi történik most valójában?">{cards[1].general}</Block>
-          <Block eyebrow="Jövő — merre mozdulhat?">{cards[2].general}</Block>
-          <Block eyebrow="A három lap együtt">
-            {threeCardSynthesis(cards[0].keywords[0], cards[1].keywords[0], cards[2].keywords[0])}
-          </Block>
-          <Block eyebrow="Egy mondatban az üzenet">
-            <em>{cards[2].daily}</em>
-          </Block>
-        </div>
-      )}
     </div>
   );
 }
