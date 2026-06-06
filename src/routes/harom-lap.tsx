@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
+import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
@@ -27,11 +29,38 @@ function HaromLap() {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
+  const [reading, setReading] = useState<TarotReadingHU | null>(null);
+  const [loadingReading, setLoadingReading] = useState(false);
+  const aiReading = useServerFn(aiTarotReadingHU);
 
   function draw() {
     setCards(pickCards(3));
     setRevealed([false, false, false]);
+    setReading(null);
   }
+
+  useEffect(() => {
+    if (!cards || !revealed.every(Boolean)) return;
+    let cancelled = false;
+    setLoadingReading(true);
+    aiReading({
+      data: {
+        spread: "three",
+        cards: cards.map((c) => ({
+          id: c.id, name: c.name, keywords: c.keywords,
+          general: c.general, love: c.love, decision: c.decision,
+          warning: c.warning, daily: c.daily,
+        })),
+        question: question || undefined,
+        category,
+      },
+    }).then((r) => {
+      if (cancelled) return;
+      if (r.ok && r.reading) setReading(r.reading);
+      setLoadingReading(false);
+    }).catch(() => { if (!cancelled) setLoadingReading(false); });
+    return () => { cancelled = true; };
+  }, [cards, revealed]);
 
   return (
     <Layout>
@@ -70,15 +99,20 @@ function HaromLap() {
 
             {revealed.every(Boolean) && (
               <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                <Section eyebrow="Múlt — honnan jön ez a helyzet?">{cards[0].general}</Section>
-                <Section eyebrow="Jelen — mi történik most valójában?">{cards[1].general}</Section>
-                <Section eyebrow="Jövő — merre mozdulhat?">{cards[2].general}</Section>
+                {loadingReading && !reading && (
+                  <div className="md:col-span-2 text-ivory/55 text-sm font-editorial italic">Egy pillanat — személyes olvasatot készítek…</div>
+                )}
+                <Section eyebrow="Múlt — honnan jön ez a helyzet?">{reading?.past ?? cards[0].general}</Section>
+                <Section eyebrow="Jelen — mi történik most valójában?">{reading?.present ?? cards[1].general}</Section>
+                <Section eyebrow="Jövő — merre mozdulhat?">{reading?.future ?? cards[2].general}</Section>
                 <Section eyebrow="A három lap együtt">
-                  Ami {cards[0].keywords[0]}-ként indult, most {cards[1].keywords[0]} formájában kér figyelmet,
-                  és {cards[2].keywords[0]} felé hív. Nem három különálló dolog — egy ív, ami most rajtad keresztül folytatódik.
+                  {reading?.together ?? (
+                    <>Ami {cards[0].keywords[0]}-ként indult, most {cards[1].keywords[0]} formájában kér figyelmet,
+                    és {cards[2].keywords[0]} felé hív. Nem három különálló dolog — egy ív, ami most rajtad keresztül folytatódik.</>
+                  )}
                 </Section>
-                <Section eyebrow="Mire figyelj most?">{cards[1].warning}</Section>
-                <Section eyebrow="Egy mondatban az üzenet"><em>{cards[2].daily}</em></Section>
+                <Section eyebrow="Mire figyelj most?">{reading?.warn ?? cards[1].warning}</Section>
+                <Section eyebrow="Egy mondatban az üzenet"><em>{reading?.oneLine ?? cards[2].daily}</em></Section>
               </div>
             )}
 
