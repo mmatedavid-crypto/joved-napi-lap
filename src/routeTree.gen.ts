@@ -15,6 +15,7 @@ import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
+import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
 import { Route as KristalyRouteImport } from './routes/kristaly'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
@@ -52,6 +53,11 @@ const OsszeillunkRoute = OsszeillunkRouteImport.update({
 const MaiLapRoute = MaiLapRouteImport.update({
   id: '/mai-lap',
   path: '/mai-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaiIranytuRoute = MaiIranytuRouteImport.update({
+  id: '/mai-iranytu',
+  path: '/mai-iranytu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KristalyRoute = KristalyRouteImport.update({
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
   '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
   '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRoute
   '/kristaly': typeof KristalyRoute
+  '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/kristaly'
+    | '/mai-iranytu'
     | '/mai-lap'
     | '/osszeillunk'
     | '/profil'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRoute
   KristalyRoute: typeof KristalyRoute
+  MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/mai-lap'
       fullPath: '/mai-lap'
       preLoaderRoute: typeof MaiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mai-iranytu': {
+      id: '/mai-iranytu'
+      path: '/mai-iranytu'
+      fullPath: '/mai-iranytu'
+      preLoaderRoute: typeof MaiIranytuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kristaly': {
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRoute,
   KristalyRoute: KristalyRoute,
+  MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
