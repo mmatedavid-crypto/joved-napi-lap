@@ -104,11 +104,8 @@ function MaiLapInline() {
     <div>
       {!card && (
         <>
-          <Eyebrow>Mai lap</Eyebrow>
-          <h2 className="font-display text-2xl text-ivory mb-4">Egy lap a mai napodra</h2>
           <SpreadDeck
             count={1}
-            seed={dailySeed()}
             onComplete={(cards) => {
               const c = cards[0];
               setCard(c);
