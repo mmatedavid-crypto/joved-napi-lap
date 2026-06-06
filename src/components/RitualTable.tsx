@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { SpreadDeck } from "./SpreadDeck";
 import { HUDateInput } from "./HUDateInput";
 import { CardFace } from "./TarotCard";
-import { CARDS, type TarotCard } from "@/data/cards";
-import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
+import { type TarotCard } from "@/data/cards";
+import { saveLocal, loadLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import {
   roxyNumerologyChart,
@@ -96,8 +96,6 @@ function Block({ eyebrow, children }: { eyebrow: string; children: React.ReactNo
 }
 
 // ─── Mai lap ─────────────────────────────────────────────────
-
-type Daily = { date: string; cardId: string };
 
 function MaiLapInline() {
   const [card, setCard] = useState<TarotCard | null>(null);
