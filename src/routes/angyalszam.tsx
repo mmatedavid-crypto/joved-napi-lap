@@ -3,9 +3,8 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { roxyAngelNumberLookup } from "@/lib/roxy.functions";
-import { normalizeRoxyAngel } from "@/lib/roxyNormalize";
-import { angelMeaning, reduceAngel, type AngelMeaning } from "@/lib/angel.hu";
+import { aiAngelHU, type AngelHU } from "@/lib/roxyTranslate.functions";
+import { angelMeaning, reduceAngel } from "@/lib/angel.hu";
 import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/angyalszam")({
@@ -22,10 +21,10 @@ export const Route = createFileRoute("/angyalszam")({
 });
 
 function Page() {
-  const call = useServerFn(roxyAngelNumberLookup);
+  const call = useServerFn(aiAngelHU);
   const [num, setNum] = useState("");
   const [loading, setLoading] = useState(false);
-  const [m, setM] = useState<{ number: string; meaning: AngelMeaning; root: number } | null>(null);
+  const [m, setM] = useState<{ number: string; meaning: AngelHU; root: number } | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   async function submit(e: React.FormEvent) {
@@ -36,20 +35,32 @@ function Page() {
     setLoading(true);
     trackEvent("angel_number_started", { number: clean });
     let root = reduceAngel(clean);
+    let meaning: AngelHU | null = null;
     try {
       const r = await call({ data: { number: clean } });
-      if (r.ok) {
+      if (r.ok && r.reading) {
         if (r.cached) trackEvent("roxy_cache_hit", { domain: "angel" });
         else trackEvent("roxy_cache_miss", { domain: "angel" });
-        const n = normalizeRoxyAngel(r.data);
-        if (n.rootNumber) root = n.rootNumber;
+        meaning = r.reading;
+        if (r.reading.rootNumber) root = r.reading.rootNumber;
       } else {
         trackEvent("roxy_fallback_used", { domain: "angel" });
       }
     } catch {
       trackEvent("roxy_fallback_used", { domain: "angel" });
     }
-    const meaning = angelMeaning(clean, root);
+    if (!meaning) {
+      const local = angelMeaning(clean, root);
+      meaning = {
+        title: local.title,
+        message: local.message,
+        love: local.love,
+        decision: local.decision,
+        warn: local.warn,
+        oneLine: local.oneLine,
+        rootNumber: root,
+      };
+    }
     setM({ number: clean, meaning, root });
     setLoading(false);
     trackEvent("angel_number_completed", { number: clean, root });
@@ -81,11 +92,11 @@ function Page() {
               <div className="mt-2 text-sm text-ivory/60">{m.meaning.title} · gyökér: {m.root}</div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="A szám üzenete">{m.meaning.message}</Section>
-              <Section eyebrow="Szerelemben">{m.meaning.love}</Section>
-              <Section eyebrow="Döntés előtt">{m.meaning.decision}</Section>
-              <Section eyebrow="Mire figyelj?">{m.meaning.warn}</Section>
-              <Section eyebrow="Egy mondatban"><em>{m.meaning.oneLine}</em></Section>
+              {m.meaning.message && <Section eyebrow="A szám üzenete">{m.meaning.message}</Section>}
+              {m.meaning.love && <Section eyebrow="Szerelemben">{m.meaning.love}</Section>}
+              {m.meaning.decision && <Section eyebrow="Döntés előtt">{m.meaning.decision}</Section>}
+              {m.meaning.warn && <Section eyebrow="Mire figyelj?">{m.meaning.warn}</Section>}
+              {m.meaning.oneLine && <Section eyebrow="Egy mondatban"><em>{m.meaning.oneLine}</em></Section>}
             </div>
           </div>
         )}

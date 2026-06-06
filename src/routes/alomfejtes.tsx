@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { roxyDreamSymbol } from "@/lib/roxy.functions";
-import { dreamTextToSlug, normalizeRoxyDreamSymbol } from "@/lib/roxyNormalize";
-import { dreamMeaning, DREAM_SLUG_OPTIONS, type DreamMeaning } from "@/lib/dream.hu";
+import { aiDreamHU, type DreamHU } from "@/lib/roxyTranslate.functions";
+import { dreamTextToSlug } from "@/lib/roxyNormalize";
+import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/alomfejtes")({
@@ -31,32 +31,43 @@ const EMOTIONS = [
 ] as const;
 
 function Page() {
-  const call = useServerFn(roxyDreamSymbol);
+  const call = useServerFn(aiDreamHU);
   const [text, setText] = useState("");
   const [emotion, setEmotion] = useState<string>("calm");
   const [chosen, setChosen] = useState<string>(""); // manual fallback slug
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ title: string; m: DreamMeaning } | null>(null);
+  const [result, setResult] = useState<DreamHU | null>(null);
   const [noSymbol, setNoSymbol] = useState(false);
 
   async function run(slug: string) {
     setLoading(true);
     setNoSymbol(false);
+    let reading: DreamHU | null = null;
     try {
       const r = await call({ data: { slug } });
-      if (r.ok) {
+      if (r.ok && r.reading) {
         if (r.cached) trackEvent("roxy_cache_hit", { domain: "dream" });
         else trackEvent("roxy_cache_miss", { domain: "dream" });
-        normalizeRoxyDreamSymbol(r.data, slug); // we don't render raw
+        reading = r.reading;
       } else {
         trackEvent("roxy_fallback_used", { domain: "dream" });
       }
     } catch {
       trackEvent("roxy_fallback_used", { domain: "dream" });
     }
-    const local = dreamMeaning(slug);
-    if (local) {
-      setResult({ title: local.title, m: local });
+    if (!reading) {
+      const local = dreamMeaning(slug);
+      if (local) {
+        reading = {
+          title: local.title,
+          surface: local.surface,
+          notice: local.notice,
+          oneLine: local.oneLine,
+        };
+      }
+    }
+    if (reading) {
+      setResult(reading);
       trackEvent("dream_completed", { slug });
     } else {
       setNoSymbol(true);
@@ -129,10 +140,10 @@ function Page() {
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{result.title}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Mit hozhat felszínre?">{result.m.surface}</Section>
-              <Section eyebrow="Mire figyelhetsz?">{result.m.notice}</Section>
+              {result.surface && <Section eyebrow="Mit hozhat felszínre?">{result.surface}</Section>}
+              {result.notice && <Section eyebrow="Mire figyelhetsz?">{result.notice}</Section>}
               <Section eyebrow="Nem jóslat, inkább belső tükör">Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó szerint venni.</Section>
-              <Section eyebrow="Egy mondatban"><em>{result.m.oneLine}</em></Section>
+              {result.oneLine && <Section eyebrow="Egy mondatban"><em>{result.oneLine}</em></Section>}
             </div>
           </div>
         )}

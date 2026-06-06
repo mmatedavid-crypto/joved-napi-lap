@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { roxyCrystalBirthstone, roxyCrystalZodiac } from "@/lib/roxy.functions";
-import { normalizeRoxyCrystal, SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
-import { crystalMeaning, MONTH_HU, FALLBACK_BIRTHSTONE, type CrystalMeaning } from "@/lib/crystal.hu";
+import { aiCrystalHU, type CrystalHU } from "@/lib/roxyTranslate.functions";
+import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
+import { crystalMeaning, MONTH_HU, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/kristaly")({
@@ -24,36 +24,47 @@ export const Route = createFileRoute("/kristaly")({
 type Mode = "month" | "zodiac";
 
 function Page() {
-  const callMonth = useServerFn(roxyCrystalBirthstone);
-  const callZodiac = useServerFn(roxyCrystalZodiac);
+  const callAi = useServerFn(aiCrystalHU);
   const [mode, setMode] = useState<Mode>("month");
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [sign, setSign] = useState<string>("aries");
   const [loading, setLoading] = useState(false);
-  const [r, setR] = useState<{ name: string; m: CrystalMeaning } | null>(null);
+  const [r, setR] = useState<CrystalHU | null>(null);
 
   useEffect(() => { trackEvent("crystal_opened"); }, []);
 
   async function load() {
     setLoading(true);
-    let crystalName: string | undefined;
     try {
-      const res = mode === "month"
-        ? await callMonth({ data: { month } })
-        : await callZodiac({ data: { sign: sign as never } });
-      if (res.ok) {
+      const res = await callAi({
+        data: mode === "month"
+          ? { mode: "month", month }
+          : { mode: "zodiac", sign: sign as never },
+      });
+      if (res.ok && res.reading) {
         if (res.cached) trackEvent("roxy_cache_hit", { domain: "crystal" });
         else trackEvent("roxy_cache_miss", { domain: "crystal" });
-        crystalName = normalizeRoxyCrystal(res.data).hungarianName;
+        setR(res.reading);
+        setLoading(false);
+        return;
       } else {
         trackEvent("roxy_fallback_used", { domain: "crystal" });
       }
     } catch {
       trackEvent("roxy_fallback_used", { domain: "crystal" });
     }
+    // Fallback: helyi kristály-szövegtár.
+    let crystalName: string | undefined;
     if (!crystalName && mode === "month") crystalName = FALLBACK_BIRTHSTONE[month];
     if (!crystalName) crystalName = "Hegyikristály";
-    setR(crystalMeaning(crystalName));
+    const cm = crystalMeaning(crystalName);
+    setR({
+      name: cm.name,
+      symbol: cm.m.symbol,
+      quality: cm.m.quality,
+      when: cm.m.when,
+      oneLine: cm.m.oneLine,
+    });
     setLoading(false);
   }
 
@@ -101,10 +112,10 @@ function Page() {
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{r.name}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Mit jelképez?">{r.m.symbol}</Section>
-              <Section eyebrow="Milyen minőséget hoz elő?">{r.m.quality}</Section>
-              <Section eyebrow="Mikor érdemes figyelni rá?">{r.m.when}</Section>
-              <Section eyebrow="Egy mondatban"><em>{r.m.oneLine}</em></Section>
+              {r.symbol && <Section eyebrow="Mit jelképez?">{r.symbol}</Section>}
+              {r.quality && <Section eyebrow="Milyen minőséget hoz elő?">{r.quality}</Section>}
+              {r.when && <Section eyebrow="Mikor érdemes figyelni rá?">{r.when}</Section>}
+              {r.oneLine && <Section eyebrow="Egy mondatban"><em>{r.oneLine}</em></Section>}
             </div>
             <p className="text-xs text-ivory/45 font-editorial text-center">A kristályok hagyományosan szimbólumok. Nem gyógyítanak — önismereti jelként használjuk.</p>
           </div>

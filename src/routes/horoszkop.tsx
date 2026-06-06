@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { roxyDailyHoroscope } from "@/lib/roxy.functions";
-import { SIGNS_HU_ORDERED, SIGN_HU, normalizeRoxyHoroscope, moonPhaseHU } from "@/lib/roxyNormalize";
-import { localHoroscope, luckyColorHU, energyPhraseHU } from "@/lib/horoscope.hu";
+import { aiHoroscopeHU, type HoroscopeHU } from "@/lib/roxyTranslate.functions";
+import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
+import { localHoroscope } from "@/lib/horoscope.hu";
 import { todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 
@@ -22,30 +22,30 @@ export const Route = createFileRoute("/horoszkop")({
   component: Page,
 });
 
-type State = { loading: boolean; sign: string; data: ReturnType<typeof normalizeRoxyHoroscope> | null; fallback: boolean };
+type State = { loading: boolean; sign: string; reading: HoroscopeHU | null; fallback: boolean };
 
 function Page() {
-  const call = useServerFn(roxyDailyHoroscope);
+  const call = useServerFn(aiHoroscopeHU);
   const [sign, setSign] = useState<string>("aries");
-  const [s, setS] = useState<State>({ loading: false, sign: "aries", data: null, fallback: false });
+  const [s, setS] = useState<State>({ loading: false, sign: "aries", reading: null, fallback: false });
 
   useEffect(() => { trackEvent("horoscope_opened"); }, []);
 
   async function load(next: string) {
-    setS({ loading: true, sign: next, data: null, fallback: false });
+    setS({ loading: true, sign: next, reading: null, fallback: false });
     try {
       const r = await call({ data: { sign: next as never, dateKey: todayKey() } });
-      if (r.ok) {
+      if (r.ok && r.reading) {
         if (r.cached) trackEvent("roxy_cache_hit", { domain: "horoscope" });
         else trackEvent("roxy_cache_miss", { domain: "horoscope" });
-        setS({ loading: false, sign: next, data: normalizeRoxyHoroscope(r.data), fallback: false });
+        setS({ loading: false, sign: next, reading: r.reading, fallback: false });
       } else {
         trackEvent("roxy_fallback_used", { domain: "horoscope" });
-        setS({ loading: false, sign: next, data: null, fallback: true });
+        setS({ loading: false, sign: next, reading: null, fallback: true });
       }
     } catch {
       trackEvent("roxy_fallback_used", { domain: "horoscope" });
-      setS({ loading: false, sign: next, data: null, fallback: true });
+      setS({ loading: false, sign: next, reading: null, fallback: true });
     }
   }
 
@@ -55,9 +55,15 @@ function Page() {
   }
 
   const local = localHoroscope(s.sign);
-  const moon = moonPhaseHU(s.data?.moonPhase);
-  const color = luckyColorHU(s.data?.luckyColor);
-  const energy = energyPhraseHU(s.data?.energyRating);
+  const r = s.reading;
+  const moon = r?.moonPhase ?? null;
+  const color = r?.luckyColor ?? null;
+  // Prefer AI HU output; fall back to local copy when a given field is missing or AI failed.
+  const mood = r?.mood ?? local.mood;
+  const love = r?.love ?? local.love;
+  const work = r?.work ?? local.work;
+  const warn = r?.warn ?? local.warn;
+  const oneLine = r?.oneLine ?? local.oneLine;
 
   return (
     <Layout>
@@ -74,31 +80,30 @@ function Page() {
               >{SIGN_HU[sg]}</button>
             ))}
           </div>
-          {!s.data && !s.loading && !s.fallback && (
+          {!s.reading && !s.loading && !s.fallback && (
             <p className="text-xs text-ivory/55 mt-3 font-editorial">Válassz egy jegyet a mai olvasathoz.</p>
           )}
           {s.loading && <p className="text-xs text-ivory/55 mt-3 font-editorial">Egy pillanat — most kérjük le.</p>}
         </div>
 
-        {(s.data || s.fallback) && (
+        {(s.reading || s.fallback) && (
           <>
             <div className="text-center">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">A mai jegyed</div>
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">{SIGN_HU[s.sign]}</h2>
-              {(moon || color || energy) && (
+              {(moon || color) && (
                 <div className="mt-2 flex flex-wrap justify-center gap-x-4 text-sm text-ivory/60">
-                  {energy && <span>· {energy}</span>}
                   {moon && <span>· holdfázis: {moon}</span>}
                   {color && <span>· szerencsés szín: {color}</span>}
                 </div>
               )}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Mai hangulat">{local.mood}</Section>
-              <Section eyebrow="Szerelem">{local.love}</Section>
-              <Section eyebrow="Munka">{local.work}</Section>
-              <Section eyebrow="Mire figyelj?">{local.warn}</Section>
-              <Section eyebrow="Egy mondatban"><em>{local.oneLine}</em></Section>
+              <Section eyebrow="Mai hangulat">{mood}</Section>
+              <Section eyebrow="Szerelem">{love}</Section>
+              <Section eyebrow="Munka">{work}</Section>
+              <Section eyebrow="Mire figyelj?">{warn}</Section>
+              <Section eyebrow="Egy mondatban"><em>{oneLine}</em></Section>
             </div>
           </>
         )}
