@@ -148,8 +148,9 @@ function HaromLapInline() {
     <div>
       {!cards && (
         <>
-          <Eyebrow>3 lapos húzás · Múlt · Jelen · Jövő</Eyebrow>
-          <h2 className="font-display text-2xl text-ivory mb-4">Válassz három lapot</h2>
+          <div className="text-center mb-2">
+            <Eyebrow>3 lapos húzás · Múlt · Jelen · Jövő</Eyebrow>
+          </div>
           <SpreadDeck
             count={3}
             slotLabels={["Múlt", "Jelen", "Jövő"]}
