@@ -290,8 +290,14 @@ function DontesInline() {
       card={card}
       eyebrow={q ? `Kérdés: „${q}"` : "Döntés előtt"}
       sections={[
-        { title: "A lap üzenete", text: card.decision },
-        { title: "Amit most nem látsz tisztán", text: card.warning },
+        {
+          title: q ? "A kérdésedre" : "A lap üzenete",
+          text: q ? decisionInlineAnswer(q, card) : card.decision,
+        },
+        {
+          title: "Amit most nem látsz tisztán",
+          text: q ? decisionInlineWarning(q, card) : card.warning,
+        },
       ]}
       oneLiner={card.daily}
       footer={
@@ -317,6 +323,14 @@ function DontesInline() {
       }
     />
   );
+}
+
+function decisionInlineAnswer(question: string, card: TarotCard): string {
+  return `A „${question.trim()}” kérdésre a ${card.name} nem kész választ ad, hanem irányt: most a ${card.keywords[0].toLowerCase()} minősége mutathatja meg, merre tisztul benned a döntés. Érdemes lehet azt figyelned, hogy a választás mögött valódi belső igen van-e, vagy inkább csak sürgetés.`;
+}
+
+function decisionInlineWarning(question: string, card: TarotCard): string {
+  return `Ebben a kérdésben a lap arra hívhatja fel a figyelmed, hogy ${card.warning.toLowerCase()} Ha a „${question.trim()}” gondolatától beszűkülsz, még nem biztos, hogy a döntés teljesen megérett.`;
 }
 
 // ─── Sorsszám ────────────────────────────────────────────────
