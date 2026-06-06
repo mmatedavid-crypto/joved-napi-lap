@@ -47,6 +47,99 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          category: Database["public"]["Enums"]["product_category"]
+          created_at: string
+          deliver_by: string | null
+          delivered_at: string | null
+          error_message: string | null
+          express: boolean
+          guest_email: string | null
+          id: string
+          input_payload: Json | null
+          paid_at: string | null
+          price_huf: number
+          product_name: string
+          product_slug: string
+          response_payload: Json | null
+          source_route: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          stripe_payment_intent: string | null
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["product_category"]
+          created_at?: string
+          deliver_by?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          express?: boolean
+          guest_email?: string | null
+          id?: string
+          input_payload?: Json | null
+          paid_at?: string | null
+          price_huf: number
+          product_name: string
+          product_slug: string
+          response_payload?: Json | null
+          source_route?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["product_category"]
+          created_at?: string
+          deliver_by?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          express?: boolean
+          guest_email?: string | null
+          id?: string
+          input_payload?: Json | null
+          paid_at?: string | null
+          price_huf?: number
+          product_name?: string
+          product_slug?: string
+          response_payload?: Json | null
+          source_route?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          stripe_payment_intent?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -55,7 +148,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      order_status:
+        | "pending_payment"
+        | "paid"
+        | "processing"
+        | "delivered"
+        | "failed"
+        | "refunded"
+      product_category: "instant" | "delayed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -182,6 +282,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      order_status: [
+        "pending_payment",
+        "paid",
+        "processing",
+        "delivered",
+        "failed",
+        "refunded",
+      ],
+      product_category: ["instant", "delayed"],
+    },
   },
 } as const
