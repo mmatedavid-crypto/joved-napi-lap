@@ -341,6 +341,13 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       sign: SignSchema,
       name: NameSchema.optional(),
       dateKey: z.string().min(8).max(20),
+      drawnCard: z
+        .object({
+          id: z.string().min(1).max(64),
+          name: z.string().min(1).max(80),
+          keywords: z.array(z.string().min(1).max(40)).max(8).optional(),
+        })
+        .optional(),
     }).parse,
   )
   .handler(async ({ data }): Promise<{
@@ -355,7 +362,8 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const nameKey = (data.name ?? "").toLowerCase().trim();
-    const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}`;
+    const cardKey = data.drawnCard?.id ?? "no-card";
+    const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}:${cardKey}`;
 
     // 1. Cache lookup (24h)
     try {
@@ -372,8 +380,9 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
     // 2. Pull raw Roxy data in parallel.
     const digits = data.dateKey.replace(/-/g, "");
     const month = Number(data.dateKey.slice(5, 7));
-    const [tarotR, horoR, bioR, angelR, crysR] = await Promise.allSettled([
-      callRoxy({ endpoint: "/tarot/draw", body: { count: 1, seed: `daily:${data.dateKey}`, allowDuplicates: false }, cacheKey: `tarot:daily:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
+    // Tarot card: ONLY use what the user personally drew. We never auto-pull
+    // a random card from Roxy for the briefing — that would feel impersonal.
+    const [horoR, bioR, angelR, crysR] = await Promise.allSettled([
       callRoxy({ endpoint: `/astrology/horoscope/${data.sign}/daily`, method: "GET", cacheKey: `astro:daily:${data.sign}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
       callRoxy({ endpoint: "/biorhythm/daily", body: { birthDate: data.birthDate, date: data.dateKey }, cacheKey: `bio:daily:${data.birthDate}:${data.dateKey}`, ttlSeconds: 60 * 60 * 24 }),
       callRoxy({ endpoint: `/angel-numbers/lookup?number=${digits}`, method: "GET", cacheKey: `angel:${digits}`, ttlSeconds: 60 * 60 * 24 * 180 }),
@@ -384,7 +393,13 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       r.status === "fulfilled" && r.value.ok ? (r.value.data as T) : null;
 
     const raw = {
-      tarot: pick(tarotR),
+      tarot: data.drawnCard
+        ? {
+            source: "user-drawn",
+            name: data.drawnCard.name,
+            keywords: data.drawnCard.keywords ?? [],
+          }
+        : null,
       horoscope: pick(horoR),
       biorhythm: pick(bioR),
       angel: pick(angelR),
@@ -403,6 +418,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       "Hangnem: csendes, meleg, tegező, ítélkezés nélküli; nem közhelyes.",
       "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj.",
       "Tartsd rövidre: minden mező 1-2 mondat. 'oneLine' egy mondat.",
+      "A 'cardTitle' mindig pontosan az a magyar lapnév, amit a 'nyersAdatok.tarot.name' mezőben kapsz — sose találj ki másikat. A 'cardLine' annak a lapnak a mai értelmét írja le a felhasználónak, a kulcsszavakra építve.",
       "Az angol forrásszövegeket NE fordítsd szó szerint, hanem fogalmazd át a saját hangoddal úgy, hogy a lényegük (téma, energia, figyelmeztetés) átjöjjön.",
       "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül.",
     ].join(" ");
