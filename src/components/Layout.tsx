@@ -1,6 +1,7 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Logo } from "./Logo";
+import { BottomNav } from "./BottomNav";
 
 const NAV = [
   { to: "/mai-lap", label: "Mai lap" },
@@ -92,6 +93,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </footer>
+      <BottomNav />
     </div>
   );
 }
