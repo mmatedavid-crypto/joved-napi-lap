@@ -25,6 +25,7 @@ import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
@@ -106,6 +107,12 @@ const DevRoxyRoute = DevRoxyRouteImport.update({
   path: '/dev/roxy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,6 +150,7 @@ export interface FileRoutesByTo {
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +170,7 @@ export interface FileRoutesById {
   '/rolunk': typeof RolunkRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
@@ -217,6 +229,7 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -236,6 +249,7 @@ export interface RootRouteChildren {
   RolunkRoute: typeof RolunkRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
   DevRoxyRoute: typeof DevRoxyRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -352,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevRoxyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -372,17 +393,8 @@ const rootRouteChildren: RootRouteChildren = {
   RolunkRoute: RolunkRoute,
   SzammisztikaRoute: SzammisztikaRoute,
   DevRoxyRoute: DevRoxyRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
