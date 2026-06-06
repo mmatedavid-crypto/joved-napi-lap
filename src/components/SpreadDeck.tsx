@@ -15,14 +15,28 @@ type Props = {
 
 const SPREAD_SIZE = 22;
 
+function buzz(ms = 8) {
+  try {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      (navigator as Navigator & { vibrate?: (p: number | number[]) => boolean }).vibrate?.(ms);
+    }
+  } catch {}
+}
+
 export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Props) {
-  const [sessionSeed, setSessionSeed] = useState(seed ?? 1);
+  // Always randomise the live shuffle session so two consecutive draws
+  // can yield different cards even with the same daily seed.
+  const [sessionSeed, setSessionSeed] = useState(() => Math.floor(Math.random() * 1_000_000));
+  const [phase, setPhase] = useState<"shuffling" | "spread">("shuffling");
+  const [shuffleTick, setShuffleTick] = useState(0);
 
   useEffect(() => {
-    if (seed == null) setSessionSeed(Math.floor(Math.random() * 1_000_000));
-  }, [seed, resetKey]);
+    setSessionSeed(Math.floor(Math.random() * 1_000_000));
+    setPhase("shuffling");
+    setShuffleTick(0);
+  }, [resetKey]);
 
-  const arrangementSeed = seed ?? sessionSeed;
+  const arrangementSeed = sessionSeed;
 
   // full Major Arcana pool arranged in an arc
   const pool = useMemo(
@@ -37,12 +51,14 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
   function pick(i: number) {
     if (picked.includes(i)) return;
     if (picked.length >= count) return;
+    buzz(10);
     const next = [...picked, i];
     setPicked(next);
     setRevealed((r) => [...r, false]);
   }
 
   function reveal(slot: number) {
+    buzz(14);
     setRevealed((r) => {
       const copy = [...r];
       copy[slot] = true;
@@ -53,9 +69,91 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
     });
   }
 
+  function shuffleAgain() {
+    buzz(6);
+    setSessionSeed(Math.floor(Math.random() * 1_000_000));
+    setShuffleTick((t) => t + 1);
+    setPicked([]);
+    setRevealed([]);
+  }
+
+  function finishShuffle() {
+    buzz(12);
+    setPhase("spread");
+  }
+
   const allPicked = picked.length === count;
   const total = SPREAD_SIZE;
   const arc = 150;
+
+  if (phase === "shuffling") {
+    // pseudo-random offsets per shuffleTick so the stack visibly "reshuffles"
+    const stack = Array.from({ length: 14 }, (_, i) => {
+      const s = Math.sin((i + 1) * 12.9898 + shuffleTick * 7.233) * 43758.5453;
+      const r1 = s - Math.floor(s);
+      const s2 = Math.sin((i + 1) * 78.233 + shuffleTick * 3.71) * 12543.123;
+      const r2 = s2 - Math.floor(s2);
+      const s3 = Math.sin((i + 1) * 39.43 + shuffleTick * 5.17) * 9012.77;
+      const r3 = s3 - Math.floor(s3);
+      return {
+        i,
+        x: (r1 - 0.5) * 18, // px
+        y: (r2 - 0.5) * 14,
+        rot: (r3 - 0.5) * 22, // deg
+        delay: i * 30,
+      };
+    });
+    return (
+      <div className="select-none w-full">
+        <div className="relative mx-auto h-[340px] sm:h-[440px] md:h-[520px] w-full flex flex-col items-center justify-center">
+          <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.75)] mb-4 animate-pulse">
+            Keverem a paklit
+          </div>
+          <div className="relative" style={{ width: "clamp(120px, 28vw, 180px)", aspectRatio: "2 / 3.4" }}>
+            {stack.map((c) => (
+              <div
+                key={`${c.i}-${shuffleTick}`}
+                className="absolute inset-0 rounded-[10px] overflow-hidden border border-[oklch(0.78_0.10_80/0.45)] shadow-[0_10px_30px_-12px_oklch(0_0_0/0.85)]"
+                style={{
+                  transform: `translate(${c.x}px, ${c.y}px) rotate(${c.rot}deg)`,
+                  transition: `transform 520ms cubic-bezier(.4,.0,.2,1) ${c.delay}ms`,
+                  zIndex: c.i,
+                }}
+              >
+                <img
+                  src={CARD_BACK_ART}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_55%,oklch(0_0_0/0.55)_100%)]" />
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex gap-3">
+            <button
+              type="button"
+              onClick={shuffleAgain}
+              className="rounded-full border border-[oklch(0.78_0.10_80/0.45)] px-4 py-2 text-[11px] tracking-[0.18em] uppercase text-[oklch(0.92_0.04_85)] hover:bg-[oklch(0.78_0.10_80/0.1)] transition"
+            >
+              Keverj még
+            </button>
+            <button
+              type="button"
+              onClick={finishShuffle}
+              className="rounded-full bg-[oklch(0.78_0.10_80/0.85)] px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-[oklch(0.18_0.03_280)] font-medium hover:bg-[oklch(0.82_0.11_85)] transition shadow-[0_8px_24px_-8px_oklch(0.78_0.10_80/0.6)]"
+            >
+              Kész, teríts ki
+            </button>
+          </div>
+          <div className="mt-3 text-[10px] text-ivory/50 text-center max-w-[280px]">
+            Vegyél egy lélegzetet, és gondolj a helyzetre, amiben választ keresel.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="select-none w-full">
