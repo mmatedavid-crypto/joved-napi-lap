@@ -285,13 +285,23 @@ function Page() {
               Új húzás
             </button>
             <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
-              <div className="text-sm text-ivory/70 mb-2">Komplex döntéselőkészítő elemzés emailben?</div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Komplex elemzés · 2490 Ft</button>
+              <div className="text-sm text-ivory/70 mb-2">
+                Komplex döntéselőkészítő elemzés emailben?
+              </div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Komplex elemzés · 2490 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="dontes_komplex" sourceRoute="/dontes-elott" inputPayload={{ q, cat, mode, cards: cards?.map((c) => c.name), hex: hex?.name }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="dontes_komplex"
+        sourceRoute="/dontes-elott"
+        inputPayload={{ q, cat, mode, cards: cards?.map((c) => c.name), hex: hex?.name }}
+      />
     </Layout>
   );
 }

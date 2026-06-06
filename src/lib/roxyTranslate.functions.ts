@@ -1,9 +1,9 @@
-// Szigorú fordító réteg a Roxy nyers angol válaszai fölött. Minden fn:
+// Szigorú magyar integráló réteg a Roxy nyers angol válaszai fölött. Minden fn:
 //   1) lekéri a megfelelő Roxy endpointot (cache-elve a roxy.server-en),
 //   2) átadja a NYERS angol payload-ot a Lovable AI Gateway-nek,
-//   3) az AI-t SZIGORÚAN FORDÍTÓ módban használja: nem talál ki új tartalmat,
-//      csak a kapott angol mezőket teszi folyékony magyarrá, kihagyva a
-//      hiányzó mezőket. A Hungarian eredményt 24h+ cache-eli az api_cache-be.
+//   3) az AI-t SZIGORÚAN FORDÍTÓ/ÖSSZEFOGLALÓ módban használja: nem talál ki
+//      új tartalmat, csak a kapott angol mezőket teszi folyékony magyarrá,
+//      kihagyva a hiányzó mezőket. A magyar eredményt cache-eli az api_cache-be.
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
@@ -30,7 +30,9 @@ const TRANSLATOR_SYSTEM = [
   "SOHA ne találj ki új tényt, új helyzetet, új tanácsot, új szimbólumot — csak azt írd át, amit a forrás tartalmaz.",
   "Ha egy mező a forrásban hiányzik, üres vagy nem értelmezhető, HAGYD KI a kimenetből (ne tölts fel közhellyel).",
   "Hangnem: csendes, meleg, tegező, ítélkezés nélküli — költői, de földhözragadt. NEM coachos, NEM közhelyes.",
-  "TILTOTT panelmondatok: 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ha a forrásban ilyesmi van, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
+  "TILTOTT panelmondatok és fordulatok: 'összességében', 'fontos megjegyezni', 'kommunikálj nyíltan és őszintén', 'as an AI', 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ha a forrásban ilyesmi van, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
+  "Ne használj emojit, angol endpoint- vagy mezőneveket, raw provider-szöveget, determinisztikus jövőállítást.",
+  "Kristályoknál csak szimbolikus nyelv használható: 'hagyományosan ehhez társítják', 'ezt a minőséget jelképezi', 'önismereti jelként'. Soha ne írd, hogy gyógyít.",
   "Tömörség: minden mező 1-2 mondat, semmi felsorolás. Az 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
   "Soha ne ígérj orvosi, jogi, pénzügyi eredményt, ne diagnosztizálj, ne mondj konkrét jövő-eseményt.",
   "Magyar nyelv: természetes magyar szórend, ne tükörfordíts, ne hagyj angol szót a kimenetben.",
@@ -383,6 +385,16 @@ export type NumerologyHU = {
   work?: string;
   personalYearNumber?: number;
   personalYearMeaning?: string;
+  expressionNumber?: number;
+  expressionMeaning?: string;
+  soulUrgeNumber?: number;
+  soulUrgeMeaning?: string;
+  personalityNumber?: number;
+  personalityMeaning?: string;
+  maturityNumber?: number;
+  maturityMeaning?: string;
+  birthDayNumber?: number;
+  birthDayMeaning?: string;
   oneLine?: string;
 };
 
@@ -448,6 +460,16 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
           work: { type: "string" },
           personalYearNumber: { type: "number" },
           personalYearMeaning: { type: "string" },
+          expressionNumber: { type: "number" },
+          expressionMeaning: { type: "string" },
+          soulUrgeNumber: { type: "number" },
+          soulUrgeMeaning: { type: "string" },
+          personalityNumber: { type: "number" },
+          personalityMeaning: { type: "string" },
+          maturityNumber: { type: "number" },
+          maturityMeaning: { type: "string" },
+          birthDayNumber: { type: "number" },
+          birthDayMeaning: { type: "string" },
           oneLine: { type: "string" },
         },
         required: ["lifePathNumber", "title", "meaning"],
@@ -455,7 +477,7 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
       const t = await translateWithAI<NumerologyHU>({
         source: chart.data,
         domainHint:
-          "Sorsszám / számmisztika olvasat. A 'lifePathNumber' a forrásban szereplő sorsszám (Life Path Number). 'title' egy rövid magyar cím (pl. 'A vezető', 'A híd', 'Az álmodó'). A 'personalYearNumber' a forrásból (personal year), ha szerepel.",
+          "Sorsszám / számmisztika olvasat. A 'lifePathNumber' a forrásban szereplő sorsszám (Life Path Number). 'title' egy rövid magyar cím (pl. 'A vezető', 'A híd', 'Az álmodó'). Ha a forrásban szerepel: expression = Kifejeződésed, soulUrge = Belső vágyad, personality = Külső képed, maturity = Érettségi számod, birthDay = Születésnap-számod. Csak létező számokhoz írj rövid magyar meaning mezőt. A 'personalYearNumber' a forrásból (personal year), ha szerepel.",
         schemaName: "NumerologyHU",
         schema,
       });

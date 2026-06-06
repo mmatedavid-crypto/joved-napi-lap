@@ -27,11 +27,20 @@ const STATUS_HU: Record<string, string> = {
   refunded: "visszatérítve",
 };
 
+type ProfileOrder = {
+  id: string;
+  product_name: string;
+  created_at: string;
+  status: string;
+  express: boolean | null;
+  price_huf: number;
+};
+
 function Page() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const call = useServerFn(getMyOrders);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
   useEffect(() => {
@@ -40,11 +49,20 @@ function Page() {
 
   useEffect(() => {
     if (!user) return;
-    call({}).then((r) => { setOrders(r.orders ?? []); setOrdersLoading(false); }).catch(() => setOrdersLoading(false));
+    call({})
+      .then((r) => {
+        setOrders(r.orders ?? []);
+        setOrdersLoading(false);
+      })
+      .catch(() => setOrdersLoading(false));
   }, [user, call]);
 
   if (loading || !user) {
-    return <Layout><PageHeader eyebrow="Profil" title="Egy pillanat…" /></Layout>;
+    return (
+      <Layout>
+        <PageHeader eyebrow="Profil" title="Egy pillanat…" />
+      </Layout>
+    );
   }
 
   return (
@@ -54,7 +72,12 @@ function Page() {
         <Section eyebrow="Előzményeid">
           {ordersLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
           {!ordersLoading && orders.length === 0 && (
-            <p className="text-ivory/70">Még nincs vásárlásod. <Link to="/" className="text-gold hover:underline">Indulj el itt.</Link></p>
+            <p className="text-ivory/70">
+              Még nincs vásárlásod.{" "}
+              <Link to="/" className="text-gold hover:underline">
+                Indulj el itt.
+              </Link>
+            </p>
           )}
           {!ordersLoading && orders.length > 0 && (
             <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
@@ -63,7 +86,8 @@ function Page() {
                   <div>
                     <div className="text-ivory">{o.product_name}</div>
                     <div className="text-xs text-ivory/55 mt-0.5">
-                      {new Date(o.created_at).toLocaleString("hu-HU")} · {STATUS_HU[o.status] ?? o.status}
+                      {new Date(o.created_at).toLocaleString("hu-HU")} ·{" "}
+                      {STATUS_HU[o.status] ?? o.status}
                       {o.express ? " · express" : ""}
                     </div>
                   </div>
@@ -74,7 +98,13 @@ function Page() {
           )}
         </Section>
 
-        <button onClick={() => { signOut(); navigate({ to: "/" }); }} className="w-full px-4 py-3 rounded-md border border-[oklch(0.78_0.10_80/0.3)] text-ivory/80 hover:text-gold">
+        <button
+          onClick={() => {
+            signOut();
+            navigate({ to: "/" });
+          }}
+          className="w-full px-4 py-3 rounded-md border border-[oklch(0.78_0.10_80/0.3)] text-ivory/80 hover:text-gold"
+        >
           Kijelentkezés
         </button>
       </div>

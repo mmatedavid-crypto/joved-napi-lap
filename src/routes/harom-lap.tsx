@@ -191,8 +191,12 @@ function HaromLap() {
                 Új húzás
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
-                <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz emailben?</div>
-                <button className="btn-gold" onClick={() => setPaywall(true)}>Három lap — mély elemzés · 1990 Ft</button>
+                <div className="text-sm text-ivory/70 mb-2">
+                  Részletes, írott elemzést kérsz emailben?
+                </div>
+                <button className="btn-gold" onClick={() => setPaywall(true)}>
+                  Három lap — mély elemzés · 1990 Ft
+                </button>
               </div>
             </div>
             {question && (
@@ -203,7 +207,13 @@ function HaromLap() {
           </>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="harom_lap_mely" sourceRoute="/harom-lap" inputPayload={{ cards: cards?.map((c) => c.name), question, category }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="harom_lap_mely"
+        sourceRoute="/harom-lap"
+        inputPayload={{ cards: cards?.map((c) => c.name), question, category }}
+      />
     </Layout>
   );
 }

@@ -11,7 +11,8 @@ export function PaymentTestModeBanner() {
   if (clientToken.startsWith("pk_test_")) {
     return (
       <div className="w-full bg-amber-900/40 border-b border-amber-500/30 px-4 py-1.5 text-center text-[11px] text-amber-200">
-        Teszt mód: a fizetések most még nem valódiak. Tesztkártya: <code className="font-mono">4242 4242 4242 4242</code>.
+        Teszt mód: a fizetések most még nem valódiak. Tesztkártya:{" "}
+        <code className="font-mono">4242 4242 4242 4242</code>.
       </div>
     );
   }

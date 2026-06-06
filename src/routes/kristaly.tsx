@@ -153,16 +153,23 @@ function Page() {
               )}
             </div>
             <p className="text-xs text-ivory/45 font-editorial text-center">
-              A kristályok hagyományosan szimbólumok. Nem gyógyítanak — önismereti jelként
-              használjuk.
+              A kristályok hagyományosan szimbólumok. Itt önismereti jelként használjuk őket.
             </p>
             <div className="text-center">
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Személyes kristály-ajánlás · 490 Ft</button>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Személyes kristály-ajánlás · 490 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="kristaly_ai" sourceRoute="/kristaly" inputPayload={mode === "month" ? { mode, month } : { mode, sign }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="kristaly_ai"
+        sourceRoute="/kristaly"
+        inputPayload={mode === "month" ? { mode, month } : { mode, sign }}
+      />
     </Layout>
   );
 }

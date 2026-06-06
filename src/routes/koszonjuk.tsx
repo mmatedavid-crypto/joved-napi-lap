@@ -6,6 +6,22 @@ import { PageHeader, Section } from "@/components/Section";
 import { getOrderBySession, processOrder } from "@/lib/payments.functions";
 import { formatHuf } from "@/lib/products";
 
+type OrderResponsePayload = {
+  title?: string;
+  body?: string;
+  [key: string]: unknown;
+};
+
+type OrderView = {
+  product_name: string;
+  price_huf: number;
+  express: boolean | null;
+  category: string;
+  status: string;
+  guest_email?: string | null;
+  response_payload?: OrderResponsePayload | null;
+};
+
 export const Route = createFileRoute("/koszonjuk")({
   validateSearch: (s: Record<string, unknown>): { session_id?: string } => ({
     session_id: typeof s.session_id === "string" ? s.session_id : undefined,
@@ -21,12 +37,15 @@ function Page() {
   const { session_id } = Route.useSearch();
   const fetchOrder = useServerFn(getOrderBySession);
   const runProcess = useServerFn(processOrder);
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<OrderView | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!session_id) { setLoading(false); return; }
+    if (!session_id) {
+      setLoading(false);
+      return;
+    }
     let stop = false;
     let triggered = false;
     let attempts = 0;
@@ -39,7 +58,11 @@ function Page() {
         setOrder(r.order);
         setLoading(false);
         if (!r.order) return;
-        if (!triggered && (r.order.status === "processing" || r.order.status === "paid") && r.order.category === "instant") {
+        if (
+          !triggered &&
+          (r.order.status === "processing" || r.order.status === "paid") &&
+          r.order.category === "instant"
+        ) {
           triggered = true;
           runProcess({ data: { sessionId: session_id! } }).catch(() => {});
         }
@@ -51,20 +74,26 @@ function Page() {
         ) {
           setTimeout(tick, 2500);
         }
-      } catch (e: any) {
-        setErr(e?.message ?? "Hiba");
+      } catch (e: unknown) {
+        setErr(e instanceof Error ? e.message : "Hiba");
         setLoading(false);
       }
     }
     tick();
-    return () => { stop = true; };
+    return () => {
+      stop = true;
+    };
   }, [session_id, fetchOrder, runProcess]);
 
   if (!session_id) {
     return (
       <Layout>
         <PageHeader eyebrow="Köszönjük" title="Nincs vásárlási adat" />
-        <div className="mx-auto max-w-md px-4 pb-20"><Link to="/" className="btn-gold">Vissza a főoldalra</Link></div>
+        <div className="mx-auto max-w-md px-4 pb-20">
+          <Link to="/" className="btn-gold">
+            Vissza a főoldalra
+          </Link>
+        </div>
       </Layout>
     );
   }
@@ -78,7 +107,10 @@ function Page() {
         {order && (
           <>
             <Section eyebrow="Vásárlás" title={order.product_name}>
-              <p className="text-ivory/70">{formatHuf(order.price_huf)}{order.express ? " · express" : ""}</p>
+              <p className="text-ivory/70">
+                {formatHuf(order.price_huf)}
+                {order.express ? " · express" : ""}
+              </p>
             </Section>
 
             {order.category === "instant" && order.status !== "delivered" && (
@@ -89,9 +121,8 @@ function Page() {
 
             {order.category === "delayed" && order.status !== "delivered" && (
               <Section eyebrow="Hamarosan érkezik">
-                A részletes elemzésed{" "}
-                {order.express ? "6 órán" : "12–24 órán"}
-                {" "}belül megérkezik a megadott email címre
+                A részletes elemzésed {order.express ? "6 órán" : "12–24 órán"} belül megérkezik a
+                megadott email címre
                 {order.guest_email ? ` (${order.guest_email})` : ""}. Addig is pihenj egy kicsit.
               </Section>
             )}
@@ -101,7 +132,9 @@ function Page() {
                 {typeof order.response_payload.body === "string" ? (
                   <div className="whitespace-pre-wrap">{order.response_payload.body}</div>
                 ) : (
-                  <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(order.response_payload, null, 2)}</pre>
+                  <pre className="text-sm whitespace-pre-wrap">
+                    {JSON.stringify(order.response_payload, null, 2)}
+                  </pre>
                 )}
               </Section>
             )}
@@ -112,7 +145,9 @@ function Page() {
               </Section>
             )}
 
-            <Link to="/" className="btn-gold inline-block">Vissza a főoldalra</Link>
+            <Link to="/" className="btn-gold inline-block">
+              Vissza a főoldalra
+            </Link>
           </>
         )}
       </div>

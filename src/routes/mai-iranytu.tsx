@@ -280,13 +280,23 @@ function Page() {
               </Section>
             </div>
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
-              <div className="text-sm text-ivory/70 mb-2">Részletes, személyre szabott AI üzenet a mai napodhoz?</div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Kérem · 590 Ft</button>
+              <div className="text-sm text-ivory/70 mb-2">
+                Részletes, személyre szabott AI üzenet a mai napodhoz?
+              </div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Kérem · 590 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="mai_iranytu_ai" sourceRoute="/mai-iranytu" inputPayload={{ dob, name, sign, ...(c ?? {}) }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="mai_iranytu_ai"
+        sourceRoute="/mai-iranytu"
+        inputPayload={{ dob, name, sign, ...(c ?? {}) }}
+      />
     </Layout>
   );
 }

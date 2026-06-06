@@ -18,8 +18,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
     () => ({
       fetchClientSecret: async (): Promise<string> => {
         const returnUrl =
-          props.returnUrl ||
-          `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+          props.returnUrl || `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
         const result = await createCheckoutSession({
           data: {
             productSlug: props.productSlug,

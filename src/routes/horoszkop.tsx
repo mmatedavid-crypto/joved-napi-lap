@@ -139,13 +139,23 @@ function Page() {
               </Section>
             </div>
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
-              <div className="text-sm text-ivory/70 mb-2">Személyre szabott horoszkóp elemzés a te helyzetedhez?</div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Kérem személyre szabva · 990 Ft</button>
+              <div className="text-sm text-ivory/70 mb-2">
+                Személyre szabott horoszkóp elemzés a te helyzetedhez?
+              </div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Kérem személyre szabva · 990 Ft
+              </button>
             </div>
           </>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="horoszkop_szemelyre" sourceRoute="/horoszkop" inputPayload={{ sign: s.sign }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="horoszkop_szemelyre"
+        sourceRoute="/horoszkop"
+        inputPayload={{ sign: s.sign }}
+      />
     </Layout>
   );
 }

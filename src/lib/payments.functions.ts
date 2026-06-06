@@ -1,11 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { type StripeEnv, createStripeClient, getStripeErrorMessage } from "@/lib/stripe.server";
 import {
-  type StripeEnv,
-  createStripeClient,
-  getStripeErrorMessage,
-} from "@/lib/stripe.server";
-import { PRODUCTS_BY_SLUG, EXPRESS_PRICE_ID, EXPRESS_PRICE_HUF, EXPRESS_HOURS } from "@/lib/products";
+  PRODUCTS_BY_SLUG,
+  EXPRESS_PRICE_ID,
+  EXPRESS_PRICE_HUF,
+  EXPRESS_HOURS,
+} from "@/lib/products";
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
 
@@ -83,9 +84,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       });
 
       const totalHuf = product.priceHuf + (wantsExpress ? EXPRESS_PRICE_HUF : 0);
-      const hours = wantsExpress ? EXPRESS_HOURS : product.standardHours ?? 0;
+      const hours = wantsExpress ? EXPRESS_HOURS : (product.standardHours ?? 0);
       const deliverBy =
-        product.category === "delayed" ? new Date(Date.now() + hours * 3600_000).toISOString() : null;
+        product.category === "delayed"
+          ? new Date(Date.now() + hours * 3600_000).toISOString()
+          : null;
 
       const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -119,7 +122,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         express: wantsExpress,
         status: "pending_payment",
         stripe_session_id: session.id,
-        input_payload: (data.inputPayload ?? null) as any,
+        input_payload: (data.inputPayload ?? null) as never,
         source_route: data.sourceRoute ?? null,
         deliver_by: deliverBy,
       });
@@ -133,7 +136,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
 export const getOrderBySession = createServerFn({ method: "POST" })
   .inputValidator((data: { sessionId: string }) => {
-    if (!data.sessionId || typeof data.sessionId !== "string") throw new Error("Hiányzó session ID");
+    if (!data.sessionId || typeof data.sessionId !== "string")
+      throw new Error("Hiányzó session ID");
     return data;
   })
   .handler(async ({ data }) => {
@@ -167,7 +171,8 @@ export const getMyOrders = createServerFn({ method: "GET" })
 // Idempotens: ha már delivered, nem fut újra.
 export const processOrder = createServerFn({ method: "POST" })
   .inputValidator((data: { sessionId: string }) => {
-    if (!data.sessionId || typeof data.sessionId !== "string") throw new Error("Hiányzó session ID");
+    if (!data.sessionId || typeof data.sessionId !== "string")
+      throw new Error("Hiányzó session ID");
     return data;
   })
   .handler(async ({ data }) => {
@@ -179,7 +184,8 @@ export const processOrder = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!order) return { ok: false, error: "Rendelés nem található" };
     if (order.status === "delivered") return { ok: true, alreadyDone: true };
-    if (order.category !== "instant") return { ok: false, error: "Csak az azonnali rendelés dolgozható fel itt" };
+    if (order.category !== "instant")
+      return { ok: false, error: "Csak az azonnali rendelés dolgozható fel itt" };
     if (order.status !== "paid" && order.status !== "processing") {
       return { ok: false, error: "Még nincs kifizetve" };
     }
@@ -211,23 +217,28 @@ export const processOrder = createServerFn({ method: "POST" })
       const json = await res.json();
       const content = json.choices?.[0]?.message?.content ?? "{}";
       let parsed: { title?: string; body?: string };
-      try { parsed = JSON.parse(content); } catch { parsed = { body: content }; }
+      try {
+        parsed = JSON.parse(content);
+      } catch {
+        parsed = { body: content };
+      }
 
       await supabaseAdmin
         .from("orders")
         .update({
           status: "delivered",
-          response_payload: parsed as any,
+          response_payload: parsed as never,
           delivered_at: new Date().toISOString(),
         })
         .eq("id", order.id);
 
       return { ok: true, response: parsed };
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
       await supabaseAdmin
         .from("orders")
-        .update({ status: "failed", error_message: String(e?.message ?? e) })
+        .update({ status: "failed", error_message: message })
         .eq("id", order.id);
-      return { ok: false, error: String(e?.message ?? e) };
+      return { ok: false, error: message };
     }
   });

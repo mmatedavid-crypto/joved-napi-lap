@@ -7,12 +7,23 @@ async function getSupabase() {
   return mod.supabaseAdmin;
 }
 
-async function handleCheckoutCompleted(session: any) {
+type CheckoutSessionLike = {
+  id: string;
+  payment_intent?: string | { id?: string } | null;
+};
+
+function checkoutObjectId(raw: unknown): string | null {
+  if (!raw || typeof raw !== "object") return null;
+  const id = (raw as { id?: unknown }).id;
+  return typeof id === "string" ? id : null;
+}
+
+async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const sessionId = session.id;
   const paymentIntent =
     typeof session.payment_intent === "string"
       ? session.payment_intent
-      : session.payment_intent?.id ?? null;
+      : (session.payment_intent?.id ?? null);
 
   const supabase = await getSupabase();
   const { data: existing } = await supabase
@@ -81,7 +92,7 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       await supabase
         .from("orders")
         .update({ status: "failed", error_message: event.type })
-        .eq("stripe_session_id", (event.data.object as any).id);
+        .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "");
       break;
     }
     default:

@@ -158,7 +158,9 @@ function MaiLap() {
                   />
                 </div>
                 <div className="pt-3 border-t border-[oklch(0.78_0.10_80/0.15)] mt-4">
-                  <div className="text-sm text-ivory/70 mb-2">Mélyebb, személyre szabott üzenetet szeretnél?</div>
+                  <div className="text-sm text-ivory/70 mb-2">
+                    Mélyebb, személyre szabott üzenetet szeretnél?
+                  </div>
                   <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
                     Kérek AI olvasatot · 490 Ft
                   </button>

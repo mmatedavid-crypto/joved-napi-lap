@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import {
@@ -10,6 +11,9 @@ import {
   relationshipNumber,
 } from "@/lib/numerology";
 import { HUDateInput } from "@/components/HUDateInput";
+import { roxyNumerologyCompatibility } from "@/lib/roxy.functions";
+import { normalizeRoxyCompat } from "@/lib/roxyNormalize";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/osszeillunk")({
   head: () => ({
@@ -34,21 +38,64 @@ const STATUS = [
 ];
 
 function Page() {
+  const callCompat = useServerFn(roxyNumerologyCompatibility);
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const [na, setNa] = useState("");
   const [nb, setNb] = useState("");
   const [status, setStatus] = useState(STATUS[0]);
-  const [res, setRes] = useState<{ aN: number; bN: number; rel: number; score: number } | null>(
-    null,
-  );
+  const [loading, setLoading] = useState(false);
+  const [res, setRes] = useState<{
+    aN: number;
+    bN: number;
+    rel: number;
+    score: number;
+    communication?: number;
+    attraction?: number;
+    longTerm?: number;
+    roxyUsed?: boolean;
+  } | null>(null);
 
-  function calc(e: React.FormEvent) {
+  async function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!a || !b) return;
-    const aN = lifePath(a),
-      bN = lifePath(b);
-    setRes({ aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) });
+    setLoading(true);
+    const aN = lifePath(a);
+    const bN = lifePath(b);
+    const base = { aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) };
+    try {
+      const r = await callCompat({
+        data: {
+          birthDate1: a,
+          birthDate2: b,
+          fullName1: na.trim() || undefined,
+          fullName2: nb.trim() || undefined,
+        },
+      });
+      if (r.ok && r.data) {
+        const n = normalizeRoxyCompat(r.data);
+        if (r.cached) trackEvent("roxy_cache_hit", { domain: "compatibility" });
+        else trackEvent("roxy_cache_miss", { domain: "compatibility" });
+        setRes({
+          ...base,
+          aN: n.lifePathA ?? base.aN,
+          bN: n.lifePathB ?? base.bN,
+          score: n.score ?? base.score,
+          communication: n.communication,
+          attraction: n.attraction,
+          longTerm: n.longTerm,
+          roxyUsed: true,
+        });
+      } else {
+        trackEvent("roxy_fallback_used", { domain: "compatibility" });
+        setRes(base);
+      }
+    } catch {
+      trackEvent("roxy_fallback_used", { domain: "compatibility" });
+      setRes(base);
+    }
+    trackEvent("compatibility_completed", { score: base.score, status });
+    setLoading(false);
   }
 
   const ai = res && lifePathInfo(res.aN);
@@ -85,8 +132,8 @@ function Page() {
               ))}
             </select>
           </div>
-          <button className="btn-gold" disabled={!a || !b}>
-            Megnézem az összeillést
+          <button className="btn-gold" disabled={!a || !b || loading}>
+            {loading ? "Egy pillanat…" : "Megnézem az összeillést"}
           </button>
         </form>
 
@@ -117,12 +164,23 @@ function Page() {
             <div className="grid md:grid-cols-2 gap-4">
               <Section eyebrow="Miért működhet">{pair.works}</Section>
               <Section eyebrow="Hol lehet nehéz">{pair.tension}</Section>
-              <Section eyebrow="Egy mondat, amit vigyetek magatokkal">
-                <em>{pair.advice}</em>
+              <Section eyebrow="Kommunikáció">
+                {res.communication
+                  ? metricText(res.communication, "kommunikáció")
+                  : "A kapcsolat hangja akkor tisztul, ha nem egymást javítjátok, hanem a saját ritmusotokat nevezitek meg."}
               </Section>
-              <Section eyebrow="A kapcsolat hangja">
-                A {res.rel}-es kapcsolatszám lassabb, őszintébb beszélgetéseket kér — nem a vita
-                tisztáz, hanem a kimondás.
+              <Section eyebrow="Vonzalom">
+                {res.attraction
+                  ? metricText(res.attraction, "vonzalom")
+                  : "A vonzalom itt nem csak szikra: inkább az mutat irányt, mennyire mertek természetesek maradni egymás mellett."}
+              </Section>
+              <Section eyebrow="Hosszú táv">
+                {res.longTerm
+                  ? metricText(res.longTerm, "hosszú táv")
+                  : "Hosszabb távon az dönthet, tudtok-e közös keretet építeni anélkül, hogy egyikőtök eltűnne benne."}
+              </Section>
+              <Section eyebrow="Egy mondatban">
+                <em>{pair.advice}</em>
               </Section>
             </div>
           </div>
@@ -135,3 +193,13 @@ const inp =
   "w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none";
 const sel =
   "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none";
+
+function metricText(value: number, label: string): string {
+  if (value >= 80) {
+    return `A ${label} erős tartóelem lehet köztetek, ha nem használjátok bizonyításra vagy kontrollra.`;
+  }
+  if (value >= 60) {
+    return `A ${label} működőképes mintát mutat, de időnként tudatos figyelmet kérhet.`;
+  }
+  return `A ${label} érzékenyebb pont lehet: nem lezárást, hanem több finom egyeztetést jelez.`;
+}

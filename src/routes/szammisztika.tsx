@@ -131,14 +131,62 @@ function Page() {
                   `Ebben az évben a ${result.personalYearNumber} energiája kísér.`}
               </Section>
             )}
+            {(result.expressionNumber ||
+              result.soulUrgeNumber ||
+              result.personalityNumber ||
+              result.maturityNumber ||
+              result.birthDayNumber) && (
+              <div className="grid md:grid-cols-2 gap-4">
+                {result.expressionNumber && (
+                  <Section eyebrow="Kifejeződésed" title={`${result.expressionNumber}-es szám`}>
+                    {result.expressionMeaning ??
+                      "Ez a szám azt mutatja, milyen formában tudsz természetesen hatni a világra."}
+                  </Section>
+                )}
+                {result.soulUrgeNumber && (
+                  <Section eyebrow="Belső vágyad" title={`${result.soulUrgeNumber}-es szám`}>
+                    {result.soulUrgeMeaning ??
+                      "Ez a szám inkább a belső hajtóerődre és mélyebb vágyaidra utalhat."}
+                  </Section>
+                )}
+                {result.personalityNumber && (
+                  <Section eyebrow="Külső képed" title={`${result.personalityNumber}-es szám`}>
+                    {result.personalityMeaning ??
+                      "Ez a szám azt jelzi, milyen első benyomást kelthet a jelenléted."}
+                  </Section>
+                )}
+                {result.maturityNumber && (
+                  <Section eyebrow="Érettségi számod" title={`${result.maturityNumber}-es szám`}>
+                    {result.maturityMeaning ??
+                      "Ez a minőség később, érettebb korszakokban válhat erősebben láthatóvá."}
+                  </Section>
+                )}
+                {result.birthDayNumber && (
+                  <Section eyebrow="Születésnap-számod" title={`${result.birthDayNumber}-es szám`}>
+                    {result.birthDayMeaning ??
+                      "Ez a szám egy veleszületett, egyszerűen felismerhető adottságodra mutathat."}
+                  </Section>
+                )}
+              </div>
+            )}
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
-              <div className="text-sm text-ivory/70 mb-2">Teljes numerológiai életút elemzést kérsz emailben?</div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Életút elemzés · 2490 Ft</button>
+              <div className="text-sm text-ivory/70 mb-2">
+                Teljes numerológiai életút elemzést kérsz emailben?
+              </div>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Életút elemzés · 2490 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="szammisztika_eletut" sourceRoute="/szammisztika" inputPayload={{ dob, name }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="szammisztika_eletut"
+        sourceRoute="/szammisztika"
+        inputPayload={{ dob, name }}
+      />
     </Layout>
   );
 }

@@ -79,7 +79,7 @@ export const ANGEL_HU: Record<number, AngelMeaning> = {
   9: {
     title: "Lezárás",
     message: "Egy ciklus a végéhez ér. Ami már nem rólad szól, elengedhető.",
-    love: "Egy régi seb most begyógyulhat, ha hagyod.",
+    love: "Egy régi seb most halkabban kérhet figyelmet, ha hagyod.",
     decision: "Ne kezdj újat, amíg a régit nem zártad.",
     warn: "Ne ragaszkodj abból dacból.",
     oneLine: "Engedd, hogy lezáruljon.",

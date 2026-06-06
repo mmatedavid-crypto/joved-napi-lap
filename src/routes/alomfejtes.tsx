@@ -185,12 +185,20 @@ function Page() {
               )}
             </div>
             <div className="text-center pt-2">
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Rövid AI álomfejtés · 790 Ft</button>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Rövid AI álomfejtés · 790 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="alomfejtes_rovid" sourceRoute="/alomfejtes" inputPayload={result ? { title: result.title, text } : { text }} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="alomfejtes_rovid"
+        sourceRoute="/alomfejtes"
+        inputPayload={result ? { title: result.title, text } : { text }}
+      />
     </Layout>
   );
 }

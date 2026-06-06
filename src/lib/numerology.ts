@@ -110,7 +110,7 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
     strengths: "Szeretet, esztétika, gondoskodás.",
     shadow: "Beavatkozás, áldozatszerep, perfekcionizmus.",
     love: "Hosszú távra építesz. A családi élet központi téma.",
-    work: "Tanítás, gyógyítás, design, vendéglátás — ahol valaki vagy valami szebb lesz általad.",
+    work: "Tanítás, támogatás, design, vendéglátás — ahol valaki vagy valami szebb lesz általad.",
     purpose:
       "Megtanulni, hogy a szeretet nem kötelesség — és nem rajtad múlik, hogy mindenki rendben legyen.",
     advice: "Először magadnak adj abból, amit másnak adsz.",
@@ -148,7 +148,7 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
     strengths: "Együttérzés, távlat, érettség.",
     shadow: "Áldozat, lemondás, melankólia.",
     love: "Mély, tartalmas kapcsolódást keresel. A felszín gyorsan elfáraszt.",
-    work: "Civil szektor, művészet, tanítás, gyógyítás — ahol értelme van annak, amit teszel.",
+    work: "Civil szektor, művészet, tanítás, segítő munka — ahol értelme van annak, amit teszel.",
     purpose: "Elengedni szépen, és a magadét sem felejteni el a sok közös közt.",
     advice: "A magadért való szeretet nem önzés. A te részed is hiányzik a világnak.",
   },
@@ -179,11 +179,12 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
   33: {
     number: 33,
     title: "A Tanító Szív",
-    meaning: "Szolgálat és gyengéd erő. A jelenléted gyógyít, akár tudsz róla, akár nem.",
+    meaning:
+      "Szolgálat és gyengéd erő. A jelenléted gyakran megnyugtató másoknak, akár tudsz róla, akár nem.",
     strengths: "Szeretet, felelősség, magasabb értelem.",
     shadow: "Mártírság, túlgondoskodás.",
     love: "Gyengéd, mély, gondoskodó. Vigyázz a határaidra.",
-    work: "Hivatás-jellegű munka — tanítás, gyógyítás, közösségépítés.",
+    work: "Hivatás-jellegű munka — tanítás, segítő szerepek, közösségépítés.",
     purpose: "Szeretni úgy, hogy közben magadat is megtartod — ez a legmélyebb tanításod.",
     advice: "A te jólléted nem luxus. Nélküle a szereteted sem fenntartható.",
   },

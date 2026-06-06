@@ -127,12 +127,20 @@ function Page() {
               )}
             </div>
             <div className="text-center pt-2">
-              <button className="btn-gold" onClick={() => setPaywall(true)}>Mélyebb AI elemzés · 490 Ft</button>
+              <button className="btn-gold" onClick={() => setPaywall(true)}>
+                Mélyebb AI elemzés · 490 Ft
+              </button>
             </div>
           </div>
         )}
       </div>
-      <PaywallDialog open={paywall} onOpenChange={setPaywall} productSlug="angyalszam_ai" sourceRoute="/angyalszam" inputPayload={m ? { number: m.number, root: m.root } : undefined} />
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="angyalszam_ai"
+        sourceRoute="/angyalszam"
+        inputPayload={m ? { number: m.number, root: m.root } : undefined}
+      />
     </Layout>
   );
 }
