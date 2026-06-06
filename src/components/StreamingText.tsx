@@ -38,13 +38,11 @@ export function StreamingText({ text, speed = 2, interval = 18, className, as = 
   }, [text, instant, speed, interval]);
 
   const isStreaming = !instant && text != null && shown.length < text.length;
-  const Tag = as as keyof JSX.IntrinsicElements;
-  return (
-    <Tag className={className}>
-      {shown}
-      {isStreaming && (
-        <span className="inline-block w-[2px] h-[1em] -mb-[2px] ml-[2px] bg-gold/80 align-middle animate-pulse" aria-hidden="true" />
-      )}
-    </Tag>
-  );
+  const caret = isStreaming ? (
+    <span className="inline-block w-[2px] h-[1em] -mb-[2px] ml-[2px] bg-gold/80 align-middle animate-pulse" aria-hidden="true" />
+  ) : null;
+  if (as === "p") return <p className={className}>{shown}{caret}</p>;
+  if (as === "span") return <span className={className}>{shown}{caret}</span>;
+  if (as === "em") return <em className={className}>{shown}{caret}</em>;
+  return <div className={className}>{shown}{caret}</div>;
 }
