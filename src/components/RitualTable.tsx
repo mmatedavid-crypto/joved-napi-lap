@@ -32,13 +32,13 @@ export function RitualTable() {
   return (
     <div>
       {/* Tabs */}
-      <div className="surface px-2 py-2 mb-6 overflow-x-auto">
+      <div className="px-1 py-1 mb-3 overflow-x-auto">
         <div className="flex gap-1 min-w-max md:justify-center">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setMode(t.id)}
-              className={`px-3.5 md:px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors ${
+              className={`px-3 md:px-4 py-1.5 rounded-full text-[13px] whitespace-nowrap transition-colors ${
                 mode === t.id
                   ? "bg-[oklch(0.78_0.10_80/0.18)] text-gold border border-[oklch(0.78_0.10_80/0.4)]"
                   : "text-ivory/70 hover:text-ivory border border-transparent"
@@ -52,7 +52,7 @@ export function RitualTable() {
         </div>
       </div>
 
-      <div className="surface p-4 md:p-7">
+      <div className={mode === "mai" || mode === "harom" ? "pt-1" : "surface p-4 md:p-7"}>
         {mode === "mai" && <MaiLapInline />}
         {mode === "harom" && <HaromLapInline />}
         {mode === "randi" && <RandiInline />}
