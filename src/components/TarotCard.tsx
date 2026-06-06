@@ -542,7 +542,7 @@ export function CardFace({ card, label, className = "" }:
           <div className="text-[8px] tracking-[0.45em] uppercase text-[oklch(0.86_0.06_80/0.65)] mb-1">Arcanum</div>
           <div
             className="font-display text-ivory leading-tight"
-            style={{ fontSize: "clamp(13px, 4.4cqw, 22px)" }}
+            style={{ fontSize: "clamp(14px, 4.2vw, 22px)" }}
           >
             {card.name}
           </div>
