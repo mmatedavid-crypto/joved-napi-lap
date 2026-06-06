@@ -16,14 +16,14 @@ export interface ProductDef {
   sourceRoute?: string;
 }
 
-export const EXPRESS_PRICE_ID = "express_6h_v2";
+export const EXPRESS_PRICE_ID = "express_6h_price";
 export const EXPRESS_PRICE_HUF = 990;
 export const EXPRESS_HOURS = 6;
 
 export const PRODUCTS: ProductDef[] = [
   {
     slug: "napi_lap_ai",
-    priceId: "napi_lap_ai_v2",
+    priceId: "napi_lap_ai_price",
     name: "Napi lap — AI értelmezés",
     short: "Személyre szabott elemzés a mai lapodhoz.",
     priceHuf: 490,
@@ -32,7 +32,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "mai_iranytu_ai",
-    priceId: "mai_iranytu_ai_v2",
+    priceId: "mai_iranytu_ai_price",
     name: "Mai iránytű — AI üzenet",
     short: "Mit üzen a mai napod neked személyesen.",
     priceHuf: 590,
@@ -41,7 +41,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "angyalszam_ai",
-    priceId: "angyalszam_ai_v2",
+    priceId: "angyalszam_ai_price",
     name: "Angyalszám — AI elemzés",
     short: "Az angyalszámod személyre szabott jelentése.",
     priceHuf: 490,
@@ -50,7 +50,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "kristaly_ai",
-    priceId: "kristaly_ai_v2",
+    priceId: "kristaly_ai_price",
     name: "Kristály ajánlás — AI",
     short: "A mostani helyzetedhez illő kristály.",
     priceHuf: 490,
@@ -59,7 +59,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "alomfejtes_rovid",
-    priceId: "alomfejtes_rovid_v2",
+    priceId: "alomfejtes_rovid_price",
     name: "Álomfejtés — rövid AI",
     short: "Az álmod szimbólumainak rövid értelmezése.",
     priceHuf: 790,
@@ -68,7 +68,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "horoszkop_szemelyre",
-    priceId: "horoszkop_szemelyre_v2",
+    priceId: "horoszkop_szemelyre_price",
     name: "Horoszkóp — személyre szabott",
     short: "Mai horoszkópod a te helyzetedre szabva.",
     priceHuf: 990,
@@ -77,7 +77,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "extra_huzas",
-    priceId: "extra_huzas_v2",
+    priceId: "extra_huzas_price",
     name: "Extra napi húzás",
     short: "Még egy húzás ma — a napi limit feloldása.",
     priceHuf: 490,
@@ -85,7 +85,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "harom_lap_mely",
-    priceId: "harom_lap_mely_v2",
+    priceId: "harom_lap_mely_price",
     name: "Három lap — mély elemzés",
     short: "Három lapos húzás részletes elemzése. 12–24 órán belül emailben.",
     priceHuf: 1990,
@@ -96,7 +96,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "kelta_kereszt",
-    priceId: "kelta_kereszt_v2",
+    priceId: "kelta_kereszt_price",
     name: "Kelta kereszt — nagy spread",
     short: "10 lapos klasszikus kelta kereszt. 12–24 órán belül emailben.",
     priceHuf: 2990,
@@ -106,7 +106,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "dontes_komplex",
-    priceId: "dontes_komplex_v2",
+    priceId: "dontes_komplex_price",
     name: "Döntés előtt — komplex elemzés",
     short: "Komplex döntéselőkészítő olvasat. 12–24 órán belül emailben.",
     priceHuf: 2490,
@@ -117,7 +117,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "parkapcsolat_elemzes",
-    priceId: "parkapcsolat_elemzes_v2",
+    priceId: "parkapcsolat_elemzes_price",
     name: "Párkapcsolat — mély elemzés",
     short: "Randi előtt vagy összeillés részletes olvasata. 12–24 órán belül emailben.",
     priceHuf: 2490,
@@ -128,7 +128,7 @@ export const PRODUCTS: ProductDef[] = [
   },
   {
     slug: "szammisztika_eletut",
-    priceId: "szammisztika_eletut_v2",
+    priceId: "szammisztika_eletut_price",
     name: "Számmisztika — életút elemzés",
     short: "Teljes numerológiai életút elemzés. 12–24 órán belül emailben.",
     priceHuf: 2490,
