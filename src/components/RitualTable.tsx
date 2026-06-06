@@ -27,10 +27,9 @@ import {
   threeCardSynthesis,
 } from "@/lib/numerology";
 
-type Mode = "mai" | "harom" | "randi" | "dontes" | "szam" | "osszeillunk";
+type Mode = "harom" | "randi" | "dontes" | "szam" | "osszeillunk";
 
 const TABS: { id: Mode; label: string; short: string }[] = [
-  { id: "mai", label: "Mai lap", short: "Mai" },
   { id: "harom", label: "3 lapos húzás", short: "3 lap" },
   { id: "randi", label: "Randi előtt", short: "Randi" },
   { id: "dontes", label: "Döntés előtt", short: "Döntés" },
@@ -39,7 +38,7 @@ const TABS: { id: Mode; label: string; short: string }[] = [
 ];
 
 export function RitualTable() {
-  const [mode, setMode] = useState<Mode>("mai");
+  const [mode, setMode] = useState<Mode>("harom");
 
   return (
     <div>
@@ -64,8 +63,7 @@ export function RitualTable() {
         </div>
       </div>
 
-      <div className={mode === "mai" || mode === "harom" ? "pt-0" : "surface p-4 md:p-7"}>
-        {mode === "mai" && <MaiLapInline />}
+      <div className={mode === "harom" ? "pt-0" : "surface p-4 md:p-7"}>
         {mode === "harom" && <HaromLapInline />}
         {mode === "randi" && <RandiInline />}
         {mode === "dontes" && <DontesInline />}
