@@ -36,7 +36,8 @@ type QualityEnvelopeBase = {
   reading: QualityReading | null;
   message?: string;
 };
-type QualityEnvelope<TExtra extends Record<string, unknown> = Record<string, never>> =
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type QualityEnvelope<TExtra extends Record<string, unknown> | object = {}> =
   QualityEnvelopeBase & TExtra;
 
 async function generateQualityReading(opts: {
