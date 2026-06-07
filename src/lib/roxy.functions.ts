@@ -649,11 +649,9 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         QUALITY_OUTPUT_SCHEMA,
       } = await import("./readingQuality/prompts");
       const { guardQualityReading } = await import("./readingQuality/qualityGuard");
-      const { READING_QUALITY_MODEL, SAFETY_NOTE, type QualityReading } = await import(
+      const { READING_QUALITY_MODEL, SAFETY_NOTE } = await import(
         "./readingQuality/styleRules"
       );
-      type QR = Awaited<ReturnType<typeof aiJSON<typeof QUALITY_OUTPUT_SCHEMA>>>;
-      void QR;
 
       const idsKey = data.cards.map((c) => c.id).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
