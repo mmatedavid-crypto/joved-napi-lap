@@ -7,9 +7,8 @@ const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 // stílus", amit a felhasználó megfelelőnek tart. Ha valamiért hibázik,
 // fallback Geminire.
 const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.5";
-const LOVABLE_FALLBACK_MODEL =
-  process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
-const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.5";
+const LOVABLE_FALLBACK_MODEL = process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
+const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
 
 export type AiResult<T> = { ok: boolean; data: T | null; error?: string };
 

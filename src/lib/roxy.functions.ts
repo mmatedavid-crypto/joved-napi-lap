@@ -652,12 +652,10 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       const { aiJSON } = await import("./ai.server");
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-      const idsKey = data.cards
-        .map((c) => `${c.id}${c.reversed ? "_r" : ""}`)
-        .join("+");
+      const idsKey = data.cards.map((c) => `${c.id}${c.reversed ? "_r" : ""}`).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
       const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-      const cacheKey = `aitarot-v6q:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const cacheKey = `aitarot:${READING_QUALITY_PROMPT_VERSION}:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
       try {
         const { data: row } = await supabaseAdmin
@@ -675,8 +673,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       // Spread-specific szekciók — a sorsszám-olvasat etalonját követjük:
       // a readingQuality rendszerrel (buildQualitySystemPrompt) generáljuk az
       // olvasatot, majd a szekciókat visszamappeljük a TarotReadingHU mezőire.
-      const isDailySingle =
-        data.spread === "single" && !data.category && !data.question;
+      const isDailySingle = data.spread === "single" && !data.category && !data.question;
 
       type SectionMap = { heading: string; field: keyof TarotReadingHU };
       let sectionMap: SectionMap[];
@@ -749,10 +746,10 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           daily: c.daily ?? null,
         })),
         utmutato: isDailySingle
-          ? "A felhasználó a mai napjához húzott egy lapot. Az olvasat fordítsa a lap fő minőségét személyes mai hangulattá: konkrét belső állapot, testi érzet, mai hétköznapi helyzet. Sose írd le a lap nevét a szekciók szövegében — a lapot a fejléc mutatja."
-          : "A lap(ok) jelentését alkalmazd a megadott helyzetre/kérdésre. A lap a lencse, a helyzet a téma; minden szekció a megadott helyzetről szóljon, ne általában a lapról.",
+          ? "Mai lap: a lap minőségét a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe."
+          : "A lap jelentését a megadott helyzetre vagy kérdésre alkalmazd. Ne általános kártyaleírást írj.",
         forditottSzabaly:
-          "Ha egy lapnál forditott=true, akkor a lap ÁRNYÉKOLDALÁT, blokkolt vagy túltolt megnyilvánulását olvasd ki, NEM az alapjelentést. A fordított lap nem feltétlenül 'rossz' — inkább azt mutatja, hogy a lap minősége most befelé fordul, késik, gátolt, vagy túlsúlyban van. Pl. fordított Császár = elmosódott határok / merevség; fordított Csillag = remény-vesztettség vagy önámítás; fordított Bolond = halogatás vagy meggondolatlan ugrás. A szekciókban ezt finoman, képszerűen jelezd, ne mondd ki azt a szót, hogy 'fordított' — a hangulatát írd.",
+          "Ha forditott=true, a lap blokkolt vagy túltolt oldalát olvasd. Nem kell kimondani, hogy fordított.",
       };
 
       const requiredSections = sectionMap.map((s) => s.heading);

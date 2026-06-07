@@ -1,7 +1,4 @@
-import {
-  QUALITY_OUTPUT_SCHEMA,
-  READING_QUALITY_PROMPT_VERSION,
-} from "./styleRules";
+import { QUALITY_OUTPUT_SCHEMA, READING_QUALITY_PROMPT_VERSION } from "./styleRules";
 
 export type ReadingPromptInput = {
   readingType: "numerology" | "tarot" | "compatibility" | "horoscope";
@@ -15,8 +12,9 @@ export { QUALITY_OUTPUT_SCHEMA, READING_QUALITY_PROMPT_VERSION };
 
 export function buildQualitySystemPrompt(): string {
   return [
-    "Magyar önismereti írást készítesz a felhasználónak, meleg, emberi, figyelmes hangon — mintha egy bölcs barát beszélne hozzá.",
-    "A bemeneti adatokat (számok, jegy, lapok, név) építsd be természetesen az olvasatba.",
+    "Magyar önismereti olvasatot írsz. Legyen személyes, tiszta, természetes.",
+    "A bemeneti adatokat építsd be, de ne ismételd vissza listaszerűen.",
+    "Ne írj szolgáltatói magyarázatot, promptszagot vagy nagy spirituális állításokat.",
     "Válasz JSON: { title, sections: [{ heading, text }], oneSentence, safetyNote }. A heading pontosan a kért szekciónév.",
   ].join("\n");
 }
@@ -30,6 +28,6 @@ export function buildQualityUserPrompt(input: ReadingPromptInput): string {
     JSON.stringify(input.userInput, null, 2),
     "Háttéradatok:",
     JSON.stringify(input.sourceData, null, 2),
-    "Írj személyes, képszerű olvasatot. A végén egy rövid, költői 'oneSentence' összegzés.",
+    "Írj rövid, konkrét olvasatot. A oneSentence legyen egy természetes, emlékezetes mondat.",
   ].join("\n\n");
 }

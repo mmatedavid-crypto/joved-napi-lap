@@ -104,7 +104,9 @@ function Page() {
             />
           </div>
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">Ahogy szólítanak (opcionális)</label>
+            <label className="block text-sm text-ivory/80 mb-2">
+              Ahogy szólítanak (opcionális)
+            </label>
             <input
               value={callName}
               onChange={(e) => setCallName(e.target.value)}

@@ -37,8 +37,8 @@ type QualityEnvelopeBase = {
   message?: string;
 };
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type QualityEnvelope<TExtra extends Record<string, unknown> | object = {}> =
-  QualityEnvelopeBase & TExtra;
+type QualityEnvelope<TExtra extends Record<string, unknown> | object = {}> = QualityEnvelopeBase &
+  TExtra;
 
 async function generateQualityReading(opts: {
   readingType: "numerology" | "compatibility" | "tarot" | "horoscope";
@@ -116,7 +116,7 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
       fullName: data.fullName,
     });
     const fallback = composeNumerologyReading(profile);
-    const cacheKey = `reading_ai:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}:${(data.preferredName ?? "").toLowerCase().trim()}`;
+    const cacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}:${(data.preferredName ?? "").toLowerCase().trim()}`;
     const hit = await readReadingCache(cacheKey);
     if (hit) {
       return { ok: true, cached: true, fallbackUsed: false, reading: hit, profile };
@@ -173,7 +173,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: CompatibilityProfile | null }>> => {
-    const compatCacheKey = `reading_ai:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}`;
+    const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}`;
     const compatHit = await readReadingCache(compatCacheKey);
     if (compatHit) {
       return {
@@ -268,7 +268,7 @@ export const qualityHoroscopeReading = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope> => {
-    const horoCacheKey = `reading_ai:horoscope:${data.sign}:${data.dateKey}`;
+    const horoCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:horoscope:${data.sign}:${data.dateKey}`;
     const horoHit = await readReadingCache(horoCacheKey);
     if (horoHit) {
       return { ok: true, cached: true, fallbackUsed: false, reading: horoHit };
