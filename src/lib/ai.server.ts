@@ -3,8 +3,13 @@
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
-const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "google/gemini-2.5-flash";
-const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
+// A Lovable AI Gateway alapból openai/gpt-5.5 -tel megy: ez a "gpt-5.5
+// stílus", amit a felhasználó megfelelőnek tart. Ha valamiért hibázik,
+// fallback Geminire.
+const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.5";
+const LOVABLE_FALLBACK_MODEL =
+  process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
+const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.5";
 
 export type AiResult<T> = { ok: boolean; data: T | null; error?: string };
 
@@ -18,6 +23,47 @@ export async function aiJSON<T>(opts: {
   readingType?: string;
 }): Promise<AiResult<T>> {
   const started = Date.now();
+  // 1) Elsődleges: Lovable AI Gateway (alapból openai/gpt-5.5 — ez a felhasználó
+  //    által elfogadott "gpt-5.5 stílus", és a Lovable workspace creditből
+  //    fizetjük, nem a saját OpenAI-fiókból).
+  const lovableKey = process.env.LOVABLE_API_KEY;
+  if (lovableKey) {
+    const primaryModel = opts.model ?? LOVABLE_MODEL;
+    const r = await lovableJSON<T>({ ...opts, apiKey: lovableKey, model: primaryModel });
+    if (r.ok) {
+      logAiCall({
+        provider: "lovable",
+        model: primaryModel,
+        ok: true,
+        started,
+        readingType: opts.readingType,
+        fallbackUsed: false,
+      });
+      return r;
+    }
+    // ha az elsődleges modell hibázik (pl. 402, 429, vagy temp. hiba),
+    // próbáljunk egy gyorsabb Gemini fallbacket ugyanazon a gateway-en
+    if (primaryModel !== LOVABLE_FALLBACK_MODEL) {
+      const r2 = await lovableJSON<T>({
+        ...opts,
+        apiKey: lovableKey,
+        model: LOVABLE_FALLBACK_MODEL,
+      });
+      if (r2.ok) {
+        logAiCall({
+          provider: "lovable",
+          model: LOVABLE_FALLBACK_MODEL,
+          ok: true,
+          started,
+          readingType: opts.readingType,
+          fallbackUsed: true,
+        });
+        return r2;
+      }
+    }
+  }
+
+  // 2) Másodlagos: közvetlen OpenAI hívás (ha van saját kulcs)
   const openaiKey = process.env.OPENAI_API_KEY;
   if (openaiKey) {
     const model = opts.model ?? OPENAI_MODEL;
@@ -33,10 +79,18 @@ export async function aiJSON<T>(opts: {
     return r;
   }
 
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) return { ok: false, data: null, error: "missing_lovable_api_key" };
+  return { ok: false, data: null, error: "no_ai_provider_available" };
+}
 
-  const model = opts.model ?? LOVABLE_MODEL;
+async function lovableJSON<T>(opts: {
+  apiKey: string;
+  model: string;
+  system: string;
+  user: string;
+  schemaName?: string;
+  schema?: Record<string, unknown>;
+}): Promise<AiResult<T>> {
+  const model = opts.model;
   const body: Record<string, unknown> = {
     model,
     messages: [
@@ -58,32 +112,21 @@ export async function aiJSON<T>(opts: {
     res = await fetch(AI_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${opts.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
   } catch (e) {
-    const r = { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
-    logAiCall({
-      provider: "lovable",
-      model,
-      ok: false,
-      started,
-      readingType: opts.readingType,
-      fallbackUsed: true,
-    });
-    return r;
+    return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
   }
   if (!res.ok) {
-    logAiCall({
-      provider: "lovable",
-      model,
-      ok: false,
-      started,
-      readingType: opts.readingType,
-      fallbackUsed: true,
-    });
+    try {
+      const t = await res.text();
+      console.warn("[lovable_ai]", { model, status: res.status, body: t.slice(0, 400) });
+    } catch {
+      /* ignore */
+    }
     return { ok: false, data: null, error: `http_${res.status}` };
   }
   let json: { choices?: Array<{ message?: { content?: string } }> };
@@ -94,25 +137,8 @@ export async function aiJSON<T>(opts: {
   }
   const content = json.choices?.[0]?.message?.content ?? "";
   try {
-    const parsed = { ok: true, data: JSON.parse(content) as T };
-    logAiCall({
-      provider: "lovable",
-      model,
-      ok: true,
-      started,
-      readingType: opts.readingType,
-      fallbackUsed: false,
-    });
-    return parsed;
+    return { ok: true, data: JSON.parse(content) as T };
   } catch {
-    logAiCall({
-      provider: "lovable",
-      model,
-      ok: false,
-      started,
-      readingType: opts.readingType,
-      fallbackUsed: true,
-    });
     return { ok: false, data: null, error: "parse_failed" };
   }
 }

@@ -20,6 +20,7 @@ import {
 import { guardQualityReading } from "./qualityGuard";
 import { composeHoroscopeReading } from "./horoscopeEngine";
 import { READING_QUALITY_MODEL, SAFETY_NOTE, type QualityReading } from "./styleRules";
+import { readReadingCache, writeReadingCache } from "./readingCache.server";
 
 const BirthDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -28,13 +29,16 @@ function splitDate(d: string): { year: number; month: number; day: number } {
   return { year, month, day };
 }
 
-type QualityEnvelope<TExtra extends Record<string, unknown> = Record<string, never>> = {
+type QualityEnvelopeBase = {
   ok: boolean;
   cached: boolean;
   fallbackUsed: boolean;
   reading: QualityReading | null;
   message?: string;
-} & TExtra;
+};
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type QualityEnvelope<TExtra extends Record<string, unknown> | object = {}> =
+  QualityEnvelopeBase & TExtra;
 
 async function generateQualityReading(opts: {
   readingType: "numerology" | "compatibility" | "tarot" | "horoscope";
@@ -111,6 +115,11 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
       fullName: data.fullName,
     });
     const fallback = composeNumerologyReading(profile);
+    const cacheKey = `reading_ai:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}`;
+    const hit = await readReadingCache(cacheKey);
+    if (hit) {
+      return { ok: true, cached: true, fallbackUsed: false, reading: hit, profile };
+    }
     const generated = await generateQualityReading({
       readingType: "numerology",
       userInput: data,
@@ -132,6 +141,10 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
       ],
       fallback,
     });
+    if (!generated.fallbackUsed && generated.reading) {
+      // 30 napig kacheljük — a sorsszám és a személyes év stabil
+      await writeReadingCache(cacheKey, "ai:numerology", generated.reading, 60 * 60 * 24 * 30);
+    }
     return {
       ok: true,
       cached: false,
@@ -152,6 +165,17 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: CompatibilityProfile | null }>> => {
+    const compatCacheKey = `reading_ai:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}`;
+    const compatHit = await readReadingCache(compatCacheKey);
+    if (compatHit) {
+      return {
+        ok: true,
+        cached: true,
+        fallbackUsed: false,
+        reading: compatHit,
+        profile: null,
+      };
+    }
     let roxy: unknown = null;
     try {
       const { callRoxy } = await import("../roxy.server");
@@ -203,6 +227,9 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       ],
       fallback,
     });
+    if (!generated.fallbackUsed && generated.reading) {
+      await writeReadingCache(compatCacheKey, "ai:compat", generated.reading, 60 * 60 * 24 * 30);
+    }
     return {
       ok: true,
       cached: false,
@@ -233,6 +260,11 @@ export const qualityHoroscopeReading = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope> => {
+    const horoCacheKey = `reading_ai:horoscope:${data.sign}:${data.dateKey}`;
+    const horoHit = await readReadingCache(horoCacheKey);
+    if (horoHit) {
+      return { ok: true, cached: true, fallbackUsed: false, reading: horoHit };
+    }
     let roxy: unknown = null;
     try {
       const { callRoxy } = await import("../roxy.server");
@@ -259,6 +291,10 @@ export const qualityHoroscopeReading = createServerFn({ method: "POST" })
       anchors: [data.sign, data.dateKey],
       fallback,
     });
+    if (!generated.fallbackUsed && generated.reading) {
+      // 24h-ig kacheljük — egy adott jegy + dátum kombinációra elég egyszer kérni
+      await writeReadingCache(horoCacheKey, "ai:horoscope", generated.reading, 60 * 60 * 24);
+    }
     return {
       ok: true,
       cached: false,

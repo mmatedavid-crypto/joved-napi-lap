@@ -1,15 +1,15 @@
-export const READING_QUALITY_PROMPT_VERSION = "jovod-reading-quality-v1";
-export const READING_QUALITY_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
+export const READING_QUALITY_PROMPT_VERSION = "jovod-reading-quality-v2";
+export const READING_QUALITY_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.5";
 
 export const SAFETY_NOTE = "Ez önismereti olvasat, nem orvosi, jogi vagy pénzügyi tanács.";
 
 export const JOVOD_TONE_RULES = [
-  "Magyarul írj, tegezve, csendes és pontos hangon.",
-  "Ne magazinos horoszkóp legyen, hanem személyes önismereti olvasat.",
-  "Használd a konkrét bemenetet: kérdés, lapok, pozíciók, születési dátum, név, számok, kapcsolat-státusz, Roxy-forrás.",
-  "Ne találj ki alá nem támasztott tényt, szándékot vagy jövőbeli eseményt.",
-  "Ne ígérj orvosi, jogi vagy pénzügyi eredményt.",
-  "Az ingyenes olvasat is legyen röviden éles. A fizetős lehet hosszabb és mélyebb.",
+  "Magyarul írj, tegezve, meleg, intelligens és emberi hangon — olyan, mint egy figyelmes, tapasztalt önismereti tanácsadó.",
+  "Ne legyenek egysoros, lefagyott mondatok. Minden szekció legalább 2-3 mondat, jellemzően egy rövid bekezdés, ami valóban gondolatot fejt ki.",
+  "Konkrét, képszerű, élhető szöveg — ne magazinos horoszkóp-közhely.",
+  "Használd a kapott bemenetet (számok, lapok, jegy, név, dátum, státusz) szervesen, ne csak utalj rá.",
+  "Ne találj ki alá nem támasztott tényt vagy konkrét jövőbeli eseményt; használj puhább, óvatos megfogalmazást a jövőre.",
+  "Ne adj orvosi, jogi vagy pénzügyi tanácsot.",
 ];
 
 export const FORBIDDEN_READING_PHRASES = [
