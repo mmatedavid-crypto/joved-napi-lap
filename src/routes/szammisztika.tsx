@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { HUDateInput } from "@/components/HUDateInput";
-import { loadLocal } from "@/lib/storage";
+import { loadLocal, saveLocal } from "@/lib/storage";
 import { qualityNumerologyReading } from "@/lib/readingQuality/functions";
 import {
   composeNumerologyReading,
@@ -80,6 +80,7 @@ function Page() {
   function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!dob) return;
+    saveLocal("numerology:last", { dob, name, callName });
     fetchReading(dob, name, callName);
   }
 
