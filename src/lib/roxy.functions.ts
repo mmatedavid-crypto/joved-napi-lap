@@ -8,6 +8,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { guardAITextObject, polishCrystalNameHU } from "./huTextGuard";
+import type { QualityReading } from "./readingQuality/styleRules";
 
 type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
 
@@ -642,11 +643,20 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
     }> => {
       const { aiJSON } = await import("./ai.server");
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const {
+        buildQualitySystemPrompt,
+        buildQualityUserPrompt,
+        QUALITY_OUTPUT_SCHEMA,
+      } = await import("./readingQuality/prompts");
+      const { guardQualityReading } = await import("./readingQuality/qualityGuard");
+      const { READING_QUALITY_MODEL, SAFETY_NOTE } = await import(
+        "./readingQuality/styleRules"
+      );
 
       const idsKey = data.cards.map((c) => c.id).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
       const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-      const cacheKey = `aitarot-v4:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const cacheKey = `aitarot-v5q:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
       try {
         const { data: row } = await supabaseAdmin
@@ -661,39 +671,67 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         /* ignore */
       }
 
+      // Spread-specific szekciók — a sorsszám-olvasat etalonját követjük:
+      // a readingQuality rendszerrel (buildQualitySystemPrompt) generáljuk az
+      // olvasatot, majd a szekciókat visszamappeljük a TarotReadingHU mezőire.
       const isDailySingle =
         data.spread === "single" && !data.category && !data.question;
 
-      const sys = [
-        "Te a Jövőd.hu spirituális napló írója vagy — egy figyelmes, intelligens, érzékeny magyar hang. Úgy írsz, mint egy tapasztalt önismereti tanácsadó, aki melegen, képszerűen, földhözragadtan beszél.",
-        "MINDIG magyarul írj, sose maradjon angol szó a kimenetben.",
-        "TILTOTT a magazinos horoszkóp-hang, a 'spirituális közhely', a coach-szerű 'légy önmagad' jellegű töltelék. Konkrét, érzéki, testben érezhető képeket használj — fény, súly, ritmus, lélegzet, csend, lépés, küszöb. Egy jó mondat olyan legyen, mintha rólad szólna, nem általában az életről.",
-        "A FELADATOD: a kihúzott lap(ok) jelentését (general/love/decision/warning/daily forrásmezők) ALKALMAZD a felhasználó konkrét helyzetére (kategória + kérdés). A lap a LENCSE, a helyzet a TÉMA. Minden mondatod a megadott helyzetről szóljon, NE a lapról általában.",
-        "PÉLDA: ha kategória='randi előtt' és a Szeretők lap jött, NE azt írd, hogy 'a Szeretők a választásokról szól', hanem azt, hogy 'a randin most ott lesz egy belső választás — figyelj, melyik részed válaszol amikor megszólal'. Konkrétan a randira vonatkoztatva.",
-        "PÉLDA: ha kategória='nem ír vissza' és a Remete lap jött, ne 'a Remete elvonulást jelent' — hanem 'most lehet, hogy ő épp magában van, nem ellened; ez a csend nem feltétlen elutasítás'. A helyzetre fordítva.",
-        "SOHA ne találj ki új jövő-eseményt, új konkrét tényt a másik emberről (mit gondol, mit fog tenni). A forrás KERETÉT alkalmazd a helyzetre, de tényeket ne állíts a másikról.",
-        "Ha egy forrásmező üres / hiányzik, HAGYD KI az adott kimeneti mezőt. Ne tölts fel közhellyel.",
-        "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt. NEM közhelyes és NEM coachos.",
-        "TILTOTT panelmondatok és fordulatok: 'összességében', 'fontos megjegyezni', 'kommunikálj nyíltan és őszintén', 'as an AI', 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül', 'a nap energiája', 'a mai napon'. Ezek helyett a forrás konkrét tartalmából építkezz, és élő, testi-érzéki képeket használj.",
-        "Ne használj emojit, angol endpoint- vagy mezőneveket, raw provider-szöveget, determinisztikus jövőállítást.",
-        "Soha ne ígérj orvosi, jogi, pénzügyi eredményt. Ne diagnosztizálj.",
-        "Hossz: minden szöveges mező LEGALÁBB 3, inkább 4-5 érdemi mondat (kb. 70-130 szó), semmi felsorolás, semmi egysoros. A mondatok természetes ritmusban vegyüljenek — rövid és hosszabb mondatok váltakozzanak. 'oneLine' EGY tömör, költői, de konkrét mondat (max 22 szó), ne kezdődjön 'Ma' szóval.",
-        "Ha a kimenetből egy mező 'üres lenne', akkor inkább hagyd ki teljesen, mintsem két üres semmitmondó mondattal kitöltsd.",
-        "Ha van 'kerdes' mező, töltsd ki a 'questionAnswer' mezőt is: 2 mondatban válaszolj közvetlenül a feltett kérdésre, óvatosan, nem determinisztikusan. Ne kerüld meg a kérdést.",
-        "Ha van 'kerdes' mező, legalább az 'oneLine' és a 'cardMessage'/'present' is közvetlenül a kérdés tárgyáról szóljon — a lap nyelvén.",
-        "Ha van 'kategoria' mező, minden releváns mezőben nevezd meg vagy érzékeltesd a konkrét helyzetet: randi, találkozó, vissza nem írás, ex-történet, ismerkedés, döntés. A szövegben szerepeljen legalább egy természetes fordulat, például 'ez a randi', 'ez a találkozó', 'ez a csend', 'ez az ismerkedés', 'ez a visszatérő történet', 'ez a döntés'.",
-        "Randi/helyzet olvasatnál mondd el, mit taníthat vagy tükrözhet MOST ez a konkrét helyzet. Példák: 'ez a randi most azt taníthatja…', 'ez a találkozó inkább azt mutatja…', 'ez a csend arra hívhatja fel a figyelmed…'. Ne állítsd, hogy pontosan mi fog történni.",
-        "A 'three' spread: past=cards[0] (honnan jött ez a HELYZET), present=cards[1] (mi van most a HELYZETBEN), future=cards[2] (merre mozdul a HELYZET); together=hogyan kapcsolódik a három a helyzethez.",
-        "A 'decision' spread: pro/contra a kategóriához konkrétan kötve — mi szól mellette / ellene EBBEN a döntésben, a lap energiája alapján. 'nextStep' egy konkrét, kis lépés ebben a helyzetben.",
-        "A 'love' 3-as spread: you=mit hozol a HELYZETBE; between=mit tanít vagy tükröz ez a találkozás/csend/ismerkedés KÖZTETEK; them=ő milyen minőséggel érkezhet EBBE a helyzetbe — a 'love' forrásmező nyelvén, a kategóriához kötve.",
-        "A 'love-1' / 'decision-1' / 'single' spread esetén a 'cardMessage' EGYÉRTELMŰEN a megadott kategóriára/kérdésre szóljon: 'ebben a helyzetben…', 'ezen a randin…', 'erre a döntésre nézve…' — ne általános laptanulság.",
-        isDailySingle
-          ? "MAI LAP MÓD (single spread, nincs konkrét kategória/kérdés): a felhasználó a mai napjához húzott egy lapot. A 'cardMessage' egy 4-5 mondatos, érzéki, személyes bekezdés legyen, ami a lap fő minőségét úgy fordítja le egy MAI NAPRA, hogy a felhasználó testileg-érzelmileg felismeri magát benne. Kezdd egy konkrét belső állapot vagy helyzetkép megnevezésével (pl. 'Van egy halk feszültség…', 'Ma valami megpuhul benned…', 'Egy döntés-féle ott áll a torkodon…'), majd vezesd át arra, mit kínál ma neked ez a minőség. A 'warn' egy 3-4 mondatos finom figyelmeztetés, NEM tiltás, hanem egy érzékeny rámutatás: mi az, amitől ma a lap árnyékoldala beindulhat (túlpörgés, halogatás, magyarázkodás, kontroll, eltávolodás stb.) — konkrétan, képszerűen. Az 'oneLine' egy költői, de hétköznapi mondat legyen, amit a felhasználó magával vihet a napjában (pl. 'A csend ma nem üresség, hanem hely.'). Sose írd le a lap nevét a 'cardMessage'-ben — a lapot a fejléc adja, te a hangulatát írd."
-          : "",
-        "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
-      ].join(" ");
+      type SectionMap = { heading: string; field: keyof TarotReadingHU };
+      let sectionMap: SectionMap[];
+      switch (data.spread) {
+        case "three":
+          sectionMap = [
+            { heading: "Honnan jött", field: "past" },
+            { heading: "Mi van most", field: "present" },
+            { heading: "Merre mozdul", field: "future" },
+            { heading: "Hogyan kapcsolódik a három", field: "together" },
+            { heading: "Mire figyelj most?", field: "warn" },
+          ];
+          break;
+        case "decision-3":
+          sectionMap = [
+            { heading: "Az alaphelyzet", field: "cardMessage" },
+            { heading: "Mi szól mellette", field: "pro" },
+            { heading: "Mi szól ellene", field: "contra" },
+            { heading: "Mire figyelj?", field: "warn" },
+            { heading: "Következő kis lépés", field: "nextStep" },
+          ];
+          break;
+        case "decision-1":
+          sectionMap = [
+            { heading: "Mit üzen ez a lap a döntésedről?", field: "cardMessage" },
+            { heading: "Mire figyelj?", field: "warn" },
+          ];
+          break;
+        case "love-3":
+          sectionMap = [
+            { heading: "Amit te hozol a helyzetbe", field: "you" },
+            { heading: "Ami köztetek történik", field: "between" },
+            { heading: "Amit ő hozhat", field: "them" },
+            { heading: "Mire figyelj?", field: "warn" },
+          ];
+          break;
+        case "love-1":
+          sectionMap = [
+            { heading: "Mit üzen ez a lap a helyzetről?", field: "cardMessage" },
+            { heading: "Mire figyelj?", field: "warn" },
+          ];
+          break;
+        case "single":
+        default:
+          sectionMap = isDailySingle
+            ? [
+                { heading: "Mit üzen ma?", field: "cardMessage" },
+                { heading: "Mire figyelj?", field: "warn" },
+              ]
+            : [
+                { heading: "Mit üzen ez a lap?", field: "cardMessage" },
+                { heading: "Mire figyelj?", field: "warn" },
+              ];
+      }
 
-      const userPayload = {
+      const sourceData = {
         spread: data.spread,
         kerdes: data.question ?? null,
         kategoria: data.category ?? null,
@@ -708,44 +746,57 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           warning: c.warning ?? null,
           daily: c.daily ?? null,
         })),
+        utmutato: isDailySingle
+          ? "A felhasználó a mai napjához húzott egy lapot. Az olvasat fordítsa a lap fő minőségét személyes mai hangulattá: konkrét belső állapot, testi érzet, mai hétköznapi helyzet. Sose írd le a lap nevét a szekciók szövegében — a lapot a fejléc mutatja."
+          : "A lap(ok) jelentését alkalmazd a megadott helyzetre/kérdésre. A lap a lencse, a helyzet a téma; minden szekció a megadott helyzetről szóljon, ne általában a lapról.",
       };
 
-      const schema = {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          oneLine: { type: "string" },
-          questionAnswer: { type: "string" },
-          intro: { type: "string" },
-          past: { type: "string" },
-          present: { type: "string" },
-          future: { type: "string" },
-          together: { type: "string" },
-          warn: { type: "string" },
-          pro: { type: "string" },
-          contra: { type: "string" },
-          nextStep: { type: "string" },
-          you: { type: "string" },
-          between: { type: "string" },
-          them: { type: "string" },
-          cardMessage: { type: "string" },
-        },
-        required: ["oneLine"],
-      };
-
-      const ai = await aiJSON<TarotReadingHU>({
-        system: sys,
-        user:
-          "Írj a felhasználónak egy konkrét, személyes magyar olvasatot a kihúzott lap(ok)ról az alábbi adatokból. Csak azokat a mezőket töltsd ki, amelyek illenek a spread-hez.\n\n" +
-          JSON.stringify(userPayload),
-        schemaName: "TarotReadingHU",
-        schema,
-        readingType: data.spread,
+      const requiredSections = sectionMap.map((s) => s.heading);
+      const started = Date.now();
+      const ai = await aiJSON<QualityReading>({
+        system: buildQualitySystemPrompt(),
+        user: buildQualityUserPrompt({
+          readingType: "tarot",
+          mode: "free",
+          userInput: { spread: data.spread, question: data.question, category: data.category },
+          sourceData,
+          requiredSections,
+        }),
+        schemaName: "QualityReading",
+        schema: QUALITY_OUTPUT_SCHEMA as unknown as Record<string, unknown>,
+        model: READING_QUALITY_MODEL,
+        readingType: `tarot:${data.spread}`,
       });
 
       if (!ai.ok || !ai.data) {
         return { ok: false, cached: false, reading: null, message: ai.error ?? "AI hiba" };
       }
+      const guard = guardQualityReading(ai.data, [data.spread]);
+      if (!guard.ok) {
+        return { ok: false, cached: false, reading: null, message: guard.issues.join("; ") };
+      }
+
+      // Map sections back to legacy TarotReadingHU shape so the UI files
+      // don't need to change.
+      const reading: TarotReadingHU = { oneLine: ai.data.oneSentence ?? "" };
+      for (const { heading, field } of sectionMap) {
+        const sec = ai.data.sections.find(
+          (s) =>
+            s.heading.trim().toLocaleLowerCase("hu-HU") ===
+            heading.trim().toLocaleLowerCase("hu-HU"),
+        );
+        if (sec?.text) (reading as Record<string, string>)[field] = sec.text;
+      }
+      // Ha a felhasználó konkrét kérdést tett fel, az első érdemi szekciót
+      // tükrözzük questionAnswer-ként is, hogy a régi UI fallback működjön.
+      if (data.question && !reading.questionAnswer) {
+        const firstField = sectionMap[0]?.field as keyof TarotReadingHU | undefined;
+        if (firstField && reading[firstField]) {
+          reading.questionAnswer = reading[firstField] as string;
+        }
+      }
+      void SAFETY_NOTE;
+      void started;
 
       try {
         await supabaseAdmin.from("api_cache").upsert(
@@ -754,7 +805,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
             endpoint: "/ai/tarot-reading",
             cache_key: cacheKey,
             request_payload: { spread: data.spread, ids: idsKey } as never,
-            response_payload: ai.data as never,
+            response_payload: reading as never,
             expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
           },
           { onConflict: "cache_key" },
@@ -763,6 +814,6 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         /* ignore */
       }
 
-      return { ok: true, cached: false, reading: ai.data };
+      return { ok: true, cached: false, reading };
     },
   );
