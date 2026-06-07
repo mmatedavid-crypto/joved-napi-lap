@@ -40,8 +40,8 @@ const ITEMS = [
     ),
   },
   {
-    to: "/horoszkop",
-    label: "Horoszkóp",
+    to: "/osszeillunk",
+    label: "Összeillés",
     icon: (
       <svg
         width="22"
@@ -53,7 +53,7 @@ const ITEMS = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <path d="M12 3l2.4 5.6L20 9.6l-4.2 4 1.2 5.8L12 16.8 7 19.4l1.2-5.8L4 9.6l5.6-1z" />
+        <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z" />
       </svg>
     ),
   },
