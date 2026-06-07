@@ -77,10 +77,12 @@ export function CardFace({
   card,
   label,
   className = "",
+  reversed = false,
 }: {
   card: TCard;
   label?: string;
   className?: string;
+  reversed?: boolean;
 }) {
   const art = CARD_ART[card.id] ?? backArt;
   return (
@@ -88,7 +90,8 @@ export function CardFace({
       <img
         src={art}
         alt={card.name}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover transition-transform"
+        style={reversed ? { transform: "rotate(180deg)" } : undefined}
         loading="lazy"
         draggable={false}
       />
@@ -100,9 +103,9 @@ export function CardFace({
       {/* Title banner — hides any baked-in roman numerals on the source art */}
       <div className="absolute left-[6%] right-[6%] top-[4%] pointer-events-none">
         <div className="rounded-[6px] border border-[oklch(0.78_0.10_80/0.55)] bg-[linear-gradient(180deg,oklch(0.12_0.05_295/0.92),oklch(0.08_0.04_295/0.88))] shadow-[inset_0_0_0_1px_oklch(0.78_0.10_80/0.18)] px-2 py-1 text-center">
-          {label && (
+          {(label || reversed) && (
             <div className="text-[7px] tracking-[0.4em] uppercase text-[oklch(0.86_0.06_80/0.7)]">
-              {label}
+              {reversed ? (label ? `${label} · fordított` : "fordított") : label}
             </div>
           )}
           <div
