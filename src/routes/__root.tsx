@@ -121,6 +121,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        src: "https://plausible.io/js/pa-jERW-QPOefpKPqQ3v5Mwk.js",
+        async: true,
+      },
+      {
+        children:
+          "window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()",
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
