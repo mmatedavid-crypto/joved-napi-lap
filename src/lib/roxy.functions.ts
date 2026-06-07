@@ -524,6 +524,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           JSON.stringify(userPayload),
         schemaName: "PersonalBriefingHU",
         schema,
+        readingType: "daily_briefing",
       });
 
       if (!ai.ok || !ai.data) {
@@ -730,6 +731,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           JSON.stringify(userPayload),
         schemaName: "TarotReadingHU",
         schema,
+        readingType: data.spread,
       });
 
       if (!ai.ok || !ai.data) {

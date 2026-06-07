@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { HUDateInput } from "@/components/HUDateInput";
 import { loadLocal } from "@/lib/storage";
-import { aiNumerologyHU, type NumerologyHU } from "@/lib/roxyTranslate.functions";
+import { qualityNumerologyReading } from "@/lib/readingQuality/functions";
+import {
+  composeNumerologyReading,
+  calculateNumerologyProfile,
+  type NumerologyProfile,
+} from "@/lib/readingQuality/numerologyEngine";
+import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 
@@ -25,41 +30,30 @@ export const Route = createFileRoute("/szammisztika")({
 });
 
 function Page() {
-  const callAi = useServerFn(aiNumerologyHU);
+  const callQuality = useServerFn(qualityNumerologyReading);
   const [dob, setDob] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<NumerologyHU | null>(null);
+  const [result, setResult] = useState<QualityReading | null>(null);
+  const [profile, setProfile] = useState<NumerologyProfile | null>(null);
   const [paywall, setPaywall] = useState(false);
 
   async function fetchReading(d: string, nm?: string) {
     setLoading(true);
     try {
-      const r = await callAi({ data: { birthDate: d, fullName: nm || undefined } });
+      const r = await callQuality({ data: { birthDate: d, fullName: nm || undefined } });
       if (r.ok && r.reading) {
         setResult(r.reading);
+        setProfile(r.profile);
         setLoading(false);
         return;
       }
     } catch {
       /* ignore */
     }
-    // Fallback: helyi sorsszám
-    const n = lifePath(d);
-    const py = personalYear(d);
-    const info = lifePathInfo(n);
-    const pyInfo = lifePathInfo(py);
-    setResult({
-      lifePathNumber: n,
-      title: info.title,
-      meaning: info.meaning,
-      strengths: info.strengths,
-      shadow: info.shadow,
-      love: info.love,
-      work: info.work,
-      personalYearNumber: py,
-      personalYearMeaning: pyInfo.meaning,
-    });
+    const fallbackProfile = calculateNumerologyProfile({ birthDate: d, fullName: nm });
+    setProfile(fallbackProfile);
+    setResult(composeNumerologyReading(fallbackProfile));
     trackEvent("roxy_fallback_used", { domain: "numerology" });
     setLoading(false);
   }
@@ -96,6 +90,7 @@ function Page() {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="A teljes születési név adja a mélyebb névelemzést"
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
           </div>
@@ -111,64 +106,32 @@ function Page() {
                 A sorsszámod{name && `, ${name}`}
               </div>
               <div className="font-display text-8xl text-gold-gradient my-3">
-                {result.lifePathNumber}
+                {profile?.lifePathNumber}
               </div>
               <div className="font-display text-2xl text-ivory">{result.title}</div>
             </div>
-            <Section eyebrow="Mit jelent ez rólad?">{result.meaning}</Section>
-            <div className="grid md:grid-cols-2 gap-4">
-              {result.strengths && <Section eyebrow="Erősségeid">{result.strengths}</Section>}
-              {result.shadow && <Section eyebrow="Árnyékoldalad">{result.shadow}</Section>}
-              {result.love && <Section eyebrow="Szerelemben">{result.love}</Section>}
-              {result.work && <Section eyebrow="Munkában">{result.work}</Section>}
-            </div>
-            {result.personalYearNumber && (
-              <Section
-                eyebrow="Az idei személyes éved"
-                title={`${result.personalYearNumber}-es év`}
-              >
-                {result.personalYearMeaning ??
-                  `Ebben az évben a ${result.personalYearNumber} energiája kísér.`}
-              </Section>
-            )}
-            {(result.expressionNumber ||
-              result.soulUrgeNumber ||
-              result.personalityNumber ||
-              result.maturityNumber ||
-              result.birthDayNumber) && (
+            {profile && (
               <div className="grid md:grid-cols-2 gap-4">
-                {result.expressionNumber && (
-                  <Section eyebrow="Kifejeződésed" title={`${result.expressionNumber}-es szám`}>
-                    {result.expressionMeaning ??
-                      "Ez a szám azt mutatja, milyen formában tudsz természetesen hatni a világra."}
-                  </Section>
-                )}
-                {result.soulUrgeNumber && (
-                  <Section eyebrow="Belső vágyad" title={`${result.soulUrgeNumber}-es szám`}>
-                    {result.soulUrgeMeaning ??
-                      "Ez a szám inkább a belső hajtóerődre és mélyebb vágyaidra utalhat."}
-                  </Section>
-                )}
-                {result.personalityNumber && (
-                  <Section eyebrow="Külső képed" title={`${result.personalityNumber}-es szám`}>
-                    {result.personalityMeaning ??
-                      "Ez a szám azt jelzi, milyen első benyomást kelthet a jelenléted."}
-                  </Section>
-                )}
-                {result.maturityNumber && (
-                  <Section eyebrow="Érettségi számod" title={`${result.maturityNumber}-es szám`}>
-                    {result.maturityMeaning ??
-                      "Ez a minőség később, érettebb korszakokban válhat erősebben láthatóvá."}
-                  </Section>
-                )}
-                {result.birthDayNumber && (
-                  <Section eyebrow="Születésnap-számod" title={`${result.birthDayNumber}-es szám`}>
-                    {result.birthDayMeaning ??
-                      "Ez a szám egy veleszületett, egyszerűen felismerhető adottságodra mutathat."}
-                  </Section>
-                )}
+                <Section eyebrow="Születésnap száma" title={`${profile.birthDayNumber}`}>
+                  A születésnap száma azt mutatja, milyen adottságod jelenik meg ösztönösen, külön
+                  erőlködés nélkül.
+                </Section>
+                <Section eyebrow="Személyes hónapod" title={`${profile.personalMonthNumber}`}>
+                  Ez a hónap közelebb hozza az idei személyes éved témáját: kisebb döntésekben, napi
+                  ritmusban, visszatérő érzésekben.
+                </Section>
               </div>
             )}
+            <div className="grid md:grid-cols-2 gap-4">
+              {result.sections.map((section) => (
+                <Section key={section.heading} eyebrow={section.heading}>
+                  {section.text}
+                </Section>
+              ))}
+            </div>
+            <Section eyebrow="Egy mondatban">
+              <em>{result.oneSentence}</em>
+            </Section>
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
               <div className="text-sm text-ivory/70 mb-2">
                 Teljes numerológiai életút elemzést kérsz emailben?

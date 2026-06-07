@@ -109,6 +109,7 @@ async function translateWithAI<T>(opts: {
     user,
     schemaName: opts.schemaName,
     schema: opts.schema,
+    readingType: opts.domainHint,
   });
   return r.ok && r.data ? { ok: true, data: r.data } : { ok: false, data: null, error: r.error };
 }

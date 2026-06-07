@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { aiHoroscopeHU, type HoroscopeHU } from "@/lib/roxyTranslate.functions";
+import { qualityHoroscopeReading } from "@/lib/readingQuality/functions";
+import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
 import { localHoroscope } from "@/lib/horoscope.hu";
 import { todayKey } from "@/lib/storage";
@@ -29,10 +30,10 @@ export const Route = createFileRoute("/horoszkop")({
   component: Page,
 });
 
-type State = { loading: boolean; sign: string; reading: HoroscopeHU | null; fallback: boolean };
+type State = { loading: boolean; sign: string; reading: QualityReading | null; fallback: boolean };
 
 function Page() {
-  const call = useServerFn(aiHoroscopeHU);
+  const call = useServerFn(qualityHoroscopeReading);
   const [sign, setSign] = useState<string>("aries");
   const [s, setS] = useState<State>({
     loading: false,
@@ -65,7 +66,7 @@ function Page() {
       if (r.ok && r.reading) {
         if (r.cached) trackEvent("roxy_cache_hit", { domain: "horoscope" });
         else trackEvent("roxy_cache_miss", { domain: "horoscope" });
-        setS({ loading: false, sign: next, reading: r.reading, fallback: false });
+        setS({ loading: false, sign: next, reading: r.reading, fallback: r.fallbackUsed });
       } else {
         trackEvent("roxy_fallback_used", { domain: "horoscope" });
         setS({ loading: false, sign: next, reading: null, fallback: true });
@@ -84,16 +85,15 @@ function Page() {
     load(next);
   }
 
-  const local = localHoroscope(s.sign);
   const r = s.reading;
-  const moon = r?.moonPhase ?? null;
-  const color = r?.luckyColor ?? null;
-  // Prefer AI HU output; fall back to local copy when a given field is missing or AI failed.
-  const mood = r?.mood ?? local.mood;
-  const love = r?.love ?? local.love;
-  const work = r?.work ?? local.work;
-  const warn = r?.warn ?? local.warn;
-  const oneLine = r?.oneLine ?? local.oneLine;
+  const local = localHoroscope(s.sign);
+  const sections = r?.sections ?? [
+    { heading: "Mai hangulat", text: local.mood },
+    { heading: "Szerelem", text: local.love },
+    { heading: "Munka", text: local.work },
+    { heading: "Mire figyelj?", text: local.warn },
+  ];
+  const oneLine = r?.oneSentence ?? local.oneLine;
 
   return (
     <Layout>
@@ -137,18 +137,13 @@ function Page() {
               <h2 className="font-display text-3xl md:text-4xl text-ivory mt-1">
                 {SIGN_HU[s.sign]}
               </h2>
-              {(moon || color) && (
-                <div className="mt-2 flex flex-wrap justify-center gap-x-4 text-sm text-ivory/60">
-                  {moon && <span>· holdfázis: {moon}</span>}
-                  {color && <span>· szerencsés szín: {color}</span>}
-                </div>
-              )}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Mai hangulat">{mood}</Section>
-              <Section eyebrow="Szerelem">{love}</Section>
-              <Section eyebrow="Munka">{work}</Section>
-              <Section eyebrow="Mire figyelj?">{warn}</Section>
+              {sections.map((section) => (
+                <Section key={section.heading} eyebrow={section.heading}>
+                  {section.text}
+                </Section>
+              ))}
               <Section eyebrow="Egy mondatban">
                 <em>{oneLine}</em>
               </Section>

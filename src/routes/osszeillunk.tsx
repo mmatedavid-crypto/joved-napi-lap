@@ -3,16 +3,14 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import {
-  compatPairMeaning,
-  compatibilityScore,
-  lifePath,
-  lifePathInfo,
-  relationshipNumber,
-} from "@/lib/numerology";
 import { HUDateInput } from "@/components/HUDateInput";
-import { roxyNumerologyCompatibility } from "@/lib/roxy.functions";
-import { normalizeRoxyCompat } from "@/lib/roxyNormalize";
+import { qualityCompatibilityReading } from "@/lib/readingQuality/functions";
+import {
+  calculateCompatibilityProfile,
+  composeCompatibilityReading,
+  type CompatibilityProfile,
+} from "@/lib/readingQuality/compatibilityEngine";
+import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/osszeillunk")({
@@ -38,70 +36,55 @@ const STATUS = [
 ];
 
 function Page() {
-  const callCompat = useServerFn(roxyNumerologyCompatibility);
+  const callQuality = useServerFn(qualityCompatibilityReading);
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const [na, setNa] = useState("");
   const [nb, setNb] = useState("");
   const [status, setStatus] = useState(STATUS[0]);
   const [loading, setLoading] = useState(false);
-  const [res, setRes] = useState<{
-    aN: number;
-    bN: number;
-    rel: number;
-    score: number;
-    communication?: number;
-    attraction?: number;
-    longTerm?: number;
-    roxyUsed?: boolean;
-  } | null>(null);
+  const [profile, setProfile] = useState<CompatibilityProfile | null>(null);
+  const [reading, setReading] = useState<QualityReading | null>(null);
 
   async function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!a || !b) return;
     setLoading(true);
-    const aN = lifePath(a);
-    const bN = lifePath(b);
-    const base = { aN, bN, rel: relationshipNumber(aN, bN), score: compatibilityScore(aN, bN) };
     try {
-      const r = await callCompat({
+      const r = await callQuality({
         data: {
-          birthDate1: a,
-          birthDate2: b,
-          fullName1: na.trim() || undefined,
-          fullName2: nb.trim() || undefined,
+          birthDateA: a,
+          birthDateB: b,
+          fullNameA: na.trim() || undefined,
+          fullNameB: nb.trim() || undefined,
+          status,
         },
       });
-      if (r.ok && r.data) {
-        const n = normalizeRoxyCompat(r.data);
-        if (r.cached) trackEvent("roxy_cache_hit", { domain: "compatibility" });
-        else trackEvent("roxy_cache_miss", { domain: "compatibility" });
-        setRes({
-          ...base,
-          aN: n.lifePathA ?? base.aN,
-          bN: n.lifePathB ?? base.bN,
-          score: n.score ?? base.score,
-          communication: n.communication,
-          attraction: n.attraction,
-          longTerm: n.longTerm,
-          roxyUsed: true,
+      if (r.ok && r.reading && r.profile) {
+        setProfile(r.profile);
+        setReading(r.reading);
+        trackEvent(r.fallbackUsed ? "roxy_fallback_used" : "roxy_cache_miss", {
+          domain: "compatibility_quality",
         });
-      } else {
-        trackEvent("roxy_fallback_used", { domain: "compatibility" });
-        setRes(base);
+        setLoading(false);
+        return;
       }
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "compatibility" });
-      setRes(base);
+      /* ignore */
     }
-    trackEvent("compatibility_completed", { score: base.score, status });
+    const fallbackProfile = calculateCompatibilityProfile({
+      birthDateA: a,
+      birthDateB: b,
+      fullNameA: na,
+      fullNameB: nb,
+      status,
+    });
+    setProfile(fallbackProfile);
+    setReading(composeCompatibilityReading(fallbackProfile));
+    trackEvent("roxy_fallback_used", { domain: "compatibility" });
+    trackEvent("compatibility_completed", { score: fallbackProfile.score, status });
     setLoading(false);
   }
-
-  const ai = res && lifePathInfo(res.aN);
-  const bi = res && lifePathInfo(res.bN);
-  const ri = res && lifePathInfo(res.rel);
-  const pair = res && compatPairMeaning(res.aN, res.bN);
 
   return (
     <Layout>
@@ -137,50 +120,38 @@ function Page() {
           </button>
         </form>
 
-        {res && ai && bi && ri && pair && (
+        {profile && reading && (
           <div className="space-y-4">
             <div className="surface p-8 text-center">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
                 Összeillés
               </div>
               <div className="font-display text-7xl md:text-8xl text-gold-gradient my-2">
-                {res.score}%
+                {profile.score}%
               </div>
               <p className="font-editorial text-ivory/70 mt-2">
                 {na || "A férfi"} és {nb || "a nő"} — {status}
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-4">
-              <Section eyebrow="A férfi sorsszáma" title={`${res.aN} · ${ai.title}`}>
-                {ai.meaning}
+              <Section eyebrow="A férfi sorsszáma" title={`${profile.personA.lifePathNumber}`}>
+                Születési ritmusa ezt a kapcsolati térbe is behozza.
               </Section>
-              <Section eyebrow="A nő sorsszáma" title={`${res.bN} · ${bi.title}`}>
-                {bi.meaning}
+              <Section eyebrow="A nő sorsszáma" title={`${profile.personB.lifePathNumber}`}>
+                Ez a szám mutatja, milyen alaptempóból közeledik.
               </Section>
-              <Section eyebrow="A kapcsolat száma" title={`${res.rel} · ${ri.title}`}>
-                {ri.meaning}
+              <Section eyebrow="A kapcsolat száma" title={`${profile.relationshipNumber}`}>
+                Ez kettőtök közös mintája, nem egyikőtök külön száma.
               </Section>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Section eyebrow="Miért működhet">{pair.works}</Section>
-              <Section eyebrow="Hol lehet nehéz">{pair.tension}</Section>
-              <Section eyebrow="Kommunikáció">
-                {res.communication
-                  ? metricText(res.communication, "kommunikáció")
-                  : "A kapcsolat hangja akkor tisztul, ha nem egymást javítjátok, hanem a saját ritmusotokat nevezitek meg."}
-              </Section>
-              <Section eyebrow="Vonzalom">
-                {res.attraction
-                  ? metricText(res.attraction, "vonzalom")
-                  : "A vonzalom itt nem csak szikra: inkább az mutat irányt, mennyire mertek természetesek maradni egymás mellett."}
-              </Section>
-              <Section eyebrow="Hosszú táv">
-                {res.longTerm
-                  ? metricText(res.longTerm, "hosszú táv")
-                  : "Hosszabb távon az dönthet, tudtok-e közös keretet építeni anélkül, hogy egyikőtök eltűnne benne."}
-              </Section>
+              {reading.sections.map((section) => (
+                <Section key={section.heading} eyebrow={section.heading}>
+                  {section.text}
+                </Section>
+              ))}
               <Section eyebrow="Egy mondatban">
-                <em>{pair.advice}</em>
+                <em>{reading.oneSentence}</em>
               </Section>
             </div>
           </div>
@@ -193,13 +164,3 @@ const inp =
   "w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none";
 const sel =
   "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none";
-
-function metricText(value: number, label: string): string {
-  if (value >= 80) {
-    return `A ${label} erős tartóelem lehet köztetek, ha nem használjátok bizonyításra vagy kontrollra.`;
-  }
-  if (value >= 60) {
-    return `A ${label} működőképes mintát mutat, de időnként tudatos figyelmet kérhet.`;
-  }
-  return `A ${label} érzékenyebb pont lehet: nem lezárást, hanem több finom egyeztetést jelez.`;
-}
