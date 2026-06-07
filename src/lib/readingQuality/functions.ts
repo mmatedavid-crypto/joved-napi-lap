@@ -20,6 +20,7 @@ import {
 import { guardQualityReading } from "./qualityGuard";
 import { composeHoroscopeReading } from "./horoscopeEngine";
 import { READING_QUALITY_MODEL, SAFETY_NOTE, type QualityReading } from "./styleRules";
+import { readReadingCache, writeReadingCache } from "./readingCache.server";
 
 const BirthDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -28,13 +29,15 @@ function splitDate(d: string): { year: number; month: number; day: number } {
   return { year, month, day };
 }
 
-type QualityEnvelope<TExtra extends Record<string, unknown> = Record<string, never>> = {
+type QualityEnvelopeBase = {
   ok: boolean;
   cached: boolean;
   fallbackUsed: boolean;
   reading: QualityReading | null;
   message?: string;
-} & TExtra;
+};
+type QualityEnvelope<TExtra extends Record<string, unknown> = Record<string, never>> =
+  QualityEnvelopeBase & TExtra;
 
 async function generateQualityReading(opts: {
   readingType: "numerology" | "compatibility" | "tarot" | "horoscope";
