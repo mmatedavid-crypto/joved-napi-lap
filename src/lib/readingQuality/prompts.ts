@@ -30,6 +30,7 @@ export function buildQualityUserPrompt(input: ReadingPromptInput): string {
   return [
     `Olvasat típusa: ${input.readingType}`,
     `Kötelező szekciók (pontosan ezekkel a címekkel, ebben a sorrendben): ${input.requiredSections.join(" | ")}`,
+    "Megszólítás szabálya: a magyar névsorrend családnév + keresztnév(ek). Ha a felhasználó megadott becenevet vagy szólítónevet (preferredName / preferredCallName), MINDIG azt használd. Ha csak teljes név van, a keresztnevét (utolsó vagy közbülső adott név) használd, NEM a családnevet. Sosem szólítsd a vezetéknevén.",
     "Felhasználói bemenet:",
     JSON.stringify(input.userInput, null, 2),
     "Háttéradatok, amikre építhetsz (számok, jegy, lapok stb.):",
