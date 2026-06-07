@@ -8,6 +8,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { guardAITextObject, polishCrystalNameHU } from "./huTextGuard";
+import type { QualityReading } from "./readingQuality/styleRules";
 
 type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
 
