@@ -1,5 +1,4 @@
 import {
-  JOVOD_TONE_RULES,
   QUALITY_OUTPUT_SCHEMA,
   READING_QUALITY_PROMPT_VERSION,
 } from "./styleRules";
