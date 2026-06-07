@@ -107,6 +107,7 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
     z.object({
       birthDate: BirthDate,
       fullName: z.string().min(1).max(120).optional(),
+      preferredName: z.string().min(1).max(60).optional(),
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: NumerologyProfile | null }>> => {
@@ -115,7 +116,7 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
       fullName: data.fullName,
     });
     const fallback = composeNumerologyReading(profile);
-    const cacheKey = `reading_ai:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}`;
+    const cacheKey = `reading_ai:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}:${(data.preferredName ?? "").toLowerCase().trim()}`;
     const hit = await readReadingCache(cacheKey);
     if (hit) {
       return { ok: true, cached: true, fallbackUsed: false, reading: hit, profile };
@@ -123,7 +124,14 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
     const generated = await generateQualityReading({
       readingType: "numerology",
       userInput: data,
-      sourceData: { profile, localFallback: fallback },
+      sourceData: {
+        profile,
+        localFallback: fallback,
+        preferredName: data.preferredName,
+        nameNote: data.preferredName
+          ? `A felhasználót MINDIG így szólítsd a szövegben, ha nevet írsz: "${data.preferredName}". Ne használd a teljes nevét vagy a családnevét megszólításnak.`
+          : undefined,
+      },
       requiredSections: [
         "A sorsszámod",
         "Mit mutat rólad?",
