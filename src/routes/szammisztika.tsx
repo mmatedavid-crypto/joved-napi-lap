@@ -99,7 +99,7 @@ function Page() {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Pl. Kovács Dávid Máté — családnév + keresztnevek"
+              placeholder="Pl. Példa Anna Bella — családnév + keresztnevek"
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
           </div>
@@ -108,11 +108,11 @@ function Page() {
             <input
               value={callName}
               onChange={(e) => setCallName(e.target.value)}
-              placeholder="Pl. Máté"
+              placeholder="Pl. Anna"
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
             <p className="text-xs text-ivory/55 mt-2 font-editorial">
-              Ezen a néven szólítunk meg az olvasatban — pl. ha Máténak hívnak, nem a vezetéknevedet
+              Ezen a néven szólítunk meg az olvasatban — pl. ha Annának hívnak, nem a vezetéknevedet
               használjuk.
             </p>
           </div>
