@@ -33,15 +33,22 @@ function Page() {
   const callQuality = useServerFn(qualityNumerologyReading);
   const [dob, setDob] = useState("");
   const [name, setName] = useState("");
+  const [callName, setCallName] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QualityReading | null>(null);
   const [profile, setProfile] = useState<NumerologyProfile | null>(null);
   const [paywall, setPaywall] = useState(false);
 
-  async function fetchReading(d: string, nm?: string) {
+  async function fetchReading(d: string, nm?: string, cn?: string) {
     setLoading(true);
     try {
-      const r = await callQuality({ data: { birthDate: d, fullName: nm || undefined } });
+      const r = await callQuality({
+        data: {
+          birthDate: d,
+          fullName: nm || undefined,
+          preferredName: cn?.trim() || undefined,
+        },
+      });
       if (r.ok && r.reading) {
         setResult(r.reading);
         setProfile(r.profile);
@@ -60,11 +67,12 @@ function Page() {
 
   // Reuse the dob/name the user already entered on the home page.
   useEffect(() => {
-    const last = loadLocal<{ dob: string; name?: string }>("numerology:last");
+    const last = loadLocal<{ dob: string; name?: string; callName?: string }>("numerology:last");
     if (last?.dob) {
       setDob(last.dob);
       if (last.name) setName(last.name);
-      fetchReading(last.dob, last.name);
+      if (last.callName) setCallName(last.callName);
+      fetchReading(last.dob, last.name, last.callName);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -72,7 +80,7 @@ function Page() {
   function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!dob) return;
-    fetchReading(dob, name);
+    fetchReading(dob, name, callName);
   }
 
   return (
@@ -86,13 +94,26 @@ function Page() {
         <form onSubmit={calc} className="surface p-6 space-y-5">
           <HUDateInput label="Születési dátumod" required value={dob} onChange={setDob} />
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">Keresztneved (opcionális)</label>
+            <label className="block text-sm text-ivory/80 mb-2">Teljes neved (opcionális)</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="A teljes születési név adja a mélyebb névelemzést"
+              placeholder="Pl. Kovács Dávid Máté — családnév + keresztnevek"
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
+          </div>
+          <div>
+            <label className="block text-sm text-ivory/80 mb-2">Ahogy szólítanak (opcionális)</label>
+            <input
+              value={callName}
+              onChange={(e) => setCallName(e.target.value)}
+              placeholder="Pl. Máté"
+              className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
+            />
+            <p className="text-xs text-ivory/55 mt-2 font-editorial">
+              Ezen a néven szólítunk meg az olvasatban — pl. ha Máténak hívnak, nem a vezetéknevedet
+              használjuk.
+            </p>
           </div>
           <button className="btn-gold" disabled={!dob || loading}>
             {loading ? "Egy pillanat…" : "Megnézem a sorsszámom"}
@@ -103,7 +124,7 @@ function Page() {
           <div className="space-y-4">
             <div className="surface p-8 text-center">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
-                A sorsszámod{name && `, ${name}`}
+                A sorsszámod{callName.trim() ? `, ${callName.trim()}` : ""}
               </div>
               <div className="font-display text-8xl text-gold-gradient my-3">
                 {profile?.lifePathNumber}
