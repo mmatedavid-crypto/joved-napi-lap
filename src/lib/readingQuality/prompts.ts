@@ -1,5 +1,4 @@
 import {
-  JOVOD_TONE_RULES,
   QUALITY_OUTPUT_SCHEMA,
   READING_QUALITY_PROMPT_VERSION,
 } from "./styleRules";
@@ -16,25 +15,21 @@ export { QUALITY_OUTPUT_SCHEMA, READING_QUALITY_PROMPT_VERSION };
 
 export function buildQualitySystemPrompt(): string {
   return [
-    "Te a Jövőd.hu magyar önismereti írója vagy — egy meleg, intelligens, emberi hang, mintha egy figyelmes barát vagy tapasztalt tanácsadó beszélne hozzá.",
-    "Strukturált forrásadatokból (számok, csillagjegy, lapok, Roxy) szövegezel olvasatot magyarul.",
-    ...JOVOD_TONE_RULES,
-    "Minden szekció legyen 2–3 mondat (kb. 60–120 szó), tartalmas, képszerű bekezdés. Ne legyen egysoros, lefagyott, üres mondat — ha valamit mondasz, fejtsd ki röviden, hogy a felhasználó érezze, róla szól.",
-    "Használj természetes, beszélt magyart. Ne idézz angolt, ne dobálj mezőneveket, ne legyen emoji.",
-    "Az 'oneSentence' egyetlen rövid, költői magyar mondat (max 160 karakter), ami megragadja a nap / olvasat lényegét — ne lista, ne pontok.",
-    "Csak érvényes JSON: { title, sections: [{ heading, text }], oneSentence, safetyNote }. A 'heading' pontosan a kért szekciónév legyen.",
+    "Magyar önismereti írást készítesz a felhasználónak, meleg, emberi, figyelmes hangon — mintha egy bölcs barát beszélne hozzá.",
+    "A bemeneti adatokat (számok, jegy, lapok, név) építsd be természetesen az olvasatba.",
+    "Válasz JSON: { title, sections: [{ heading, text }], oneSentence, safetyNote }. A heading pontosan a kért szekciónév.",
   ].join("\n");
 }
 
 export function buildQualityUserPrompt(input: ReadingPromptInput): string {
   return [
     `Olvasat típusa: ${input.readingType}`,
-    `Kötelező szekciók (pontosan ezekkel a címekkel, ebben a sorrendben): ${input.requiredSections.join(" | ")}`,
-    "Megszólítás szabálya: a magyar névsorrend családnév + keresztnév(ek). Ha a felhasználó megadott becenevet vagy szólítónevet (preferredName / preferredCallName), MINDIG azt használd. Ha csak teljes név van, a keresztnevét (utolsó vagy közbülső adott név) használd, NEM a családnevet. Sosem szólítsd a vezetéknevén.",
+    `Szekciók ezekkel a fejlécekkel, ebben a sorrendben: ${input.requiredSections.join(" | ")}`,
+    "Megszólítás: ha van preferredName/preferredCallName, azt használd; egyébként a keresztnevet (magyar névsorrendben az utolsó adott név), sose a családnevet.",
     "Felhasználói bemenet:",
     JSON.stringify(input.userInput, null, 2),
-    "Háttéradatok, amikre építhetsz (számok, jegy, lapok stb.):",
+    "Háttéradatok:",
     JSON.stringify(input.sourceData, null, 2),
-    "Feladat: írj egy meleg, személyes, részletes magyar olvasatot. Minden szekció rövid bekezdés (2–3 mondat). Beszéld be magad a felhasználó helyzetébe, hivatkozz a konkrét számokra/jegyre/lapokra, de természetesen, nem mereven. A végén egy költői, rövid összegző mondat ('oneSentence').",
+    "Írj személyes, képszerű olvasatot. A végén egy rövid, költői 'oneSentence' összegzés.",
   ].join("\n\n");
 }
