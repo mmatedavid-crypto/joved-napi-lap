@@ -53,7 +53,6 @@ function Index() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {[
             { to: "/mai-iranytu", label: "Mai iránytű" },
-            { to: "/horoszkop", label: "Horoszkóp" },
             { to: "/angyalszam", label: "Angyalszám" },
             { to: "/alomfejtes", label: "Álomfejtés" },
             { to: "/kristaly", label: "Kristály" },
