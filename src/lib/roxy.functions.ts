@@ -9,6 +9,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { guardAITextObject, polishCrystalNameHU } from "./huTextGuard";
 import type { QualityReading } from "./readingQuality/styleRules";
+import {
+  buildQualitySystemPrompt,
+  buildQualityUserPrompt,
+  QUALITY_OUTPUT_SCHEMA,
+} from "./readingQuality/prompts";
+import { guardQualityReading } from "./readingQuality/qualityGuard";
+import { READING_QUALITY_MODEL, SAFETY_NOTE } from "./readingQuality/styleRules";
 
 type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
 
@@ -644,15 +651,6 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
     }> => {
       const { aiJSON } = await import("./ai.server");
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const {
-        buildQualitySystemPrompt,
-        buildQualityUserPrompt,
-        QUALITY_OUTPUT_SCHEMA,
-      } = await import("./readingQuality/prompts");
-      const { guardQualityReading } = await import("./readingQuality/qualityGuard");
-      const { READING_QUALITY_MODEL, SAFETY_NOTE } = await import(
-        "./readingQuality/styleRules"
-      );
 
       const idsKey = data.cards
         .map((c) => `${c.id}${c.reversed ? "_r" : ""}`)
