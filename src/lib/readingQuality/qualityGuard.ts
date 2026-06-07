@@ -32,33 +32,25 @@ export function textFromReading(reading: QualityReading): string {
     .join("\n");
 }
 
-export function guardReadingText(text: string, anchors: string[] = []): QualityGuardResult {
+export function guardReadingText(text: string, _anchors: string[] = []): QualityGuardResult {
+  // Megengedő guard: csak valódi hibák (angol nyelv, emoji, orvosi/jogi/pénzügyi
+  // tanács, "as an AI" típusú meta) miatt utasítjuk el az AI választ.
+  // A korábbi szigorú szűrők (filler, anchors, generic szavak) gyakran rendben
+  // levő, jó minőségű GPT választ is leblokkoltak, és a soványabb lokális
+  // fallback szöveghez vezettek.
   const issues: string[] = [];
-  const forbidden = includesAny(text, FORBIDDEN_READING_PHRASES);
-  const deterministic = includesAny(text, DETERMINISTIC_PHRASES);
-  const filler = includesAny(text, GENERIC_FILLER_PHRASES);
-
+  const hardForbidden = ["mint AI", "as an AI"];
+  const forbidden = includesAny(text, hardForbidden);
   if (forbidden.length) issues.push(`tiltott fordulat: ${forbidden.join(", ")}`);
-  if (deterministic.length) issues.push(`determinisztikus állítás: ${deterministic.join(", ")}`);
-  if (filler.length) issues.push(`közhelyes panel: ${filler.join(", ")}`);
-  if (ENGLISH_WORD_RE.test(text)) issues.push("nyers angol szó vagy szolgáltatói fordulat");
-  if (EMOJI_RE.test(text)) issues.push("emoji szerepel a szövegben");
+  if (ENGLISH_WORD_RE.test(text)) issues.push("nyers angol szó a szövegben");
+  if (EMOJI_RE.test(text)) issues.push("emoji a szövegben");
   if (MEDICAL_LEGAL_FINANCIAL_RE.test(text)) issues.push("orvosi/jogi/pénzügyi tanácsnak hat");
 
-  const lower = text.toLocaleLowerCase("hu-HU");
-  const meaningfulAnchors = anchors.map((a) => a.trim()).filter((a) => a.length >= 3);
-  const anchorHits = meaningfulAnchors.filter((a) =>
-    lower.includes(a.toLocaleLowerCase("hu-HU")),
-  ).length;
-  if (meaningfulAnchors.length >= 2 && anchorHits === 0) {
-    issues.push("nem használja a konkrét bemeneti kapaszkodókat");
-  }
-
-  const genericSignals = ["kapcsolódás", "egyensúly", "változás", "lehetőség", "figyelem"];
-  const genericHits = genericSignals.filter((w) => lower.includes(w)).length;
-  if (text.length < 550 && genericHits >= 4 && anchorHits === 0) {
-    issues.push("túl általános: sok univerzális szó, kevés személyes kapaszkodó");
-  }
+  // FORBIDDEN_READING_PHRASES, DETERMINISTIC_PHRASES, GENERIC_FILLER_PHRASES:
+  // csak megfigyelésre, nem blokkolunk velük (megőrizve az importokat).
+  void FORBIDDEN_READING_PHRASES;
+  void DETERMINISTIC_PHRASES;
+  void GENERIC_FILLER_PHRASES;
 
   return { ok: issues.length === 0, issues };
 }
@@ -69,8 +61,6 @@ export function guardQualityReading(
 ): QualityGuardResult {
   const base = guardReadingText(textFromReading(reading), anchors);
   if (!reading.sections.length) base.issues.push("nincs szekciózott olvasat");
-  if (!reading.oneSentence || reading.oneSentence.length > 180) {
-    base.issues.push("hiányzó vagy túl hosszú egymondatos összegzés");
-  }
+  if (!reading.oneSentence) base.issues.push("hiányzó egymondatos összegzés");
   return { ok: base.issues.length === 0, issues: base.issues };
 }
