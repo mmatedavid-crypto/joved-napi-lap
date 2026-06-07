@@ -25,10 +25,11 @@ export const Route = createFileRoute("/mai-lap")({
   component: MaiLap,
 });
 
-type Daily = { date: string; cardId: string };
+type Daily = { date: string; cardId: string; reversed?: boolean };
 
 function MaiLap() {
   const [card, setCard] = useState<TarotCard | null>(null);
+  const [reversed, setReversed] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
@@ -40,15 +41,18 @@ function MaiLap() {
     if (stored && stored.date === todayKey()) {
       const c = CARDS.find((x) => x.id === stored.cardId) ?? null;
       setCard(c);
+      setReversed(stored.reversed === true);
       setRevealed(true);
     }
   }, []);
 
   function draw() {
     const c = pickCards(1, dailySeed() + Math.floor(Math.random() * 1000))[0];
+    const rev = Math.random() < 0.3; // ~30% chance, mint a klasszikus pakliban
     setCard(c);
+    setReversed(rev);
     setReading(null);
-    saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id });
+    saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id, reversed: rev });
   }
 
   useEffect(() => {
@@ -68,6 +72,7 @@ function MaiLap() {
             decision: card.decision,
             warning: card.warning,
             daily: card.daily,
+            reversed,
           },
         ],
         dateKey: todayKey(),
@@ -84,7 +89,7 @@ function MaiLap() {
     return () => {
       cancelled = true;
     };
-  }, [card?.id, revealed]);
+  }, [card?.id, revealed, reversed]);
 
   return (
     <Layout>
@@ -108,7 +113,7 @@ function MaiLap() {
           <div className="grid md:grid-cols-[260px,1fr] gap-8 md:gap-10 items-start">
             <div className="mx-auto w-full max-w-[260px]">
               {revealed ? (
-                <CardFace card={card} />
+                <CardFace card={card} reversed={reversed} />
               ) : (
                 <button onClick={() => setRevealed(true)} className="block w-full">
                   <CardBack />

@@ -620,6 +620,7 @@ const TarotCardInput = z.object({
   decision: z.string().max(600).optional(),
   warning: z.string().max(600).optional(),
   daily: z.string().max(400).optional(),
+  reversed: z.boolean().optional(),
 });
 
 export const aiTarotReadingHU = createServerFn({ method: "POST" })
@@ -653,10 +654,12 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         "./readingQuality/styleRules"
       );
 
-      const idsKey = data.cards.map((c) => c.id).join("+");
+      const idsKey = data.cards
+        .map((c) => `${c.id}${c.reversed ? "_r" : ""}`)
+        .join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
       const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-      const cacheKey = `aitarot-v5q:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const cacheKey = `aitarot-v6q:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
 
       try {
         const { data: row } = await supabaseAdmin
@@ -740,6 +743,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           sorszam: i,
           nev: c.name,
           kulcsszavak: c.keywords ?? [],
+          forditott: c.reversed === true,
           general: c.general ?? null,
           love: c.love ?? null,
           decision: c.decision ?? null,
@@ -749,6 +753,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         utmutato: isDailySingle
           ? "A felhasználó a mai napjához húzott egy lapot. Az olvasat fordítsa a lap fő minőségét személyes mai hangulattá: konkrét belső állapot, testi érzet, mai hétköznapi helyzet. Sose írd le a lap nevét a szekciók szövegében — a lapot a fejléc mutatja."
           : "A lap(ok) jelentését alkalmazd a megadott helyzetre/kérdésre. A lap a lencse, a helyzet a téma; minden szekció a megadott helyzetről szóljon, ne általában a lapról.",
+        forditottSzabaly:
+          "Ha egy lapnál forditott=true, akkor a lap ÁRNYÉKOLDALÁT, blokkolt vagy túltolt megnyilvánulását olvasd ki, NEM az alapjelentést. A fordított lap nem feltétlenül 'rossz' — inkább azt mutatja, hogy a lap minősége most befelé fordul, késik, gátolt, vagy túlsúlyban van. Pl. fordított Császár = elmosódott határok / merevség; fordított Csillag = remény-vesztettség vagy önámítás; fordított Bolond = halogatás vagy meggondolatlan ugrás. A szekciókban ezt finoman, képszerűen jelezd, ne mondd ki azt a szót, hogy 'fordított' — a hangulatát írd.",
       };
 
       const requiredSections = sectionMap.map((s) => s.heading);

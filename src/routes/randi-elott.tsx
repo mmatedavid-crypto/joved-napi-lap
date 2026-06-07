@@ -42,6 +42,7 @@ function Page() {
   const [q, setQ] = useState("");
   const [type, setType] = useState<1 | 3>(1);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const [reversedFlags, setReversedFlags] = useState<boolean[]>([]);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywall, setPaywall] = useState(false);
@@ -50,6 +51,7 @@ function Page() {
   function draw(e: React.FormEvent) {
     e.preventDefault();
     setCards(pickCards(type));
+    setReversedFlags(Array.from({ length: type }, () => Math.random() < 0.3));
     setReading(null);
   }
 
@@ -60,7 +62,7 @@ function Page() {
     aiReading({
       data: {
         spread: cards.length === 3 ? "love-3" : "love-1",
-        cards: cards.map((c) => ({
+        cards: cards.map((c, i) => ({
           id: c.id,
           name: c.name,
           keywords: c.keywords,
@@ -69,6 +71,7 @@ function Page() {
           decision: c.decision,
           warning: c.warning,
           daily: c.daily,
+          reversed: reversedFlags[i] === true,
         })),
         question: q || sit,
         category: sit,
@@ -85,7 +88,7 @@ function Page() {
     return () => {
       cancelled = true;
     };
-  }, [cards]);
+  }, [cards, reversedFlags]);
 
   return (
     <Layout>
@@ -156,6 +159,7 @@ function Page() {
                 <CardFace
                   key={i}
                   card={c}
+                  reversed={reversedFlags[i] === true}
                   label={cards.length === 3 ? ["Te", "Köztetek", "Ő"][i] : undefined}
                 />
               ))}

@@ -39,6 +39,7 @@ function HaromLap() {
   const [question, setQuestion] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const [reversedFlags, setReversedFlags] = useState<boolean[]>([]);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
@@ -47,6 +48,7 @@ function HaromLap() {
 
   function draw() {
     setCards(pickCards(3));
+    setReversedFlags([Math.random() < 0.3, Math.random() < 0.3, Math.random() < 0.3]);
     setRevealed([false, false, false]);
     setReading(null);
   }
@@ -58,7 +60,7 @@ function HaromLap() {
     aiReading({
       data: {
         spread: "three",
-        cards: cards.map((c) => ({
+        cards: cards.map((c, i) => ({
           id: c.id,
           name: c.name,
           keywords: c.keywords,
@@ -67,6 +69,7 @@ function HaromLap() {
           decision: c.decision,
           warning: c.warning,
           daily: c.daily,
+          reversed: reversedFlags[i] === true,
         })),
         question: question || undefined,
         category,
@@ -83,7 +86,7 @@ function HaromLap() {
     return () => {
       cancelled = true;
     };
-  }, [cards, revealed]);
+  }, [cards, revealed, reversedFlags]);
 
   return (
     <Layout>
@@ -141,7 +144,7 @@ function HaromLap() {
                     {LABELS[i]}
                   </div>
                   {revealed[i] ? (
-                    <CardFace card={c} />
+                    <CardFace card={c} reversed={reversedFlags[i] === true} />
                   ) : (
                     <button
                       onClick={() => setRevealed((r) => r.map((v, j) => (j === i ? true : v)))}

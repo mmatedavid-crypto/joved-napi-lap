@@ -37,6 +37,7 @@ function Page() {
   const [type, setType] = useState<1 | 3>(1);
   const [mode, setMode] = useState<Mode>("tarot");
   const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const [reversedFlags, setReversedFlags] = useState<boolean[]>([]);
   const [revealed, setRevealed] = useState<boolean[]>([]);
   const [hex, setHex] = useState<{
     number?: number;
@@ -55,9 +56,11 @@ function Page() {
     if (mode === "tarot" || mode === "both") {
       const c = pickCards(type);
       setCards(c);
+      setReversedFlags(Array.from({ length: type }, () => Math.random() < 0.3));
       setRevealed(new Array(type).fill(false));
     } else {
       setCards(null);
+      setReversedFlags([]);
       setRevealed([]);
     }
     if (mode === "iching" || mode === "both") {
@@ -83,6 +86,7 @@ function Page() {
           // fallback to tarot-only
           const c = pickCards(1);
           setCards(c);
+          setReversedFlags([Math.random() < 0.3]);
           setRevealed([false]);
         }
       }
@@ -98,7 +102,7 @@ function Page() {
     aiReading({
       data: {
         spread: cards.length === 3 ? "decision-3" : "decision-1",
-        cards: cards.map((c) => ({
+        cards: cards.map((c, i) => ({
           id: c.id,
           name: c.name,
           keywords: c.keywords,
@@ -107,6 +111,7 @@ function Page() {
           decision: c.decision,
           warning: c.warning,
           daily: c.daily,
+          reversed: reversedFlags[i] === true,
         })),
         question: q || undefined,
         category: cat,
@@ -123,7 +128,7 @@ function Page() {
     return () => {
       cancelled = true;
     };
-  }, [cards, revealed]);
+  }, [cards, revealed, reversedFlags]);
 
   const main = cards?.[Math.min(1, (cards?.length ?? 1) - 1)];
 
@@ -206,6 +211,7 @@ function Page() {
                   <CardFace
                     key={i}
                     card={c}
+                    reversed={reversedFlags[i] === true}
                     label={cards.length === 3 ? ["Múlt", "Jelen", "Jövő"][i] : undefined}
                   />
                 ) : (
