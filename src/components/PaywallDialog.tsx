@@ -62,7 +62,7 @@ export function PaywallDialog({
               <div className="text-xs text-ivory/55 mt-1">
                 {product.category === "instant"
                   ? "azonnali olvasat"
-                  : `részletes olvasat ${express ? EXPRESS_HOURS + " órán" : "12–24 órán"} belül`}
+                  : "részletes olvasat fizetés után, az oldalon"}
               </div>
             </div>
 
@@ -81,7 +81,7 @@ export function PaywallDialog({
               )}
             </div>
 
-            {product.category === "delayed" && (
+            {false && product.category === "delayed" && (
               <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.2)] cursor-pointer">
                 <input
                   type="checkbox"
