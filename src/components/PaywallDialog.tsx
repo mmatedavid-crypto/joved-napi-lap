@@ -62,12 +62,12 @@ export function PaywallDialog({
               <div className="text-xs text-ivory/55 mt-1">
                 {product.category === "instant"
                   ? "azonnali olvasat"
-                  : `kiszállítás emailben ${express ? EXPRESS_HOURS + " órán" : "12–24 órán"} belül`}
+                  : `részletes olvasat ${express ? EXPRESS_HOURS + " órán" : "12–24 órán"} belül`}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-ivory/80 mb-1">Email cím (ide küldjük)</label>
+              <label className="block text-sm text-ivory/80 mb-1">Email cím a vásárláshoz</label>
               <input
                 type="email"
                 required
