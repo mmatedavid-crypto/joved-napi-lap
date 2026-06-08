@@ -49,7 +49,7 @@ function Page() {
     let stop = false;
     let triggered = false;
     let attempts = 0;
-    const MAX_ATTEMPTS = 60; // ~2.5 perc 2.5s intervallumonként
+    const MAX_ATTEMPTS = 240; // ~10 perc 2.5s intervallumonként
     async function tick() {
       attempts++;
       try {
