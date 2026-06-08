@@ -12,6 +12,7 @@ import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/dontes-elott")({
   head: () => ({
@@ -301,7 +302,7 @@ function Page() {
                 Komplex döntéselőkészítő elemzés emailben?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Komplex elemzés · 2490 Ft
+                {productCtaLabel("Komplex elemzés", "dontes_komplex")}
               </button>
             </div>
           </div>

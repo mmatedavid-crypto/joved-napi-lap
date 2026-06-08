@@ -14,6 +14,7 @@ import {
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -161,7 +162,7 @@ function Page() {
                 Teljes numerológiai életút elemzést kérsz emailben?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Életút elemzés · 2490 Ft
+                {productCtaLabel("Életút elemzés", "szammisztika_eletut")}
               </button>
             </div>
           </div>

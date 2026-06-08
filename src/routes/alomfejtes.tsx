@@ -8,6 +8,7 @@ import { dreamTextToSlug } from "@/lib/roxyNormalize";
 import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/alomfejtes")({
   head: () => ({
@@ -186,7 +187,7 @@ function Page() {
             </div>
             <div className="text-center pt-2">
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Rövid személyes álomfejtés · 790 Ft
+                {productCtaLabel("Rövid személyes álomfejtés", "alomfejtes_rovid")}
               </button>
             </div>
           </div>

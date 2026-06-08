@@ -8,6 +8,7 @@ import { pickCards, type TarotCard } from "@/data/cards";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
@@ -205,7 +206,7 @@ function HaromLap() {
                   Részletes, írott elemzést kérsz emailben?
                 </div>
                 <button className="btn-gold" onClick={() => setPaywall(true)}>
-                  Három lap — mély elemzés · 1990 Ft
+                  {productCtaLabel("Három lap — mély elemzés", "harom_lap_mely")}
                 </button>
               </div>
             </div>

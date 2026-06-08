@@ -7,6 +7,7 @@ import { aiAngelHU, type AngelHU } from "@/lib/roxyTranslate.functions";
 import { angelMeaning, reduceAngel } from "@/lib/angel.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/angyalszam")({
   head: () => ({
@@ -128,7 +129,7 @@ function Page() {
             </div>
             <div className="text-center pt-2">
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Mélyebb olvasat · 490 Ft
+                {productCtaLabel("Mélyebb olvasat", "angyalszam_ai")}
               </button>
             </div>
           </div>

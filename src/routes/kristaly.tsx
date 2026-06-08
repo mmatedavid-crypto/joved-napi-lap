@@ -8,6 +8,7 @@ import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
 import { crystalMeaning, MONTH_HU, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/kristaly")({
   head: () => ({
@@ -157,7 +158,7 @@ function Page() {
             </p>
             <div className="text-center">
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Személyes kristály-ajánlás · 490 Ft
+                {productCtaLabel("Személyes kristály-ajánlás", "kristaly_ai")}
               </button>
             </div>
           </div>

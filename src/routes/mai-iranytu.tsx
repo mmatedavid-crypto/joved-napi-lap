@@ -29,6 +29,7 @@ import { crystalMeaning, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { todayKey, loadLocal, saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/mai-iranytu")({
   head: () => ({
@@ -284,7 +285,7 @@ function Page() {
                 Részletes, személyre szabott üzenet a mai napodhoz?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
-                Kérem · 590 Ft
+                {productCtaLabel("Kérem", "mai_iranytu_ai")}
               </button>
             </div>
           </div>

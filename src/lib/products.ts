@@ -17,7 +17,7 @@ export interface ProductDef {
 }
 
 export const EXPRESS_PRICE_ID = "express_6h_price";
-export const EXPRESS_PRICE_HUF = 990;
+export const EXPRESS_PRICE_HUF = 790;
 export const EXPRESS_HOURS = 6;
 
 export const PRODUCTS: ProductDef[] = [
@@ -26,7 +26,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "napi_lap_ai_price",
     name: "Napi lap — személyes olvasat",
     short: "Személyre szabott elemzés a mai lapodhoz.",
-    priceHuf: 490,
+    priceHuf: 390,
     category: "instant",
     sourceRoute: "/mai-lap",
   },
@@ -35,7 +35,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "mai_iranytu_ai_price",
     name: "Mai iránytű — személyes üzenet",
     short: "Mit üzen a mai napod neked személyesen.",
-    priceHuf: 590,
+    priceHuf: 490,
     category: "instant",
     sourceRoute: "/mai-iranytu",
   },
@@ -44,7 +44,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "angyalszam_ai_price",
     name: "Angyalszám — mélyebb olvasat",
     short: "Az angyalszámod személyre szabott jelentése.",
-    priceHuf: 490,
+    priceHuf: 390,
     category: "instant",
     sourceRoute: "/angyalszam",
   },
@@ -53,7 +53,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "kristaly_ai_price",
     name: "Kristály ajánlás — személyesen",
     short: "A mostani helyzetedhez illő kristály.",
-    priceHuf: 490,
+    priceHuf: 390,
     category: "instant",
     sourceRoute: "/kristaly",
   },
@@ -62,7 +62,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "alomfejtes_rovid_price",
     name: "Álomfejtés — rövid olvasat",
     short: "Az álmod szimbólumainak rövid értelmezése.",
-    priceHuf: 790,
+    priceHuf: 590,
     category: "instant",
     sourceRoute: "/alomfejtes",
   },
@@ -71,7 +71,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "horoszkop_szemelyre_price",
     name: "Horoszkóp — személyre szabott",
     short: "Mai horoszkópod a te helyzetedre szabva.",
-    priceHuf: 990,
+    priceHuf: 590,
     category: "instant",
     sourceRoute: "/horoszkop",
   },
@@ -80,7 +80,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "extra_huzas_price",
     name: "Extra napi húzás",
     short: "Még egy húzás ma — a napi limit feloldása.",
-    priceHuf: 490,
+    priceHuf: 390,
     category: "instant",
   },
   {
@@ -88,7 +88,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "harom_lap_mely_price",
     name: "Három lap — mély elemzés",
     short: "Három lapos húzás részletes elemzése. 12–24 órán belül emailben.",
-    priceHuf: 1990,
+    priceHuf: 1490,
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
@@ -99,7 +99,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "kelta_kereszt_price",
     name: "Kelta kereszt — nagy spread",
     short: "10 lapos klasszikus kelta kereszt. 12–24 órán belül emailben.",
-    priceHuf: 2990,
+    priceHuf: 2490,
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
@@ -109,7 +109,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "dontes_komplex_price",
     name: "Döntés előtt — komplex elemzés",
     short: "Komplex döntéselőkészítő olvasat. 12–24 órán belül emailben.",
-    priceHuf: 2490,
+    priceHuf: 1990,
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
@@ -120,7 +120,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "parkapcsolat_elemzes_price",
     name: "Párkapcsolat — mély elemzés",
     short: "Randi előtt vagy összeillés részletes olvasata. 12–24 órán belül emailben.",
-    priceHuf: 2490,
+    priceHuf: 1990,
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
@@ -131,7 +131,7 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "szammisztika_eletut_price",
     name: "Számmisztika — életút elemzés",
     short: "Teljes numerológiai életút elemzés. 12–24 órán belül emailben.",
-    priceHuf: 2490,
+    priceHuf: 1990,
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
@@ -149,4 +149,14 @@ export const PRODUCTS_BY_PRICE_ID: Record<string, ProductDef> = Object.fromEntri
 
 export function formatHuf(amount: number): string {
   return new Intl.NumberFormat("hu-HU").format(amount) + " Ft";
+}
+
+export function productPriceLabel(slug: string): string {
+  const product = PRODUCTS_BY_SLUG[slug];
+  return product ? formatHuf(product.priceHuf) : "";
+}
+
+export function productCtaLabel(label: string, slug: string): string {
+  const price = productPriceLabel(slug);
+  return price ? `${label} · ${price}` : label;
 }

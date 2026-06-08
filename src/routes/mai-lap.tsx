@@ -10,6 +10,7 @@ import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/mai-lap")({
   head: () => ({
@@ -175,7 +176,7 @@ function MaiLap() {
                     Mélyebb, személyre szabott üzenetet szeretnél?
                   </div>
                   <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
-                    Kérek személyes olvasatot · 490 Ft
+                    {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
                   </button>
                 </div>
               </div>

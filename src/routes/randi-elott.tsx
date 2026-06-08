@@ -9,6 +9,7 @@ import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -206,7 +207,7 @@ function Page() {
                 Két ember energiájának részletes olvasata. 12–24 órán belül emailben.
               </p>
               <button className="btn-gold mt-3" onClick={() => setPaywall(true)}>
-                Megrendelem · 2490 Ft
+                {productCtaLabel("Megrendelem", "parkapcsolat_elemzes")}
               </button>
             </div>
             <div className="text-center">
