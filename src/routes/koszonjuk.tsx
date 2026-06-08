@@ -58,11 +58,7 @@ function Page() {
         setOrder(r.order);
         setLoading(false);
         if (!r.order) return;
-        if (
-          !triggered &&
-          (r.order.status === "processing" || r.order.status === "paid") &&
-          r.order.category === "instant"
-        ) {
+        if (!triggered && (r.order.status === "processing" || r.order.status === "paid")) {
           triggered = true;
           runProcess({ data: { sessionId: session_id! } }).catch(() => {});
         }
@@ -113,17 +109,9 @@ function Page() {
               </p>
             </Section>
 
-            {order.category === "instant" && order.status !== "delivered" && (
+            {order.status !== "delivered" && order.status !== "failed" && (
               <Section eyebrow="Készítjük">
-                Egy pillanat — most állítjuk össze a személyre szabott olvasatodat.
-              </Section>
-            )}
-
-            {order.category === "delayed" && order.status !== "delivered" && (
-              <Section eyebrow="Hamarosan érkezik">
-                A részletes elemzésed {order.express ? "6 órán" : "12–24 órán"} belül megérkezik a
-                megadott email címre
-                {order.guest_email ? ` (${order.guest_email})` : ""}. Addig is pihenj egy kicsit.
+                A személyes olvasatod itt jelenik meg ezen az oldalon, amint elkészült.
               </Section>
             )}
 
