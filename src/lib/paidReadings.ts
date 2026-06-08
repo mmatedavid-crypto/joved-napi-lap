@@ -256,6 +256,13 @@ function premiumCompatibility(input: Record<string, unknown>): PaidReadingPayloa
     status,
   });
   const reading = composeCompatibilityReading(profile);
+  const memoryContext = text(input.memoryContext);
+  if (memoryContext) {
+    reading.sections.splice(2, 0, {
+      heading: "A visszatérő mintád",
+      text: "A korábbi kérdéseid alapján itt nem csak kettőtök százaléka számít, hanem az is, milyen kapcsolati mintát keresel újra: biztonságot, lezárást, visszatérést vagy tisztább választ. Ezt most finoman érdemes különválasztani attól, hogy ez az egy ember mit mutat.",
+    });
+  }
   reading.title = `Párkapcsolati dinamika · ${reading.title}`;
   return renderReading(reading);
 }

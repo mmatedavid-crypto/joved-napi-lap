@@ -9,6 +9,8 @@ import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
+import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/alomfejtes")({
   head: () => ({
@@ -39,7 +41,10 @@ const EMOTIONS = [
 const EMOTION_LABEL: Record<string, string> = Object.fromEntries(EMOTIONS.map((e) => [e.v, e.l]));
 
 function Page() {
+  const { user } = useAuth();
   const call = useServerFn(aiDreamHU);
+  const loadMemory = useServerFn(getReadingContext);
+  const saveMemory = useServerFn(saveReadingMemory);
   const [text, setText] = useState("");
   const [emotion, setEmotion] = useState<string>("calm");
   const [chosen, setChosen] = useState<string>(""); // manual fallback slug
@@ -47,6 +52,7 @@ function Page() {
   const [result, setResult] = useState<DreamHU | null>(null);
   const [noSymbol, setNoSymbol] = useState(false);
   const [paywall, setPaywall] = useState(false);
+  const [memoryNote, setMemoryNote] = useState("");
 
   async function run(slug: string) {
     setLoading(true);
@@ -77,6 +83,29 @@ function Page() {
     }
     if (reading) {
       setResult(reading);
+      if (user) {
+        try {
+          const memory = await loadMemory({
+            data: { readingType: "dream", topic: reading.title, situation: emotion, limit: 5 },
+          });
+          setMemoryNote(memory.themeSummary || memory.contextText || "");
+          await saveMemory({
+            data: {
+              readingType: "dream",
+              topic: reading.title,
+              question: text.trim() || undefined,
+              situation: EMOTION_LABEL[emotion] ?? emotion,
+              sourceRoute: "/alomfejtes",
+              title: reading.title,
+              summary: reading.oneLine || reading.notice || reading.surface || reading.title,
+              oneSentence: reading.oneLine,
+              anchors: [reading.title, EMOTION_LABEL[emotion] ?? emotion],
+            },
+          });
+        } catch {
+          /* memory is optional */
+        }
+      }
       trackEvent("dream_completed", { slug });
     } else {
       setNoSymbol(true);
@@ -177,6 +206,7 @@ function Page() {
                 <Section eyebrow="Mit hozhat felszínre?">{result.surface}</Section>
               )}
               {result.notice && <Section eyebrow="Mire figyelhetsz?">{result.notice}</Section>}
+              {memoryNote && <Section eyebrow="A visszatérő álommintád">{memoryNote}</Section>}
               <Section eyebrow="A te álmodban">
                 {dreamContextReflection(text, emotion, result.title)}
               </Section>

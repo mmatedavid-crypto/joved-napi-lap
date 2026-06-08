@@ -12,6 +12,9 @@ import {
 } from "@/lib/readingQuality/compatibilityEngine";
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
+import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/osszeillunk")({
   head: () => ({
@@ -36,7 +39,10 @@ const STATUS = [
 ];
 
 function Page() {
+  const { user } = useAuth();
   const callQuality = useServerFn(qualityCompatibilityReading);
+  const loadMemory = useServerFn(getReadingContext);
+  const saveMemory = useServerFn(saveReadingMemory);
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const [na, setNa] = useState("");
@@ -45,11 +51,31 @@ function Page() {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<CompatibilityProfile | null>(null);
   const [reading, setReading] = useState<QualityReading | null>(null);
+  const [comparisonContext, setComparisonContext] = useState("");
 
   async function calc(e: React.FormEvent) {
     e.preventDefault();
     if (!a || !b) return;
     setLoading(true);
+    const browserPattern = recordCompatibilityCheck({
+      partnerName: nb || "a nő",
+      partnerBirthDate: b,
+      status,
+    });
+    setComparisonContext(browserPattern.contextText);
+    let memoryContext = browserPattern.contextText;
+    if (user) {
+      try {
+        const memory = await loadMemory({
+          data: { readingType: "compatibility", topic: status, situation: status, limit: 5 },
+        });
+        memoryContext = [memory.contextText, memory.themeSummary, browserPattern.contextText]
+          .filter(Boolean)
+          .join("\n");
+      } catch {
+        /* memory is optional */
+      }
+    }
     try {
       const r = await callQuality({
         data: {
@@ -58,11 +84,36 @@ function Page() {
           fullNameA: na.trim() || undefined,
           fullNameB: nb.trim() || undefined,
           status,
+          memoryContext: memoryContext || undefined,
         },
       });
       if (r.ok && r.reading && r.profile) {
         setProfile(r.profile);
         setReading(r.reading);
+        if (user) {
+          saveMemory({
+            data: {
+              readingType: "compatibility",
+              topic: status,
+              question: browserPattern.isComparing
+                ? "Több emberrel nézett összeillési mintázat"
+                : undefined,
+              situation: status,
+              sourceRoute: "/osszeillunk",
+              title: r.reading.title,
+              summary: r.reading.oneSentence,
+              oneSentence: r.reading.oneSentence,
+              anchors: [
+                status,
+                `${r.profile.personA.lifePathNumber}`,
+                `${r.profile.personB.lifePathNumber}`,
+                `${r.profile.relationshipNumber}`,
+                ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
+              ],
+              metadata: { distinctCompatibilityChecks30d: browserPattern.distinctCount },
+            },
+          }).catch(() => {});
+        }
         trackEvent(r.fallbackUsed ? "roxy_fallback_used" : "roxy_cache_miss", {
           domain: "compatibility_quality",
         });
@@ -81,6 +132,26 @@ function Page() {
     });
     setProfile(fallbackProfile);
     setReading(composeCompatibilityReading(fallbackProfile));
+    if (user) {
+      saveMemory({
+        data: {
+          readingType: "compatibility",
+          topic: status,
+          situation: status,
+          sourceRoute: "/osszeillunk",
+          title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
+          summary: `Összeillés: ${fallbackProfile.score}%, ${fallbackProfile.relationshipNumber}-es kapcsolatminta.`,
+          oneSentence: `A kapcsolat mintája ${fallbackProfile.relationshipNumber}-es ritmust mutat.`,
+          anchors: [
+            status,
+            `${fallbackProfile.personA.lifePathNumber}`,
+            `${fallbackProfile.personB.lifePathNumber}`,
+            ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
+          ],
+          metadata: { distinctCompatibilityChecks30d: browserPattern.distinctCount },
+        },
+      }).catch(() => {});
+    }
     trackEvent("roxy_fallback_used", { domain: "compatibility" });
     trackEvent("compatibility_completed", { score: fallbackProfile.score, status });
     setLoading(false);
@@ -150,6 +221,14 @@ function Page() {
                   {section.text}
                 </Section>
               ))}
+              {comparisonContext && (
+                <Section eyebrow="A keresésed mintája">
+                  Most nem csak az a kérdés, hogy egy emberrel mennyi az összeillés. Ha több
+                  kapcsolatot is összehasonlítasz, érdemes lehet azt is figyelned, milyen minőséget
+                  keresel újra és újra: biztonságot, izgalmat, lezárást vagy megerősítést. Ez nem
+                  baj, inkább jelzés arra, hogy a választás mögötti mintát is érdemes olvasni.
+                </Section>
+              )}
               <Section eyebrow="Egy mondatban">
                 <em>{reading.oneSentence}</em>
               </Section>

@@ -13,6 +13,8 @@ import { todayKey } from "@/lib/storage";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
+import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dontes-elott")({
   head: () => ({
@@ -33,6 +35,7 @@ const CATS = ["szerelem", "munka", "pénz", "család", "költözés", "ex / viss
 type Mode = "tarot" | "iching" | "both";
 
 function Page() {
+  const { user } = useAuth();
   const callIching = useServerFn(roxyIchingDailyCast);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState(CATS[0]);
@@ -51,6 +54,8 @@ function Page() {
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
+  const loadMemory = useServerFn(getReadingContext);
+  const saveMemory = useServerFn(saveReadingMemory);
 
   async function draw() {
     setIchingFailed(false);
@@ -101,27 +106,59 @@ function Page() {
     if (!cards || !revealed.length || !revealed.every(Boolean)) return;
     let cancelled = false;
     setLoadingReading(true);
-    aiReading({
-      data: {
-        spread: cards.length === 3 ? "decision-3" : "decision-1",
-        cards: cards.map((c, i) => ({
-          id: c.id,
-          name: c.name,
-          keywords: c.keywords,
-          general: c.general,
-          love: c.love,
-          decision: c.decision,
-          warning: c.warning,
-          daily: c.daily,
-          reversed: reversedFlags[i] === true,
-        })),
-        question: q || undefined,
-        category: cat,
-      },
-    })
+    async function load() {
+      let memoryContext: string | undefined;
+      if (user) {
+        try {
+          const memory = await loadMemory({
+            data: { readingType: "decision", topic: q || cat, situation: cat, limit: 5 },
+          });
+          memoryContext = memory.contextText || memory.themeSummary || undefined;
+        } catch {
+          /* memory is optional */
+        }
+      }
+      return aiReading({
+        data: {
+          spread: cards.length === 3 ? "decision-3" : "decision-1",
+          cards: cards.map((c, i) => ({
+            id: c.id,
+            name: c.name,
+            keywords: c.keywords,
+            general: c.general,
+            love: c.love,
+            decision: c.decision,
+            warning: c.warning,
+            daily: c.daily,
+            reversed: reversedFlags[i] === true,
+          })),
+          question: q || undefined,
+          category: cat,
+          memoryContext,
+        },
+      });
+    }
+    load()
       .then((r) => {
         if (cancelled) return;
-        if (r.ok && r.reading) setReading(r.reading);
+        if (r.ok && r.reading) {
+          setReading(r.reading);
+          if (user) {
+            saveMemory({
+              data: {
+                readingType: "decision",
+                topic: q || cat,
+                question: q || undefined,
+                situation: cat,
+                sourceRoute: "/dontes-elott",
+                title: "Döntés előtt",
+                summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
+                oneSentence: r.reading.oneLine,
+                anchors: [cat, ...cards.map((card) => card.name)],
+              },
+            }).catch(() => {});
+          }
+        }
         setLoadingReading(false);
       })
       .catch(() => {
@@ -130,7 +167,7 @@ function Page() {
     return () => {
       cancelled = true;
     };
-  }, [cards, revealed, reversedFlags]);
+  }, [cards, revealed, reversedFlags, aiReading, cat, loadMemory, q, saveMemory, user]);
 
   const main = cards?.[Math.min(1, (cards?.length ?? 1) - 1)];
 

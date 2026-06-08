@@ -6,6 +6,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { getMyOrders } from "@/lib/payments.functions";
 import { formatHuf } from "@/lib/products";
+import { getMyReadingMemoryOverview, type ReadingMemory } from "@/lib/readingMemory.functions";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
@@ -40,8 +41,12 @@ function Page() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const call = useServerFn(getMyOrders);
+  const loadMemory = useServerFn(getMyReadingMemoryOverview);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [memories, setMemories] = useState<ReadingMemory[]>([]);
+  const [themeSummary, setThemeSummary] = useState("");
+  const [memoriesLoading, setMemoriesLoading] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/bejelentkezes" });
@@ -55,7 +60,14 @@ function Page() {
         setOrdersLoading(false);
       })
       .catch(() => setOrdersLoading(false));
-  }, [user, call]);
+    loadMemory({})
+      .then((r) => {
+        setMemories(r.memories ?? []);
+        setThemeSummary(r.themeSummary ?? "");
+        setMemoriesLoading(false);
+      })
+      .catch(() => setMemoriesLoading(false));
+  }, [user, call, loadMemory]);
 
   if (loading || !user) {
     return (
@@ -69,6 +81,35 @@ function Page() {
     <Layout>
       <PageHeader eyebrow="Profil" title="A te oldalad" lead={user.email ?? undefined} />
       <div className="mx-auto max-w-2xl px-4 pb-20 space-y-4">
+        <Section eyebrow="Visszatérő mintáid">
+          {memoriesLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
+          {!memoriesLoading && memories.length === 0 && (
+            <p className="text-ivory/70">
+              Ahogy használod az oldalt, itt finoman kirajzolódnak a visszatérő kérdéseid és témáid.
+            </p>
+          )}
+          {!memoriesLoading && memories.length > 0 && (
+            <div className="space-y-4">
+              {themeSummary && <p className="font-editorial text-ivory/75">{themeSummary}</p>}
+              <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
+                {memories.slice(0, 6).map((memory) => (
+                  <li key={memory.id} className="py-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-ivory">{memory.title || memory.topic || "Olvasat"}</div>
+                      <div className="text-xs text-ivory/45">
+                        {new Date(memory.created_at).toLocaleDateString("hu-HU")}
+                      </div>
+                    </div>
+                    <p className="text-sm text-ivory/60 mt-1">
+                      {memory.one_sentence || memory.summary}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Section>
+
         <Section eyebrow="Előzményeid">
           {ordersLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
           {!ordersLoading && orders.length === 0 && (

@@ -221,6 +221,62 @@ export type Database = {
         };
         Relationships: [];
       };
+      reading_memories: {
+        Row: {
+          anchors: string[];
+          created_at: string;
+          id: string;
+          metadata: Json;
+          one_sentence: string | null;
+          question: string | null;
+          reading_type: string;
+          situation: string | null;
+          source_route: string | null;
+          summary: string;
+          title: string | null;
+          topic: string | null;
+          user_id: string;
+        };
+        Insert: {
+          anchors?: string[];
+          created_at?: string;
+          id?: string;
+          metadata?: Json;
+          one_sentence?: string | null;
+          question?: string | null;
+          reading_type: string;
+          situation?: string | null;
+          source_route?: string | null;
+          summary: string;
+          title?: string | null;
+          topic?: string | null;
+          user_id: string;
+        };
+        Update: {
+          anchors?: string[];
+          created_at?: string;
+          id?: string;
+          metadata?: Json;
+          one_sentence?: string | null;
+          question?: string | null;
+          reading_type?: string;
+          situation?: string | null;
+          source_route?: string | null;
+          summary?: string;
+          title?: string | null;
+          topic?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reading_memories_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       suppressed_emails: {
         Row: {
           created_at: string;

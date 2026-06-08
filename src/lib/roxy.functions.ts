@@ -638,6 +638,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       cards: z.array(TarotCardInput).min(1).max(5),
       question: z.string().max(500).optional(),
       category: z.string().max(60).optional(),
+      memoryContext: z.string().max(1600).optional(),
       dateKey: z.string().min(8).max(20).optional(),
     }).parse,
   )
@@ -655,8 +656,9 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
 
       const idsKey = data.cards.map((c) => `${c.id}${c.reversed ? "_r" : ""}`).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
+      const memoryKey = (data.memoryContext ?? "").toLowerCase().trim().slice(0, 160);
       const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
-      const cacheKey = `aitarot:${READING_QUALITY_PROMPT_VERSION}:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${dateKey}`;
+      const cacheKey = `aitarot:${READING_QUALITY_PROMPT_VERSION}:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${memoryKey}:${dateKey}`;
 
       try {
         const { data: row } = await supabaseAdmin
@@ -763,7 +765,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           readingType: "tarot",
           mode: "free",
           userInput: { spread: data.spread, question: data.question, category: data.category },
-          sourceData,
+          sourceData: { ...sourceData, memoryContext: data.memoryContext ?? null },
           requiredSections,
         }),
         schemaName: "QualityReading",

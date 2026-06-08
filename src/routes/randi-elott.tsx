@@ -10,6 +10,8 @@ import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
+import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -36,6 +38,7 @@ const SITUATIONS = [
 ];
 
 function Page() {
+  const { user } = useAuth();
   const [myDob, setMyDob] = useState("");
   const [hisDob, setHisDob] = useState("");
   const [myName, setMyName] = useState("");
@@ -49,6 +52,8 @@ function Page() {
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
+  const loadMemory = useServerFn(getReadingContext);
+  const saveMemory = useServerFn(saveReadingMemory);
 
   function draw(e: React.FormEvent) {
     e.preventDefault();
@@ -61,27 +66,59 @@ function Page() {
     if (!cards) return;
     let cancelled = false;
     setLoadingReading(true);
-    aiReading({
-      data: {
-        spread: cards.length === 3 ? "love-3" : "love-1",
-        cards: cards.map((c, i) => ({
-          id: c.id,
-          name: c.name,
-          keywords: c.keywords,
-          general: c.general,
-          love: c.love,
-          decision: c.decision,
-          warning: c.warning,
-          daily: c.daily,
-          reversed: reversedFlags[i] === true,
-        })),
-        question: q || sit,
-        category: sit,
-      },
-    })
+    async function load() {
+      let memoryContext: string | undefined;
+      if (user) {
+        try {
+          const memory = await loadMemory({
+            data: { readingType: "love", topic: q || sit, situation: sit, limit: 5 },
+          });
+          memoryContext = memory.contextText || memory.themeSummary || undefined;
+        } catch {
+          /* memory is optional */
+        }
+      }
+      return aiReading({
+        data: {
+          spread: cards.length === 3 ? "love-3" : "love-1",
+          cards: cards.map((c, i) => ({
+            id: c.id,
+            name: c.name,
+            keywords: c.keywords,
+            general: c.general,
+            love: c.love,
+            decision: c.decision,
+            warning: c.warning,
+            daily: c.daily,
+            reversed: reversedFlags[i] === true,
+          })),
+          question: q || sit,
+          category: sit,
+          memoryContext,
+        },
+      });
+    }
+    load()
       .then((r) => {
         if (cancelled) return;
-        if (r.ok && r.reading) setReading(r.reading);
+        if (r.ok && r.reading) {
+          setReading(r.reading);
+          if (user) {
+            saveMemory({
+              data: {
+                readingType: "love",
+                topic: q || sit,
+                question: q || undefined,
+                situation: sit,
+                sourceRoute: "/randi-elott",
+                title: "Randi előtt",
+                summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
+                oneSentence: r.reading.oneLine,
+                anchors: [sit, ...cards.map((card) => card.name)],
+              },
+            }).catch(() => {});
+          }
+        }
         setLoadingReading(false);
       })
       .catch(() => {
@@ -90,7 +127,7 @@ function Page() {
     return () => {
       cancelled = true;
     };
-  }, [cards, reversedFlags]);
+  }, [cards, reversedFlags, aiReading, loadMemory, q, saveMemory, sit, user]);
 
   return (
     <Layout>

@@ -170,10 +170,11 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       fullNameA: z.string().min(1).max(120).optional(),
       fullNameB: z.string().min(1).max(120).optional(),
       status: z.string().max(80).optional(),
+      memoryContext: z.string().max(1600).optional(),
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: CompatibilityProfile | null }>> => {
-    const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}`;
+    const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}:${(data.memoryContext ?? "").toLowerCase().trim().slice(0, 160)}`;
     const compatHit = await readReadingCache(compatCacheKey);
     if (compatHit) {
       return {
@@ -216,7 +217,12 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
     const generated = await generateQualityReading({
       readingType: "compatibility",
       userInput: data,
-      sourceData: { profile, roxy: normalized, localFallback: fallback },
+      sourceData: {
+        profile,
+        roxy: normalized,
+        localFallback: fallback,
+        memoryContext: data.memoryContext,
+      },
       requiredSections: [
         "Összeillés",
         "A kapcsolat alapmintája",

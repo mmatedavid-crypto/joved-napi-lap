@@ -194,11 +194,14 @@ export const processOrder = createServerFn({ method: "POST" })
     await supabaseAdmin.from("orders").update({ status: "processing" }).eq("id", order.id);
 
     try {
+      const memoryContext = order.user_id
+        ? await loadPaidMemoryContext(order.user_id, order.product_slug, order.input_payload)
+        : "";
       const { generatePaidOrderReading } = await import("./paidReadings.server");
       const reading = await generatePaidOrderReading({
         productSlug: order.product_slug,
         productName: order.product_name,
-        inputPayload: order.input_payload,
+        inputPayload: withMemoryContext(order.input_payload, memoryContext),
       });
 
       await supabaseAdmin
@@ -210,6 +213,29 @@ export const processOrder = createServerFn({ method: "POST" })
         })
         .eq("id", order.id);
 
+      if (order.user_id) {
+        try {
+          await supabaseAdmin.from("reading_memories").insert({
+            user_id: order.user_id,
+            reading_type: "paid",
+            topic: order.product_name,
+            question: memoryQuestion(order.input_payload),
+            situation: memorySituation(order.input_payload),
+            source_route: null,
+            title: reading.title,
+            summary: reading.body.slice(0, 700),
+            one_sentence: reading.reading?.oneSentence ?? reading.title,
+            anchors: memoryAnchors(order.product_slug, order.input_payload),
+            metadata: {
+              product_slug: order.product_slug,
+              order_id: order.id,
+            } as never,
+          });
+        } catch (memoryError) {
+          console.warn("paid reading memory save failed:", memoryError);
+        }
+      }
+
       return { ok: true, response: reading };
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
@@ -220,3 +246,71 @@ export const processOrder = createServerFn({ method: "POST" })
       return { ok: false, error: message };
     }
   });
+
+function memoryQuestion(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") return null;
+  const data = payload as Record<string, unknown>;
+  const value = data.q ?? data.question;
+  return typeof value === "string" && value.trim() ? value.trim().slice(0, 500) : null;
+}
+
+function memorySituation(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") return null;
+  const data = payload as Record<string, unknown>;
+  const value = data.sit ?? data.status ?? data.cat ?? data.category;
+  return typeof value === "string" && value.trim() ? value.trim().slice(0, 160) : null;
+}
+
+function memoryAnchors(productSlug: string, payload: unknown): string[] {
+  const anchors = [productSlug];
+  if (payload && typeof payload === "object") {
+    const data = payload as Record<string, unknown>;
+    for (const key of ["sit", "status", "cat", "category", "sign", "number", "crystal", "title"]) {
+      const value = data[key];
+      if (typeof value === "string" && value.trim()) anchors.push(value.trim().slice(0, 80));
+    }
+    const cards = data.cards;
+    if (Array.isArray(cards)) {
+      for (const card of cards) {
+        if (typeof card === "string" && card.trim()) anchors.push(card.trim().slice(0, 80));
+      }
+    }
+  }
+  return Array.from(new Set(anchors)).slice(0, 12);
+}
+
+function withMemoryContext(payload: unknown, memoryContext: string): unknown {
+  if (!memoryContext) return payload;
+  if (!payload || typeof payload !== "object") return { memoryContext };
+  return { ...(payload as Record<string, unknown>), memoryContext };
+}
+
+async function loadPaidMemoryContext(
+  userId: string,
+  productSlug: string,
+  payload: unknown,
+): Promise<string> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const anchors = memoryAnchors(productSlug, payload);
+    const { data } = await supabaseAdmin
+      .from("reading_memories")
+      .select(
+        "reading_type, topic, question, situation, title, summary, one_sentence, anchors, created_at",
+      )
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(6);
+    if (!data?.length) return "";
+    const lines = data.map((memory) => {
+      const label = memory.topic || memory.situation || memory.reading_type;
+      return `${label}: ${memory.one_sentence || memory.summary}`;
+    });
+    const anchorLine = anchors.length ? `Aktuális kulcsok: ${anchors.join(", ")}` : "";
+    return ["Korábbi felhasználói minták a prémium olvasathoz:", anchorLine, ...lines]
+      .filter(Boolean)
+      .join("\n");
+  } catch {
+    return "";
+  }
+}

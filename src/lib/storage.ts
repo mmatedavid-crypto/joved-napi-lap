@@ -25,6 +25,30 @@ export function pushHistory<T>(key: string, item: T, max = 50) {
   saveLocal(key, arr.slice(0, max));
 }
 
+export function saveCookie(key: string, value: string, maxAgeDays = 180) {
+  if (typeof document === "undefined") return;
+  try {
+    const maxAge = Math.max(1, Math.round(maxAgeDays * 24 * 60 * 60));
+    document.cookie = `${PREFIX}${key}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  } catch {
+    /* ignore */
+  }
+}
+
+export function loadCookie(key: string): string | null {
+  if (typeof document === "undefined") return null;
+  try {
+    const name = `${PREFIX}${key}=`;
+    const part = document.cookie
+      .split(";")
+      .map((item) => item.trim())
+      .find((item) => item.startsWith(name));
+    return part ? decodeURIComponent(part.slice(name.length)) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function todayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;

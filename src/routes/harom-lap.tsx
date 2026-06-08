@@ -9,6 +9,8 @@ import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
+import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
@@ -38,6 +40,7 @@ const CATEGORIES = [
 const LABELS = ["Múlt", "Jelen", "Jövő"] as const;
 
 function HaromLap() {
+  const { user } = useAuth();
   const [question, setQuestion] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
@@ -47,6 +50,8 @@ function HaromLap() {
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
+  const loadMemory = useServerFn(getReadingContext);
+  const saveMemory = useServerFn(saveReadingMemory);
 
   function draw() {
     setCards(pickCards(3));
@@ -59,27 +64,64 @@ function HaromLap() {
     if (!cards || !revealed.every(Boolean)) return;
     let cancelled = false;
     setLoadingReading(true);
-    aiReading({
-      data: {
-        spread: "three",
-        cards: cards.map((c, i) => ({
-          id: c.id,
-          name: c.name,
-          keywords: c.keywords,
-          general: c.general,
-          love: c.love,
-          decision: c.decision,
-          warning: c.warning,
-          daily: c.daily,
-          reversed: reversedFlags[i] === true,
-        })),
-        question: question || undefined,
-        category,
-      },
-    })
+    async function load() {
+      let memoryContext: string | undefined;
+      if (user) {
+        try {
+          const memory = await loadMemory({
+            data: {
+              readingType: "tarot",
+              topic: question || category,
+              situation: category,
+              limit: 5,
+            },
+          });
+          memoryContext = memory.contextText || memory.themeSummary || undefined;
+        } catch {
+          /* memory is optional */
+        }
+      }
+      return aiReading({
+        data: {
+          spread: "three",
+          cards: cards.map((c, i) => ({
+            id: c.id,
+            name: c.name,
+            keywords: c.keywords,
+            general: c.general,
+            love: c.love,
+            decision: c.decision,
+            warning: c.warning,
+            daily: c.daily,
+            reversed: reversedFlags[i] === true,
+          })),
+          question: question || undefined,
+          category,
+          memoryContext,
+        },
+      });
+    }
+    load()
       .then((r) => {
         if (cancelled) return;
-        if (r.ok && r.reading) setReading(r.reading);
+        if (r.ok && r.reading) {
+          setReading(r.reading);
+          if (user) {
+            saveMemory({
+              data: {
+                readingType: "tarot",
+                topic: question || category,
+                question: question || undefined,
+                situation: category,
+                sourceRoute: "/harom-lap",
+                title: r.reading.oneLine || "Három lapos húzás",
+                summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
+                oneSentence: r.reading.oneLine,
+                anchors: [category, ...cards.map((card) => card.name)],
+              },
+            }).catch(() => {});
+          }
+        }
         setLoadingReading(false);
       })
       .catch(() => {
@@ -88,7 +130,7 @@ function HaromLap() {
     return () => {
       cancelled = true;
     };
-  }, [cards, revealed, reversedFlags]);
+  }, [aiReading, cards, category, loadMemory, question, revealed, reversedFlags, saveMemory, user]);
 
   return (
     <Layout>
