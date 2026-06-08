@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { Logo } from "./Logo";
 import { BottomNav } from "./BottomNav";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
 
 const NAV = [
   { to: "/mai-lap", label: "Mai lap" },
@@ -141,10 +142,33 @@ export function Layout({ children }: { children?: ReactNode }) {
               Jogi tudnivalók
             </div>
             <p className="font-editorial leading-relaxed text-ivory/60">
-              A Jövőd.hu szórakoztató és önismereti célú tartalom. Nem orvosi, jogi, pénzügyi vagy
-              pszichológiai tanácsadás.
+              {ENTERTAINMENT_DISCLAIMER}
             </p>
-            <p className="mt-4 text-ivory/40 text-xs">© {new Date().getFullYear()} Jövőd.hu</p>
+            <ul className="mt-4 grid gap-2">
+              <li>
+                <Link to="/impresszum" className="hover:text-gold">
+                  Impresszum
+                </Link>
+              </li>
+              <li>
+                <Link to="/aszf" className="hover:text-gold">
+                  ÁSZF
+                </Link>
+              </li>
+              <li>
+                <Link to="/adatkezelesi-tajekoztato" className="hover:text-gold">
+                  Adatkezelés
+                </Link>
+              </li>
+              <li>
+                <Link to="/elallasi-tajekoztato" className="hover:text-gold">
+                  Elállási tájékoztató
+                </Link>
+              </li>
+            </ul>
+            <p className="mt-4 text-ivory/40 text-xs">
+              © {new Date().getFullYear()} {SITE_LEGAL.operator.shortName}
+            </p>
           </div>
         </div>
       </footer>

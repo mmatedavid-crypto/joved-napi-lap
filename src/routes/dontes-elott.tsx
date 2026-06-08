@@ -11,6 +11,7 @@ import { hexHU } from "@/lib/iching.hu";
 import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { withHungarianArticle } from "@/lib/huGrammar";
 
 export const Route = createFileRoute("/dontes-elott")({
   head: () => ({
@@ -329,5 +330,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function decisionQuestionFallback(question: string, card: TarotCard, category: string): string {
-  return `A „${question}” kérdésre a ${card.name} nem parancsot ad, hanem szempontot: a ${category} témájában akkor mozdulj, ha a döntés mögött nem csak sürgetés, hanem belső tisztaság is van. Ha a kérdésre gondolva inkább szűkületet érzel, érdemes lehet még egy kicsit várni vagy pontosítani a feltételeket.`;
+  return `A „${question}” kérdésre ${withHungarianArticle(card.name)} nem parancsot ad, hanem szempontot: a ${category} témájában akkor mozdulj, ha a döntés mögött nem csak sürgetés, hanem belső tisztaság is van. Ha a kérdésre gondolva inkább szűkületet érzel, érdemes lehet még egy kicsit várni vagy pontosítani a feltételeket.`;
 }

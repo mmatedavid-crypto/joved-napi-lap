@@ -8,6 +8,7 @@ import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { withHungarianArticle } from "@/lib/huGrammar";
 
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
@@ -241,7 +242,7 @@ function F({ label, children }: { label: string; children: React.ReactNode }) {
 }
 
 function loveQuestionFallback(question: string, card: TarotCard, situation: string): string {
-  return `A „${question}” kérdésre a ${card.name} nem biztos választ ad, inkább irányt: ${loveSituationLead(situation)} most a ${card.keywords[0].toLowerCase()} minőségét taníthatja. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
+  return `A „${question}” kérdésre ${withHungarianArticle(card.name)} nem biztos választ ad, inkább irányt: ${loveSituationLead(situation)} most a ${card.keywords[0].toLowerCase()} minőségét taníthatja. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
 }
 
 function loveSituationFallback(
@@ -254,12 +255,12 @@ function loveSituationFallback(
     return `${lead} azt mutathatja, hogy te most a ${card.keywords[0].toLowerCase()} minőségén keresztül érkezel ebbe a kapcsolódásba. ${card.love}`;
   }
   if (position === "between") {
-    return `${lead} köztetek most nem kész választ, hanem tükröt ad: a ${card.name} szerint ez a helyzet a ${card.keywords[0].toLowerCase()} témáját hozhatja felszínre. ${card.love}`;
+    return `${lead} köztetek most nem kész választ, hanem tükröt ad: ${withHungarianArticle(card.name)} szerint ez a helyzet a ${card.keywords[0].toLowerCase()} témáját hozhatja felszínre. ${card.love}`;
   }
   if (position === "them") {
     return `${lead} arra is rávilágíthat, milyen minőséget érzékelsz a másik oldaláról. A ${card.name} itt óvatosan, nem biztos állításként mutat irányt: ${card.love}`;
   }
-  return `${lead} most ezt taníthatja: a ${card.name} szerint a ${card.keywords[0].toLowerCase()} minősége lesz az, amit érdemes észrevenned. ${card.love}`;
+  return `${lead} most ezt taníthatja: ${withHungarianArticle(card.name)} szerint a ${card.keywords[0].toLowerCase()} minősége lesz az, amit érdemes észrevenned. ${card.love}`;
 }
 
 function loveSituationLead(situation: string): string {

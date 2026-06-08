@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/rolunk")({
   head: () => ({
@@ -31,8 +32,10 @@ export const Route = createFileRoute("/rolunk")({
           irányt mutatunk.
         </Section>
         <Section eyebrow="Jogi tudnivalók">
-          A Jövőd.hu szórakoztató és önismereti célú tartalom. Nem orvosi, jogi, pénzügyi vagy
-          pszichológiai tanácsadás.
+          <p>{ENTERTAINMENT_DISCLAIMER}</p>
+          <p className="text-base text-ivory/60">
+            Üzemeltető: {SITE_LEGAL.operator.shortName}. Kapcsolat: {SITE_LEGAL.supportEmail}.
+          </p>
         </Section>
       </div>
     </Layout>

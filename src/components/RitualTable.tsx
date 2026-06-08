@@ -7,6 +7,7 @@ import { CardFace } from "./TarotCard";
 import { type TarotCard } from "@/data/cards";
 import { saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
+import { withHungarianArticle } from "@/lib/huGrammar";
 import { roxyNumerologyChart, roxyNumerologyCompatibility } from "@/lib/roxy.functions";
 import {
   normalizeRoxyChart,
@@ -177,7 +178,7 @@ function RandiInline() {
 }
 
 function datingInlineAnswer(situation: string, card: TarotCard): string {
-  return `${datingSituationLead(situation)} most nem kész választ ad, hanem tükröt: a ${card.name} szerint a ${card.keywords[0].toLowerCase()} minősége lehet az, amit ebben a kapcsolódásban észre kell venned. ${card.love}`;
+  return `${datingSituationLead(situation)} most nem kész választ ad, hanem tükröt: ${withHungarianArticle(card.name)} szerint a ${card.keywords[0].toLowerCase()} minősége lehet az, amit ebben a kapcsolódásban észre kell venned. ${card.love}`;
 }
 
 function datingInlineWarning(situation: string, card: TarotCard): string {
@@ -297,7 +298,7 @@ function DontesInline() {
 }
 
 function decisionInlineAnswer(question: string, card: TarotCard): string {
-  return `A „${question.trim()}” kérdésre a ${card.name} nem kész választ ad, hanem irányt: most a ${card.keywords[0].toLowerCase()} minősége mutathatja meg, merre tisztul benned a döntés. Érdemes lehet azt figyelned, hogy a választás mögött valódi belső igen van-e, vagy inkább csak sürgetés.`;
+  return `A „${question.trim()}” kérdésre ${withHungarianArticle(card.name)} nem kész választ ad, hanem irányt: most a ${card.keywords[0].toLowerCase()} minősége mutathatja meg, merre tisztul benned a döntés. Érdemes lehet azt figyelned, hogy a választás mögött valódi belső igen van-e, vagy inkább csak sürgetés.`;
 }
 
 function decisionInlineWarning(question: string, card: TarotCard): string {

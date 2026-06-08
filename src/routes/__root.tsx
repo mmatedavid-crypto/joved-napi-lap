@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SITE_LEGAL } from "../lib/legal";
 
 const SITE_URL = "https://jovod.hu";
 const BRAND_NAME = "Jövőd.hu";
@@ -24,16 +25,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Az oldal nem található</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Lehet, hogy a keresett oldal elköltözött, vagy már nem elérhető.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Vissza a főoldalra
           </Link>
         </div>
       </div>
@@ -52,10 +53,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Ez az oldal most nem töltött be
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Valami megakadt nálunk. Próbáld újra, vagy térj vissza a főoldalra.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -65,13 +66,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Újrapróbálom
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Főoldal
           </a>
         </div>
       </div>
@@ -146,10 +147,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: BRAND_NAME,
+          name: SITE_LEGAL.operator.name,
+          alternateName: BRAND_NAME,
+          legalName: SITE_LEGAL.operator.name,
           url: SITE_URL,
           logo: BRAND_LOGO_URL,
           image: BRAND_OG_IMAGE_URL,
+          taxID: SITE_LEGAL.operator.taxNumber,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Ady Endre utca 11.",
+            postalCode: "2636",
+            addressLocality: "Tésa",
+            addressCountry: "HU",
+          },
+          email: SITE_LEGAL.supportEmail,
           sameAs: [],
         }),
       },
@@ -165,7 +177,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           description: SITE_DESCRIPTION,
           publisher: {
             "@type": "Organization",
-            name: BRAND_NAME,
+            name: SITE_LEGAL.operator.name,
+            alternateName: BRAND_NAME,
             logo: {
               "@type": "ImageObject",
               url: BRAND_LOGO_URL,

@@ -7,6 +7,7 @@ import { CardBack, CardFace } from "@/components/TarotCard";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { withHungarianArticle } from "@/lib/huGrammar";
 
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
@@ -228,5 +229,5 @@ function HaromLap() {
 }
 
 function threeCardQuestionFallback(question: string, card: TarotCard, category: string): string {
-  return `A kérdésedre a ${card.name} azt mutatja, hogy a ${category} témájában most nem a gyors lezárás, hanem a jelen helyzet pontosabb érzékelése visz közelebb. A válasz inkább abban látszik, hogy ${card.keywords[0].toLowerCase()} minősége támogat-e vagy feszít benned.`;
+  return `A kérdésedre ${withHungarianArticle(card.name)} azt mutatja, hogy a ${category} témájában most nem a gyors lezárás, hanem a jelen helyzet pontosabb érzékelése visz közelebb. A válasz inkább abban látszik, hogy ${card.keywords[0].toLowerCase()} minősége támogat-e vagy feszít benned.`;
 }

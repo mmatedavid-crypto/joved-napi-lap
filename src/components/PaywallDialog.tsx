@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   Dialog,
   DialogContent,
@@ -29,6 +30,7 @@ export function PaywallDialog({
   const { user } = useAuth();
   const [email, setEmail] = useState(user?.email ?? "");
   const [express, setExpress] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
   if (!product) return null;
@@ -41,7 +43,10 @@ export function PaywallDialog({
       open={open}
       onOpenChange={(o) => {
         onOpenChange(o);
-        if (!o) setConfirmed(false);
+        if (!o) {
+          setConfirmed(false);
+          setTermsAccepted(false);
+        }
       }}
     >
       <DialogContent className="max-w-lg bg-[oklch(0.12_0.03_290)] border-[oklch(0.78_0.10_80/0.25)] text-ivory">
@@ -94,8 +99,28 @@ export function PaywallDialog({
               </label>
             )}
 
+            <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Elfogadom az{" "}
+                <Link to="/aszf" className="text-gold hover:text-gold/80">
+                  ÁSZF-et
+                </Link>
+                , az{" "}
+                <Link to="/adatkezelesi-tajekoztato" className="text-gold hover:text-gold/80">
+                  adatkezelési tájékoztatót
+                </Link>{" "}
+                és kérem a digitális tartalom teljesítésének megkezdését a fizetés után.
+              </span>
+            </label>
+
             <button
-              disabled={!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
+              disabled={!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !termsAccepted}
               onClick={() => setConfirmed(true)}
               className="w-full btn-gold"
             >

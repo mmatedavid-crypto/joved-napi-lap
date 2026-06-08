@@ -31,6 +31,10 @@ const STATIC_PATHS = [
   "/alomfejtes",
   "/kristaly",
   "/rolunk",
+  "/impresszum",
+  "/aszf",
+  "/adatkezelesi-tajekoztato",
+  "/elallasi-tajekoztato",
 ] as const;
 
 export const Route = createFileRoute("/sitemap.xml")({
