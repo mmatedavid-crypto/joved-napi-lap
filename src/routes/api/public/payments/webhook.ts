@@ -41,7 +41,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     return;
   }
 
-  const newStatus = existing.category === "instant" ? "processing" : "paid";
+  const newStatus = "processing";
 
   // Late-bind: a deliver_by-t a tényleges fizetés időpontjától számoljuk.
   const { data: full } = await supabase
@@ -66,16 +66,14 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     })
     .eq("id", existing.id);
 
-  // Instant rendelésekhez: szerveroldalon is elindítjuk az AI feldolgozást,
+  // Szerveroldalon is elindítjuk az olvasat elkészítését,
   // hogy ne csak a köszönő-oldal polling indítsa el (ha a vásárló bezárja a tabot).
-  if (existing.category === "instant") {
-    try {
-      const { processOrder } = await import("@/lib/payments.functions");
-      // Tűzd-és-felejtsd: a vásárló köszönő-oldala újra meghívja idempotensen.
-      processOrder({ data: { sessionId } }).catch((e) => console.error("processOrder failed:", e));
-    } catch (e) {
-      console.error("processOrder import failed:", e);
-    }
+  try {
+    const { processOrder } = await import("@/lib/payments.functions");
+    // Tűzd-és-felejtsd: a vásárló köszönő-oldala újra meghívja idempotensen.
+    processOrder({ data: { sessionId } }).catch((e) => console.error("processOrder failed:", e));
+  } catch (e) {
+    console.error("processOrder import failed:", e);
   }
 }
 
