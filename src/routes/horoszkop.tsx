@@ -1,7 +1,12 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
-import { allHoroscopeArticlePaths, HOROSCOPE_PERIODS, PERIOD_LABEL } from "@/lib/horoscopeNews";
+import {
+  allHoroscopeArticlePaths,
+  HOROSCOPE_PERIODS,
+  PERIOD_LABEL,
+  periodDateLabel,
+} from "@/lib/horoscopeNews";
 
 export const Route = createFileRoute("/horoszkop")({
   head: () => ({
@@ -46,7 +51,7 @@ function HoroszkopIndex() {
           <section key={period} className="space-y-4">
             <div>
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
-                {PERIOD_LABEL[period]}
+                {PERIOD_LABEL[period]} · {periodDateLabel(period)}
               </div>
               <h2 className="font-display text-2xl md:text-3xl text-ivory mt-1">
                 {PERIOD_LABEL[period]} csillagjegyek szerint
@@ -63,6 +68,9 @@ function HoroszkopIndex() {
                   >
                     <span className="font-display text-xl text-ivory">{p.signName}</span>
                     <span className="block text-sm text-ivory/55 mt-1">{PERIOD_LABEL[period]}</span>
+                    <span className="block text-sm text-ivory/55 mt-0.5">
+                      {periodDateLabel(period)}
+                    </span>
                   </Link>
                 ))}
             </div>

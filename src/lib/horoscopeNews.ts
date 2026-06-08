@@ -35,6 +35,35 @@ export const PERIOD_LABEL: Record<HoroscopePeriodHU, string> = {
   havi: "Havi horoszkóp",
 };
 
+const DATE_FORMAT = new Intl.DateTimeFormat("hu-HU", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const MONTH_FORMAT = new Intl.DateTimeFormat("hu-HU", {
+  year: "numeric",
+  month: "long",
+});
+
+function mondayOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay() || 7;
+  d.setDate(d.getDate() - day + 1);
+  return d;
+}
+
+export function periodDateLabel(period: HoroscopePeriodHU, baseDate = new Date()): string {
+  if (period === "havi") return MONTH_FORMAT.format(baseDate);
+  if (period === "heti") {
+    const start = mondayOfWeek(baseDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    return `${DATE_FORMAT.format(start)} - ${DATE_FORMAT.format(end)}`;
+  }
+  return DATE_FORMAT.format(baseDate);
+}
+
 export type HoroscopeNewsSection = {
   heading: string;
   text: string;

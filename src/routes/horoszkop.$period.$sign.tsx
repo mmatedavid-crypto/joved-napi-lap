@@ -5,6 +5,7 @@ import {
   PERIOD_LABEL,
   SIGN_BY_SLUG,
   horoscopeArticlePath,
+  periodDateLabel,
   type HoroscopePeriodHU,
 } from "@/lib/horoscopeNews";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
@@ -44,7 +45,7 @@ function HoroscopeArticlePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-4 pb-20">
       <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)] text-center">
-        {PERIOD_LABEL[article.period]} · {article.signName}
+        {PERIOD_LABEL[article.period]} · {article.signName} · {periodDateLabel(article.period)}
       </div>
       <h1 className="font-display text-4xl md:text-5xl text-ivory leading-[1.1] text-center mt-3">
         {article.title}
@@ -54,7 +55,6 @@ function HoroscopeArticlePage() {
       </p>
 
       <div className="flex flex-wrap justify-center gap-2 text-xs text-ivory/55 mt-6">
-        <span>{article.dateKey}</span>
         {article.moonPhase && <span>Hold: {article.moonPhase}</span>}
         {article.luckyColor && <span>Szín: {article.luckyColor}</span>}
         {article.luckyNumber != null && <span>Szám: {article.luckyNumber}</span>}
