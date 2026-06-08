@@ -88,6 +88,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#181126" },
       { name: "application-name", content: BRAND_NAME },
       { name: "apple-mobile-web-app-title", content: BRAND_NAME },
+      {
+        name: "google-site-verification",
+        content: "V36Zfy13SRBnVwyLGXY20HLeJOA9IbWsKDUC4l7rvX4",
+      },
       { title: "Jövőd.hu — Húzz egy lapot, mielőtt döntesz" },
       {
         name: "description",
