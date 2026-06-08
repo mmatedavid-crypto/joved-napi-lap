@@ -29,7 +29,7 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
       <LegalSection title="Teljesítés megkezdése">
         <p>
           A fizetés megkezdése előtt a felhasználó elfogadja, hogy a szolgáltatás teljesítése a
-          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése vagy kiküldése már
+          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése és megjelenítése már
           megtörtént, az elállási jog a vonatkozó szabályok szerint korlátozott lehet.
         </p>
       </LegalSection>

@@ -299,7 +299,7 @@ function Page() {
             </button>
             <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
               <div className="text-sm text-ivory/70 mb-2">
-                Komplex döntéselőkészítő elemzés emailben?
+                Komplex döntéselőkészítő elemzést kérsz?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
                 {productCtaLabel("Komplex elemzés", "dontes_komplex")}
