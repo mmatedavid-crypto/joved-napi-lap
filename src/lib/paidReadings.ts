@@ -191,8 +191,10 @@ function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
 
 function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
   const dreamText = text(input.text);
+  const emotion = text(input.emotion);
   const slug = dreamTextToSlug(dreamText);
   const meaning = dreamMeaning(slug) ?? dreamMeaning("water")!;
+  const feeling = dreamEmotionLabel(emotion);
   return renderReading({
     title: `${meaning.title} · álomfejtés`,
     sections: [
@@ -200,8 +202,8 @@ function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
       {
         heading: "Mi dolgozhat mögötte?",
         text: dreamText
-          ? `A leírásod alapján nem egyetlen jóslatot keresünk, hanem azt, milyen érzés maradt meg az álomból. Ez a szimbólum inkább azt mutathatja, hol kér figyelmet egy belső téma.`
-          : "Az álom akkor válik beszédessé, ha nem csak a képet, hanem az ébredés utáni érzést is figyeled.",
+          ? `A leírásod alapján nem egyetlen jóslatot keresünk, hanem azt, milyen érzés maradt meg az álomból. A ${feeling} különösen fontos jel: ez mutatja, hogy a szimbólum nem kívülről üzen, hanem egy belső feszültséghez vagy vágyhoz kapcsolódik.`
+          : `Az álom akkor válik beszédessé, ha nem csak a képet, hanem az ébredés utáni érzést is figyeled. Most a ${feeling} adja a legerősebb kulcsot.`,
       },
       { heading: "Mire kérdez rá?", text: meaning.notice },
       {
@@ -221,6 +223,23 @@ function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
     safetyNote: "Ez önismereti álomértelmezés, nem diagnózis vagy mentális egészségügyi tanács.",
     meta: { fallbackUsed: true, readingType: "paid:dream" },
   });
+}
+
+function dreamEmotionLabel(emotion: string): string {
+  switch (emotion) {
+    case "fear":
+      return "félelem";
+    case "desire":
+      return "vágy";
+    case "uncertain":
+      return "bizonytalanság";
+    case "calm":
+      return "nyugalom";
+    case "recurring":
+      return "visszatérő álom";
+    default:
+      return "megmaradt érzés";
+  }
 }
 
 function premiumCompatibility(input: Record<string, unknown>): PaidReadingPayload {
@@ -263,16 +282,20 @@ export function composePaidOrderReading(
   if (productSlug === "alomfejtes_rovid") return premiumDream(input);
   if (productSlug === "horoszkop_szemelyre") return premiumDailyCompass(input);
   if (productSlug === "harom_lap_mely" || productSlug === "kelta_kereszt") {
+    const question = text(input.question) || text(input.q);
+    const category = text(input.category) || "általános élethelyzet";
     const reading = composeThreeCardTarot({
       readingType: "3 lapos húzás",
       cards: cardsFromPayload(input, 3),
-      question: text(input.question) || text(input.q),
-      category: text(input.category) || "általános élethelyzet",
+      question,
+      category,
     });
     reading.sections.push(
       {
         heading: "A mélyebb réteg",
-        text: "A három lap nem csak eseményívet mutat, hanem azt is, hogyan reagálsz a helyzetre. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.",
+        text: question
+          ? `A „${question}” kérdésben a három lap nem csak eseményívet mutat, hanem azt is, hogyan reagálsz a ${category} helyzetére. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.`
+          : "A három lap nem csak eseményívet mutat, hanem azt is, hogyan reagálsz a helyzetre. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.",
       },
       {
         heading: "Következő belső lépés",
@@ -282,16 +305,18 @@ export function composePaidOrderReading(
     return renderReading(reading);
   }
   if (productSlug === "dontes_komplex") {
+    const question = text(input.q) || text(input.question) || "Merre mozduljak?";
+    const category = text(input.cat) || text(input.category) || "döntés előtt";
     const reading = composeThreeCardTarot({
       readingType: "Döntés előtt",
       cards: cardsFromPayload(input, 3),
-      question: text(input.q) || text(input.question) || "Merre mozduljak?",
-      category: text(input.cat) || text(input.category) || "döntés előtt",
+      question,
+      category,
     });
     reading.sections.push(
       {
         heading: "Mit tisztít a döntés?",
-        text: "Ez az olvasat nem azt mondja meg, melyik opció a helyes. Inkább azt mutatja, melyik választás mögött van valódi belső igen, és melyik mögött csak sürgetés, félelem vagy megfelelés. A döntés minősége fontosabb, mint a sebessége.",
+        text: `A „${question}” kérdésben ez az olvasat nem azt mondja meg, melyik opció a helyes. Inkább azt mutatja, hogy a ${category} témájában melyik választás mögött van valódi belső igen, és melyik mögött csak sürgetés, félelem vagy megfelelés. A döntés minősége fontosabb, mint a sebessége.`,
       },
       {
         heading: "Mikor ne lépj még?",

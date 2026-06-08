@@ -275,6 +275,11 @@ function Page() {
               )}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
+              {q.trim() && (
+                <Section eyebrow="A kérdésed felől" title={`„${q.trim()}”`}>
+                  {ichingQuestionReflection(q, cat, hex.name)}
+                </Section>
+              )}
               <Section eyebrow="A jel">{hex.name}</Section>
               <Section eyebrow="Mit mutat a helyzetben?">{hex.m.show}</Section>
               <Section eyebrow="Mire figyelmeztet?">{hex.m.warn}</Section>
@@ -332,4 +337,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function decisionQuestionFallback(question: string, card: TarotCard, category: string): string {
   return `A „${question}” kérdésre ${withHungarianArticle(card.name)} nem parancsot ad, hanem szempontot: a ${category} témájában akkor mozdulj, ha a döntés mögött nem csak sürgetés, hanem belső tisztaság is van. Ha a kérdésre gondolva inkább szűkületet érzel, érdemes lehet még egy kicsit várni vagy pontosítani a feltételeket.`;
+}
+
+function ichingQuestionReflection(question: string, category: string, hexName: string): string {
+  return `A „${question}” kérdésben a ${hexName} jele nem azt mondja meg, mit kell tenned. Inkább azt mutatja, hogy a ${category} témájában milyen mozgás érett meg, és hol lenne korai erőltetni a választ. Akkor használd jól ezt a jelet, ha a döntés feltételeit tisztítod vele, nem bizonyosságot próbálsz kicsikarni belőle.`;
 }

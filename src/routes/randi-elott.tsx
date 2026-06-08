@@ -177,6 +177,9 @@ function Page() {
                   {reading?.questionAnswer ?? loveQuestionFallback(q, cards[cards.length - 1], sit)}
                 </Section>
               )}
+              <Section eyebrow="A helyzet szerint">
+                {loveStatusReflection(sit, q, cards[cards.length - 1])}
+              </Section>
               {cards.length === 3 ? (
                 <>
                   <Section eyebrow="Te" title={cards[0].name}>
@@ -244,6 +247,31 @@ function F({ label, children }: { label: string; children: React.ReactNode }) {
 
 function loveQuestionFallback(question: string, card: TarotCard, situation: string): string {
   return `A „${question}” kérdésre ${withHungarianArticle(card.name)} nem biztos választ ad, inkább irányt: ${loveSituationLead(situation)} most a ${card.keywords[0].toLowerCase()} minőségét taníthatja. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
+}
+
+function loveStatusReflection(situation: string, question: string, card: TarotCard): string {
+  const keyword = card.keywords[0].toLowerCase();
+  if (situation === "ex / visszatérő történet") {
+    return `Ex vagy visszatérő történetnél a valódi kérdés ritkán csak az, hogy visszajön-e. A ${card.name} inkább azt mutatja, milyen minőségben térhet vissza ez a kapcsolat: ${keyword} formájában. Rövid visszacsúszásra utalhat, ha csak a hiány, nosztalgia vagy megszokás mozdítja meg. Tartósabb irány akkor látszik, ha a visszatérés mellett tisztább szándék, következetesebb jelenlét és másfajta felelősség is megjelenik.`;
+  }
+  if (situation === "nem ír vissza") {
+    return `A csend most nem bizonyíték arra, hogy mit érez, inkább azt mutatja, hogyan hat rád a bizonytalanság. A ${card.name} arra kérhet, hogy ne csak az üzenetet várd, hanem figyeld meg: ebben a várakozásban te mennyire maradsz önmagadnál.`;
+  }
+  if (situation === "randi előtt") {
+    return `Ez a randi most nem vizsga, hanem találkozási pont. A ${card.name} szerint azt érdemes figyelned, hogy a ${keyword} minősége oldottabbá tesz-e köztetek valamit, vagy inkább szerepbe kényszerít.`;
+  }
+  if (situation === "randi után") {
+    return `Ez a találkozó utólag nem csak abból olvasható, mit mondott a másik. A ${card.name} inkább azt kérdezi: a testedben több nyugalom vagy több feszültség maradt utána?`;
+  }
+  if (situation === "most ismerkedünk") {
+    return `Ismerkedésnél a kezdeti szikra mellett a tempó számít. A ${card.name} azt mutathatja, hogy a ${keyword} minősége akkor jó jel, ha nem csak egyszeri intenzitásként, hanem ismétlődő figyelemként is megjelenik.`;
+  }
+  if (situation === "nem tudom, mit akar") {
+    return `Ha nem látod, mit akar, ez a lap nem helyette mond választ. Inkább azt mutatja, hogy a ${keyword} körül hol homályosodik el a helyzet, és mit kellene tisztábban látnod, mielőtt még többet beleteszel.`;
+  }
+  return question.trim()
+    ? `A megadott kérdésedhez ez a helyzet a ${keyword} minőségén keresztül kapcsolódik.`
+    : `Ez a helyzet most a ${keyword} minőségét teszi láthatóvá.`;
 }
 
 function loveSituationFallback(

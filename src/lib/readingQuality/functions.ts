@@ -220,6 +220,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       requiredSections: [
         "Összeillés",
         "A kapcsolat alapmintája",
+        "A helyzet szerint",
         "Miért erős köztetek?",
         "Hol akadhattok el?",
         "Kommunikáció",

@@ -20,6 +20,7 @@ const demoPayloads: Record<string, Record<string, unknown>> = {
   kristaly_ai: { mode: "month", month: 2, crystal: "Ametiszt" },
   alomfejtes_rovid: {
     text: "Egy régi házban jártam, víz folyt a lépcsőkön, és kerestem egy szobát.",
+    emotion: "fear",
   },
   horoszkop_szemelyre: { name: "Dávid", sign: "Bak", personalYear: 8 },
   extra_huzas: { cardName: "Az Erő", question: "Mi a következő jó lépés?" },
@@ -44,8 +45,8 @@ const demoPayloads: Record<string, Record<string, unknown>> = {
     hisName: "Nagy Péter",
     myDob: "1992-04-17",
     hisDob: "1990-01-14",
-    sit: "most ismerkedünk",
-    q: "Lehet ebből valódi kapcsolat?",
+    sit: "ex / visszatérő történet",
+    q: "Visszajön, és ha igen, maradni is tud?",
   },
   szammisztika_eletut: { name: "Kovács Éva Anna", dob: "1988-11-29" },
 };
@@ -116,7 +117,7 @@ const freeReadings = [
         birthDateB: "1990-01-14",
         fullNameA: "Kovács Anna",
         fullNameB: "Nagy Péter",
-        status: "most ismerkedünk",
+        status: "ex / visszatérő történet",
       }),
     ),
   },
@@ -134,8 +135,63 @@ const freeReadings = [
   ),
 );
 
-console.log(JSON.stringify({ paid, free: freeReadings }, null, 2));
-const failed = [...paid, ...freeReadings].filter((item) => !item.ok);
+const contextChecks = [
+  {
+    name: "context:paid_dream_emotion",
+    body: composePaidOrderReading(
+      "alomfejtes_rovid",
+      "Álomfejtés — rövid olvasat",
+      demoPayloads.alomfejtes_rovid,
+    ).body,
+    required: ["félelem"],
+  },
+  {
+    name: "context:paid_decision_question",
+    body: composePaidOrderReading(
+      "dontes_komplex",
+      "Döntés előtt — komplex elemzés",
+      demoPayloads.dontes_komplex,
+    ).body,
+    required: ["Elfogadjam az új munkalehetőséget", "munka"],
+  },
+  {
+    name: "context:paid_ex_return",
+    body: composePaidOrderReading(
+      "parkapcsolat_elemzes",
+      "Párkapcsolat — mély elemzés",
+      demoPayloads.parkapcsolat_elemzes,
+    ).body,
+    required: ["visszatér", "rövid", "tartós"],
+  },
+  {
+    name: "context:free_ex_return",
+    body: textFromReading(
+      composeCompatibilityReading(
+        calculateCompatibilityProfile({
+          birthDateA: "1992-04-17",
+          birthDateB: "1990-01-14",
+          fullNameA: "Kovács Anna",
+          fullNameB: "Nagy Péter",
+          status: "ex / visszatérő történet",
+        }),
+      ),
+    ),
+    required: ["visszatér", "rövid", "tartós"],
+  },
+].map((item) => {
+  const lower = item.body.toLocaleLowerCase("hu-HU");
+  const missing = item.required.filter((word) => !lower.includes(word.toLocaleLowerCase("hu-HU")));
+  return {
+    name: item.name,
+    title: item.name,
+    chars: item.body.length,
+    ok: missing.length === 0,
+    issues: missing.map((word) => `hiányzó kontextus: ${word}`),
+  };
+});
+
+console.log(JSON.stringify({ paid, free: freeReadings, context: contextChecks }, null, 2));
+const failed = [...paid, ...freeReadings, ...contextChecks].filter((item) => !item.ok);
 if (failed.length) {
   console.error("\nFailed quality audit:");
   for (const item of failed) console.error(`- ${item.name}: ${item.issues.join("; ")}`);

@@ -68,6 +68,7 @@ export function composeCompatibilityReading(profile: CompatibilityProfile): Qual
         text: `A ${profile.personA.lifePathNumber}-es és ${profile.personB.lifePathNumber}-es sorsszám találkozása nem csak százalék: az egyik ritmus ${a.title.toLocaleLowerCase("hu-HU")} minőséget, a másik ${b.title.toLocaleLowerCase("hu-HU")} minőséget hoz. A ${profile.score}% inkább azt jelzi, mennyire könnyen találtok közös tempót.`,
       },
       { heading: "A kapcsolat alapmintája", text: `${rel.meaning} ${nameLine}` },
+      { heading: "A helyzet szerint", text: statusText(profile.status, profile.score) },
       { heading: "Miért erős köztetek?", text: pair.works },
       { heading: "Hol akadhattok el?", text: pair.tension },
       {
@@ -97,7 +98,7 @@ export function composeCompatibilityReading(profile: CompatibilityProfile): Qual
       },
       { heading: "Mire kell figyelni?", text: pair.advice },
     ],
-    oneSentence: `Kettőtök dinamikája akkor erős, ha nem ugyanolyanná akartok válni, hanem közös tempót találtok.`,
+    oneSentence: oneSentenceForStatus(profile.status),
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: "compatibility" },
   };
@@ -108,6 +109,38 @@ export function composeCompatibilityReading(profile: CompatibilityProfile): Qual
   ]);
   reading.meta = { ...reading.meta, qualityIssues: guard.issues };
   return reading;
+}
+
+export function statusText(status: string | undefined, score: number): string {
+  const normalized = (status ?? "").toLocaleLowerCase("hu-HU");
+  if (normalized.includes("ex") || normalized.includes("visszatér")) {
+    const tone =
+      score >= 70
+        ? "van még köztetek felismerhető kapcsolódási erő"
+        : "a vonzás visszahúzhat, de a régi feszültség is könnyen újraindulhat";
+    return `Ex vagy visszatérő történetként ezt nem egyszerű igen-nem kérdésként érdemes olvasni. Inkább azt mutatja, hogy ${tone}. Ha újra megjelenik, a kérdés nem csak az, marad-e, hanem hogy más mintával érkezik-e vissza. Rövid fellángolás akkor valószínűbb, ha ugyanaz a bizonytalanság, csend vagy kontrollhelyzet ismétlődik. Tartósabb irányt az jelezhet, ha a visszatérés mellett tisztább szándék, következetesebb jelenlét és konkrétabb felelősség is megjelenik.`;
+  }
+  if (normalized.includes("ismerked")) {
+    return "Új vagy alakuló ismeretségnél a százalék nem ígéret, hanem induló ritmus. Itt az számít, hogy a kezdeti kíváncsiság mellett megjelenik-e következetesség is: nem csak jó beszélgetések, hanem visszatérő figyelem, tiszta tempó és valódi érdeklődés.";
+  }
+  if (normalized.includes("kapcsolatban")) {
+    return "Már meglévő kapcsolatnál ez az olvasat nem a kezdeti szikrát méri, hanem azt, hogyan bírjátok a hétköznapi közelséget. A fontos kérdés az, hogy a különbségeitek fárasztanak-e, vagy idővel megtanultatok belőlük közös nyelvet építeni.";
+  }
+  if (normalized.includes("házasság") || normalized.includes("hosszú")) {
+    return "Hosszú távú vagy házassági helyzetben a kapcsolat nem attól erős, hogy nincs feszültség, hanem attól, hogy van-e közös tartás, amikor a romantikus könnyedség kevesebb. Itt a stabilitás, felelősség és szabadság aránya a kulcs.";
+  }
+  return "A megadott kapcsolati helyzet alapján ezt nem általános összeillésként érdemes olvasni, hanem annak jelzéseként, hogy ebben az életszakaszban milyen tempót, közelséget és biztonságot tudtok egymásnak adni.";
+}
+
+function oneSentenceForStatus(status: string | undefined): string {
+  const normalized = (status ?? "").toLocaleLowerCase("hu-HU");
+  if (normalized.includes("ex") || normalized.includes("visszatér")) {
+    return "A visszatérés értéke nem abban látszik, hogy újra megjelenik-e, hanem abban, hogy ugyanazt a történetet hozza-e vissza.";
+  }
+  if (normalized.includes("ismerked")) {
+    return "Ez az ismerkedés akkor mélyülhet, ha a kíváncsiság mellett ritmus és következetesség is megjelenik.";
+  }
+  return "Kettőtök dinamikája akkor erős, ha nem ugyanolyanná akartok válni, hanem közös tempót találtok.";
 }
 
 function metricText(value: number, label: string): string {

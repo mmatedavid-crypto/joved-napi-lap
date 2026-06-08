@@ -749,6 +749,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
         utmutato: isDailySingle
           ? "Mai lap: a lap minőségét a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe."
           : "A lap jelentését a megadott helyzetre vagy kérdésre alkalmazd. Ne általános kártyaleírást írj.",
+        helyzetiSzabaly:
+          "Ha van konkrét kérdés vagy kategória, válaszolj rá érdemben. Ex / visszatérő történetnél érintsd, hogy visszatérés esetén mi mutat rövid fellángolást és mi mutat tartósabb szándékot, de ne mondd biztosra, hogy visszajön vagy marad. Randi/ismerkedés esetén a találkozó vagy ismerkedés tanítására és tempójára reflektálj.",
         forditottSzabaly:
           "Ha forditott=true, a lap blokkolt vagy túltolt oldalát olvasd. Nem kell kimondani, hogy fordított.",
       };

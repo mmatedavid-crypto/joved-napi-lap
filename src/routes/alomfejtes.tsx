@@ -36,6 +36,8 @@ const EMOTIONS = [
   { v: "other", l: "egyéb" },
 ] as const;
 
+const EMOTION_LABEL: Record<string, string> = Object.fromEntries(EMOTIONS.map((e) => [e.v, e.l]));
+
 function Page() {
   const call = useServerFn(aiDreamHU);
   const [text, setText] = useState("");
@@ -175,6 +177,9 @@ function Page() {
                 <Section eyebrow="Mit hozhat felszínre?">{result.surface}</Section>
               )}
               {result.notice && <Section eyebrow="Mire figyelhetsz?">{result.notice}</Section>}
+              <Section eyebrow="A te álmodban">
+                {dreamContextReflection(text, emotion, result.title)}
+              </Section>
               <Section eyebrow="Nem jóslat, inkább belső tükör">
                 Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó
                 szerint venni.
@@ -198,8 +203,29 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="alomfejtes_rovid"
         sourceRoute="/alomfejtes"
-        inputPayload={result ? { title: result.title, text } : { text }}
+        inputPayload={result ? { title: result.title, text, emotion } : { text, emotion }}
       />
     </Layout>
   );
+}
+
+function dreamContextReflection(text: string, emotion: string, symbolTitle: string): string {
+  const trimmed = text.trim();
+  const feeling = EMOTION_LABEL[emotion] ?? "az ébredés utáni érzés";
+  const base = trimmed
+    ? `A leírásodban a ${symbolTitle.toLocaleLowerCase("hu-HU")} nem önmagában fontos, hanem azzal együtt, hogy ${feeling} maradt körülötte.`
+    : `A ${symbolTitle.toLocaleLowerCase("hu-HU")} most leginkább azon keresztül olvasható, hogy ${feeling} kapcsolódott hozzá.`;
+  if (emotion === "recurring") {
+    return `${base} Visszatérő álomnál nem az a fő kérdés, hogy “mit jósol”, hanem hogy milyen élethelyzet után jön elő újra ugyanaz a kép. Figyeld meg, milyen döntés, hiány vagy kimondatlan feszültség előzi meg.`;
+  }
+  if (emotion === "fear") {
+    return `${base} Félelemmel kísért álomnál a kép gyakran felnagyít valamit, amit ébren próbálsz kontroll alatt tartani. Nem kell szó szerint venni, inkább azt érdemes nézni, hol érzed most kevésnek a biztonságot.`;
+  }
+  if (emotion === "desire") {
+    return `${base} Vágyhoz kötött álomnál a jel arra mutathat, mihez szeretnél közelebb kerülni, de még nem biztos, hogy tisztán ki mered mondani.`;
+  }
+  if (emotion === "uncertain") {
+    return `${base} Bizonytalanság esetén az álom inkább kérdést hagy maga után: melyik részét próbálod gyorsan megfejteni, pedig valójában időt kérne?`;
+  }
+  return `${base} Ezt belső tükörként érdemes olvasni: mi volt az a részlet, amelyik ébredés után is veled maradt, és hol kapcsolódik a mostani napjaidhoz?`;
 }
