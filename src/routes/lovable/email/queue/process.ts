@@ -11,12 +11,23 @@ const DEFAULT_TRANSACTIONAL_TTL_MINUTES = 60;
 type EmailQueueMessage = {
   msg_id: number;
   read_ct?: number | null;
+  enqueued_at?: string | null;
   message: Record<string, unknown> & {
     message_id?: unknown;
     label?: unknown;
     to?: unknown;
     created_at?: unknown;
     template_name?: unknown;
+    queued_at?: unknown;
+    run_id?: unknown;
+    from?: unknown;
+    sender_domain?: unknown;
+    subject?: unknown;
+    html?: unknown;
+    text?: unknown;
+    purpose?: unknown;
+    idempotency_key?: unknown;
+    unsubscribe_token?: unknown;
   };
 };
 
@@ -185,7 +196,10 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
             // Drop expired messages (TTL exceeded).
             // Prefer payload.queued_at when present; fall back to PGMQ's enqueued_at
             // which is always set by the queue.
-            const queuedAt = payload.queued_at ?? msg.enqueued_at;
+            const queuedAt =
+              (typeof payload.queued_at === "string" ? payload.queued_at : undefined) ??
+              msg.enqueued_at ??
+              undefined;
             if (queuedAt) {
               const ageMs = Date.now() - new Date(queuedAt).getTime();
               const maxAgeMs = ttlMinutes[queue] * 60 * 1000;
@@ -250,18 +264,18 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
             try {
               await sendLovableEmail(
                 {
-                  run_id: payload.run_id,
-                  to: payload.to,
-                  from: payload.from,
-                  sender_domain: payload.sender_domain,
-                  subject: payload.subject,
-                  html: payload.html,
-                  text: payload.text,
-                  purpose: payload.purpose,
-                  label: payload.label,
-                  idempotency_key: payload.idempotency_key,
-                  unsubscribe_token: payload.unsubscribe_token,
-                  message_id: payload.message_id,
+                  run_id: payload.run_id as string | undefined,
+                  to: payload.to as string,
+                  from: payload.from as string,
+                  sender_domain: payload.sender_domain as string | undefined,
+                  subject: payload.subject as string,
+                  html: payload.html as string,
+                  text: payload.text as string,
+                  purpose: payload.purpose as string | undefined,
+                  label: payload.label as string | undefined,
+                  idempotency_key: payload.idempotency_key as string | undefined,
+                  unsubscribe_token: payload.unsubscribe_token as string | undefined,
+                  message_id: payload.message_id as string | undefined,
                 },
                 { apiKey, sendUrl: process.env.LOVABLE_SEND_URL },
               );

@@ -64,6 +64,7 @@ function Page() {
 
   useEffect(() => {
     if (!cards) return;
+    const cardsLocal = cards;
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
@@ -80,8 +81,8 @@ function Page() {
       }
       return aiReading({
         data: {
-          spread: cards.length === 3 ? "love-3" : "love-1",
-          cards: cards.map((c, i) => ({
+          spread: cardsLocal.length === 3 ? "love-3" : "love-1",
+          cards: cardsLocal.map((c, i) => ({
             id: c.id,
             name: c.name,
             keywords: c.keywords,
