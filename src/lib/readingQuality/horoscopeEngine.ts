@@ -36,6 +36,14 @@ export function composeHoroscopeReading(opts: {
       { heading: "Szerelem", text: local.love },
       { heading: "Munka", text: local.work },
       { heading: "Mire figyelj?", text: local.warn },
+      {
+        heading: "A jegyed mai mintája",
+        text: `A ${signName} számára ez a nap akkor lesz tisztább, ha nem mindent teljesítményként vagy visszajelzésként mér. A ${tension} most finoman megmutathatja, hol szorítasz rá valamire, amit elég lenne pontosabban időzíteni.`,
+      },
+      {
+        heading: "Egy apró irány",
+        text: "Válassz egyetlen helyzetet, ahol ma nem automatikusan reagálsz. Ha egy pillanattal később válaszolsz, könnyebb lesz észrevenni, mi a saját szándékod, és mi csak megszokott védekezés.",
+      },
     ],
     oneSentence: local.oneLine,
     safetyNote: SAFETY_NOTE,

@@ -19,15 +19,47 @@ export async function aiJSON<T>(opts: {
   schemaName?: string;
   schema?: Record<string, unknown>;
   model?: string;
+  openaiModel?: string;
+  lovableModel?: string;
+  providerPreference?: "lovable_first" | "openai_first";
   readingType?: string;
 }): Promise<AiResult<T>> {
   const started = Date.now();
-  // 1) Elsődleges: Lovable AI Gateway (alapból openai/gpt-5.5 — ez a felhasználó
-  //    által elfogadott "gpt-5.5 stílus", és a Lovable workspace creditből
-  //    fizetjük, nem a saját OpenAI-fiókból).
+  const preference = opts.providerPreference ?? "lovable_first";
+  const openaiModel = opts.openaiModel ?? opts.model ?? OPENAI_MODEL;
+  const lovableModel = opts.lovableModel ?? opts.model ?? LOVABLE_MODEL;
+
+  if (preference === "openai_first") {
+    const openaiKey = process.env.OPENAI_API_KEY;
+    if (openaiKey) {
+      const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model: openaiModel });
+      if (r.ok) {
+        logAiCall({
+          provider: "openai",
+          model: openaiModel,
+          ok: true,
+          started,
+          readingType: opts.readingType,
+          fallbackUsed: false,
+        });
+        return r;
+      }
+      logAiCall({
+        provider: "openai",
+        model: openaiModel,
+        ok: false,
+        started,
+        readingType: opts.readingType,
+        fallbackUsed: true,
+      });
+    }
+  }
+
+  // Lovable AI Gateway (alapból openai/gpt-5.5). Ez marad az elsődleges
+  // útvonal azoknál az olvasatoknál, ahol nincs külön prémium preferencia.
   const lovableKey = process.env.LOVABLE_API_KEY;
   if (lovableKey) {
-    const primaryModel = opts.model ?? LOVABLE_MODEL;
+    const primaryModel = lovableModel;
     const r = await lovableJSON<T>({ ...opts, apiKey: lovableKey, model: primaryModel });
     if (r.ok) {
       logAiCall({
@@ -62,10 +94,10 @@ export async function aiJSON<T>(opts: {
     }
   }
 
-  // 2) Másodlagos: közvetlen OpenAI hívás (ha van saját kulcs)
+  // Másodlagos: közvetlen OpenAI hívás (ha van saját kulcs)
   const openaiKey = process.env.OPENAI_API_KEY;
   if (openaiKey) {
-    const model = opts.model ?? OPENAI_MODEL;
+    const model = openaiModel;
     const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model });
     logAiCall({
       provider: "openai",

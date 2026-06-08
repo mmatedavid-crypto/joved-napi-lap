@@ -66,7 +66,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     })
     .eq("id", existing.id);
 
-  // Szerveroldalon is elindítjuk az olvasat elkészítését,
+  // Fizetett rendelésekhez: szerveroldalon is elindítjuk az olvasat feldolgozását,
   // hogy ne csak a köszönő-oldal polling indítsa el (ha a vásárló bezárja a tabot).
   try {
     const { processOrder } = await import("@/lib/payments.functions");

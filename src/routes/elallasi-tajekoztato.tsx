@@ -21,16 +21,17 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
     >
       <LegalSection title="Digitális tartalom">
         <p>
-          A Jövőd.hu fizetős olvasatai digitális tartalmak. A sikeres fizetés után az olvasat
-          automatikusan készül el, és a köszönőoldalon jelenik meg.
+          A Jövőd.hu fizetős olvasatai digitális tartalmak. Az olvasatok a sikeres fizetés után
+          automatikusan készülnek el, és a rendelési oldalon vagy a felhasználói profilban érhetők
+          el.
         </p>
       </LegalSection>
 
       <LegalSection title="Teljesítés megkezdése">
         <p>
           A fizetés megkezdése előtt a felhasználó elfogadja, hogy a szolgáltatás teljesítése a
-          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése és megjelenítése már
-          megtörtént, az elállási jog a vonatkozó szabályok szerint korlátozott lehet.
+          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése és megjelenítése
+          már megtörtént, az elállási jog a vonatkozó szabályok szerint korlátozott lehet.
         </p>
       </LegalSection>
 

@@ -111,7 +111,9 @@ function Page() {
 
             {order.status !== "delivered" && order.status !== "failed" && (
               <Section eyebrow="Készítjük">
-                A személyes olvasatod itt jelenik meg ezen az oldalon, amint elkészült.
+                A személyes olvasatod itt jelenik meg ezen az oldalon, amint elkészült. Ha az oldal
+                nem frissül pár percen belül, írj nekünk a rendelés email címéről
+                {order.guest_email ? ` (${order.guest_email})` : ""}, és utánanézünk.
               </Section>
             )}
 

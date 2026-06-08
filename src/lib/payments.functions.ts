@@ -167,7 +167,7 @@ export const getMyOrders = createServerFn({ method: "GET" })
     return { orders: data ?? [] };
   });
 
-// Generálja a megvásárolt olvasat tartalmát Lovable AI-val és megjelöli a rendelést "delivered"-ként.
+// Generálja a fizetett olvasat tartalmát és megjelöli a rendelést "delivered"-ként.
 // Idempotens: ha már delivered, nem fut újra.
 export const processOrder = createServerFn({ method: "POST" })
   .inputValidator((data: { sessionId: string }) => {
@@ -179,7 +179,9 @@ export const processOrder = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: order } = await supabaseAdmin
       .from("orders")
-      .select("id, product_slug, product_name, category, status, input_payload, user_id, guest_email")
+      .select(
+        "id, product_slug, product_name, category, status, input_payload, user_id, guest_email",
+      )
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
     if (!order) return { ok: false, error: "Rendelés nem található" };
@@ -192,48 +194,23 @@ export const processOrder = createServerFn({ method: "POST" })
     await supabaseAdmin.from("orders").update({ status: "processing" }).eq("id", order.id);
 
     try {
-      const apiKey = process.env.LOVABLE_API_KEY;
-      if (!apiKey) throw new Error("LOVABLE_API_KEY hiányzik");
-
-      const lengthRule =
-        order.category === "instant"
-          ? "Adj 4-6 mondatos olvasatot."
-          : "Adj részletes, tagolt, 900-1400 szavas írott elemzést, finom alcímekkel és gyakorlati lezárással.";
-      const system = `Te egy magyar tarot, asztrológia és numerológia mester vagy. Válaszolj melegen, csendesen — Roxy stílusban. Mindig magyarul. ${lengthRule}`;
-      const user = `Termék: ${order.product_name}\nFelhasználói input: ${JSON.stringify(order.input_payload ?? {}, null, 2)}\n\nKészíts egy személyre szabott olvasatot. JSON formátumban válaszolj: { "title": "...", "body": "..." }`;
-
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: system },
-            { role: "user", content: user },
-          ],
-          response_format: { type: "json_object" },
-        }),
+      const { generatePaidOrderReading } = await import("./paidReadings.server");
+      const reading = await generatePaidOrderReading({
+        productSlug: order.product_slug,
+        productName: order.product_name,
+        inputPayload: order.input_payload,
       });
-      if (!res.ok) throw new Error(`AI hiba: ${res.status}`);
-      const json = await res.json();
-      const content = json.choices?.[0]?.message?.content ?? "{}";
-      let parsed: { title?: string; body?: string };
-      try {
-        parsed = JSON.parse(content);
-      } catch {
-        parsed = { body: content };
-      }
 
       await supabaseAdmin
         .from("orders")
         .update({
           status: "delivered",
-          response_payload: parsed as never,
+          response_payload: reading as never,
           delivered_at: new Date().toISOString(),
         })
         .eq("id", order.id);
 
-      return { ok: true, response: parsed };
+      return { ok: true, response: reading };
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
       await supabaseAdmin
