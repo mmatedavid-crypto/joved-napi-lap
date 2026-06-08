@@ -34,6 +34,7 @@ import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezele
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 import { Route as HoroszkopPeriodSignRouteImport } from './routes/horoszkop.$period.$sign'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
@@ -161,6 +162,12 @@ const HoroszkopPeriodSignRoute = HoroszkopPeriodSignRouteImport.update({
   path: '/$period/$sign',
   getParentRoute: () => HoroszkopRoute,
 } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -195,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -223,6 +231,7 @@ export interface FileRoutesByTo {
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -252,6 +261,7 @@ export interface FileRoutesById {
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
+    | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
+    | '/lovable/email/queue/process'
   id:
     | '__root__'
     | '/'
@@ -338,6 +350,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
+    | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,6 +379,7 @@ export interface RootRouteChildren {
   SzammisztikaRoute: typeof SzammisztikaRoute
   DevRoxyRoute: typeof DevRoxyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -545,6 +559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HoroszkopPeriodSignRouteImport
       parentRoute: typeof HoroszkopRoute
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -593,6 +614,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzammisztikaRoute: SzammisztikaRoute,
   DevRoxyRoute: DevRoxyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
