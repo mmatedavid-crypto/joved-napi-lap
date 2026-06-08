@@ -7,6 +7,8 @@ import {
   horoscopeArticlePath,
   periodDateLabel,
   type HoroscopePeriodHU,
+  type HoroscopeNewsArticle,
+  type HoroscopeNewsSection,
 } from "@/lib/horoscopeNews";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
@@ -37,7 +39,7 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
 });
 
 function HoroscopeArticlePage() {
-  const article = Route.useLoaderData();
+  const article = Route.useLoaderData() as HoroscopeNewsArticle;
   const siblingSigns = SIGNS_HU_ORDERED.map((sign) => ({
     sign,
     name: SIGN_HU[sign],
@@ -63,7 +65,7 @@ function HoroscopeArticlePage() {
       </div>
 
       <div className="mt-10 space-y-5">
-        {article.sections.map((section) => (
+        {article.sections.map((section: HoroscopeNewsSection) => (
           <Section key={section.heading} eyebrow={section.heading}>
             <p>{section.text}</p>
           </Section>
