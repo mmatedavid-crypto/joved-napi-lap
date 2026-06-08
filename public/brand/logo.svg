@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Jövőd.hu">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#181126"/>
+      <stop offset="1" stop-color="#0d0a16"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="120" y1="72" x2="392" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2d39a"/>
+      <stop offset=".52" stop-color="#d4a866"/>
+      <stop offset="1" stop-color="#9f733d"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="118" y="66" width="276" height="380" rx="30" fill="#181126" stroke="url(#gold)" stroke-width="14"/>
+  <path d="M176 202c52-76 108-76 160 0v126c-54-32-106-32-160 0V202Z" fill="none" stroke="url(#gold)" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="256" cy="201" r="13" fill="url(#gold)"/>
+  <path d="M235 250a35 35 0 1 0 56 30" fill="none" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M209 369h94M195 399h122M183 429h146" stroke="url(#gold)" stroke-width="10" stroke-linecap="round"/>
+</svg>

@@ -13,7 +13,13 @@ export const Route = createFileRoute("/robots.txt")({
       GET: async ({ request }) => {
         const origin = originFromRequest(request);
         return new Response(
-          ["User-agent: *", "Allow: /", `Sitemap: ${origin}/sitemap-news.xml`, ""].join("\n"),
+          [
+            "User-agent: *",
+            "Allow: /",
+            `Sitemap: ${origin}/sitemap.xml`,
+            `Sitemap: ${origin}/sitemap-news.xml`,
+            "",
+          ].join("\n"),
           {
             headers: {
               "Content-Type": "text/plain; charset=utf-8",

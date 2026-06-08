@@ -1,0 +1,19 @@
+{
+  "name": "Jövőd.hu",
+  "short_name": "Jövőd",
+  "description": "Magyar tarot, számmisztika, horoszkóp és önismereti olvasatok.",
+  "lang": "hu",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d0a16",
+  "theme_color": "#181126",
+  "icons": [
+    {
+      "src": "/brand/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

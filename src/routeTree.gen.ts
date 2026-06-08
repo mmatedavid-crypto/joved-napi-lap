@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapNewsDotxmlRouteImport } from './routes/sitemap-news[.]xml'
 import { Route as RolunkRouteImport } from './routes/rolunk'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
@@ -34,6 +35,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
   path: '/szammisztika',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapNewsDotxmlRoute = SitemapNewsDotxmlRouteImport.update({
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/rolunk'
     | '/sitemap-news.xml'
+    | '/sitemap.xml'
     | '/szammisztika'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/rolunk'
     | '/sitemap-news.xml'
+    | '/sitemap.xml'
     | '/szammisztika'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/rolunk'
     | '/sitemap-news.xml'
+    | '/sitemap.xml'
     | '/szammisztika'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RolunkRoute: typeof RolunkRoute
   SitemapNewsDotxmlRoute: typeof SitemapNewsDotxmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
   DevRoxyRoute: typeof DevRoxyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       path: '/szammisztika'
       fullPath: '/szammisztika'
       preLoaderRoute: typeof SzammisztikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-news.xml': {
@@ -485,6 +505,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   RolunkRoute: RolunkRoute,
   SitemapNewsDotxmlRoute: SitemapNewsDotxmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SzammisztikaRoute: SzammisztikaRoute,
   DevRoxyRoute: DevRoxyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

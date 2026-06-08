@@ -12,6 +12,13 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+const SITE_URL = "https://jovod.hu";
+const BRAND_NAME = "Jövőd.hu";
+const SITE_DESCRIPTION =
+  "Magyar tarot, számmisztika, horoszkóp és önismereti olvasatok egy csendes napi rituáléhoz.";
+const BRAND_LOGO_URL = `${SITE_URL}/brand/logo.svg`;
+const BRAND_OG_IMAGE_URL = `${SITE_URL}/brand/og-image.svg`;
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -77,39 +84,51 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#181126" },
+      { name: "application-name", content: BRAND_NAME },
+      { name: "apple-mobile-web-app-title", content: BRAND_NAME },
       { title: "Jövőd.hu — Húzz egy lapot, mielőtt döntesz" },
       {
         name: "description",
-        content:
-          "Húzz napi tarot lapot, nézd meg a sorsszámod, vagy teszteld, összeilletek-e. Magyar nyelvű tarot, számmisztika és párkapcsolati útmutató a Jövőd.hu-n.",
+        content: SITE_DESCRIPTION,
       },
       { name: "author", content: "Jövőd.hu" },
+      { property: "og:site_name", content: BRAND_NAME },
       { property: "og:title", content: "Jövőd.hu — Húzz egy lapot, mielőtt döntesz" },
       {
         property: "og:description",
-        content:
-          "Húzz napi tarot lapot, nézd meg a sorsszámod, vagy teszteld, összeilletek-e. Magyar nyelvű tarot, számmisztika és párkapcsolati útmutató a Jövőd.hu-n.",
+        content: SITE_DESCRIPTION,
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:url", content: SITE_URL },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Jövőd.hu — Húzz egy lapot, mielőtt döntesz" },
       {
         name: "twitter:description",
-        content:
-          "Húzz napi tarot lapot, nézd meg a sorsszámod, vagy teszteld, összeilletek-e. Magyar nyelvű tarot, számmisztika és párkapcsolati útmutató a Jövőd.hu-n.",
+        content: SITE_DESCRIPTION,
       },
       {
         property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/23cb0dfe-3163-45f4-9729-ef3ceedb7b7f/id-preview-5b7db5bd--d502d229-99d2-4393-b21e-bc7ed9e96c6b.lovable.app-1780732632878.png",
+        content: BRAND_OG_IMAGE_URL,
       },
+      { property: "og:image:type", content: "image/svg+xml" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Jövőd.hu logó és márkakép" },
       {
         name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/23cb0dfe-3163-45f4-9729-ef3ceedb7b7f/id-preview-5b7db5bd--d502d229-99d2-4393-b21e-bc7ed9e96c6b.lovable.app-1780732632878.png",
+        content: BRAND_OG_IMAGE_URL,
+      },
+      {
+        name: "twitter:image:alt",
+        content: "Jövőd.hu logó és márkakép",
       },
     ],
     links: [
+      { rel: "canonical", href: SITE_URL },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/brand/logo.svg" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -122,6 +141,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: BRAND_NAME,
+          url: SITE_URL,
+          logo: BRAND_LOGO_URL,
+          image: BRAND_OG_IMAGE_URL,
+          sameAs: [],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: BRAND_NAME,
+          alternateName: "Jövőd",
+          url: SITE_URL,
+          inLanguage: "hu-HU",
+          description: SITE_DESCRIPTION,
+          publisher: {
+            "@type": "Organization",
+            name: BRAND_NAME,
+            logo: {
+              "@type": "ImageObject",
+              url: BRAND_LOGO_URL,
+            },
+          },
+        }),
+      },
       {
         src: "https://plausible.io/js/pa-jERW-QPOefpKPqQ3v5Mwk.js",
         async: true,
