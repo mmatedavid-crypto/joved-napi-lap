@@ -34,6 +34,7 @@ function MaiLap() {
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [alreadyDrawnToday, setAlreadyDrawnToday] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   useEffect(() => {
@@ -43,6 +44,7 @@ function MaiLap() {
       setCard(c);
       setReversed(stored.reversed === true);
       setRevealed(true);
+      setAlreadyDrawnToday(true);
     }
   }, []);
 
@@ -127,6 +129,11 @@ function MaiLap() {
             </div>
             {revealed && (
               <div className="space-y-4">
+                {alreadyDrawnToday && (
+                  <div className="rounded-md border border-[oklch(0.78_0.10_80/0.25)] bg-[oklch(0.78_0.10_80/0.06)] px-3 py-2 text-xs text-ivory/70 font-editorial italic">
+                    Ma már húztál lapot. Egy nap egy lap — így marad tiszta az üzenet. Holnap új lap vár.
+                  </div>
+                )}
                 <div>
                   <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
                     A mai lapod
