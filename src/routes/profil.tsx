@@ -6,7 +6,11 @@ import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { getMyOrders } from "@/lib/payments.functions";
 import { formatHuf } from "@/lib/products";
-import { getMyReadingMemoryOverview, type ReadingMemory } from "@/lib/readingMemory.functions";
+import {
+  getMyReadingMemoryOverview,
+  type ReadingMemory,
+  type ReadingMemoryInsights,
+} from "@/lib/readingMemory.functions";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
@@ -46,6 +50,7 @@ function Page() {
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [memories, setMemories] = useState<ReadingMemory[]>([]);
   const [themeSummary, setThemeSummary] = useState("");
+  const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
 
   useEffect(() => {
@@ -64,6 +69,7 @@ function Page() {
       .then((r) => {
         setMemories(r.memories ?? []);
         setThemeSummary(r.themeSummary ?? "");
+        setInsights(r.insights ?? null);
         setMemoriesLoading(false);
       })
       .catch(() => setMemoriesLoading(false));
@@ -91,6 +97,22 @@ function Page() {
           {!memoriesLoading && memories.length > 0 && (
             <div className="space-y-4">
               {themeSummary && <p className="font-editorial text-ivory/75">{themeSummary}</p>}
+              {insights && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <MemoryInsightCard eyebrow="Heti ív" text={insights.weeklySummary} />
+                  <MemoryInsightCard eyebrow="Havi ív" text={insights.monthlySummary} />
+                  <MemoryInsightCard
+                    eyebrow="Miben kérdezel újra?"
+                    text={insights.recurringQuestion}
+                  />
+                  <MemoryInsightCard eyebrow="Mi változott?" text={insights.changeSinceLast} />
+                </div>
+              )}
+              {insights?.gentleNudge && (
+                <p className="rounded-md border border-gold/20 bg-gold/10 px-4 py-3 text-sm text-ivory/75">
+                  {insights.gentleNudge}
+                </p>
+              )}
               <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
                 {memories.slice(0, 6).map((memory) => (
                   <li key={memory.id} className="py-3">
@@ -150,5 +172,14 @@ function Page() {
         </button>
       </div>
     </Layout>
+  );
+}
+
+function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {
+  return (
+    <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/15 p-4">
+      <div className="text-[11px] uppercase tracking-[0.18em] text-gold/70">{eyebrow}</div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/72">{text}</p>
+    </div>
   );
 }

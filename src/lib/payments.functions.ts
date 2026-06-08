@@ -285,6 +285,67 @@ function withMemoryContext(payload: unknown, memoryContext: string): unknown {
   return { ...(payload as Record<string, unknown>), memoryContext };
 }
 
+type PaidMemoryRow = {
+  reading_type: string;
+  topic: string | null;
+  question: string | null;
+  situation: string | null;
+  title: string | null;
+  summary: string;
+  one_sentence: string | null;
+  anchors: string[];
+  created_at: string;
+};
+
+function recentPaidMemories(memories: PaidMemoryRow[], days: number): PaidMemoryRow[] {
+  const since = Date.now() - days * 24 * 60 * 60 * 1000;
+  return memories.filter((memory) => new Date(memory.created_at).getTime() >= since);
+}
+
+function topPaidAnchors(memories: PaidMemoryRow[], limit = 3): string[] {
+  const counts = new Map<string, number>();
+  for (const anchor of memories.flatMap((memory) => memory.anchors ?? [])) {
+    const clean = anchor.trim();
+    if (clean.length > 1) counts.set(clean, (counts.get(clean) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([anchor]) => anchor);
+}
+
+function buildPaidMemoryArc(memories: PaidMemoryRow[]): string[] {
+  const weekly = recentPaidMemories(memories, 7);
+  const monthly = recentPaidMemories(memories, 30);
+  const weeklyThemes = topPaidAnchors(weekly);
+  const monthlyThemes = topPaidAnchors(monthly);
+  const latest = memories[0];
+  const previous = memories[1];
+  const lines = [
+    weekly.length
+      ? `Heti minta: ${weekly.length} korábbi olvasat, fő motívumok: ${weeklyThemes.join(", ") || "még szórt témák"}.`
+      : "Heti minta: még nincs elég friss olvasat.",
+    monthly.length
+      ? `Havi ív: ${monthly.length} olvasat, visszatérő motívumok: ${monthlyThemes.join(", ") || "még alakuló fókusz"}.`
+      : "Havi ív: még nincs elég adat.",
+  ];
+  if (latest && previous) {
+    const overlap = (latest.anchors ?? []).filter((anchor) =>
+      (previous.anchors ?? []).includes(anchor),
+    );
+    if (overlap.length) {
+      lines.push(
+        `Változás a múltkorihoz képest: más kérdésben is visszajön ez: ${overlap.slice(0, 2).join(", ")}.`,
+      );
+    } else {
+      lines.push(
+        "Változás a múltkorihoz képest: a fókusz elmozdult, ne kezeld ugyanannak a helyzetnek.",
+      );
+    }
+  }
+  return lines;
+}
+
 async function loadPaidMemoryContext(
   userId: string,
   productSlug: string,
@@ -300,14 +361,20 @@ async function loadPaidMemoryContext(
       )
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(20);
     if (!data?.length) return "";
-    const lines = data.map((memory) => {
+    const memories = data as PaidMemoryRow[];
+    const lines = memories.slice(0, 6).map((memory) => {
       const label = memory.topic || memory.situation || memory.reading_type;
       return `${label}: ${memory.one_sentence || memory.summary}`;
     });
     const anchorLine = anchors.length ? `Aktuális kulcsok: ${anchors.join(", ")}` : "";
-    return ["Korábbi felhasználói minták a prémium olvasathoz:", anchorLine, ...lines]
+    return [
+      "Korábbi felhasználói minták a prémium olvasathoz:",
+      anchorLine,
+      ...buildPaidMemoryArc(memories),
+      ...lines,
+    ]
       .filter(Boolean)
       .join("\n");
   } catch {
