@@ -159,7 +159,7 @@ function Page() {
             </Section>
             <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
               <div className="text-sm text-ivory/70 mb-2">
-                Teljes numerológiai életút elemzést kérsz emailben?
+                Teljes numerológiai életút elemzést kérsz?
               </div>
               <button className="btn-gold" onClick={() => setPaywall(true)}>
                 {productCtaLabel("Életút elemzés", "szammisztika_eletut")}

@@ -167,7 +167,7 @@ export const getMyOrders = createServerFn({ method: "GET" })
     return { orders: data ?? [] };
   });
 
-// Generálja az instant olvasat tartalmát Lovable AI-val és megjelöli a rendelést "delivered"-ként.
+// Generálja a megvásárolt olvasat tartalmát Lovable AI-val és megjelöli a rendelést "delivered"-ként.
 // Idempotens: ha már delivered, nem fut újra.
 export const processOrder = createServerFn({ method: "POST" })
   .inputValidator((data: { sessionId: string }) => {
@@ -184,8 +184,6 @@ export const processOrder = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!order) return { ok: false, error: "Rendelés nem található" };
     if (order.status === "delivered") return { ok: true, alreadyDone: true };
-    if (order.category !== "instant")
-      return { ok: false, error: "Csak az azonnali rendelés dolgozható fel itt" };
     if (order.status !== "paid" && order.status !== "processing") {
       return { ok: false, error: "Még nincs kifizetve" };
     }
@@ -197,8 +195,11 @@ export const processOrder = createServerFn({ method: "POST" })
       const apiKey = process.env.LOVABLE_API_KEY;
       if (!apiKey) throw new Error("LOVABLE_API_KEY hiányzik");
 
-      const system =
-        "Te egy magyar tarot, asztrológia és numerológia mester vagy. Válaszolj röviden, melegen, csendesen — Roxy stílusban. Mindig magyarul. Adj 4-6 mondatos olvasatot.";
+      const lengthRule =
+        order.category === "instant"
+          ? "Adj 4-6 mondatos olvasatot."
+          : "Adj részletes, tagolt, 900-1400 szavas írott elemzést, finom alcímekkel és gyakorlati lezárással.";
+      const system = `Te egy magyar tarot, asztrológia és numerológia mester vagy. Válaszolj melegen, csendesen — Roxy stílusban. Mindig magyarul. ${lengthRule}`;
       const user = `Termék: ${order.product_name}\nFelhasználói input: ${JSON.stringify(order.input_payload ?? {}, null, 2)}\n\nKészíts egy személyre szabott olvasatot. JSON formátumban válaszolj: { "title": "...", "body": "..." }`;
 
       const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -231,32 +232,6 @@ export const processOrder = createServerFn({ method: "POST" })
           delivered_at: new Date().toISOString(),
         })
         .eq("id", order.id);
-
-      // Best-effort: send "megrendelésed elkészült" email. Never block delivery on email failure.
-      try {
-        const { enqueueTransactionalEmail, resolveOrderRecipientEmail } = await import(
-          "@/lib/email/sendTransactional.server"
-        );
-        const recipient = await resolveOrderRecipientEmail({
-          user_id: order.user_id,
-          guest_email: order.guest_email,
-        });
-        if (recipient) {
-          await enqueueTransactionalEmail({
-            templateName: "order-delivered",
-            recipientEmail: recipient,
-            idempotencyKey: `order-delivered-${order.id}`,
-            templateData: {
-              productName: order.product_name,
-              title: parsed.title,
-              body: parsed.body,
-              orderId: order.id,
-            },
-          });
-        }
-      } catch (emailErr) {
-        console.error("order-delivered email enqueue failed:", emailErr);
-      }
 
       return { ok: true, response: parsed };
     } catch (e: unknown) {

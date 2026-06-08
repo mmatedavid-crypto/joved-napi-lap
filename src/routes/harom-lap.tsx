@@ -202,9 +202,7 @@ function HaromLap() {
                 Új húzás
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
-                <div className="text-sm text-ivory/70 mb-2">
-                  Részletes, írott elemzést kérsz emailben?
-                </div>
+                <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz?</div>
                 <button className="btn-gold" onClick={() => setPaywall(true)}>
                   {productCtaLabel("Három lap — mély elemzés", "harom_lap_mely")}
                 </button>

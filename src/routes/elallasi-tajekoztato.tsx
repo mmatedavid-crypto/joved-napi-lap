@@ -21,22 +21,22 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
     >
       <LegalSection title="Digitális tartalom">
         <p>
-          A Jövőd.hu fizetős olvasatai digitális tartalmak. Az azonnali olvasatok a sikeres fizetés
-          után automatikusan készülnek el, a hosszabb olvasatok pedig emailben kerülnek kiküldésre.
+          A Jövőd.hu fizetős olvasatai digitális tartalmak. A sikeres fizetés után az olvasat
+          automatikusan készül el, és a köszönőoldalon jelenik meg.
         </p>
       </LegalSection>
 
       <LegalSection title="Teljesítés megkezdése">
         <p>
           A fizetés megkezdése előtt a felhasználó elfogadja, hogy a szolgáltatás teljesítése a
-          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése vagy kiküldése már
+          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése és megjelenítése már
           megtörtént, az elállási jog a vonatkozó szabályok szerint korlátozott lehet.
         </p>
       </LegalSection>
 
       <LegalSection title="Hibás teljesítés vagy technikai gond">
         <p>
-          Ha a fizetés sikeres volt, de az olvasat nem érkezett meg, nem nyílt meg, vagy nyilvánvaló
+          Ha a fizetés sikeres volt, de az olvasat nem jelent meg, nem nyílt meg, vagy nyilvánvaló
           technikai hiba történt, írj erre a címre:{" "}
           <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
             {SITE_LEGAL.supportEmail}
