@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
+import { Route as SorsszamKalkulatorRouteImport } from './routes/sorsszam-kalkulator'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapNewsDotxmlRouteImport } from './routes/sitemap-news[.]xml'
 import { Route as RolunkRouteImport } from './routes/rolunk'
@@ -28,7 +30,9 @@ import { Route as ElallasiTajekoztatoRouteImport } from './routes/elallasi-tajek
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
 import { Route as AszfRouteImport } from './routes/aszf'
+import { Route as AngyalszamJelenteseRouteImport } from './routes/angyalszam-jelentese'
 import { Route as AngyalszamRouteImport } from './routes/angyalszam'
+import { Route as AlomfejtesJelentesRouteImport } from './routes/alomfejtes-jelentes'
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezelesi-tajekoztato'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,9 +41,19 @@ import { Route as HoroszkopPeriodSignRouteImport } from './routes/horoszkop.$per
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
+  id: '/tarot-napi-lap',
+  path: '/tarot-napi-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
   path: '/szammisztika',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SorsszamKalkulatorRoute = SorsszamKalkulatorRouteImport.update({
+  id: '/sorsszam-kalkulator',
+  path: '/sorsszam-kalkulator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -132,9 +146,19 @@ const AszfRoute = AszfRouteImport.update({
   path: '/aszf',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AngyalszamJelenteseRoute = AngyalszamJelenteseRouteImport.update({
+  id: '/angyalszam-jelentese',
+  path: '/angyalszam-jelentese',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AngyalszamRoute = AngyalszamRouteImport.update({
   id: '/angyalszam',
   path: '/angyalszam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlomfejtesJelentesRoute = AlomfejtesJelentesRouteImport.update({
+  id: '/alomfejtes-jelentes',
+  path: '/alomfejtes-jelentes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlomfejtesRoute = AlomfejtesRouteImport.update({
@@ -179,7 +203,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
+  '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
+  '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -198,7 +224,9 @@ export interface FileRoutesByFullPath {
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -208,7 +236,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
+  '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
+  '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -227,7 +257,9 @@ export interface FileRoutesByTo {
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -238,7 +270,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
+  '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
+  '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -257,7 +291,9 @@ export interface FileRoutesById {
   '/rolunk': typeof RolunkRoute
   '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
@@ -269,7 +305,9 @@ export interface FileRouteTypes {
     | '/'
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
+    | '/alomfejtes-jelentes'
     | '/angyalszam'
+    | '/angyalszam-jelentese'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -288,7 +326,9 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/sitemap-news.xml'
     | '/sitemap.xml'
+    | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/tarot-napi-lap'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
@@ -298,7 +338,9 @@ export interface FileRouteTypes {
     | '/'
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
+    | '/alomfejtes-jelentes'
     | '/angyalszam'
+    | '/angyalszam-jelentese'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -317,7 +359,9 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/sitemap-news.xml'
     | '/sitemap.xml'
+    | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/tarot-napi-lap'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
@@ -327,7 +371,9 @@ export interface FileRouteTypes {
     | '/'
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
+    | '/alomfejtes-jelentes'
     | '/angyalszam'
+    | '/angyalszam-jelentese'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -346,7 +392,9 @@ export interface FileRouteTypes {
     | '/rolunk'
     | '/sitemap-news.xml'
     | '/sitemap.xml'
+    | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/tarot-napi-lap'
     | '/dev/roxy'
     | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
@@ -357,7 +405,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdatkezelesiTajekoztatoRoute: typeof AdatkezelesiTajekoztatoRoute
   AlomfejtesRoute: typeof AlomfejtesRoute
+  AlomfejtesJelentesRoute: typeof AlomfejtesJelentesRoute
   AngyalszamRoute: typeof AngyalszamRoute
+  AngyalszamJelenteseRoute: typeof AngyalszamJelenteseRoute
   AszfRoute: typeof AszfRoute
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
@@ -376,7 +426,9 @@ export interface RootRouteChildren {
   RolunkRoute: typeof RolunkRoute
   SitemapNewsDotxmlRoute: typeof SitemapNewsDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SorsszamKalkulatorRoute: typeof SorsszamKalkulatorRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
+  TarotNapiLapRoute: typeof TarotNapiLapRoute
   DevRoxyRoute: typeof DevRoxyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -384,11 +436,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tarot-napi-lap': {
+      id: '/tarot-napi-lap'
+      path: '/tarot-napi-lap'
+      fullPath: '/tarot-napi-lap'
+      preLoaderRoute: typeof TarotNapiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/szammisztika': {
       id: '/szammisztika'
       path: '/szammisztika'
       fullPath: '/szammisztika'
       preLoaderRoute: typeof SzammisztikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sorsszam-kalkulator': {
+      id: '/sorsszam-kalkulator'
+      path: '/sorsszam-kalkulator'
+      fullPath: '/sorsszam-kalkulator'
+      preLoaderRoute: typeof SorsszamKalkulatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -517,11 +583,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AszfRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/angyalszam-jelentese': {
+      id: '/angyalszam-jelentese'
+      path: '/angyalszam-jelentese'
+      fullPath: '/angyalszam-jelentese'
+      preLoaderRoute: typeof AngyalszamJelenteseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/angyalszam': {
       id: '/angyalszam'
       path: '/angyalszam'
       fullPath: '/angyalszam'
       preLoaderRoute: typeof AngyalszamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alomfejtes-jelentes': {
+      id: '/alomfejtes-jelentes'
+      path: '/alomfejtes-jelentes'
+      fullPath: '/alomfejtes-jelentes'
+      preLoaderRoute: typeof AlomfejtesJelentesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/alomfejtes': {
@@ -592,7 +672,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdatkezelesiTajekoztatoRoute: AdatkezelesiTajekoztatoRoute,
   AlomfejtesRoute: AlomfejtesRoute,
+  AlomfejtesJelentesRoute: AlomfejtesJelentesRoute,
   AngyalszamRoute: AngyalszamRoute,
+  AngyalszamJelenteseRoute: AngyalszamJelenteseRoute,
   AszfRoute: AszfRoute,
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
@@ -611,7 +693,9 @@ const rootRouteChildren: RootRouteChildren = {
   RolunkRoute: RolunkRoute,
   SitemapNewsDotxmlRoute: SitemapNewsDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SorsszamKalkulatorRoute: SorsszamKalkulatorRoute,
   SzammisztikaRoute: SzammisztikaRoute,
+  TarotNapiLapRoute: TarotNapiLapRoute,
   DevRoxyRoute: DevRoxyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
@@ -619,3 +703,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -5,12 +5,21 @@ import {
   PERIOD_LABEL,
   SIGN_BY_SLUG,
   horoscopeArticlePath,
+  horoscopeSeoDescription,
+  horoscopeSeoTitle,
   periodDateLabel,
   type HoroscopePeriodHU,
   type HoroscopeNewsArticle,
   type HoroscopeNewsSection,
 } from "@/lib/horoscopeNews";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
+
+const SITE_URL = "https://jovod.hu";
+
+function articleDateTime(period: HoroscopePeriodHU, dateKey: string): string {
+  const dayKey = period === "havi" ? `${dateKey}-01` : dateKey;
+  return `${dayKey}T06:00:00+00:00`;
+}
 
 export const Route = createFileRoute("/horoszkop/$period/$sign")({
   loader: async ({ params }) => {
@@ -22,19 +31,84 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
       signSlug: params.sign,
     });
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.title ?? "Horoszkóp"} | Jövőd.hu` },
-      { name: "description", content: loaderData?.lead ?? "" },
-      { property: "og:title", content: loaderData?.title ?? "" },
-      { property: "og:description", content: loaderData?.lead ?? "" },
-      { property: "og:type", content: "article" },
-      { name: "robots", content: loaderData?.fallbackUsed ? "noindex,follow" : "index,follow" },
-    ],
-    links: loaderData
-      ? [{ rel: "canonical", href: `/horoszkop/${loaderData.period}/${loaderData.signSlug}` }]
-      : [],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData) {
+      return {
+        meta: [
+          { title: "Horoszkóp | Jövőd.hu" },
+          { name: "description", content: "Friss napi, heti és havi horoszkóp magyarul." },
+          { name: "robots", content: "index,follow" },
+        ],
+        links: [],
+      };
+    }
+    const canonicalPath = `/horoszkop/${loaderData.period}/${loaderData.signSlug}`;
+    const title = horoscopeSeoTitle(loaderData.period, loaderData.signName);
+    const description = horoscopeSeoDescription(loaderData.period, loaderData.signName);
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+    const articleDate = articleDateTime(loaderData.period, loaderData.dateKey);
+    return {
+      meta: [
+        { title: `${title} | Jövőd.hu` },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: canonicalUrl },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "robots", content: loaderData.fallbackUsed ? "noindex,follow" : "index,follow" },
+      ],
+      links: [{ rel: "canonical", href: canonicalPath }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            headline: title,
+            description,
+            url: canonicalUrl,
+            inLanguage: "hu-HU",
+            datePublished: articleDate,
+            dateModified: articleDate,
+            isAccessibleForFree: true,
+            articleSection: "Horoszkóp",
+            publisher: {
+              "@type": "Organization",
+              name: "Jövőd.hu",
+              url: SITE_URL,
+              logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/brand/logo.svg`,
+              },
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": canonicalUrl,
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Jövőd.hu", item: SITE_URL },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Horoszkóp",
+                item: `${SITE_URL}/horoszkop`,
+              },
+              { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
+            ],
+          }),
+        },
+      ],
+    };
+  },
   component: HoroscopeArticlePage,
 });
 
@@ -52,7 +126,7 @@ function HoroscopeArticlePage() {
         {PERIOD_LABEL[article.period]} · {article.signName} · {periodDateLabel(article.period)}
       </div>
       <h1 className="font-display text-4xl md:text-5xl text-ivory leading-[1.1] text-center mt-3">
-        {article.title}
+        {horoscopeSeoTitle(article.period, article.signName)}
       </h1>
       <p className="font-editorial text-ivory/75 text-xl leading-relaxed text-center mt-5">
         {article.lead}

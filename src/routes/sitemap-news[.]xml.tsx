@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   PERIOD_LABEL,
   allHoroscopeArticlePaths,
+  horoscopeSeoTitle,
   type HoroscopePeriodHU,
 } from "@/lib/horoscopeNews";
 
@@ -60,7 +61,7 @@ ${urls
         <news:language>hu</news:language>
       </news:publication>
       <news:publication_date>${publicationDateFor(u.period)}</news:publication_date>
-      <news:title>${xmlEscape(`${PERIOD_LABEL[u.period]} ${u.signName} jegyűeknek`)}</news:title>
+      <news:title>${xmlEscape(horoscopeSeoTitle(u.period, u.signName))}</news:title>
     </news:news>
   </url>`,
   )

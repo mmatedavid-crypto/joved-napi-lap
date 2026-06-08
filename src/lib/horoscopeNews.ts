@@ -64,6 +64,22 @@ export function periodDateLabel(period: HoroscopePeriodHU, baseDate = new Date()
   return DATE_FORMAT.format(baseDate);
 }
 
+export function horoscopeSeoTitle(
+  period: HoroscopePeriodHU,
+  signName: string,
+  baseDate = new Date(),
+): string {
+  return `${PERIOD_LABEL[period]} ${signName} jegyűeknek - ${periodDateLabel(period, baseDate)}`;
+}
+
+export function horoscopeSeoDescription(
+  period: HoroscopePeriodHU,
+  signName: string,
+  baseDate = new Date(),
+): string {
+  return `${horoscopeSeoTitle(period, signName, baseDate)}. Friss magyar horoszkóp szerelem, munka, hangulat és önismereti irány szerint.`;
+}
+
 export type HoroscopeNewsSection = {
   heading: string;
   text: string;
