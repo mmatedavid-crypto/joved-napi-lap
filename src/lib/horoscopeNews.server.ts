@@ -238,6 +238,11 @@ export async function getHoroscopeNewsArticle(opts: {
     schemaName: "HoroscopeNewsArticleHU",
     schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-news:${opts.period}`,
+    // A horoszkóp-fordítás SSR-ben fut. A gpt-5.5 itt 40+ másodperc, ami
+    // gyakran beleszalad a Worker időkorlátba és fallbackra ejti az oldalt.
+    // A gemini-2.5-flash a gateway-en ~5s alatt visszatér ugyanezzel a
+    // strict JSON sémával, így a felhasználó valódi horoszkópot kap.
+    lovableModel: "google/gemini-2.5-flash",
   });
 
   const article =
