@@ -179,7 +179,7 @@ export const processOrder = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: order } = await supabaseAdmin
       .from("orders")
-      .select("id, product_slug, product_name, category, status, input_payload")
+      .select("id, product_slug, product_name, category, status, input_payload, user_id, guest_email")
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
     if (!order) return { ok: false, error: "Rendelés nem található" };
@@ -231,6 +231,32 @@ export const processOrder = createServerFn({ method: "POST" })
           delivered_at: new Date().toISOString(),
         })
         .eq("id", order.id);
+
+      // Best-effort: send "megrendelésed elkészült" email. Never block delivery on email failure.
+      try {
+        const { enqueueTransactionalEmail, resolveOrderRecipientEmail } = await import(
+          "@/lib/email/sendTransactional.server"
+        );
+        const recipient = await resolveOrderRecipientEmail({
+          user_id: order.user_id,
+          guest_email: order.guest_email,
+        });
+        if (recipient) {
+          await enqueueTransactionalEmail({
+            templateName: "order-delivered",
+            recipientEmail: recipient,
+            idempotencyKey: `order-delivered-${order.id}`,
+            templateData: {
+              productName: order.product_name,
+              title: parsed.title,
+              body: parsed.body,
+              orderId: order.id,
+            },
+          });
+        }
+      } catch (emailErr) {
+        console.error("order-delivered email enqueue failed:", emailErr);
+      }
 
       return { ok: true, response: parsed };
     } catch (e: unknown) {
