@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
-import { PRODUCTS_BY_SLUG, formatHuf, EXPRESS_PRICE_HUF, EXPRESS_HOURS } from "@/lib/products";
+import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
 interface PaywallDialogProps {
   open: boolean;
@@ -29,14 +29,12 @@ export function PaywallDialog({
   const product = PRODUCTS_BY_SLUG[productSlug];
   const { user } = useAuth();
   const [email, setEmail] = useState(user?.email ?? "");
-  const [express, setExpress] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
   if (!product) return null;
 
-  const total =
-    product.priceHuf + (express && product.category === "delayed" ? EXPRESS_PRICE_HUF : 0);
+  const total = product.priceHuf;
 
   return (
     <Dialog
@@ -81,24 +79,6 @@ export function PaywallDialog({
               )}
             </div>
 
-            {false && product.category === "delayed" && (
-              <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.2)] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={express}
-                  onChange={(e) => setExpress(e.target.checked)}
-                  className="mt-1"
-                />
-                <div>
-                  <div className="text-ivory">
-                    Express — 6 órán belül{" "}
-                    <span className="text-gold">+{formatHuf(EXPRESS_PRICE_HUF)}</span>
-                  </div>
-                  <div className="text-xs text-ivory/55">Soron kívül készítjük el.</div>
-                </div>
-              </label>
-            )}
-
             <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
               <input
                 type="checkbox"
@@ -133,7 +113,7 @@ export function PaywallDialog({
         ) : (
           <StripeEmbeddedCheckoutForm
             productSlug={productSlug}
-            express={express}
+            express={false}
             customerEmail={email}
             userId={user?.id}
             inputPayload={inputPayload}
