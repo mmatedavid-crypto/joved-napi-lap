@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as SorsszamKalkulatorRouteImport } from './routes/sorsszam-kalkulator'
@@ -45,6 +46,11 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
   id: '/tarot-napi-lap',
   path: '/tarot-napi-lap',
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/tarot-napi-lap'
+    | '/unsubscribe'
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/tarot-napi-lap'
+    | '/unsubscribe'
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/tarot-napi-lap'
+    | '/unsubscribe'
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
@@ -479,6 +491,7 @@ export interface RootRouteChildren {
   SorsszamKalkulatorRoute: typeof SorsszamKalkulatorRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
   TarotNapiLapRoute: typeof TarotNapiLapRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
@@ -490,6 +503,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tarot-napi-lap': {
       id: '/tarot-napi-lap'
       path: '/tarot-napi-lap'
@@ -778,6 +798,7 @@ const rootRouteChildren: RootRouteChildren = {
   SorsszamKalkulatorRoute: SorsszamKalkulatorRoute,
   SzammisztikaRoute: SzammisztikaRoute,
   TarotNapiLapRoute: TarotNapiLapRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
