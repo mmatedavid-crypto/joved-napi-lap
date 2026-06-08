@@ -62,6 +62,7 @@ function HaromLap() {
 
   useEffect(() => {
     if (!cards || !revealed.every(Boolean)) return;
+    const cardsLocal = cards;
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
@@ -84,7 +85,7 @@ function HaromLap() {
       return aiReading({
         data: {
           spread: "three",
-          cards: cards.map((c, i) => ({
+          cards: cardsLocal.map((c, i) => ({
             id: c.id,
             name: c.name,
             keywords: c.keywords,
