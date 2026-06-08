@@ -13,6 +13,7 @@ import {
   buildQualitySystemPrompt,
   buildQualityUserPrompt,
   QUALITY_OUTPUT_SCHEMA,
+  READING_QUALITY_PROMPT_VERSION,
 } from "./readingQuality/prompts";
 import { guardQualityReading } from "./readingQuality/qualityGuard";
 import { READING_QUALITY_MODEL, SAFETY_NOTE } from "./readingQuality/styleRules";
