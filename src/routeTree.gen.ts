@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
+import { Route as SitemapNewsDotxmlRouteImport } from './routes/sitemap-news[.]xml'
 import { Route as RolunkRouteImport } from './routes/rolunk'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
@@ -26,6 +28,7 @@ import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
+import { Route as HoroszkopPeriodSignRouteImport } from './routes/horoszkop.$period.$sign'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
@@ -33,9 +36,19 @@ const SzammisztikaRoute = SzammisztikaRouteImport.update({
   path: '/szammisztika',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapNewsDotxmlRoute = SitemapNewsDotxmlRouteImport.update({
+  id: '/sitemap-news.xml',
+  path: '/sitemap-news.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RolunkRoute = RolunkRouteImport.update({
   id: '/rolunk',
   path: '/rolunk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RandiElottRoute = RandiElottRouteImport.update({
@@ -113,6 +126,11 @@ const DevRoxyRoute = DevRoxyRouteImport.update({
   path: '/dev/roxy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HoroszkopPeriodSignRoute = HoroszkopPeriodSignRouteImport.update({
+  id: '/$period/$sign',
+  path: '/$period/$sign',
+  getParentRoute: () => HoroszkopRoute,
+} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -127,7 +145,7 @@ export interface FileRoutesByFullPath {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
-  '/horoszkop': typeof HoroszkopRoute
+  '/horoszkop': typeof HoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -135,9 +153,12 @@ export interface FileRoutesByFullPath {
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
+  '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -147,7 +168,7 @@ export interface FileRoutesByTo {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
-  '/horoszkop': typeof HoroszkopRoute
+  '/horoszkop': typeof HoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -155,9 +176,12 @@ export interface FileRoutesByTo {
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
+  '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
@@ -168,7 +192,7 @@ export interface FileRoutesById {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/harom-lap': typeof HaromLapRoute
-  '/horoszkop': typeof HoroszkopRoute
+  '/horoszkop': typeof HoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -176,9 +200,12 @@ export interface FileRoutesById {
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rolunk': typeof RolunkRoute
+  '/sitemap-news.xml': typeof SitemapNewsDotxmlRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/dev/roxy': typeof DevRoxyRoute
+  '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
@@ -198,9 +225,12 @@ export interface FileRouteTypes {
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
+    | '/robots.txt'
     | '/rolunk'
+    | '/sitemap-news.xml'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -218,9 +248,12 @@ export interface FileRouteTypes {
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
+    | '/robots.txt'
     | '/rolunk'
+    | '/sitemap-news.xml'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
   id:
     | '__root__'
@@ -238,9 +271,12 @@ export interface FileRouteTypes {
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
+    | '/robots.txt'
     | '/rolunk'
+    | '/sitemap-news.xml'
     | '/szammisztika'
     | '/dev/roxy'
+    | '/horoszkop/$period/$sign'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -251,7 +287,7 @@ export interface RootRouteChildren {
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   HaromLapRoute: typeof HaromLapRoute
-  HoroszkopRoute: typeof HoroszkopRoute
+  HoroszkopRoute: typeof HoroszkopRouteWithChildren
   KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
   MaiIranytuRoute: typeof MaiIranytuRoute
@@ -259,7 +295,9 @@ export interface RootRouteChildren {
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
   RandiElottRoute: typeof RandiElottRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   RolunkRoute: typeof RolunkRoute
+  SitemapNewsDotxmlRoute: typeof SitemapNewsDotxmlRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
   DevRoxyRoute: typeof DevRoxyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
@@ -274,11 +312,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SzammisztikaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap-news.xml': {
+      id: '/sitemap-news.xml'
+      path: '/sitemap-news.xml'
+      fullPath: '/sitemap-news.xml'
+      preLoaderRoute: typeof SitemapNewsDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rolunk': {
       id: '/rolunk'
       path: '/rolunk'
       fullPath: '/rolunk'
       preLoaderRoute: typeof RolunkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/randi-elott': {
@@ -386,6 +438,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevRoxyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/horoszkop/$period/$sign': {
+      id: '/horoszkop/$period/$sign'
+      path: '/$period/$sign'
+      fullPath: '/horoszkop/$period/$sign'
+      preLoaderRoute: typeof HoroszkopPeriodSignRouteImport
+      parentRoute: typeof HoroszkopRoute
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -396,6 +455,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface HoroszkopRouteChildren {
+  HoroszkopPeriodSignRoute: typeof HoroszkopPeriodSignRoute
+}
+
+const HoroszkopRouteChildren: HoroszkopRouteChildren = {
+  HoroszkopPeriodSignRoute: HoroszkopPeriodSignRoute,
+}
+
+const HoroszkopRouteWithChildren = HoroszkopRoute._addFileChildren(
+  HoroszkopRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlomfejtesRoute: AlomfejtesRoute,
@@ -403,7 +474,7 @@ const rootRouteChildren: RootRouteChildren = {
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   HaromLapRoute: HaromLapRoute,
-  HoroszkopRoute: HoroszkopRoute,
+  HoroszkopRoute: HoroszkopRouteWithChildren,
   KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
   MaiIranytuRoute: MaiIranytuRoute,
@@ -411,7 +482,9 @@ const rootRouteChildren: RootRouteChildren = {
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
   RandiElottRoute: RandiElottRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   RolunkRoute: RolunkRoute,
+  SitemapNewsDotxmlRoute: SitemapNewsDotxmlRoute,
   SzammisztikaRoute: SzammisztikaRoute,
   DevRoxyRoute: DevRoxyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,

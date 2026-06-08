@@ -9,6 +9,7 @@ const NAV = [
   { to: "/harom-lap", label: "3 lapos húzás" },
   { to: "/randi-elott", label: "Randi előtt" },
   { to: "/dontes-elott", label: "Döntés előtt" },
+  { to: "/horoszkop", label: "Horoszkóp" },
   { to: "/szammisztika", label: "Sorsszám" },
   { to: "/osszeillunk", label: "Összeillünk?" },
 ] as const;

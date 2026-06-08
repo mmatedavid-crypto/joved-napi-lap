@@ -54,6 +54,7 @@ function Index() {
           {[
             { to: "/mai-iranytu", label: "Mai iránytű" },
             { to: "/angyalszam", label: "Angyalszám" },
+            { to: "/horoszkop", label: "Horoszkóp" },
             { to: "/alomfejtes", label: "Álomfejtés" },
             { to: "/kristaly", label: "Kristály" },
             { to: "/dontes-elott", label: "I-Ching" },

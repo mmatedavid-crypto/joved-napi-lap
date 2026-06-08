@@ -131,7 +131,8 @@ function MaiLap() {
               <div className="space-y-4">
                 {alreadyDrawnToday && (
                   <div className="rounded-md border border-[oklch(0.78_0.10_80/0.25)] bg-[oklch(0.78_0.10_80/0.06)] px-3 py-2 text-xs text-ivory/70 font-editorial italic">
-                    Ma már húztál lapot. Egy nap egy lap — így marad tiszta az üzenet. Holnap új lap vár.
+                    Ma már húztál lapot. Egy nap egy lap — így marad tiszta az üzenet. Holnap új lap
+                    vár.
                   </div>
                 )}
                 <div>
