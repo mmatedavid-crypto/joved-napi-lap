@@ -22,14 +22,16 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData.title} | Jövőd.hu` },
-      { name: "description", content: loaderData.lead },
-      { property: "og:title", content: loaderData.title },
-      { property: "og:description", content: loaderData.lead },
+      { title: `${loaderData?.title ?? "Horoszkóp"} | Jövőd.hu` },
+      { name: "description", content: loaderData?.lead ?? "" },
+      { property: "og:title", content: loaderData?.title ?? "" },
+      { property: "og:description", content: loaderData?.lead ?? "" },
       { property: "og:type", content: "article" },
-      { name: "robots", content: loaderData.fallbackUsed ? "noindex,follow" : "index,follow" },
+      { name: "robots", content: loaderData?.fallbackUsed ? "noindex,follow" : "index,follow" },
     ],
-    links: [{ rel: "canonical", href: `/horoszkop/${loaderData.period}/${loaderData.signSlug}` }],
+    links: loaderData
+      ? [{ rel: "canonical", href: `/horoszkop/${loaderData.period}/${loaderData.signSlug}` }]
+      : [],
   }),
   component: HoroscopeArticlePage,
 });
