@@ -85,6 +85,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "delivered email exposes recovery path",
+    file: "src/lib/email-templates/order-delivered.tsx",
+    includes: [
+      "SITE_LEGAL.supportEmail",
+      "Ha a gomb nem nyílik meg",
+      "Rendelés rövid azonosítója",
+      "orderId.slice(0, 8)",
+      "Vendég vásárlásnál",
+      "linket érdemes megtartanod",
+    ],
+  },
+  {
     name: "order reconciliation migration exists",
     file: "supabase/migrations/20260609143000_order_payment_reconciliation.sql",
     includes: ["stripe_environment TEXT", "payment_rechecked_at TIMESTAMPTZ"],

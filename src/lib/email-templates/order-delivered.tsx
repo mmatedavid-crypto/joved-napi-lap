@@ -13,6 +13,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
+import { SITE_LEGAL } from "../legal";
 import type { TemplateData, TemplateEntry } from "./registry";
 
 interface Props {
@@ -36,6 +37,7 @@ const OrderDeliveredEmail = ({
 }: Props) => {
   const readingBlocks = parseReadingBlocks(body);
   const openUrl = accessUrl ?? `${siteUrl}/profil`;
+  const shortOrderId = orderId ? orderId.slice(0, 8) : undefined;
   return (
     <Html lang="hu" dir="ltr">
       <Head />
@@ -86,13 +88,23 @@ const OrderDeliveredEmail = ({
                 {siteUrl}/profil
               </Link>
             </Text>
+            <Text style={supportText}>
+              Ha a gomb nem nyílik meg, írj nekünk a{" "}
+              <Link href={`mailto:${SITE_LEGAL.supportEmail}`} style={link}>
+                {SITE_LEGAL.supportEmail}
+              </Link>{" "}
+              címre. A gyorsabb segítséghez ezt add meg:{" "}
+              {shortOrderId
+                ? `Rendelés rövid azonosítója: ${shortOrderId}.`
+                : "a vásárlási email címed."}
+            </Text>
           </Section>
 
           <Hr style={hr} />
           <Text style={footer}>
             Köszönjük, hogy a Jövőd.hu-t választottad. Az olvasat önismereti és szimbolikus
             tartalom, nem orvosi, jogi vagy pénzügyi tanácsadás.
-            {orderId ? ` Rendelésazonosító: ${orderId.slice(0, 8)}.` : ""}
+            {shortOrderId ? ` Rendelés rövid azonosítója: ${shortOrderId}.` : ""}
           </Text>
         </Container>
       </Body>
@@ -177,6 +189,12 @@ const blockHeading = {
   margin: "0 0 4px 0",
 };
 const paragraph = { color: "#2a2434", fontSize: "15px", lineHeight: "1.65", margin: "0 0 12px 0" };
+const supportText = {
+  color: "#5b5368",
+  fontSize: "14px",
+  lineHeight: "1.6",
+  margin: "4px 0 12px 0",
+};
 const link = { color: "#5a3fb8", textDecoration: "underline" };
 const hr = { borderColor: "#e9e4f3", margin: "24px 0" };
 const footer = { color: "#9b94aa", fontSize: "12px", lineHeight: "1.5" };
