@@ -38,6 +38,17 @@ const checks: Check[] = [
     includes: ["payment_rechecked_at: new Date().toISOString()"],
   },
   {
+    name: "webhook survives pending reconciliation migration",
+    file: "src/routes/api/public/payments/webhook.ts",
+    includes: [
+      "isMissingColumnError",
+      "orders reconciliation columns unavailable in webhook",
+      "fallbackPaidUpdate",
+      "_stripePaymentIntent",
+      "_paymentRecheckedAt",
+    ],
+  },
+  {
     name: "thank-you page can read source route",
     file: "src/lib/payments.functions.ts",
     includes: ["guest_email, source_route", "created_at, source_route"],

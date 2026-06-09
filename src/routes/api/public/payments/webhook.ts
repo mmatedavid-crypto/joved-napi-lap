@@ -18,6 +18,16 @@ function checkoutObjectId(raw: unknown): string | null {
   return typeof id === "string" ? id : null;
 }
 
+function isMissingColumnError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as { code?: string; message?: string };
+  return (
+    err.code === "42703" ||
+    /column .* does not exist/i.test(err.message ?? "") ||
+    /Could not find .* column/i.test(err.message ?? "")
+  );
+}
+
 async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const sessionId = session.id;
   const paymentIntent =
@@ -60,17 +70,34 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   }
 
   if (existing.status === "pending_payment") {
-    await supabase
+    const paidUpdate = {
+      status: newStatus,
+      stripe_payment_intent: paymentIntent,
+      paid_at: new Date().toISOString(),
+      payment_rechecked_at: new Date().toISOString(),
+      ...(deliverBy ? { deliver_by: deliverBy } : {}),
+    };
+    const paidResult = await supabase
       .from("orders")
-      .update({
-        status: newStatus,
-        stripe_payment_intent: paymentIntent,
-        paid_at: new Date().toISOString(),
-        payment_rechecked_at: new Date().toISOString(),
-        ...(deliverBy ? { deliver_by: deliverBy } : {}),
-      })
+      .update(paidUpdate)
       .eq("id", existing.id)
       .eq("status", "pending_payment");
+
+    if (isMissingColumnError(paidResult.error)) {
+      const {
+        stripe_payment_intent: _stripePaymentIntent,
+        payment_rechecked_at: _paymentRecheckedAt,
+        ...fallbackPaidUpdate
+      } = paidUpdate;
+      console.warn("orders reconciliation columns unavailable in webhook; using paid fallback");
+      await supabase
+        .from("orders")
+        .update(fallbackPaidUpdate)
+        .eq("id", existing.id)
+        .eq("status", "pending_payment");
+    } else if (paidResult.error) {
+      throw paidResult.error;
+    }
   }
 
   // Fizetett rendelésekhez: szerveroldalon is elindítjuk az olvasat feldolgozását,
