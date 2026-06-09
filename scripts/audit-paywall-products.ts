@@ -4,6 +4,13 @@ import { PRODUCTS } from "../src/lib/products";
 const failed: string[] = [];
 
 for (const product of PRODUCTS) {
+  const visibleCopy = [
+    product.name,
+    product.short,
+    ...product.includes,
+    ...product.depthPromise,
+    product.qualityPromise,
+  ].join("\n");
   if (!Array.isArray(product.depthPromise) || product.depthPromise.length < 2) {
     failed.push(`${product.slug}: missing at least two depthPromise items`);
   }
@@ -12,6 +19,12 @@ for (const product of PRODUCTS) {
     if (/\b(ai|gpt|prompt|api|endpoint)\b/i.test(item)) {
       failed.push(`${product.slug}: technical wording in depthPromise: ${item}`);
     }
+  }
+  if (/gyógy/i.test(visibleCopy)) {
+    failed.push(`${product.slug}: health-adjacent crystal wording must be avoided`);
+  }
+  if (/\b(biztosan|garantáltan|mindenképpen|ez fog történni)\b/i.test(visibleCopy)) {
+    failed.push(`${product.slug}: deterministic wording in paywall copy`);
   }
 }
 

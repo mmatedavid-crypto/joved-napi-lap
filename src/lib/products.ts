@@ -89,13 +89,13 @@ export const PRODUCTS: ProductDef[] = [
     includes: [
       "egy kristály szimbolikus ajánlása",
       "milyen minőséget képviselhet számodra",
-      "rövid, gyógyítási ígéret nélküli értelmezés",
+      "rövid, józan és szimbolikus értelmezés",
     ],
     depthPromise: [
       "a kristályt hónaphoz, jegyhez vagy megadott témához kapcsolja",
       "szimbolikus önismereti jelentést ad, testi hatásígéret nélkül",
     ],
-    qualityPromise: "Önismereti kristály-ajánlás, nem egészségügyi vagy gyógyító állítás.",
+    qualityPromise: "Önismereti kristály-ajánlás, nem egészségügyi állítás.",
     priceHuf: 590,
     category: "instant",
     sourceRoute: "/kristaly",
