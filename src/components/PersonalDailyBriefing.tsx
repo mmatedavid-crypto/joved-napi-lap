@@ -19,6 +19,7 @@ import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 type Profile = { name?: string; dob?: string; sign?: string };
 
@@ -100,6 +101,9 @@ export function PersonalDailyBriefing() {
     trackEvent("daily_compass_opened", { from: "home" });
 
     const dateKey = todayKey();
+    const guestMemory = getGuestReadingContext({ limit: 6 });
+    const memoryContext =
+      guestMemory.contextText || guestMemory.insightText || guestMemory.themeSummary || undefined;
 
     const res = await enrich({
       data: {
@@ -107,6 +111,7 @@ export function PersonalDailyBriefing() {
         sign: sign as never,
         name: name.trim() || undefined,
         dateKey,
+        memoryContext,
         drawnCard: {
           id: drawnCard.id,
           name: drawnCard.name,
@@ -144,6 +149,21 @@ export function PersonalDailyBriefing() {
 
     setBriefing(stored);
     saveLocal("home:briefing", stored);
+    recordGuestReadingMemory({
+      readingType: "daily_compass",
+      topic: "mai iránytű",
+      sourceRoute: "/",
+      title: stored.cardTitle,
+      summary: [stored.oneLine, stored.cardLine, stored.horoMood].filter(Boolean).join(" "),
+      oneSentence: stored.oneLine,
+      anchors: [
+        drawnCard.name,
+        SIGN_HU[sign],
+        stored.crystalName,
+        `sorsszám ${lp}`,
+        `személyes év ${py}`,
+      ],
+    });
     setLoading(false);
     setPhase("result");
     trackEvent("daily_compass_completed", { from: "home" });

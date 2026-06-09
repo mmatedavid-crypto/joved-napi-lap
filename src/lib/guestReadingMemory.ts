@@ -64,6 +64,7 @@ const TYPE_LABELS: Record<string, string> = {
   angel: "angyalszámok",
   crystal: "kristályok",
   paid: "mélyebb olvasatok",
+  daily_compass: "mai iránytű",
 };
 
 function cleanText(value: string | undefined, max: number): string | undefined {

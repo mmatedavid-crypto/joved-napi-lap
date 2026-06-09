@@ -338,7 +338,8 @@ export const roxyLocationSearch = createServerFn({ method: "POST" })
 // Combines tarot/daily, horoscope/daily, biorhythm/daily, angel-numbers
 // and crystals/birthstone, then runs the meaningful English fields through
 // Lovable AI to produce a single warm Hungarian briefing. Cached per
-// (sign, dob, dateKey, name) for 24h in api_cache so repeated visits are free.
+// (sign, dob, dateKey, name, card, local memory context) for 24h in api_cache
+// so repeated visits are free.
 
 export type PersonalBriefingHU = {
   oneLine: string; // 1 mondat összegzés
@@ -362,6 +363,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       sign: SignSchema,
       name: NameSchema.optional(),
       dateKey: z.string().min(8).max(20),
+      memoryContext: z.string().max(1600).optional(),
       drawnCard: z
         .object({
           id: z.string().min(1).max(64),
@@ -389,7 +391,12 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
 
       const nameKey = (data.name ?? "").toLowerCase().trim();
       const cardKey = data.drawnCard?.id ?? "no-card";
-      const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}:${cardKey}`;
+      const memoryKey = (data.memoryContext ?? "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 160);
+      const cacheKey = `enrich:daily:${data.sign}:${data.birthDate}:${data.dateKey}:${nameKey}:${cardKey}:${memoryKey}`;
 
       // 1. Cache lookup (24h)
       try {
@@ -490,11 +497,13 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
         "A 'cardTitle' SZÓ SZERINT a 'nyersAdatok.tarot.name' értéke. A 'cardLine' a 'nyersAdatok.tarot.huGeneral' és 'huDaily' tartalmából készül — természetes magyar újrafogalmazás, semmi új tartalom.",
         "A horoMood/Love/Work/Warn mezők a 'nyersAdatok.horoscope' angol mezőiből készülnek — folyékony magyarra fordítva, csak azt, ami a forrásban van.",
         "Ha bizonytalan vagy egy konkrét részletben, inkább MARADJ ÁLTALÁNOSABB a forrás keretén belül, mintsem hogy kitalálj.",
+        "Ha van 'felhasznaloiIv', finoman használd visszatérő mintaként: egy mondatban reflektálhatsz arra, milyen témákhoz tér vissza a kérdező. Ne nevezd memóriának, adatbázisnak vagy követésnek. Ne tegyél úgy, mintha biztosan ismernéd az életét.",
         "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
       ].join(" ");
 
       const userPayload = {
         kerdezo: { keresztnev: data.name ?? null, csillagjegy: data.sign, datum: data.dateKey },
+        felhasznaloiIv: data.memoryContext ?? null,
         nyersAdatok: raw,
       };
 
@@ -564,7 +573,11 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
             provider: "roxy+ai",
             endpoint: "/personal/daily-briefing",
             cache_key: cacheKey,
-            request_payload: { sign: data.sign, dateKey: data.dateKey } as never,
+            request_payload: {
+              sign: data.sign,
+              dateKey: data.dateKey,
+              hasMemoryContext: Boolean(data.memoryContext),
+            } as never,
             response_payload: briefing as never,
             expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
           },

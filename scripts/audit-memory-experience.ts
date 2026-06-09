@@ -95,6 +95,28 @@ const checks: Check[] = [
     file: "src/components/Layout.tsx",
     includes: ["GuestMemoryNotice", "<GuestMemoryNotice />"],
   },
+  {
+    name: "home daily compass uses and records returning-user context",
+    file: "src/components/PersonalDailyBriefing.tsx",
+    includes: [
+      "getGuestReadingContext",
+      "recordGuestReadingMemory",
+      "memoryContext",
+      'readingType: "daily_compass"',
+      'topic: "mai iránytű"',
+    ],
+  },
+  {
+    name: "server daily briefing can personalize from memory without exposing it",
+    file: "src/lib/roxy.functions.ts",
+    includes: [
+      "memoryContext: z.string().max(1600).optional()",
+      "felhasznaloiIv",
+      "hasMemoryContext",
+      "Ne nevezd memóriának",
+      "memoryKey",
+    ],
+  },
 ];
 
 const failed: string[] = [];
