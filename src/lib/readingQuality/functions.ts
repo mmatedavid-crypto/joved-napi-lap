@@ -20,7 +20,6 @@ import {
 import { guardQualityReading } from "./qualityGuard";
 import { composeHoroscopeReading } from "./horoscopeEngine";
 import { READING_QUALITY_MODEL, SAFETY_NOTE, type QualityReading } from "./styleRules";
-import { readReadingCache, writeReadingCache } from "./readingCache.server";
 
 const BirthDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -102,6 +101,21 @@ async function generateQualityReading(opts: {
   };
 }
 
+async function readCachedReading(cacheKey: string): Promise<QualityReading | null> {
+  const { readReadingCache } = await import("./readingCache.server");
+  return readReadingCache(cacheKey);
+}
+
+async function writeCachedReading(
+  cacheKey: string,
+  endpoint: string,
+  reading: QualityReading,
+  ttlSeconds: number,
+): Promise<void> {
+  const { writeReadingCache } = await import("./readingCache.server");
+  await writeReadingCache(cacheKey, endpoint, reading, ttlSeconds);
+}
+
 export const qualityNumerologyReading = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
@@ -117,7 +131,7 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
     });
     const fallback = composeNumerologyReading(profile);
     const cacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:numerology:${data.birthDate}:${(data.fullName ?? "").toLowerCase().trim()}:${(data.preferredName ?? "").toLowerCase().trim()}`;
-    const hit = await readReadingCache(cacheKey);
+    const hit = await readCachedReading(cacheKey);
     if (hit) {
       return { ok: true, cached: true, fallbackUsed: false, reading: hit, profile };
     }
@@ -151,7 +165,7 @@ export const qualityNumerologyReading = createServerFn({ method: "POST" })
     });
     if (!generated.fallbackUsed && generated.reading) {
       // 30 napig kacheljük — a sorsszám és a személyes év stabil
-      await writeReadingCache(cacheKey, "ai:numerology", generated.reading, 60 * 60 * 24 * 30);
+      await writeCachedReading(cacheKey, "ai:numerology", generated.reading, 60 * 60 * 24 * 30);
     }
     return {
       ok: true,
@@ -175,7 +189,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: CompatibilityProfile | null }>> => {
     const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}:${(data.memoryContext ?? "").toLowerCase().trim().slice(0, 160)}`;
-    const compatHit = await readReadingCache(compatCacheKey);
+    const compatHit = await readCachedReading(compatCacheKey);
     if (compatHit) {
       return {
         ok: true,
@@ -243,7 +257,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       fallback,
     });
     if (!generated.fallbackUsed && generated.reading) {
-      await writeReadingCache(compatCacheKey, "ai:compat", generated.reading, 60 * 60 * 24 * 30);
+      await writeCachedReading(compatCacheKey, "ai:compat", generated.reading, 60 * 60 * 24 * 30);
     }
     return {
       ok: true,
@@ -276,7 +290,7 @@ export const qualityHoroscopeReading = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }): Promise<QualityEnvelope> => {
     const horoCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:horoscope:${data.sign}:${data.dateKey}`;
-    const horoHit = await readReadingCache(horoCacheKey);
+    const horoHit = await readCachedReading(horoCacheKey);
     if (horoHit) {
       return { ok: true, cached: true, fallbackUsed: false, reading: horoHit };
     }
@@ -308,7 +322,7 @@ export const qualityHoroscopeReading = createServerFn({ method: "POST" })
     });
     if (!generated.fallbackUsed && generated.reading) {
       // 24h-ig kacheljük — egy adott jegy + dátum kombinációra elég egyszer kérni
-      await writeReadingCache(horoCacheKey, "ai:horoscope", generated.reading, 60 * 60 * 24);
+      await writeCachedReading(horoCacheKey, "ai:horoscope", generated.reading, 60 * 60 * 24);
     }
     return {
       ok: true,

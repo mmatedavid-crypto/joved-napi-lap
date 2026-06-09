@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { type StripeEnv, createStripeClient } from "@/lib/stripe.server";
+import type Stripe from "stripe";
+import type { StripeEnv } from "@/lib/stripe.server";
 import {
   PRODUCTS_BY_SLUG,
   EXPRESS_PRICE_ID,
@@ -14,7 +15,7 @@ const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 
 async function resolveOrCreateCustomer(
-  stripe: ReturnType<typeof createStripeClient>,
+  stripe: Stripe,
   options: { email?: string; userId?: string },
 ): Promise<string> {
   if (options.userId && !/^[a-zA-Z0-9_-]+$/.test(options.userId)) {
@@ -71,6 +72,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<CheckoutSessionResult> => {
     try {
       const product = PRODUCTS_BY_SLUG[data.productSlug];
+      const { createStripeClient } = await import("@/lib/stripe.server");
       const stripe = createStripeClient(data.environment);
 
       const lookupKeys = [product.priceId];
@@ -174,10 +176,7 @@ function safeCheckoutErrorMessage(error: unknown): string {
   return allowedMessages.includes(message) ? message : CHECKOUT_GENERIC_ERROR;
 }
 
-async function expireUnusableCheckoutSession(
-  stripe: ReturnType<typeof createStripeClient>,
-  sessionId: string,
-): Promise<void> {
+async function expireUnusableCheckoutSession(stripe: Stripe, sessionId: string): Promise<void> {
   try {
     await stripe.checkout.sessions.expire(sessionId);
   } catch (error) {
