@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { type StripeEnv, createStripeClient, getStripeErrorMessage } from "@/lib/stripe.server";
+import { type StripeEnv, createStripeClient } from "@/lib/stripe.server";
 import {
   PRODUCTS_BY_SLUG,
   EXPRESS_PRICE_ID,
@@ -10,11 +10,16 @@ import {
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
 
+const CHECKOUT_GENERIC_ERROR =
+  "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
+
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
   options: { email?: string; userId?: string },
 ): Promise<string> {
-  if (options.userId && !/^[a-zA-Z0-9_-]+$/.test(options.userId)) throw new Error("Invalid userId");
+  if (options.userId && !/^[a-zA-Z0-9_-]+$/.test(options.userId)) {
+    throw new Error("Érvénytelen felhasználói azonosító");
+  }
   if (options.userId) {
     const found = await stripe.customers.search({
       query: `metadata['userId']:'${options.userId}'`,
@@ -58,7 +63,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     if (!data.customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.customerEmail)) {
       throw new Error("Érvénytelen email cím");
     }
-    if (data.userId && !/^[a-zA-Z0-9_-]+$/.test(data.userId)) throw new Error("Invalid userId");
+    if (data.userId && !/^[a-zA-Z0-9_-]+$/.test(data.userId)) {
+      throw new Error("Érvénytelen felhasználói azonosító");
+    }
     return data;
   })
   .handler(async ({ data }): Promise<CheckoutSessionResult> => {
@@ -148,9 +155,24 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       return { clientSecret: session.client_secret };
     } catch (error) {
       console.error("createCheckoutSession error:", error);
-      return { error: getStripeErrorMessage(error) };
+      return { error: safeCheckoutErrorMessage(error) };
     }
   });
+
+function safeCheckoutErrorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  const allowedMessages = [
+    "Ismeretlen termék",
+    "Érvénytelen email cím",
+    "Érvénytelen felhasználói azonosító",
+    "A termék ára nem található",
+    "Az express ár nem található",
+    "A fizetési munkamenet nem indítható el. Próbáld újra később.",
+    "Most nem sikerült előkészíteni a rendelést. Próbáld újra később.",
+  ];
+
+  return allowedMessages.includes(message) ? message : CHECKOUT_GENERIC_ERROR;
+}
 
 async function expireUnusableCheckoutSession(
   stripe: ReturnType<typeof createStripeClient>,
