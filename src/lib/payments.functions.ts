@@ -111,28 +111,57 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         },
       });
 
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.from("orders").insert({
-        user_id: data.userId ?? null,
-        guest_email: data.userId ? null : data.customerEmail,
-        product_slug: data.productSlug,
-        product_name: product.name,
-        category: product.category,
-        price_huf: totalHuf,
-        express: wantsExpress,
-        status: "pending_payment",
-        stripe_session_id: session.id,
-        input_payload: (data.inputPayload ?? null) as never,
-        source_route: data.sourceRoute ?? null,
-        deliver_by: deliverBy,
-      });
+      if (!session.client_secret) {
+        throw new Error("A fizetési munkamenet nem indítható el. Próbáld újra később.");
+      }
 
-      return { clientSecret: session.client_secret ?? "" };
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { error: orderError } = await supabaseAdmin
+        .from("orders")
+        .insert({
+          user_id: data.userId ?? null,
+          guest_email: data.userId ? null : data.customerEmail,
+          product_slug: data.productSlug,
+          product_name: product.name,
+          category: product.category,
+          price_huf: totalHuf,
+          express: wantsExpress,
+          status: "pending_payment",
+          stripe_session_id: session.id,
+          input_payload: (data.inputPayload ?? null) as never,
+          source_route: data.sourceRoute ?? null,
+          deliver_by: deliverBy,
+        })
+        .select("id")
+        .single();
+
+      if (orderError) {
+        console.error("createCheckoutSession order insert failed:", {
+          sessionId: session.id,
+          productSlug: data.productSlug,
+          error: orderError.message,
+        });
+        await expireUnusableCheckoutSession(stripe, session.id);
+        throw new Error("Most nem sikerült előkészíteni a rendelést. Próbáld újra később.");
+      }
+
+      return { clientSecret: session.client_secret };
     } catch (error) {
       console.error("createCheckoutSession error:", error);
       return { error: getStripeErrorMessage(error) };
     }
   });
+
+async function expireUnusableCheckoutSession(
+  stripe: ReturnType<typeof createStripeClient>,
+  sessionId: string,
+): Promise<void> {
+  try {
+    await stripe.checkout.sessions.expire(sessionId);
+  } catch (error) {
+    console.warn("Could not expire checkout session without order:", error);
+  }
+}
 
 export const getOrderBySession = createServerFn({ method: "POST" })
   .inputValidator((data: { sessionId: string }) => {
