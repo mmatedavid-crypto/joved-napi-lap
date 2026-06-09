@@ -247,7 +247,7 @@ function Page() {
                             <h3 className="font-display text-xl text-ivory">{payload.title}</h3>
                           )}
                           <div className="mt-3">
-                            <PaidReadingBody body={payload.body} />
+                            <PaidReadingBody body={payload.body ?? ""} />
                           </div>
                         </div>
                       </details>
