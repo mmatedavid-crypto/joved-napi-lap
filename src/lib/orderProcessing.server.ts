@@ -17,7 +17,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
   const { data: order } = await supabaseAdmin
     .from("orders")
     .select(
-      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, response_payload, updated_at",
+      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, stripe_session_id, response_payload, updated_at",
     )
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
@@ -31,6 +31,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
         productName: order.product_name,
         userId: order.user_id,
         guestEmail: order.guest_email,
+        stripeSessionId: order.stripe_session_id,
         reading: deliveredReading,
       });
     }
@@ -91,6 +92,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
       productName: order.product_name,
       userId: order.user_id,
       guestEmail: order.guest_email,
+      stripeSessionId: order.stripe_session_id,
       reading,
     });
 
@@ -155,6 +157,7 @@ async function queueDeliveredEmail(order: {
   productName: string;
   userId: string | null;
   guestEmail: string | null;
+  stripeSessionId: string | null;
   reading: { title?: string; body?: string };
 }): Promise<void> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -205,6 +208,9 @@ async function queueDeliveredEmail(order: {
         title: order.reading.title,
         body: order.reading.body,
         orderId: order.id,
+        accessUrl: order.stripeSessionId
+          ? `https://jovod.hu/koszonjuk?session_id=${encodeURIComponent(order.stripeSessionId)}`
+          : undefined,
       },
     });
 

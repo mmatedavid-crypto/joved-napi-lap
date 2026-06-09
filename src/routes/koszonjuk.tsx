@@ -112,6 +112,19 @@ function Page() {
         )}
         {order && (
           <>
+            {order.guest_email && (
+              <Section eyebrow="Hozzáférés">
+                <p>
+                  Vendégként vásároltál. Az olvasatod ehhez az oldalhoz és a vásárlási email
+                  címedhez kapcsolódik, ezért érdemes ezt a linket megtartanod.
+                </p>
+                <p className="mt-3 text-sm text-ivory/55">
+                  Amikor elkészül, emailben is elküldjük. Ha később nem találod, a vásárlási email
+                  címről írj nekünk, és visszakeressük.
+                </p>
+              </Section>
+            )}
+
             <Section eyebrow="Vásárlás" title={order.product_name}>
               <p className="text-ivory/70">
                 {formatHuf(order.price_huf)}
@@ -162,6 +175,7 @@ function Page() {
                     )}
                     <p className="mt-4 text-sm text-ivory/55">
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
+                      Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
                   </Section>
                 );
@@ -175,12 +189,18 @@ function Page() {
             )}
 
             <div className="flex flex-wrap gap-3">
-              <Link to="/profil" className="btn-gold inline-block">
-                Profil megnyitása
-              </Link>
+              {!order.guest_email && (
+                <Link to="/profil" className="btn-gold inline-block">
+                  Profil megnyitása
+                </Link>
+              )}
               <Link
                 to="/"
-                className="inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+                className={
+                  order.guest_email
+                    ? "btn-gold inline-block"
+                    : "inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+                }
               >
                 Vissza a főoldalra
               </Link>

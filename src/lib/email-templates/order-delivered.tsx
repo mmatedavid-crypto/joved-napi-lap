@@ -19,6 +19,7 @@ interface Props {
   title?: string;
   body?: string;
   orderId?: string;
+  accessUrl?: string;
   siteUrl?: string;
 }
 
@@ -29,6 +30,7 @@ const OrderDeliveredEmail = ({
   title,
   body,
   orderId,
+  accessUrl,
   siteUrl = SITE_URL,
 }: Props) => {
   const paragraphs = (body ?? "").split(/\n\n+/).filter(Boolean);
@@ -60,7 +62,13 @@ const OrderDeliveredEmail = ({
 
           <Section>
             <Text style={paragraph}>
-              A teljes rendelésed és a korábbi olvasataid itt érhetők el:{" "}
+              Az olvasatot ezen a linken bármikor újra megnyithatod:{" "}
+              <Link href={accessUrl ?? `${siteUrl}/profil`} style={link}>
+                olvasat megnyitása
+              </Link>
+            </Text>
+            <Text style={paragraph}>
+              Ha fiókkal vásároltál, a profilodban a korábbi olvasataidat is megtalálod:{" "}
               <Link href={`${siteUrl}/profil`} style={link}>
                 {siteUrl}/profil
               </Link>
@@ -91,6 +99,7 @@ export const template = {
     title: "A három lap üzenete",
     body: "Az első lap a múltadról beszél — egy lezáratlan kapcsolatról.\n\nA második a jelenedet tükrözi: most érdemes lassítani.\n\nA harmadik egy nyitott ajtót mutat a közeljövőben.",
     orderId: "12345678-aaaa-bbbb-cccc-1234567890ab",
+    accessUrl: "https://jovod.hu/koszonjuk?session_id=cs_test_123",
   },
 } satisfies TemplateEntry;
 
