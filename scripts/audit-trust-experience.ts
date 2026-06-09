@@ -45,6 +45,17 @@ const checks: Check[] = [
     ],
     excludes: ['console.error("Failed to mark token as used", { error: updateError, token })'],
   },
+  {
+    name: "SSR fallback logging does not include raw response bodies",
+    file: "src/server.ts",
+    includes: [
+      "function swallowedSsrError",
+      "JSON.parse(body)",
+      "h3 swallowed SSR error: ${message} (${status})",
+      "console.error(consumeLastCapturedError() ?? swallowedSsrError(body))",
+    ],
+    excludes: ["new Error(`h3 swallowed SSR error: ${body}`)"],
+  },
 ];
 
 const failed: string[] = [];

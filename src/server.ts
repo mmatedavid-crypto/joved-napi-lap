@@ -30,11 +30,31 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
     return response;
   }
 
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  console.error(consumeLastCapturedError() ?? swallowedSsrError(body));
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
   });
+}
+
+function swallowedSsrError(body: string): Error {
+  try {
+    const parsed = JSON.parse(body) as {
+      message?: unknown;
+      status?: unknown;
+      statusCode?: unknown;
+    };
+    const message = typeof parsed.message === "string" ? parsed.message : "SSR error";
+    const status =
+      typeof parsed.statusCode === "number"
+        ? parsed.statusCode
+        : typeof parsed.status === "number"
+          ? parsed.status
+          : 500;
+    return new Error(`h3 swallowed SSR error: ${message} (${status})`);
+  } catch {
+    return new Error("h3 swallowed SSR error");
+  }
 }
 
 export default {
