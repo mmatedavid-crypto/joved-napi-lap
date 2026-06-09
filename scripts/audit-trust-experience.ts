@@ -56,6 +56,26 @@ const checks: Check[] = [
     ],
     excludes: ["new Error(`h3 swallowed SSR error: ${body}`)"],
   },
+  {
+    name: "checkout insert errors redact Stripe session ids",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      "function redactStripeId",
+      "session_id_redacted: redactStripeId(session.id)",
+      "createCheckoutSession order insert failed",
+    ],
+    excludes: ["sessionId: session.id"],
+  },
+  {
+    name: "payment webhooks redact Stripe session ids in operational logs",
+    file: "src/routes/api/public/payments/webhook.ts",
+    includes: [
+      "function redactStripeId",
+      "session_id_redacted: redactStripeId(sessionId)",
+      "checkout.session.completed for unknown session",
+    ],
+    excludes: ['console.error("checkout.session.completed for unknown session:", sessionId)'],
+  },
 ];
 
 const failed: string[] = [];

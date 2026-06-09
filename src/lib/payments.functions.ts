@@ -29,6 +29,12 @@ const ORDER_SELECT_BASE =
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 
+function redactStripeId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 4)}***`;
+  return `${value.slice(0, 8)}***${value.slice(-4)}`;
+}
+
 async function resolveOrCreateCustomer(
   stripe: Stripe,
   options: { email?: string; userId?: string },
@@ -160,7 +166,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       if (orderError) {
         console.error("createCheckoutSession order insert failed:", {
-          sessionId: session.id,
+          session_id_redacted: redactStripeId(session.id),
           productSlug: data.productSlug,
           error: orderError.message,
         });

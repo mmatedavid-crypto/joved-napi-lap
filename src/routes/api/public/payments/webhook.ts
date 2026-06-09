@@ -12,6 +12,12 @@ type CheckoutSessionLike = {
   payment_intent?: string | { id?: string } | null;
 };
 
+function redactStripeId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 4)}***`;
+  return `${value.slice(0, 8)}***${value.slice(-4)}`;
+}
+
 function checkoutObjectId(raw: unknown): string | null {
   if (!raw || typeof raw !== "object") return null;
   const id = (raw as { id?: unknown }).id;
@@ -43,7 +49,9 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     .maybeSingle();
 
   if (!existing) {
-    console.error("checkout.session.completed for unknown session:", sessionId);
+    console.error("checkout.session.completed for unknown session", {
+      session_id_redacted: redactStripeId(sessionId),
+    });
     return;
   }
   if (existing.status === "delivered") {
