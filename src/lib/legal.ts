@@ -9,6 +9,11 @@ export const SITE_LEGAL = {
     taxNumber: "26558534-2-13",
     companyRegistrationNumber: "13-10-042640",
   },
+  disputeResolution: {
+    competentConciliationBoard: "Pest Vármegyei Békéltető Testület",
+    conciliationInfoUrl: "https://www.bekeltetes.hu",
+    euOdrInfoUrl: "https://consumer-redress.ec.europa.eu/site-relocation_en",
+  },
   updatedAt: "2026. június 9.",
 } as const;
 

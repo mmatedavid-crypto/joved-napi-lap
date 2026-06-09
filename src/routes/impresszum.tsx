@@ -68,6 +68,26 @@ export const Route = createFileRoute("/impresszum")({
           A weboldal digitális szolgáltatásként működik. A szolgáltatás működéséhez külső
           infrastruktúra- és fizetési szolgáltatók is kapcsolódhatnak.
         </p>
+      </LegalSection>
+
+      <LegalSection title="Panasz és fogyasztói jogvita">
+        <p>
+          Panaszt elsőként a kapcsolati email címen tudsz jelezni. Fogyasztói jogvita esetén
+          békéltető testülethez is fordulhatsz; a szolgáltató székhelye alapján illetékes testület:{" "}
+          {SITE_LEGAL.disputeResolution.competentConciliationBoard}.
+        </p>
+        <p>
+          Az aktuális békéltető testületi elérhetőségek itt érhetők el:{" "}
+          <a
+            className="text-gold hover:text-gold/80"
+            href={SITE_LEGAL.disputeResolution.conciliationInfoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            bekeltetes.hu
+          </a>
+          .
+        </p>
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>
     </LegalPage>

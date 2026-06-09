@@ -96,6 +96,41 @@ export const Route = createFileRoute("/aszf")({
           </a>
           .
         </p>
+      </LegalSection>
+
+      <LegalSection title="Panaszkezelés és békéltetés">
+        <p>
+          Panaszt elsőként írásban, a kapcsolati email címen tudsz jelezni. A panaszt érdemben
+          kivizsgáljuk, és a lehetőségekhez képest írásban válaszolunk.
+        </p>
+        <p>
+          Ha a fogyasztói jogvita közvetlenül nem rendezhető, fogyasztóként békéltető testülethez
+          fordulhatsz. A szolgáltató székhelye alapján illetékes testület:{" "}
+          {SITE_LEGAL.disputeResolution.competentConciliationBoard}. A békéltető testületek aktuális
+          elérhetőségei itt találhatók:{" "}
+          <a
+            className="text-gold hover:text-gold/80"
+            href={SITE_LEGAL.disputeResolution.conciliationInfoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            bekeltetes.hu
+          </a>
+          .
+        </p>
+        <p>
+          Az Európai Bizottság korábbi online vitarendezési platformja 2025. július 20-án megszűnt;
+          a hivatalos tájékoztató itt érhető el:{" "}
+          <a
+            className="text-gold hover:text-gold/80"
+            href={SITE_LEGAL.disputeResolution.euOdrInfoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            consumer-redress.ec.europa.eu
+          </a>
+          .
+        </p>
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>
     </LegalPage>
