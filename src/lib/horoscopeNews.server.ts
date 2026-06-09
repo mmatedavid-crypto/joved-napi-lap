@@ -10,8 +10,10 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v3";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v4";
 const DAY_SECONDS = 60 * 60 * 24;
+const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "google/gemini-2.5-flash";
+const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 35_000);
 
 const TECHNICAL_FALLBACK_RE =
   /háttéradat|nem érhető el|általános magyar tartalmat|\bprovider\b|\bendpoint\b|\broxy\b|\bapi\b|\bfallback\b/i;
@@ -150,6 +152,99 @@ const SIGN_FALLBACK_ARCHETYPE: Record<keyof typeof SIGN_SLUGS, string> = {
     "A Halak érzékenyebben veszi át a hangulatokat, ezért most különösen fontos lehet megkülönböztetni, mi a saját érzésed és mi az, amit másoktól hozol magaddal.",
 };
 
+const SIGN_WITH_ARTICLE: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries: "a Kos",
+  taurus: "a Bika",
+  gemini: "az Ikrek",
+  cancer: "a Rák",
+  leo: "az Oroszlán",
+  virgo: "a Szűz",
+  libra: "a Mérleg",
+  scorpio: "a Skorpió",
+  sagittarius: "a Nyilas",
+  capricorn: "a Bak",
+  aquarius: "a Vízöntő",
+  pisces: "a Halak",
+};
+
+const SIGN_RELATIONSHIP_FOCUS: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries:
+    "Kapcsolatokban a gyors reakciók mögött most könnyen lehet sértettség vagy türelmetlenség. Akkor érthetőbb a helyzet, ha nem az első benyomásra válaszolsz, hanem arra, ami mögötte tényleg fontos.",
+  taurus:
+    "Kapcsolatokban a biztonság kérdése erősebben jelenhet meg. Ami megbízható, az most vonzóbb lehet, de érdemes figyelni, mikor válik a nyugalomhoz való ragaszkodás makacssággá.",
+  gemini:
+    "Kapcsolatokban sok minden fejben dől el, mégis most az számíthat, hogy a beszélgetés után könnyebbnek vagy zajosabbnak érzed-e magad. Nem minden üzenet kíván azonnali választ.",
+  cancer:
+    "Kapcsolatokban a régi emlékek és a jelen érzései könnyebben összecsúszhatnak. Most az lehet felszabadító, ha megkülönbözteted, ki bántott meg régen, és ki áll előtted most.",
+  leo: "Kapcsolatokban a figyelem minősége fontosabb lehet, mint a mennyisége. Ha valaki lát téged, azt nem kell bizonygatni; ha nem lát, a túlzott ragyogás sem fogja pótolni.",
+  virgo:
+    "Kapcsolatokban most könnyű apró részletekből nagy következtetést levonni. A tisztánlátást nem az adja, ha mindent elemzel, hanem ha kimondod, mire van valóban szükséged.",
+  libra:
+    "Kapcsolatokban előjöhet, mennyit igazítasz magadon a béke kedvéért. A harmónia most akkor valódi, ha nem csak csend van, hanem te is jelen vagy benne.",
+  scorpio:
+    "Kapcsolatokban erős lehet a késztetés, hogy a sorok között olvass. A megérzés értékes, de most különösen fontos lehet nem összekeverni a mélységet a gyanakvással.",
+  sagittarius:
+    "Kapcsolatokban a szabadság és a kötődés közötti arány kerülhet elő. Ami őszinte, annak nem kell szűknek lennie, de a távolság sem mindig jelent valódi függetlenséget.",
+  capricorn:
+    "Kapcsolatokban a felelősség és az időzítés fontosabbá válhat. Nem az a kérdés, mennyit bírsz el, hanem hogy amiért tartod magad, abban van-e még kölcsönösség.",
+  aquarius:
+    "Kapcsolatokban most könnyebb kívülről nézni a helyzetet, mint benne maradni az érzésben. A távolság segíthet, de ne legyen menekülés attól, amit valójában kimondanál.",
+  pisces:
+    "Kapcsolatokban erősen átveheted mások hangulatát. Most az lehet a legfontosabb, hogy ne csak azt érezd, mire van szüksége a másiknak, hanem azt is, neked mi fér bele.",
+};
+
+const SIGN_WORK_FOCUS: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries:
+    "Munka terén a lendület hasznos, ha iránya is van. A hónap vagy hét akkor hozhat eredményt, ha nem több fronton harcolsz, hanem egy ügyet viszel végig tisztán.",
+  taurus:
+    "Munka terén a stabil építkezés kedvezőbb lehet, mint a látványos fordulat. Ami lassan erősödik, most többet érhet, mint ami gyors sikernek látszik.",
+  gemini:
+    "Munka terén az információk szétaprózhatják a figyelmedet. Egy jól megválasztott beszélgetés vagy döntés most többet érhet, mint tíz félig elindított ötlet.",
+  cancer:
+    "Munka terén a hangulat erősen befolyásolhatja a teljesítményedet. Ha teremtesz magadnak egy védettebb ritmust, könnyebben látszik, mi a valódi feladat.",
+  leo: "Munka terén a láthatóság témája előtérbe kerülhet. Nem kell túlmagyaráznod az értékedet; elég lehet következetesen megmutatni, hol vagy valóban erős.",
+  virgo:
+    "Munka terén a pontosítás most előny. Arra figyelj, hogy a javítás ne váljon halogatássá: van, amit elég jó állapotban kell továbbengedni.",
+  libra:
+    "Munka terén együttműködésből jöhet előrelépés, de csak akkor, ha nem te viszed csendben mindenki más aránytalanságát. A tiszta keretek most sokat számítanak.",
+  scorpio:
+    "Munka terén mélyebb motivációk mozoghatnak a háttérben. Érdemes észrevenni, mi az, amit valódi célból csinálsz, és mi az, amit csak kontrollból tartasz kézben.",
+  sagittarius:
+    "Munka terén nagyobb térre vagy új nézőpontra lehet szükséged. A szélesebb terv akkor működik, ha mellé kerül egy konkrét első lépés is.",
+  capricorn:
+    "Munka terén az időzítés és a felelősségvállalás hangsúlyos. Most nem a gyors könnyebbség, hanem a jól megválasztott határ adhat erőt.",
+  aquarius:
+    "Munka terén egy megszokott rendszer kívülről nézve már szűknek tűnhet. Az újítás jó irány lehet, ha nem csak ellenállásból, hanem tiszta felismerésből születik.",
+  pisces:
+    "Munka terén a megérzés segíthet, de most szüksége van néhány egyszerű kapaszkodóra. Amit leírsz, időzítesz vagy lezársz, az tehermentesítheti a fejedet.",
+};
+
+const SIGN_ATTENTION_FOCUS: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries:
+    "Ne minden sürgetést tekints jelnek. Ami valóban fontos, az egy rövid szünet után is fontos marad.",
+  taurus:
+    "Ne csak azt nézd, mi biztonságos, hanem azt is, mi élő. A megszokás és a nyugalom most könnyen összekeveredhet.",
+  gemini:
+    "A túl sok lehetőség most nem szabadságot, hanem zajt is hozhat. Válassz kevesebb szálat, de azokkal maradj jelen.",
+  cancer:
+    "Nem minden érzékenység gyengeség, de nem is minden hangulat üzenet. A saját határaid most finom figyelmet kérnek.",
+  leo: "A figyelem utáni vágy mögött lehet valódi kapcsolódási igény. Ne szerepből válaszolj arra, ami sebezhetőbb benned.",
+  virgo:
+    "A részletek segítenek, amíg nem fedik el az egészet. Most ne a tökéletes mondatot keresd, hanem a tiszta szándékot.",
+  libra:
+    "A békítés csak akkor működik, ha közben nem tűnsz el belőle. Figyeld meg, hol mondasz igent túl gyorsan.",
+  scorpio:
+    "A mélység nem mindig dráma. Néha az mutat erőt, ha nem mész bele abba a játszmába, amit már túl jól ismersz.",
+  sagittarius:
+    "A szabadságvágy most irányt is kér. Ne csak távolodj valamitől, nevezd meg, mi felé mennél.",
+  capricorn:
+    "Nem minden felelősség a tiéd. Amit tisztán vállalsz, erősít; amit megszokásból cipelsz, lassan szűkíthet.",
+  aquarius:
+    "A kívülálló nézőpont hasznos, de ne váljon érzelmi távolsággá. Amit fontosnak tartasz, ahhoz érdemes emberien is kapcsolódni.",
+  pisces:
+    "A megérzésed érzékenyebb lehet, de most szűrésre is szüksége van. Nem kell minden rezdülést magadra venned.",
+};
+
 const FALLBACK_COLORS: Record<keyof typeof SIGN_SLUGS, string> = {
   aries: "mélyvörös",
   taurus: "mohazöld",
@@ -278,27 +373,30 @@ function localFallbackArticle(opts: {
   const signName = SIGN_HU[opts.sign];
   const focus = periodFocus(opts.period);
   const archetype = SIGN_FALLBACK_ARCHETYPE[opts.sign];
+  const signArticle = SIGN_WITH_ARTICLE[opts.sign];
+  const periodFrame =
+    opts.period === "havi" ? "Ez a hónap" : opts.period === "heti" ? "Ez a hét" : "Ez a nap";
   return {
     ...opts,
     signName,
     title: `${PERIOD_LABEL[opts.period]} ${signName} jegyűeknek`,
-    lead: `${focus.leadPrefix} a ${signName} jegy számára nem nagy jóslatot, hanem finomabb belső igazítást hozhat. ${archetype}`,
+    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. ${archetype}`,
     sections: [
       {
         heading: focus.firstHeading,
-        text: archetype,
+        text: `${focus.leadPrefix} ${signArticle} alapmintája erősebben látszódhat: ${archetype} A legfontosabb kérdés most az, hogy mi az, ami valóban belőled indul, és mi az, amit csak a környezet tempója hív elő.`,
       },
       {
         heading: focus.loveHeading,
-        text: "Kapcsolatokban most az apró reakciók lehetnek beszédesek. Nem kell mindent végleges jelként olvasnod, de érdemes észrevenned, hol érzel valódi nyugalmat, és hol csak megszokott feszültséget.",
+        text: SIGN_RELATIONSHIP_FOCUS[opts.sign],
       },
       {
         heading: focus.workHeading,
-        text: "A feladatoknál a túl nagy ígéret helyett a következetes, tiszta lépés adhat erőt. Amit most egyszerűbben is meg lehet oldani, azt ne bonyolítsd túl.",
+        text: SIGN_WORK_FOCUS[opts.sign],
       },
       {
         heading: focus.attentionHeading,
-        text: "A minta inkább arra utalhat, hogy a tempódat kell pontosabban beállítanod: ne kapkodj, de ne is halogasd azt, amiről már tudod, hogy figyelmet kér.",
+        text: SIGN_ATTENTION_FOCUS[opts.sign],
       },
     ],
     luckyColor: FALLBACK_COLORS[opts.sign],
@@ -355,7 +453,7 @@ export async function getHoroscopeNewsArticle(opts: {
   const translated = await aiJSON<ArticleAI>({
     system: [
       "Te magyar szerkesztőségi fordító vagy a Jövőd.hu-n.",
-      "A RoxyAPI horoszkóp-forrását hűen fordítod magyarra.",
+      "A RoxyAPI horoszkóp-forrását hűen, természetes magyar szerkesztőségi nyelvre fordítod.",
       "Ne rövidíts, ne vágj, ne értelmezz át, ne adj hozzá új állítást.",
       "Őrizd meg a forrás szerkezetét: amit a forrás külön témaként ad, legyen külön szekció.",
       "A finance/health témákat is csak horoszkóp-rovatként fordítsd; ne adj valós orvosi vagy pénzügyi tanácsot.",
@@ -373,11 +471,13 @@ export async function getHoroscopeNewsArticle(opts: {
     schemaName: "HoroscopeNewsArticleHU",
     schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-news:${opts.period}`,
-    // Közvetlen OpenAI hívás a saját OPENAI_API_KEY-vel. A Lovable Gateway-n
-    // a GPT-5.2 SSR-ben korábban túl lassú volt, ami timeoutolt és fallbackra
-    // ejtette az oldalt. Az OpenAI Responses API gyorsabb és stabilabb.
-    providerPreference: "openai_first",
-    openaiModel: "gpt-5.2",
+    // A news-horoszkóp nem prémium mélyolvasat, hanem gyors, hű fordítás.
+    // Itt a stabil, rövid latency fontosabb, mint a legerősebb kreatív modell,
+    // mert timeout esetén a publikus SEO-oldal gyenge fallbackra esne.
+    providerPreference: "lovable_first",
+    lovableModel: HOROSCOPE_NEWS_MODEL,
+    openaiModel: process.env.OPENAI_HOROSCOPE_NEWS_MODEL ?? "gpt-5.2",
+    timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
   });
 
   const article =

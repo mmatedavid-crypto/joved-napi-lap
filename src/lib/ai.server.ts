@@ -23,6 +23,7 @@ export async function aiJSON<T>(opts: {
   allowLovableFallback?: boolean;
   providerPreference?: "lovable_first" | "openai_first";
   readingType?: string;
+  timeoutMs?: number;
 }): Promise<AiResult<T>> {
   const started = Date.now();
   const preference = opts.providerPreference ?? "lovable_first";
@@ -128,6 +129,7 @@ async function lovableJSON<T>(opts: {
   user: string;
   schemaName?: string;
   schema?: Record<string, unknown>;
+  timeoutMs?: number;
 }): Promise<AiResult<T>> {
   const model = opts.model;
   const body: Record<string, unknown> = {
@@ -155,7 +157,7 @@ async function lovableJSON<T>(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(opts.timeoutMs ?? 20_000),
     });
   } catch (e) {
     return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
@@ -190,6 +192,7 @@ async function openaiJSON<T>(opts: {
   user: string;
   schemaName?: string;
   schema?: Record<string, unknown>;
+  timeoutMs?: number;
 }): Promise<AiResult<T>> {
   const body: Record<string, unknown> = {
     model: opts.model,
@@ -220,7 +223,7 @@ async function openaiJSON<T>(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(22_000),
+      signal: AbortSignal.timeout(opts.timeoutMs ?? 22_000),
     });
   } catch (e) {
     return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
