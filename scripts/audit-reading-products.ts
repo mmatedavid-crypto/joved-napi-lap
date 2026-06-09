@@ -276,7 +276,10 @@ if (
   !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug)") ||
   !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug)") ||
   !paidServer.includes("[paid_reading_quality_rejected]") ||
-  !paidServer.includes("issues: quality.issues")
+  !paidServer.includes("issues: quality.issues") ||
+  !paidServer.includes("hasPaidSafetyFrame") ||
+  !paidServer.includes("missing_safety_frame") ||
+  !paidServer.includes("önismereti és szimbolikus keret")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
 }

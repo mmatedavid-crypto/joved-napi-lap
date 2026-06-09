@@ -41,6 +41,13 @@ function paidReadingMinimumSections(productSlug: string): number {
   return isDeepPaidProduct(productSlug) ? 5 : 4;
 }
 
+function hasPaidSafetyFrame(body: string): boolean {
+  const lower = body.toLocaleLowerCase("hu-HU");
+  return (
+    lower.includes("önismereti") && (lower.includes("szimbolikus") || lower.includes("nem orvosi"))
+  );
+}
+
 function inspectPaidReadingQuality(
   reading: PaidReadingPayload,
   productSlug: string,
@@ -53,6 +60,7 @@ function inspectPaidReadingQuality(
   if (body.length < minLength) issues.push(`too_short:${body.length}<${minLength}`);
   if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) issues.push("forbidden_text");
   if (sections < minSections) issues.push(`too_few_sections:${sections}<${minSections}`);
+  if (!hasPaidSafetyFrame(reading.body)) issues.push("missing_safety_frame");
   return { ok: issues.length === 0, issues, chars: body.length, sections };
 }
 
@@ -103,6 +111,7 @@ export async function generatePaidOrderReading(opts: {
         deep
           ? "A body legyen jól tagolt, címsorokkal, 1800-3200 karakter között."
           : "A body legyen jól tagolt, címsorokkal, 900-1800 karakter között.",
+        "A body végén legyen egy rövid, természetes Megjegyzés arról, hogy az olvasat önismereti és szimbolikus keret, nem orvosi, jogi vagy pénzügyi tanács.",
         "Csak JSON-t adj vissza: { title, body }.",
       ].join("\n"),
       user: [
