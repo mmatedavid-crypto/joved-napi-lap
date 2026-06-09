@@ -24,6 +24,7 @@ export function Layout({ children }: { children?: ReactNode }) {
       const drop = ["daily", "tarot:last", "spread:last", "draw:last"];
       drop.forEach((k) => {
         window.localStorage.removeItem("jvd:" + k);
+        window.localStorage.removeItem("jovod:" + k);
         window.localStorage.removeItem(k);
       });
       window.sessionStorage.clear();

@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
+import { clearGuestPersonalization } from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
@@ -13,7 +15,18 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
     ],
     links: [{ rel: "canonical", href: "/adatkezelesi-tajekoztato" }],
   }),
-  component: () => (
+  component: PrivacyPage,
+});
+
+function PrivacyPage() {
+  const [localCleared, setLocalCleared] = useState(false);
+
+  function clearLocalPersonalization() {
+    clearGuestPersonalization();
+    setLocalCleared(true);
+  }
+
+  return (
     <LegalPage
       eyebrow="Adatkezelés"
       title="Adatkezelési tájékoztató"
@@ -50,10 +63,20 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
 
       <LegalSection title="Személyesebb olvasati memória">
         <p>
-          Ha bejelentkezve használod az oldalt, az olvasatok rövid összefoglalóját és néhány
-          visszatérő motívumát eltárolhatjuk, hogy később ne minden alkalommal idegenként kezeljen a
-          rendszer. Ez segíthet abban, hogy az új olvasatok finoman reflektáljanak arra, milyen
-          témákhoz térsz vissza, vagy miben változott a fókuszod.
+          A Jövőd.hu célja, hogy az olvasatok ne minden alkalommal idegenként induljanak. Ezért
+          röviden eltárolhatjuk az olvasat típusát, a megadott kérdés lényegét, néhány visszatérő
+          motívumot és az olvasat rövid összefoglalóját.
+        </p>
+        <p>
+          Bejelentkezve ezek az adatok a felhasználói fiókodhoz kapcsolódhatnak. Vendégként a
+          személyesebb olvasati ív helyi böngészőadatként marad nálad, például localStorage-ban és
+          néhány rövid cookie-jelzésben. Ilyen jelzés lehet, hogy több különböző összeillést néztél
+          meg, vagy hogy visszatérően döntési, kapcsolati vagy álomtémákat kérdezel.
+        </p>
+        <p>
+          Az új olvasatok ezt csak finoman használják: visszatérő témára, heti-havi ívre vagy
+          változó fókuszra reflektálhatnak. Nem cél az, hogy kész személyiségprofilt vagy biztos
+          jövőállítást készítsünk belőle.
         </p>
         <p>
           Ez az emlékezet önismereti és szolgáltatásminőségi célú; nem használjuk orvosi,
@@ -72,6 +95,19 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
           Ezek az adatok nem bankkártyaadatok, és nem helyettesítenek szakmai tanácsadást. A
           böngésződben tárolt helyi adatok a böngésző beállításaiban törölhetők.
         </p>
+        <div className="mt-4 rounded-md border border-[oklch(0.78_0.10_80/0.16)] p-4">
+          <p className="text-sm text-ivory/70">
+            A vendégként tárolt helyi olvasati mintát itt is törölheted ebből a böngészőből.
+          </p>
+          <button type="button" onClick={clearLocalPersonalization} className="btn-ghost-gold mt-3">
+            Helyi olvasati minta törlése
+          </button>
+          {localCleared && (
+            <p className="mt-2 text-sm text-ivory/55">
+              Töröltük a helyi olvasati mintát ebből a böngészőből.
+            </p>
+          )}
+        </div>
       </LegalSection>
 
       <LegalSection title="Jogalapok és megőrzés">
@@ -103,5 +139,5 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>
     </LegalPage>
-  ),
-});
+  );
+}

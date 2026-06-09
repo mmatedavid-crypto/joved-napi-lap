@@ -1,4 +1,4 @@
-import { loadLocal, saveCookie, saveLocal } from "./storage";
+import { deleteCookie, loadLocal, saveCookie, saveLocal } from "./storage";
 
 export type GuestReadingType =
   | "tarot"
@@ -38,6 +38,9 @@ export type GuestReadingContext = {
 const KEY = "guest_reading_memory";
 const COOKIE_TOTAL_KEY = "guest_reading_memory_count";
 const COOKIE_LAST_TYPE_KEY = "guest_reading_memory_last_type";
+const COMPATIBILITY_KEY = "compatibility_checks";
+const COMPATIBILITY_COUNT_KEY = "compatibility_distinct_30d";
+const COMPATIBILITY_STATUS_KEY = "compatibility_last_status";
 const MAX_ITEMS = 36;
 
 const TYPE_LABELS: Record<string, string> = {
@@ -234,4 +237,19 @@ export function getGuestReadingContext(
     insightText,
     distinctCompatibilityCount,
   };
+}
+
+export function clearGuestPersonalization() {
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.removeItem(`jovod:${KEY}`);
+      window.localStorage.removeItem(`jovod:${COMPATIBILITY_KEY}`);
+    } catch {
+      /* ignore */
+    }
+  }
+  deleteCookie(COOKIE_TOTAL_KEY);
+  deleteCookie(COOKIE_LAST_TYPE_KEY);
+  deleteCookie(COMPATIBILITY_COUNT_KEY);
+  deleteCookie(COMPATIBILITY_STATUS_KEY);
 }

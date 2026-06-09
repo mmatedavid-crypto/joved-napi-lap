@@ -35,6 +35,15 @@ export function saveCookie(key: string, value: string, maxAgeDays = 180) {
   }
 }
 
+export function deleteCookie(key: string) {
+  if (typeof document === "undefined") return;
+  try {
+    document.cookie = `${PREFIX}${key}=; path=/; max-age=0; SameSite=Lax`;
+  } catch {
+    /* ignore */
+  }
+}
+
 export function loadCookie(key: string): string | null {
   if (typeof document === "undefined") return null;
   try {
