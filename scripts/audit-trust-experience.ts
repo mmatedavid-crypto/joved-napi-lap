@@ -35,6 +35,16 @@ const checks: Check[] = [
     ],
     excludes: ['setErr(e instanceof Error ? e.message : "Hiba")'],
   },
+  {
+    name: "unsubscribe endpoint never logs raw unsubscribe tokens",
+    file: "src/routes/email/unsubscribe.ts",
+    includes: [
+      "function redactToken",
+      "token_redacted: redactToken(token)",
+      "email_redacted: redactEmail(tokenRecord.email)",
+    ],
+    excludes: ['console.error("Failed to mark token as used", { error: updateError, token })'],
+  },
 ];
 
 const failed: string[] = [];

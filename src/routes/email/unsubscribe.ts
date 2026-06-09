@@ -8,6 +8,12 @@ function redactEmail(email: string | null | undefined): string {
   return `${localPart[0]}***@${domain}`;
 }
 
+function redactToken(token: string | null | undefined): string {
+  if (!token) return "***";
+  if (token.length <= 10) return `${token.slice(0, 2)}***`;
+  return `${token.slice(0, 4)}***${token.slice(-4)}`;
+}
+
 export const Route = createFileRoute("/email/unsubscribe")({
   server: {
     handlers: {
@@ -117,7 +123,10 @@ export const Route = createFileRoute("/email/unsubscribe")({
           .maybeSingle();
 
         if (updateError) {
-          console.error("Failed to mark token as used", { error: updateError, token });
+          console.error("Failed to mark token as used", {
+            error: updateError,
+            token_redacted: redactToken(token),
+          });
           return Response.json({ error: "Failed to process unsubscribe" }, { status: 500 });
         }
 
