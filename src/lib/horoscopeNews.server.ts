@@ -120,7 +120,15 @@ function cleanHoroscopeNewsText(value: unknown): string | undefined {
     .replace(/\bhallgass a szívedre\b/gi, "a saját érzéseidre is figyelj")
     .replace(/\blégy önmagad\b/gi, "maradj hiteles")
     .replace(/\bkommunikálj nyíltan és őszintén\b/gi, "fogalmazz tisztán");
-  return cleanHUText(softened);
+  const cleaned = cleanHUText(softened);
+  return cleaned?.replace(/(^|[.!?]\s+)([a-záéíóöőúüű])/g, (_, prefix: string, letter: string) =>
+    `${prefix}${letter.toLocaleUpperCase("hu-HU")}`,
+  );
+}
+
+function cleanHoroscopeNewsHeading(value: unknown): string | undefined {
+  const cleaned = cleanHoroscopeNewsText(value);
+  return cleaned ? cleaned.charAt(0).toLocaleUpperCase("hu-HU") + cleaned.slice(1) : undefined;
 }
 
 function normalizeArticle(
@@ -140,7 +148,7 @@ function normalizeArticle(
   const sections = Array.isArray(raw.sections)
     ? raw.sections
         .map((s) => ({
-          heading: cleanHoroscopeNewsText(s.heading) ?? "",
+          heading: cleanHoroscopeNewsHeading(s.heading) ?? "",
           text: cleanHoroscopeNewsText(s.text) ?? "",
         }))
         .filter((s) => s.heading && s.text)
