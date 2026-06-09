@@ -188,6 +188,13 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }): Promise<QualityEnvelope<{ profile: CompatibilityProfile | null }>> => {
+    const localProfile = calculateCompatibilityProfile({
+      birthDateA: data.birthDateA,
+      birthDateB: data.birthDateB,
+      fullNameA: data.fullNameA,
+      fullNameB: data.fullNameB,
+      status: data.status,
+    });
     const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}:${(data.memoryContext ?? "").toLowerCase().trim().slice(0, 160)}`;
     const compatHit = await readCachedReading(compatCacheKey);
     if (compatHit) {
@@ -196,7 +203,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
         cached: true,
         fallbackUsed: false,
         reading: compatHit,
-        profile: null,
+        profile: localProfile,
       };
     }
     let roxy: unknown = null;
@@ -216,16 +223,12 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       roxy = null;
     }
     const normalized = normalizeRoxyCompat(roxy);
-    const profile = calculateCompatibilityProfile({
-      birthDateA: data.birthDateA,
-      birthDateB: data.birthDateB,
-      fullNameA: data.fullNameA,
-      fullNameB: data.fullNameB,
-      status: data.status,
+    const profile = {
+      ...localProfile,
       communication: normalized.communication,
       attraction: normalized.attraction,
       longTerm: normalized.longTerm,
-    });
+    };
     if (normalized.score) profile.score = normalized.score;
     const fallback = composeCompatibilityReading(profile);
     const generated = await generateQualityReading({

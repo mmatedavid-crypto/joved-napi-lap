@@ -107,6 +107,29 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "compatibility fallback memory reflects status and repeated comparisons",
+    file: "src/routes/osszeillunk.tsx",
+    includes: [
+      "function compatibilityMemorySentence",
+      "Több emberrel is megnézted az összeillést",
+      "Visszatérő történetnél nem csak az számít",
+      "ismerkedésnél a kezdeti vonzalom",
+      "relationshipNumber: fallbackProfile.relationshipNumber",
+      "summary: `${fallbackReading.oneSentence} ${memorySentence}`",
+      "oneSentence: memorySentence",
+    ],
+  },
+  {
+    name: "compatibility cached AI reading still returns display profile",
+    file: "src/lib/readingQuality/functions.ts",
+    includes: [
+      "const localProfile = calculateCompatibilityProfile",
+      "const compatHit = await readCachedReading(compatCacheKey)",
+      "profile: localProfile",
+      "...localProfile",
+    ],
+  },
+  {
     name: "server daily briefing can personalize from memory without exposing it",
     file: "src/lib/roxy.functions.ts",
     includes: [

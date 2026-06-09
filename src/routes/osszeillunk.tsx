@@ -41,6 +41,28 @@ const STATUS = [
   "házasság / hosszú táv",
 ];
 
+function compatibilityMemorySentence(input: {
+  status: string;
+  relationshipNumber: number;
+  score: number;
+  isComparing: boolean;
+}): string {
+  const normalized = input.status.toLocaleLowerCase("hu-HU");
+  if (input.isComparing) {
+    return "Több emberrel is megnézted az összeillést; itt már nem csak az a fontos, ki illik hozzád, hanem milyen kapcsolati érzést keresel újra.";
+  }
+  if (normalized.includes("ex") || normalized.includes("visszatér")) {
+    return "Visszatérő történetnél nem csak az számít, újra megjelenik-e, hanem hogy más felelősséggel és tempóval tér-e vissza.";
+  }
+  if (normalized.includes("ismerked")) {
+    return "Ennél az ismerkedésnél a kezdeti vonzalom mellett az lesz beszédes, megjelenik-e következetes figyelem is.";
+  }
+  if (normalized.includes("házasság") || normalized.includes("hosszú")) {
+    return "Hosszú távon ez a kapcsolatminta azt kérdezi, hogyan fér meg egymás mellett a biztonság és a szabadság.";
+  }
+  return `A kapcsolat ${input.relationshipNumber}-es mintája ${input.score}%-os közös tempót jelez, de a számnál fontosabb, hogyan bánik veletek ez a ritmus.`;
+}
+
 function Page() {
   const { user } = useAuth();
   const callQuality = useServerFn(qualityCompatibilityReading);
@@ -162,20 +184,28 @@ function Page() {
       fullNameB: nb,
       status,
     });
+    const fallbackReading = composeCompatibilityReading(fallbackProfile);
+    const memorySentence = compatibilityMemorySentence({
+      status,
+      relationshipNumber: fallbackProfile.relationshipNumber,
+      score: fallbackProfile.score,
+      isComparing: browserPattern.isComparing,
+    });
     setProfile(fallbackProfile);
-    setReading(composeCompatibilityReading(fallbackProfile));
+    setReading(fallbackReading);
     recordGuestReadingMemory({
       readingType: "compatibility",
       topic: `${na || "én"} + ${nb || "ő"} · ${status}`,
       situation: status,
       sourceRoute: "/osszeillunk",
       title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
-      summary: `Összeillés: ${fallbackProfile.score}%, ${fallbackProfile.relationshipNumber}-es kapcsolatminta.`,
-      oneSentence: `A kapcsolat mintája ${fallbackProfile.relationshipNumber}-es ritmust mutat.`,
+      summary: `${fallbackReading.oneSentence} ${memorySentence}`,
+      oneSentence: memorySentence,
       anchors: [
         status,
         `${fallbackProfile.personA.lifePathNumber}`,
         `${fallbackProfile.personB.lifePathNumber}`,
+        `${fallbackProfile.relationshipNumber}`,
         ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
       ],
     });
@@ -187,12 +217,13 @@ function Page() {
           situation: status,
           sourceRoute: "/osszeillunk",
           title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
-          summary: `Összeillés: ${fallbackProfile.score}%, ${fallbackProfile.relationshipNumber}-es kapcsolatminta.`,
-          oneSentence: `A kapcsolat mintája ${fallbackProfile.relationshipNumber}-es ritmust mutat.`,
+          summary: `${fallbackReading.oneSentence} ${memorySentence}`,
+          oneSentence: memorySentence,
           anchors: [
             status,
             `${fallbackProfile.personA.lifePathNumber}`,
             `${fallbackProfile.personB.lifePathNumber}`,
+            `${fallbackProfile.relationshipNumber}`,
             ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
           ],
           metadata: { distinctCompatibilityChecks30d: browserPattern.distinctCount },
