@@ -8,6 +8,7 @@ export interface ProductDef {
   name: string;
   short: string;
   includes: string[];
+  depthPromise: string[];
   qualityPromise: string;
   priceHuf: number;
   category: ProductCategory;
@@ -33,6 +34,10 @@ export const PRODUCTS: ProductDef[] = [
       "rövid helyzetkép a mai napra",
       "egy figyelni érdemes belső irány",
     ],
+    depthPromise: [
+      "a lap jelentését a kérdésedhez és a mai helyzetedhez köti",
+      "nem csak kulcsszavakat ad, hanem rövid belső irányt",
+    ],
     qualityPromise: "Azonnali, rövid, de személyes olvasat. Nem általános horoszkópszöveg.",
     priceHuf: 590,
     category: "instant",
@@ -47,6 +52,10 @@ export const PRODUCTS: ProductDef[] = [
       "napi önismereti irány",
       "szerelem/munka/hangulat finom bontása",
       "egy konkrét kérdés, amire érdemes figyelned",
+    ],
+    depthPromise: [
+      "a nap üzenetét a megadott személyes adataiddal hangolja össze",
+      "külön kezeli a kapcsolat, munka és belső ritmus rétegeit",
     ],
     qualityPromise: "Azonnali napi iránytű, személyesebb hanggal, nem magazinos jóslatként.",
     priceHuf: 690,
@@ -63,6 +72,10 @@ export const PRODUCTS: ProductDef[] = [
       "mit jelezhet a mostani élethelyzetedben",
       "egy rövid önismereti fókusz",
     ],
+    depthPromise: [
+      "a számot nem önmagában, hanem a megadott helyzeted felől értelmezi",
+      "óvatos, önismereti nyelven mutatja meg a visszatérő mintát",
+    ],
     qualityPromise: "Szimbolikus értelmezés, józanul megfogalmazva, túlzó ígéretek nélkül.",
     priceHuf: 590,
     category: "instant",
@@ -77,6 +90,10 @@ export const PRODUCTS: ProductDef[] = [
       "egy kristály szimbolikus ajánlása",
       "milyen minőséget képviselhet számodra",
       "rövid, gyógyítási ígéret nélküli értelmezés",
+    ],
+    depthPromise: [
+      "a kristályt hónaphoz, jegyhez vagy megadott témához kapcsolja",
+      "szimbolikus önismereti jelentést ad, testi hatásígéret nélkül",
     ],
     qualityPromise: "Önismereti kristály-ajánlás, nem egészségügyi vagy gyógyító állítás.",
     priceHuf: 590,
@@ -93,6 +110,10 @@ export const PRODUCTS: ProductDef[] = [
       "az általad megadott álomhangulat figyelembevétele",
       "visszatérő álomnál finom mintajelzés",
     ],
+    depthPromise: [
+      "a leírt álmot és az ébredés utáni érzést együtt olvassa",
+      "nem diagnosztizál, hanem önismereti jelként keresi a visszatérő témát",
+    ],
     qualityPromise: "Önismereti álomfejtés, diagnózis és ijesztgetés nélkül.",
     priceHuf: 790,
     category: "instant",
@@ -107,6 +128,10 @@ export const PRODUCTS: ProductDef[] = [
       "jegyed mai archetípusos mintája",
       "rövid szerelem/munka/figyelem bontás",
       "a megadott helyzetedhez igazított üzenet",
+    ],
+    depthPromise: [
+      "a napi jegyhangulatot nem bulvárjóslatként, hanem személyes fókuszként adja",
+      "ha megadsz témát, arra külön reflektál a szerelem/munka/figyelem bontásban",
     ],
     qualityPromise: "Rövid, személyes napi horoszkóp; nem bulvárjóslat.",
     priceHuf: 790,
@@ -123,6 +148,10 @@ export const PRODUCTS: ProductDef[] = [
       "rövid helyzethez kötött értelmezés",
       "külön figyelmeztetés, ha a kérdés ismétlődik",
     ],
+    depthPromise: [
+      "az új húzást a korábbi napi kérdésedhez képest is keretezi",
+      "segít észrevenni, ha ugyanazt a választ keresed másik laptól",
+    ],
     qualityPromise: "Az extra húzás nem dönt helyetted, hanem új nézőpontot ad.",
     priceHuf: 590,
     category: "instant",
@@ -137,6 +166,10 @@ export const PRODUCTS: ProductDef[] = [
       "múlt, jelen és jövő külön értelmezése",
       "a három lap közös történetének szintézise",
       "a kérdésedre reflektáló mélyebb összegzés",
+    ],
+    depthPromise: [
+      "a három lapot egy történetté fűzi, nem külön lapmagyarázatként adja",
+      "a kérdésedben megjelenő feszültségre és következő belső lépésre figyel",
     ],
     qualityPromise: "Részletesebb, prémium olvasat; nem három különálló lapmagyarázat.",
     priceHuf: 1990,
@@ -155,6 +188,10 @@ export const PRODUCTS: ProductDef[] = [
       "akadály, háttér, tudatos és rejtett réteg",
       "összefüggő nagy kép a kérdésed körül",
     ],
+    depthPromise: [
+      "a tíz pozícióból mélyebb mintát és belső ellentmondást rajzol ki",
+      "komplex helyzeteknél nem gyors választ, hanem átláthatóbb képet ad",
+    ],
     qualityPromise: "A legmélyebb tarot-riport: lassabb, részletesebb, összefüggő elemzés.",
     priceHuf: 2990,
     category: "delayed",
@@ -171,6 +208,10 @@ export const PRODUCTS: ProductDef[] = [
       "a megadott döntési helyzet értelmezése",
       "mi húz vissza és mi nyithat utat",
       "érzelmi szempontok döntésparancs nélkül",
+    ],
+    depthPromise: [
+      "a konkrét döntésedre reflektál, nem általános tanácsot ad",
+      "külön kezeli, mi félelemből és mi tisztább belső irányból mozgat",
     ],
     qualityPromise: "Nem mondja meg, mit tegyél; segít tisztábban látni, mi mozgat.",
     priceHuf: 2490,
@@ -189,6 +230,10 @@ export const PRODUCTS: ProductDef[] = [
       "vonzalom, kommunikáció és hosszú táv bontása",
       "ex/visszatérő történetnél óvatos visszatérési minta",
     ],
+    depthPromise: [
+      "a kapcsolat típusát is figyeli: randi, ex, visszatérő történet vagy összeillés",
+      "nem ígér visszatérést, hanem tempót, realitást és ismétlődő mintát olvas",
+    ],
     qualityPromise:
       "Nem ígéri, hogy valaki visszajön vagy szeret; a mintát és a realitást olvassa.",
     priceHuf: 2490,
@@ -206,6 +251,10 @@ export const PRODUCTS: ProductDef[] = [
       "sorsszám és születésnap száma",
       "teljes név esetén belső vágy, külső kép és kifejeződés",
       "szerelem, munka, árnyékoldal és személyes év",
+    ],
+    depthPromise: [
+      "a születési dátumot és teljes nevet együtt értelmezi, ha megadtad",
+      "a számokat személyes életút, munka, szerelem és árnyékoldal szerint bontja",
     ],
     qualityPromise: "Személyesebb életút-olvasat születési dátum és név alapján.",
     priceHuf: 2490,

@@ -97,6 +97,20 @@ export function PaywallDialog({
               </p>
             </div>
 
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                Miben lesz személyesebb?
+              </div>
+              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                {product.depthPromise.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {inputSummary.length > 0 && (
               <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
                 <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
