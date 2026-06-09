@@ -2,6 +2,7 @@
 import React from "react";
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -33,7 +34,8 @@ const OrderDeliveredEmail = ({
   accessUrl,
   siteUrl = SITE_URL,
 }: Props) => {
-  const paragraphs = (body ?? "").split(/\n\n+/).filter(Boolean);
+  const readingBlocks = parseReadingBlocks(body);
+  const openUrl = accessUrl ?? `${siteUrl}/profil`;
   return (
     <Html lang="hu" dir="ltr">
       <Head />
@@ -45,15 +47,26 @@ const OrderDeliveredEmail = ({
             <Text style={muted}>Elkészült az olvasatod.</Text>
           </Section>
 
+          <Section style={accessCard}>
+            <Text style={accessText}>
+              A teljes olvasatot ezen a biztonságos linken is eléred. Vendég vásárlásnál ezt a
+              linket érdemes megtartanod.
+            </Text>
+            <Button href={openUrl} style={button}>
+              Olvasat megnyitása
+            </Button>
+          </Section>
+
           <Section style={card}>
             <Heading as="h2" style={h2}>
               {title ?? productName}
             </Heading>
-            {paragraphs.length > 0 ? (
-              paragraphs.map((p, i) => (
-                <Text key={i} style={paragraph}>
-                  {p}
-                </Text>
+            {readingBlocks.length > 0 ? (
+              readingBlocks.map((block, i) => (
+                <Section key={i} style={readingBlock}>
+                  {block.heading && <Text style={blockHeading}>{block.heading}</Text>}
+                  <Text style={paragraph}>{block.text}</Text>
+                </Section>
               ))
             ) : (
               <Text style={paragraph}>A részletes olvasatot a profilodban éred el.</Text>
@@ -63,7 +76,7 @@ const OrderDeliveredEmail = ({
           <Section>
             <Text style={paragraph}>
               Az olvasatot ezen a linken bármikor újra megnyithatod:{" "}
-              <Link href={accessUrl ?? `${siteUrl}/profil`} style={link}>
+              <Link href={openUrl} style={link}>
                 olvasat megnyitása
               </Link>
             </Text>
@@ -77,7 +90,8 @@ const OrderDeliveredEmail = ({
 
           <Hr style={hr} />
           <Text style={footer}>
-            Köszönjük, hogy a Jövőd.hu-t választottad.
+            Köszönjük, hogy a Jövőd.hu-t választottad. Az olvasat önismereti és szimbolikus
+            tartalom, nem orvosi, jogi vagy pénzügyi tanácsadás.
             {orderId ? ` Rendelésazonosító: ${orderId.slice(0, 8)}.` : ""}
           </Text>
         </Container>
@@ -103,10 +117,49 @@ export const template = {
   },
 } satisfies TemplateEntry;
 
+function parseReadingBlocks(value: string | undefined): { heading?: string; text: string }[] {
+  return (value ?? "")
+    .split(/\n\n+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const [first, ...rest] = part
+        .split(/\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+      if (first && rest.length) {
+        return { heading: first, text: rest.join("\n") };
+      }
+      return { text: first ?? part };
+    });
+}
+
 const main = { backgroundColor: "#ffffff", fontFamily: "Georgia, serif" };
 const container = { padding: "32px 24px", maxWidth: "560px", margin: "0 auto" };
 const brand = { fontSize: "24px", color: "#181126", margin: "0 0 4px 0", fontWeight: 600 as const };
 const muted = { color: "#6b6478", fontSize: "14px", margin: "0 0 24px 0" };
+const accessCard = {
+  backgroundColor: "#181126",
+  borderRadius: "12px",
+  padding: "22px",
+  margin: "0 0 20px 0",
+};
+const accessText = {
+  color: "#f6f0df",
+  fontSize: "14px",
+  lineHeight: "1.6",
+  margin: "0 0 16px 0",
+};
+const button = {
+  backgroundColor: "#c9a85d",
+  borderRadius: "8px",
+  color: "#181126",
+  display: "inline-block",
+  fontSize: "14px",
+  fontWeight: 700 as const,
+  padding: "12px 18px",
+  textDecoration: "none",
+};
 const card = {
   backgroundColor: "#faf8ff",
   border: "1px solid #e9e4f3",
@@ -115,6 +168,14 @@ const card = {
   margin: "0 0 24px 0",
 };
 const h2 = { fontSize: "20px", color: "#181126", margin: "0 0 12px 0" };
+const readingBlock = { margin: "0 0 16px 0" };
+const blockHeading = {
+  color: "#5a3f88",
+  fontSize: "13px",
+  fontWeight: 700 as const,
+  letterSpacing: "0.03em",
+  margin: "0 0 4px 0",
+};
 const paragraph = { color: "#2a2434", fontSize: "15px", lineHeight: "1.65", margin: "0 0 12px 0" };
 const link = { color: "#5a3fb8", textDecoration: "underline" };
 const hr = { borderColor: "#e9e4f3", margin: "24px 0" };
