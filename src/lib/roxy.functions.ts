@@ -742,14 +742,9 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           nev: c.name,
           kulcsszavak: c.keywords ?? [],
           forditott: c.reversed === true,
-          general: c.general ?? null,
-          love: c.love ?? null,
-          decision: c.decision ?? null,
-          warning: c.warning ?? null,
-          daily: c.daily ?? null,
         })),
         utmutato: isDailySingle
-          ? "Mai lap: a lap minőségét a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe."
+          ? "Mai lap: a lap kulcsszavaiból és nevéből indulj ki, a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe. Ne írj sablonos 'Ma lassíts' / 'Ma egy dolgot csinálj lassabban' típusú zárómondatot — minden lap mást üzen, a oneSentence legyen konkrét és a lap karakteréhez kötött."
           : "A lap jelentését a megadott helyzetre vagy kérdésre alkalmazd. Ne általános kártyaleírást írj.",
         helyzetiSzabaly:
           "Ha van konkrét kérdés vagy kategória, válaszolj rá érdemben. Ex / visszatérő történetnél érintsd, hogy visszatérés esetén mi mutat rövid fellángolást és mi mutat tartósabb szándékot, de ne mondd biztosra, hogy visszajön vagy marad. Randi/ismerkedés esetén a találkozó vagy ismerkedés tanítására és tempójára reflektálj.",

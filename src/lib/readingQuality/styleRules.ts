@@ -1,4 +1,4 @@
-export const READING_QUALITY_PROMPT_VERSION = "jovod-reading-quality-v3-natural";
+export const READING_QUALITY_PROMPT_VERSION = "jovod-reading-quality-v4-natural";
 export const READING_QUALITY_MODEL = "gpt-5.2";
 
 export const SAFETY_NOTE = "Ez önismereti olvasat, nem orvosi, jogi vagy pénzügyi tanács.";
