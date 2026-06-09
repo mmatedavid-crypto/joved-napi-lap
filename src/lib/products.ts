@@ -7,6 +7,8 @@ export interface ProductDef {
   priceId: string; // Stripe lookup_key
   name: string;
   short: string;
+  includes: string[];
+  qualityPromise: string;
   priceHuf: number;
   category: ProductCategory;
   // Csak késleltetett termékekhez: standard szállítási idő órákban
@@ -26,6 +28,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "napi_lap_ai_price",
     name: "Napi lap — személyes olvasat",
     short: "Személyre szabott elemzés a mai lapodhoz.",
+    includes: [
+      "a kihúzott lap személyes értelmezése",
+      "rövid helyzetkép a mai napra",
+      "egy figyelni érdemes belső irány",
+    ],
+    qualityPromise: "Azonnali, rövid, de személyes olvasat. Nem általános horoszkópszöveg.",
     priceHuf: 590,
     category: "instant",
     sourceRoute: "/mai-lap",
@@ -35,6 +43,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "mai_iranytu_ai_price",
     name: "Mai iránytű — személyes üzenet",
     short: "Mit üzen a mai napod neked személyesen.",
+    includes: [
+      "napi önismereti irány",
+      "szerelem/munka/hangulat finom bontása",
+      "egy konkrét kérdés, amire érdemes figyelned",
+    ],
+    qualityPromise: "Azonnali napi iránytű, személyesebb hanggal, nem magazinos jóslatként.",
     priceHuf: 690,
     category: "instant",
     sourceRoute: "/mai-iranytu",
@@ -44,6 +58,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "angyalszam_ai_price",
     name: "Angyalszám — mélyebb olvasat",
     short: "Az angyalszámod személyre szabott jelentése.",
+    includes: [
+      "a szám szimbolikus jelentése",
+      "mit jelezhet a mostani élethelyzetedben",
+      "egy rövid önismereti fókusz",
+    ],
+    qualityPromise: "Szimbolikus értelmezés, józanul megfogalmazva, túlzó ígéretek nélkül.",
     priceHuf: 590,
     category: "instant",
     sourceRoute: "/angyalszam",
@@ -53,6 +73,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "kristaly_ai_price",
     name: "Kristály ajánlás — személyesen",
     short: "A mostani helyzetedhez illő kristály.",
+    includes: [
+      "egy kristály szimbolikus ajánlása",
+      "milyen minőséget képviselhet számodra",
+      "rövid, gyógyítási ígéret nélküli értelmezés",
+    ],
+    qualityPromise: "Önismereti kristály-ajánlás, nem egészségügyi vagy gyógyító állítás.",
     priceHuf: 590,
     category: "instant",
     sourceRoute: "/kristaly",
@@ -62,6 +88,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "alomfejtes_rovid_price",
     name: "Álomfejtés — rövid olvasat",
     short: "Az álmod szimbólumainak rövid értelmezése.",
+    includes: [
+      "az álom fő szimbólumának értelmezése",
+      "az általad megadott álomhangulat figyelembevétele",
+      "visszatérő álomnál finom mintajelzés",
+    ],
+    qualityPromise: "Önismereti álomfejtés, diagnózis és ijesztgetés nélkül.",
     priceHuf: 790,
     category: "instant",
     sourceRoute: "/alomfejtes",
@@ -71,6 +103,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "horoszkop_szemelyre_price",
     name: "Horoszkóp — személyre szabott",
     short: "Mai horoszkópod a te helyzetedre szabva.",
+    includes: [
+      "jegyed mai archetípusos mintája",
+      "rövid szerelem/munka/figyelem bontás",
+      "a megadott helyzetedhez igazított üzenet",
+    ],
+    qualityPromise: "Rövid, személyes napi horoszkóp; nem bulvárjóslat.",
     priceHuf: 790,
     category: "instant",
     sourceRoute: "/horoszkop",
@@ -80,6 +118,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "extra_huzas_price",
     name: "Extra napi húzás",
     short: "Még egy húzás ma — a napi limit feloldása.",
+    includes: [
+      "egy új személyes lapolvasat",
+      "rövid helyzethez kötött értelmezés",
+      "külön figyelmeztetés, ha a kérdés ismétlődik",
+    ],
+    qualityPromise: "Az extra húzás nem dönt helyetted, hanem új nézőpontot ad.",
     priceHuf: 590,
     category: "instant",
   },
@@ -88,6 +132,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "harom_lap_mely_price",
     name: "Három lap — mély elemzés",
     short: "Három lapos húzás részletes elemzése fizetés után, az oldalon.",
+    includes: [
+      "múlt, jelen és jövő külön értelmezése",
+      "a három lap közös történetének szintézise",
+      "a kérdésedre reflektáló mélyebb összegzés",
+    ],
+    qualityPromise: "Részletesebb, prémium olvasat; nem három különálló lapmagyarázat.",
     priceHuf: 1990,
     category: "delayed",
     standardHours: 24,
@@ -99,6 +149,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "kelta_kereszt_price",
     name: "Kelta kereszt — nagy spread",
     short: "10 lapos klasszikus kelta kereszt fizetés után, az oldalon.",
+    includes: [
+      "10 lapos klasszikus kelta kereszt szerkezet",
+      "akadály, háttér, tudatos és rejtett réteg",
+      "összefüggő nagy kép a kérdésed körül",
+    ],
+    qualityPromise: "A legmélyebb tarot-riport: lassabb, részletesebb, összefüggő elemzés.",
     priceHuf: 2990,
     category: "delayed",
     standardHours: 24,
@@ -109,6 +165,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "dontes_komplex_price",
     name: "Döntés előtt — komplex elemzés",
     short: "Komplex döntéselőkészítő olvasat fizetés után, az oldalon.",
+    includes: [
+      "a megadott döntési helyzet értelmezése",
+      "mi húz vissza és mi nyithat utat",
+      "érzelmi szempontok döntésparancs nélkül",
+    ],
+    qualityPromise: "Nem mondja meg, mit tegyél; segít tisztábban látni, mi mozgat.",
     priceHuf: 2490,
     category: "delayed",
     standardHours: 24,
@@ -120,6 +182,13 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "parkapcsolat_elemzes_price",
     name: "Párkapcsolat — mély elemzés",
     short: "Randi előtt vagy összeillés részletes olvasata fizetés után, az oldalon.",
+    includes: [
+      "kapcsolati dinamika és tempó",
+      "vonzalom, kommunikáció és hosszú táv bontása",
+      "ex/visszatérő történetnél óvatos visszatérési minta",
+    ],
+    qualityPromise:
+      "Nem ígéri, hogy valaki visszajön vagy szeret; a mintát és a realitást olvassa.",
     priceHuf: 2490,
     category: "delayed",
     standardHours: 24,
@@ -131,6 +200,12 @@ export const PRODUCTS: ProductDef[] = [
     priceId: "szammisztika_eletut_price",
     name: "Számmisztika — életút elemzés",
     short: "Teljes numerológiai életút elemzés fizetés után, az oldalon.",
+    includes: [
+      "sorsszám és születésnap száma",
+      "teljes név esetén belső vágy, külső kép és kifejeződés",
+      "szerelem, munka, árnyékoldal és személyes év",
+    ],
+    qualityPromise: "Személyesebb életút-olvasat születési dátum és név alapján.",
     priceHuf: 2490,
     category: "delayed",
     standardHours: 24,

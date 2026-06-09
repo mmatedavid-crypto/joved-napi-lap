@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
-import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
+import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
 interface PaywallDialogProps {
   open: boolean;
@@ -31,10 +31,18 @@ export function PaywallDialog({
   const [email, setEmail] = useState(user?.email ?? "");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [express, setExpress] = useState(false);
 
   if (!product) return null;
 
-  const total = product.priceHuf;
+  const canExpress = product.category === "delayed";
+  const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
+  const deliveryLabel =
+    product.category === "instant"
+      ? "azonnal, fizetés után"
+      : express
+        ? "6 órán belül"
+        : `${product.standardHours ?? 24} órán belül`;
 
   return (
     <Dialog
@@ -44,6 +52,7 @@ export function PaywallDialog({
         if (!o) {
           setConfirmed(false);
           setTermsAccepted(false);
+          setExpress(false);
         }
       }}
     >
@@ -58,11 +67,41 @@ export function PaywallDialog({
             <div className="text-center">
               <div className="font-display text-4xl text-gold-gradient">{formatHuf(total)}</div>
               <div className="text-xs text-ivory/55 mt-1">
-                {product.category === "instant"
-                  ? "azonnali olvasat"
-                  : "részletes olvasat fizetés után, az oldalon"}
+                {deliveryLabel} · a profilodban és ezen az oldalon
               </div>
             </div>
+
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/15 p-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Mit kapsz?</div>
+              <ul className="mt-3 space-y-2 text-sm text-ivory/72">
+                {product.includes.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 border-t border-[oklch(0.78_0.10_80/0.14)] pt-3 text-xs leading-relaxed text-ivory/55">
+                {product.qualityPromise}
+              </p>
+            </div>
+
+            {canExpress && (
+              <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
+                <input
+                  type="checkbox"
+                  checked={express}
+                  onChange={(e) => setExpress(e.target.checked)}
+                  className="mt-1"
+                />
+                <span>
+                  Express gyorsítás 6 órán belül · +{formatHuf(EXPRESS_PRICE_HUF)}
+                  <span className="block text-xs text-ivory/45 mt-1">
+                    Ha nem sürgős, a normál kézbesítés kedvezőbb.
+                  </span>
+                </span>
+              </label>
+            )}
 
             <div>
               <label className="block text-sm text-ivory/80 mb-1">Email cím a vásárláshoz</label>
@@ -113,7 +152,7 @@ export function PaywallDialog({
         ) : (
           <StripeEmbeddedCheckoutForm
             productSlug={productSlug}
-            express={false}
+            express={express && canExpress}
             customerEmail={email}
             userId={user?.id}
             inputPayload={inputPayload}

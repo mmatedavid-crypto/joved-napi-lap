@@ -18,6 +18,7 @@ type OrderView = {
   express: boolean | null;
   category: string;
   status: string;
+  deliver_by?: string | null;
   guest_email?: string | null;
   response_payload?: unknown;
 };
@@ -96,10 +97,19 @@ function Page() {
 
   return (
     <Layout>
-      <PageHeader eyebrow="Köszönjük" title="A vásárlásod megérkezett" />
+      <PageHeader
+        eyebrow="Köszönjük"
+        title="A vásárlásod megérkezett"
+        lead="Most elkészítjük az olvasatodat. Az oldalt nyugodtan nyitva hagyhatod, de később is visszatérhetsz."
+      />
       <div className="mx-auto max-w-2xl px-4 pb-20 space-y-4">
         {loading && <Section eyebrow="Egy pillanat">Egyeztetjük a fizetést…</Section>}
-        {err && <Section eyebrow="Hiba">{err}</Section>}
+        {err && (
+          <Section eyebrow="Kapcsolódási hiba">
+            Nem a fizetéseddel van baj; csak az állapotlekérés akadt meg. Frissítsd az oldalt pár
+            perc múlva, vagy írj nekünk a vásárlási email címedről.
+          </Section>
+        )}
         {order && (
           <>
             <Section eyebrow="Vásárlás" title={order.product_name}>
@@ -107,13 +117,28 @@ function Page() {
                 {formatHuf(order.price_huf)}
                 {order.express ? " · express" : ""}
               </p>
+              {order.deliver_by && order.status !== "delivered" && (
+                <p className="mt-2 text-sm text-ivory/55">
+                  Várható elkészülés: {new Date(order.deliver_by).toLocaleString("hu-HU")}
+                </p>
+              )}
             </Section>
 
             {order.status !== "delivered" && order.status !== "failed" && (
               <Section eyebrow="Készítjük">
-                A személyes olvasatod itt jelenik meg ezen az oldalon, amint elkészült. Ha az oldal
-                nem frissül pár percen belül, írj nekünk a rendelés email címéről
-                {order.guest_email ? ` (${order.guest_email})` : ""}, és utánanézünk.
+                <p>
+                  A személyes olvasatod ezen az oldalon jelenik meg, amint elkészült. Az azonnali
+                  termékek általában pár percen belül megérkeznek; a részletes elemzéseket gondosabb
+                  szövegezéssel készítjük.
+                </p>
+                <p className="mt-3 text-sm text-ivory/60">
+                  Ha vendégként vásároltál, ezt az oldalt érdemes megtartanod. Ha bejelentkeztél, a
+                  profilodban is eléred az elkészült olvasatot.
+                </p>
+                <p className="mt-3 text-sm text-ivory/50">
+                  Ha az oldal nem frissül, írj nekünk a rendelés email címéről
+                  {order.guest_email ? ` (${order.guest_email})` : ""}, és utánanézünk.
+                </p>
               </Section>
             )}
 
@@ -139,13 +164,22 @@ function Page() {
 
             {order.status === "failed" && (
               <Section eyebrow="Sajnos hiba történt">
-                Nem sikerült feldolgozni az olvasatot. Kérlek írj nekünk — visszatérítjük.
+                Nem sikerült feldolgozni az olvasatot. Kérlek írj nekünk a vásárlási email címedről;
+                vagy elkészítjük kézzel, vagy visszatérítjük.
               </Section>
             )}
 
-            <Link to="/" className="btn-gold inline-block">
-              Vissza a főoldalra
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/profil" className="btn-gold inline-block">
+                Profil megnyitása
+              </Link>
+              <Link
+                to="/"
+                className="inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+              >
+                Vissza a főoldalra
+              </Link>
+            </div>
           </>
         )}
       </div>
