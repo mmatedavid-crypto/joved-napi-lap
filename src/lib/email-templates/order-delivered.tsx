@@ -22,6 +22,7 @@ interface Props {
   body?: string;
   orderId?: string;
   accessUrl?: string;
+  isGuest?: boolean;
   siteUrl?: string;
 }
 
@@ -33,11 +34,15 @@ const OrderDeliveredEmail = ({
   body,
   orderId,
   accessUrl,
+  isGuest = false,
   siteUrl = SITE_URL,
 }: Props) => {
   const readingBlocks = parseReadingBlocks(body);
   const openUrl = accessUrl ?? `${siteUrl}/profil`;
   const shortOrderId = orderId ? orderId.slice(0, 8) : undefined;
+  const missingBodyText = isGuest
+    ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről."
+    : "A részletes olvasatot ezen a linken és a profilodban is eléred.";
   return (
     <Html lang="hu" dir="ltr">
       <Head />
@@ -71,7 +76,7 @@ const OrderDeliveredEmail = ({
                 </Section>
               ))
             ) : (
-              <Text style={paragraph}>A részletes olvasatot a profilodban éred el.</Text>
+              <Text style={paragraph}>{missingBodyText}</Text>
             )}
           </Section>
 
@@ -83,10 +88,19 @@ const OrderDeliveredEmail = ({
               </Link>
             </Text>
             <Text style={paragraph}>
-              Ha fiókkal vásároltál, a profilodban a korábbi olvasataidat is megtalálod:{" "}
-              <Link href={`${siteUrl}/profil`} style={link}>
-                {siteUrl}/profil
-              </Link>
+              {isGuest ? (
+                <>
+                  Vendég vásárlásnál ez a biztonságos rendelési link a legfontosabb hozzáférés. Fiók
+                  létrehozása nem kötelező.
+                </>
+              ) : (
+                <>
+                  A profilodban a korábbi olvasataidat is megtalálod:{" "}
+                  <Link href={`${siteUrl}/profil`} style={link}>
+                    {siteUrl}/profil
+                  </Link>
+                </>
+              )}
             </Text>
             <Text style={supportText}>
               Ha a gomb nem nyílik meg, írj nekünk a{" "}
@@ -126,6 +140,7 @@ export const template = {
     body: "Az első lap a múltadról beszél — egy lezáratlan kapcsolatról.\n\nA második a jelenedet tükrözi: most érdemes lassítani.\n\nA harmadik egy nyitott ajtót mutat a közeljövőben.",
     orderId: "12345678-aaaa-bbbb-cccc-1234567890ab",
     accessUrl: "https://jovod.hu/koszonjuk?session_id=cs_test_123",
+    isGuest: true,
   },
 } satisfies TemplateEntry;
 

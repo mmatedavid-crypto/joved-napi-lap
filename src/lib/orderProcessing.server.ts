@@ -208,6 +208,7 @@ async function queueDeliveredEmail(order: {
         title: order.reading.title,
         body: order.reading.body,
         orderId: order.id,
+        isGuest: Boolean(order.guestEmail),
         accessUrl: order.stripeSessionId
           ? `https://jovod.hu/koszonjuk?session_id=${encodeURIComponent(order.stripeSessionId)}`
           : undefined,
