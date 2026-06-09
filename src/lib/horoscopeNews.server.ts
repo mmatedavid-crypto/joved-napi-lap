@@ -10,7 +10,7 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v1";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 
 function todayKey(): string {
