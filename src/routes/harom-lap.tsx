@@ -50,6 +50,9 @@ function HaromLap() {
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywall, setPaywall] = useState(false);
+  const [paywallProduct, setPaywallProduct] = useState<"harom_lap_mely" | "kelta_kereszt">(
+    "harom_lap_mely",
+  );
   const aiReading = useServerFn(aiTarotReadingHU);
   const loadMemory = useServerFn(getReadingContext);
   const saveMemory = useServerFn(saveReadingMemory);
@@ -271,8 +274,26 @@ function HaromLap() {
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
                 <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz?</div>
-                <button className="btn-gold" onClick={() => setPaywall(true)}>
+                <button
+                  className="btn-gold"
+                  onClick={() => {
+                    setPaywallProduct("harom_lap_mely");
+                    setPaywall(true);
+                  }}
+                >
                   {productCtaLabel("Három lap — mély elemzés", "harom_lap_mely")}
+                </button>
+                <div className="mt-4 text-sm text-ivory/65">
+                  Nagyobb kérdéshez 10 pozíciós kelta kereszt elemzést is kérhetsz.
+                </div>
+                <button
+                  className="btn-ghost-gold mt-2"
+                  onClick={() => {
+                    setPaywallProduct("kelta_kereszt");
+                    setPaywall(true);
+                  }}
+                >
+                  {productCtaLabel("Kelta kereszt — nagy spread", "kelta_kereszt")}
                 </button>
               </div>
             </div>
@@ -287,7 +308,7 @@ function HaromLap() {
       <PaywallDialog
         open={paywall}
         onOpenChange={setPaywall}
-        productSlug="harom_lap_mely"
+        productSlug={paywallProduct}
         sourceRoute="/harom-lap"
         inputPayload={{
           cards: cards?.map((c) => c.name),

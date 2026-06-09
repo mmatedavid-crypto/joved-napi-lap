@@ -40,6 +40,19 @@ function cardsFromPayload(input: Record<string, unknown>, count = 3): TarotCard[
   return CARDS.slice(0, count);
 }
 
+function completeCardsFromPayload(input: Record<string, unknown>, count: number): TarotCard[] {
+  const selected = cardsFromPayload(input, count);
+  const used = new Set(selected.map((card) => card.id));
+  for (const card of CARDS) {
+    if (selected.length >= count) break;
+    if (!used.has(card.id)) {
+      selected.push(card);
+      used.add(card.id);
+    }
+  }
+  return selected.slice(0, count);
+}
+
 function renderReading(reading: QualityReading): PaidReadingPayload {
   const body = [
     ...reading.sections.map((section) => `${section.heading}\n${section.text}`),
@@ -88,9 +101,80 @@ function premiumTarotOneCard(
   return renderReading(reading);
 }
 
+function premiumCelticCross(input: Record<string, unknown>): PaidReadingPayload {
+  const cards = completeCardsFromPayload(input, 10);
+  const question = text(input.question) || text(input.q) || "Merre mozduljak innen?";
+  const category = text(input.category) || text(input.cat) || "mélyebb élethelyzet";
+  const positions = [
+    {
+      heading: "1. A helyzet magja",
+      text: `${cards[0].name} mutatja, mi van most a kérdés közepén. A ${category} témájában ez nem felszíni esemény, inkább az a belső minőség, amely köré minden más rendeződik: ${cards[0].general}`,
+    },
+    {
+      heading: "2. Ami keresztezi",
+      text: `${cards[1].name} jelzi, mi nehezíti vagy feszíti a helyzetet. Ez nem feltétlenül akadály; lehet olyan tükör is, amely megmutatja, hol ismétled a régi választ. ${cards[1].warning}`,
+    },
+    {
+      heading: "3. A mélyebb gyökér",
+      text: `${cards[2].name} a háttérben működő mintára utalhat. A kérdésedben ez azt mutatja, honnan jön az érzés, amelyet most már nem elég csak fejben megoldani. ${cards[2].general}`,
+    },
+    {
+      heading: "4. Ami mögötted van",
+      text: `${cards[3].name} azt a réteget hozza, amit már kinőttél, vagy amit lassan el kell engedni. Nem kell megtagadni, de nem biztos, hogy innen érdemes tovább dönteni. ${cards[3].daily}`,
+    },
+    {
+      heading: "5. Ami tudatosan látszik",
+      text: `${cards[4].name} azt mutatja, amit már értesz magadból. Itt van a kimondható szándék, de érdemes figyelni, hogy ez ne takarja el a csendesebb, nehezebben bevallható érzést. ${cards[4].decision}`,
+    },
+    {
+      heading: "6. Ami közeledhet",
+      text: `${cards[5].name} nem biztos jövőt mond, hanem irányt. Arra utalhat, milyen minőség nyílik meg, ha nem ugyanabból az önvédelemből reagálsz, mint eddig. ${cards[5].general}`,
+    },
+    {
+      heading: "7. Te ebben a történetben",
+      text: `${cards[6].name} a saját szerepedet mutatja. A kérdés nem csak az, mi történik veled, hanem az is, milyen részed vesz részt benne: a félelmes, a vágyakozó, vagy az, amelyik már tisztábban lát. ${cards[6].decision}`,
+    },
+    {
+      heading: "8. A környezet hatása",
+      text: `${cards[7].name} azt jelzi, milyen külső vagy kapcsolati tér vesz körül. Érdemes lehet elkülöníteni, mi a te belső válaszod, és mi az, amit mások tempója vagy elvárása húz rád. ${cards[7].warning}`,
+    },
+    {
+      heading: "9. Remény és félelem",
+      text: `${cards[8].name} kettős hely: amit szeretnél, és amitől tartasz, gyakran ugyanott ér össze. Itt nem az a feladat, hogy eltüntesd a félelmet, hanem hogy ne az vezesse a döntést. ${cards[8].love}`,
+    },
+    {
+      heading: "10. Lehetséges kifutás",
+      text: `${cards[9].name} a történet lehetséges irányát mutatja, ha a mostani mintát tudatosabban kezeled. Nem lezárást ad, hanem azt a minőséget, amely felé a helyzet mozdulhat. ${cards[9].daily}`,
+    },
+  ];
+  const reading: QualityReading = {
+    title: `Kelta kereszt · ${question}`,
+    sections: [
+      {
+        heading: "A kérdésed tere",
+        text: `A „${question}” kérdés nem egyszerű igen-nem helyzetként olvasható. A kelta kereszt itt azt mutatja meg, milyen belső, kapcsolati és időzítési rétegek rakódnak egymásra a ${category} témájában.`,
+      },
+      ...positions,
+      {
+        heading: "A tíz lap együtt",
+        text: `A fő feszültség ${cards[0].keywords[0].toLowerCase()} és ${cards[1].keywords[0].toLowerCase()} között rajzolódik ki. Ami nyílhat, az nem gyors bizonyosság, hanem ${cards[5].keywords[0].toLowerCase()} és ${cards[9].keywords[0].toLowerCase()} felé mutató lassabb rendeződés.`,
+      },
+      {
+        heading: "Mire figyelj most?",
+        text: "A nagy spread értéke nem abban van, hogy több lapból erősebb jóslatot csinál. Abban segít, hogy lásd, melyik rétegben keresed rossz helyen a választ: eseményben, érzésben, félelemben vagy mások visszajelzésében.",
+      },
+    ],
+    oneSentence: `${cards[9].name} nem lezárást, hanem irányt mutat: akkor mozdulhat tisztábban a helyzet, ha a régi reakció helyett új belső tempót választasz.`,
+    safetyNote: SAFETY_NOTE,
+    meta: { fallbackUsed: true, readingType: "paid:kelta_kereszt" },
+  };
+  return renderReading(reading);
+}
+
 function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload {
   const name = text(input.name);
   const sign = text(input.sign);
+  const situation = text(input.situation) || text(input.question) || text(input.q);
   const personalYear = text(input.personalYear);
   const title = name ? `Mai iránytű · ${name}` : "Mai iránytű · személyes üzenet";
   const reading: QualityReading = {
@@ -100,6 +184,14 @@ function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload
         heading: "Mai alaphang",
         text: `A mai napod nem nagy fordulatként, hanem finom hangolásként olvasható. ${sign ? `A ${sign} minősége most azt kéri, hogy pontosabban figyeld, hol gyorsítasz túl.` : "A hangsúly azon van, hol térsz vissza saját ritmusodhoz."}`,
       },
+      ...(situation
+        ? [
+            {
+              heading: "A megadott témád felől",
+              text: `A „${situation}” témájában ez az olvasat nem nagy előrejelzést ad, hanem napi fókuszt: hol érdemes ma kevesebb zajból, tisztább belső ritmusból reagálnod.`,
+            },
+          ]
+        : []),
       {
         heading: "Személyes ritmus",
         text: personalYear
@@ -288,7 +380,8 @@ export function composePaidOrderReading(
   if (productSlug === "kristaly_ai") return premiumCrystal(input);
   if (productSlug === "alomfejtes_rovid") return premiumDream(input);
   if (productSlug === "horoszkop_szemelyre") return premiumDailyCompass(input);
-  if (productSlug === "harom_lap_mely" || productSlug === "kelta_kereszt") {
+  if (productSlug === "kelta_kereszt") return premiumCelticCross(input);
+  if (productSlug === "harom_lap_mely") {
     const question = text(input.question) || text(input.q);
     const category = text(input.category) || "általános élethelyzet";
     const reading = composeThreeCardTarot({

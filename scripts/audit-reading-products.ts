@@ -73,6 +73,10 @@ function inspect(name: string, title: string, body: string, minLength: number, s
   if (/\b(today|overall|relationship|communication|advice|the|and|you|your)\b/i.test(body)) {
     issues.push("angol szó gyanú");
   }
+  if (name === "kelta_kereszt") {
+    if (!body.includes("10. Lehetséges kifutás")) issues.push("nem 10 pozíciós kelta kereszt");
+    if (!body.includes("A tíz lap együtt")) issues.push("hiányzik a kelta szintézis");
+  }
   const lower = body.toLocaleLowerCase("hu-HU");
   const found = forbidden.filter((phrase) => lower.includes(phrase));
   if (found.length) issues.push(`tiltott fordulat: ${found.join(", ")}`);

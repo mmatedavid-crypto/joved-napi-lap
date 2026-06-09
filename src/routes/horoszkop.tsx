@@ -1,12 +1,16 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
+import { PaywallDialog } from "@/components/PaywallDialog";
 import {
   allHoroscopeArticlePaths,
   HOROSCOPE_PERIODS,
   PERIOD_LABEL,
   periodDateLabel,
 } from "@/lib/horoscopeNews";
+import { productCtaLabel } from "@/lib/products";
+import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
 export const Route = createFileRoute("/horoszkop")({
   head: () => ({
@@ -30,6 +34,10 @@ export const Route = createFileRoute("/horoszkop")({
 
 function HoroszkopIndex() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const [name, setName] = useState("");
+  const [sign, setSign] = useState("capricorn");
+  const [situation, setSituation] = useState("");
+  const [paywall, setPaywall] = useState(false);
   if (pathname !== "/horoszkop") {
     return (
       <Layout>
@@ -47,6 +55,70 @@ function HoroszkopIndex() {
         lead="Friss csillagjegy-rovat magyarul. Válassz időszakot és jegyet."
       />
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20 space-y-8">
+        <section className="surface p-5 md:p-6">
+          <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                Személyes horoszkóp
+              </div>
+              <h2 className="font-display text-2xl text-ivory mt-1">
+                Rövid olvasat a mai helyzetedre
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
+                Ha nem általános jegyszöveget szeretnél, kérhetsz egy rövid, személyre szabott napi
+                horoszkópot a jegyedhez és a mostani kérdésedhez igazítva.
+              </p>
+            </div>
+            <button className="btn-gold" onClick={() => setPaywall(true)}>
+              {productCtaLabel("Személyes horoszkóp", "horoszkop_szemelyre")}
+            </button>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            <div>
+              <label htmlFor="horoscope-paid-name" className="block text-sm text-ivory/80 mb-2">
+                Név <span className="text-ivory/45">(opcionális)</span>
+              </label>
+              <input
+                id="horoscope-paid-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={fieldClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="horoscope-paid-sign" className="block text-sm text-ivory/80 mb-2">
+                Csillagjegy
+              </label>
+              <select
+                id="horoscope-paid-sign"
+                value={sign}
+                onChange={(e) => setSign(e.target.value)}
+                className={fieldClass}
+              >
+                {SIGNS_HU_ORDERED.map((item) => (
+                  <option key={item} value={item}>
+                    {SIGN_HU[item]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="horoscope-paid-situation"
+                className="block text-sm text-ivory/80 mb-2"
+              >
+                Mostani téma <span className="text-ivory/45">(opcionális)</span>
+              </label>
+              <input
+                id="horoscope-paid-situation"
+                value={situation}
+                onChange={(e) => setSituation(e.target.value)}
+                placeholder="Pl. szerelem, munka, döntés"
+                className={fieldClass}
+              />
+            </div>
+          </div>
+        </section>
         {HOROSCOPE_PERIODS.map((period) => (
           <section key={period} className="space-y-4">
             <div>
@@ -77,6 +149,20 @@ function HoroszkopIndex() {
           </section>
         ))}
       </div>
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="horoszkop_szemelyre"
+        sourceRoute="/horoszkop"
+        inputPayload={{
+          name,
+          sign: SIGN_HU[sign] ?? sign,
+          situation,
+        }}
+      />
     </Layout>
   );
 }
+
+const fieldClass =
+  "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none";
