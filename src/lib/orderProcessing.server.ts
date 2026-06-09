@@ -7,15 +7,17 @@ type PaidOrderReading = {
 };
 
 type ProcessOrderResult =
-  | { ok: true; response?: PaidOrderReading; alreadyDone?: true }
+  | { ok: true; response?: PaidOrderReading; alreadyDone?: true; processing?: true }
   | { ok: false; error: string };
+
+const PROCESSING_RETRY_AFTER_MS = 15 * 60 * 1000;
 
 export async function processPaidOrderBySession(sessionId: string): Promise<ProcessOrderResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: order } = await supabaseAdmin
     .from("orders")
     .select(
-      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, response_payload",
+      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, response_payload, updated_at",
     )
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
@@ -38,7 +40,8 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
     return { ok: false, error: "Még nincs kifizetve" };
   }
 
-  await supabaseAdmin.from("orders").update({ status: "processing" }).eq("id", order.id);
+  const claimed = await claimOrderForProcessing(order);
+  if (!claimed) return { ok: true, processing: true };
 
   try {
     const memoryContext = order.user_id
@@ -100,6 +103,42 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
       .eq("id", order.id);
     return { ok: false, error: message };
   }
+}
+
+async function claimOrderForProcessing(order: {
+  id: string;
+  status: string;
+  updated_at: string;
+}): Promise<boolean> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const nowIso = new Date().toISOString();
+
+  if (order.status === "processing") {
+    const lastTouched = new Date(order.updated_at).getTime();
+    if (Number.isFinite(lastTouched) && Date.now() - lastTouched < PROCESSING_RETRY_AFTER_MS) {
+      return false;
+    }
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from("orders")
+    .update({
+      status: "processing",
+      error_message: null,
+      updated_at: nowIso,
+    })
+    .eq("id", order.id)
+    .eq("status", order.status)
+    .eq("updated_at", order.updated_at)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    console.warn("order processing claim failed:", error.message);
+    return false;
+  }
+
+  return Boolean(data);
 }
 
 function normalizeDeliveredReading(payload: unknown): { title?: string; body?: string } | null {

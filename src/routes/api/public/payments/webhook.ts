@@ -49,7 +49,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     return;
   }
 
-  const newStatus = "processing";
+  const newStatus = "paid";
 
   // Late-bind: a deliver_by-t a tényleges fizetés időpontjától számoljuk.
   let deliverBy: string | null = null;
@@ -68,7 +68,8 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
         paid_at: new Date().toISOString(),
         ...(deliverBy ? { deliver_by: deliverBy } : {}),
       })
-      .eq("id", existing.id);
+      .eq("id", existing.id)
+      .eq("status", "pending_payment");
   }
 
   // Fizetett rendelésekhez: szerveroldalon is elindítjuk az olvasat feldolgozását,
@@ -95,7 +96,8 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       await supabase
         .from("orders")
         .update({ status: "failed", error_message: event.type })
-        .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "");
+        .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "")
+        .eq("status", "pending_payment");
       break;
     }
     default:
