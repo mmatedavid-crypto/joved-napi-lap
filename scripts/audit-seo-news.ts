@@ -4,6 +4,7 @@ type Check = {
   name: string;
   file: string;
   includes: string[];
+  excludes?: string[];
 };
 
 const checks: Check[] = [
@@ -37,6 +38,24 @@ const checks: Check[] = [
       "dateModified: articleDate",
     ],
   },
+  {
+    name: "horoscope fallback is publishable Hungarian copy, not provider error text",
+    file: "src/lib/horoscopeNews.server.ts",
+    includes: [
+      "SIGN_FALLBACK_ARCHETYPE",
+      "periodFocus",
+      "Heti hangulat",
+      "Havi irány",
+      "Kapcsolatok",
+      "Munka és ritmus",
+      "FALLBACK_COLORS",
+    ],
+    excludes: [
+      "A háttéradat most nem érhető el",
+      "általános magyar tartalmat mutatunk",
+      "provider error",
+    ],
+  },
 ];
 
 const failed: string[] = [];
@@ -45,6 +64,8 @@ for (const check of checks) {
   const body = readFileSync(check.file, "utf8");
   const missing = check.includes.filter((needle) => !body.includes(needle));
   if (missing.length) failed.push(`${check.name}: missing ${missing.join(", ")}`);
+  const forbidden = (check.excludes ?? []).filter((needle) => body.includes(needle));
+  if (forbidden.length) failed.push(`${check.name}: forbidden ${forbidden.join(", ")}`);
 }
 
 if (failed.length) {

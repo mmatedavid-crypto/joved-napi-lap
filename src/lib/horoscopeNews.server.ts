@@ -112,6 +112,88 @@ type ArticleAI = {
   moonPhase?: string;
 };
 
+const SIGN_FALLBACK_ARCHETYPE: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries:
+    "A Kos lendülete most gyors választ keres, de a hét valódi ereje abban lehet, ha nem minden impulzusból lesz azonnal döntés.",
+  taurus:
+    "A Bika számára most a biztonság, a ritmus és a testközeli józanság adhat kapaszkodót; ami túl gyorsan kér választ, azt érdemes lassabban megvizsgálni.",
+  gemini:
+    "Az Ikrek figyelme könnyen több irányba szalad, ezért most az lehet a kulcs, hogy ne minden gondolatból legyen külön történet.",
+  cancer:
+    "A Rák érzékenyebb belső antennákkal figyel, de most nem minden régi emlék kér azonnali választ; elég lehet észrevenni, mi érint meg.",
+  leo: "Az Oroszlán most könnyebben érzi, hol kap figyelmet és hol nem, de a valódi erő nem a bizonyításban, hanem a méltóságteljes jelenlétben van.",
+  virgo:
+    "A Szűz most rendet kereshet ott is, ahol még csak alakul a kép; a túl sok elemzés helyett egy tiszta, gyakorlati lépés vihet közelebb.",
+  libra:
+    "A Mérleg számára a kapcsolati egyensúly kerülhet előtérbe: nem az a kérdés, mindenkinek megfelelsz-e, hanem hogy te hol maradsz benne.",
+  scorpio:
+    "A Skorpió most mélyebbre lát a felszínnél, de nem minden sejtés bizonyíték; a tisztaságot az adhatja, ha nem a félelem vezeti az értelmezést.",
+  sagittarius:
+    "A Nyilas tágabb térre vágyhat, de most a szabadság akkor ad valódi könnyebbséget, ha nem menekülésből, hanem belső irányból születik.",
+  capricorn:
+    "A Bak számára a felelősség és az időzítés lehet a fő téma; nem mindent kell most megoldani, de amit vállalsz, annak legyen tiszta kerete.",
+  aquarius:
+    "A Vízöntő most kívülről láthat rá egy régi mintára, de a távolság mellett fontos lehet az is, hogy ne szakadj el attól, ami valóban számít.",
+  pisces:
+    "A Halak érzékenyebben veszi át a hangulatokat, ezért most különösen fontos lehet megkülönböztetni, mi a saját érzésed és mi az, amit másoktól hozol magaddal.",
+};
+
+const FALLBACK_COLORS: Record<keyof typeof SIGN_SLUGS, string> = {
+  aries: "mélyvörös",
+  taurus: "mohazöld",
+  gemini: "világossárga",
+  cancer: "ezüst",
+  leo: "arany",
+  virgo: "zsályazöld",
+  libra: "rózsakvarc",
+  scorpio: "bordó",
+  sagittarius: "királykék",
+  capricorn: "grafitszürke",
+  aquarius: "türkiz",
+  pisces: "gyöngyház",
+};
+
+function periodFocus(period: HoroscopePeriodHU): {
+  leadPrefix: string;
+  firstHeading: string;
+  workHeading: string;
+  loveHeading: string;
+  attentionHeading: string;
+} {
+  if (period === "heti") {
+    return {
+      leadPrefix: "Ezen a héten",
+      firstHeading: "Heti hangulat",
+      workHeading: "Munka és ritmus",
+      loveHeading: "Kapcsolatok",
+      attentionHeading: "Mire figyelj a héten?",
+    };
+  }
+  if (period === "havi") {
+    return {
+      leadPrefix: "Ebben a hónapban",
+      firstHeading: "Havi irány",
+      workHeading: "Munka és hosszabb táv",
+      loveHeading: "Kapcsolati tér",
+      attentionHeading: "Mire figyelj ebben a hónapban?",
+    };
+  }
+  return {
+    leadPrefix: "Ma",
+    firstHeading: "Mai hangulat",
+    workHeading: "Munka",
+    loveHeading: "Szerelem",
+    attentionHeading: "Mire figyelj ma?",
+  };
+}
+
+function fallbackNumber(sign: keyof typeof SIGN_SLUGS, period: HoroscopePeriodHU): number {
+  const signs = Object.keys(SIGN_SLUGS);
+  const signIndex = Math.max(0, signs.indexOf(sign));
+  const periodOffset = period === "napi" ? 1 : period === "heti" ? 3 : 6;
+  return ((signIndex + periodOffset) % 9) + 1;
+}
+
 function cleanHoroscopeNewsText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const softened = value
@@ -177,17 +259,33 @@ function localFallbackArticle(opts: {
   fallbackUsed: boolean;
 }): HoroscopeNewsArticle {
   const signName = SIGN_HU[opts.sign];
+  const focus = periodFocus(opts.period);
+  const archetype = SIGN_FALLBACK_ARCHETYPE[opts.sign];
   return {
     ...opts,
     signName,
     title: `${PERIOD_LABEL[opts.period]} ${signName} jegyűeknek`,
-    lead: "A háttéradat most nem érhető el, ezért rövid, általános magyar tartalmat mutatunk.",
+    lead: `${focus.leadPrefix} a ${signName} jegy számára nem nagy jóslatot, hanem finomabb belső igazítást hozhat. ${archetype}`,
     sections: [
       {
-        heading: "Mai irány",
-        text: "Figyeld meg, hol kér több türelmet a napod, és hol lenne elég egy kisebb, tisztább lépés.",
+        heading: focus.firstHeading,
+        text: archetype,
+      },
+      {
+        heading: focus.loveHeading,
+        text: "Kapcsolatokban most az apró reakciók lehetnek beszédesek. Nem kell mindent végleges jelként olvasnod, de érdemes észrevenned, hol érzel valódi nyugalmat, és hol csak megszokott feszültséget.",
+      },
+      {
+        heading: focus.workHeading,
+        text: "A feladatoknál a túl nagy ígéret helyett a következetes, tiszta lépés adhat erőt. Amit most egyszerűbben is meg lehet oldani, azt ne bonyolítsd túl.",
+      },
+      {
+        heading: focus.attentionHeading,
+        text: "A minta inkább arra utalhat, hogy a tempódat kell pontosabban beállítanod: ne kapkodj, de ne is halogasd azt, amiről már tudod, hogy figyelmet kér.",
       },
     ],
+    luckyColor: FALLBACK_COLORS[opts.sign],
+    luckyNumber: fallbackNumber(opts.sign, opts.period),
   };
 }
 
