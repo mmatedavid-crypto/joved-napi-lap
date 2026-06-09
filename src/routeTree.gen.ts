@@ -46,6 +46,7 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
+import { Route as ApiInternalHoroscopeNewsPrewarmRouteImport } from './routes/api/internal/horoscope-news/prewarm'
 
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
   id: '/unsubscribe',
@@ -236,6 +237,12 @@ const ApiPublicPaymentsWebhookRoute =
     path: '/api/public/payments/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiInternalHoroscopeNewsPrewarmRoute =
+  ApiInternalHoroscopeNewsPrewarmRouteImport.update({
+    id: '/api/internal/horoscope-news/prewarm',
+    path: '/api/internal/horoscope-news/prewarm',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -310,6 +318,7 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -350,6 +359,7 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
+  '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
+    | '/api/internal/horoscope-news/prewarm'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -430,6 +441,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
+    | '/api/internal/horoscope-news/prewarm'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -469,6 +481,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
+    | '/api/internal/horoscope-news/prewarm'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
@@ -508,6 +521,7 @@ export interface RootRouteChildren {
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  ApiInternalHoroscopeNewsPrewarmRoute: typeof ApiInternalHoroscopeNewsPrewarmRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -775,6 +789,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/internal/horoscope-news/prewarm': {
+      id: '/api/internal/horoscope-news/prewarm'
+      path: '/api/internal/horoscope-news/prewarm'
+      fullPath: '/api/internal/horoscope-news/prewarm'
+      preLoaderRoute: typeof ApiInternalHoroscopeNewsPrewarmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -823,6 +844,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  ApiInternalHoroscopeNewsPrewarmRoute: ApiInternalHoroscopeNewsPrewarmRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

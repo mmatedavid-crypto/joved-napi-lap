@@ -51,6 +51,23 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope news can be prewarmed through a protected internal route",
+    file: "src/routes/api/internal/horoscope-news/prewarm.ts",
+    includes: [
+      'createFileRoute("/api/internal/horoscope-news/prewarm")',
+      "HOROSCOPE_PREWARM_SECRET",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "Authorization",
+      "Bearer ",
+      "MAX_LIMIT = 36",
+      "getHoroscopeNewsArticle",
+      '"Cache-Control": "no-store"',
+      "fallbackCount",
+      "translationCached",
+    ],
+    excludes: ["article.lead", "article.title", "roxy.data", "response_payload"],
+  },
+  {
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
