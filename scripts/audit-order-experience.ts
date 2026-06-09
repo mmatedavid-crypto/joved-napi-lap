@@ -58,6 +58,17 @@ const checks: Check[] = [
     includes: ["SupportContact", "SITE_LEGAL.supportEmail", "Ügyfélszolgálat"],
   },
   {
+    name: "thank-you page exposes a short order reference",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "function shortOrderId",
+      "Rendelés:",
+      "shortOrderId(order.id)",
+      "add meg ezt",
+      "rövid rendelésazonosítót",
+    ],
+  },
+  {
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],
@@ -77,9 +88,13 @@ const checks: Check[] = [
     name: "profile exposes support contact for stuck orders",
     file: "src/routes/profil.tsx",
     includes: [
+      "function shortOrderId",
+      "Rendelés:",
+      "shortOrderId(o.id)",
       "ProfileSupportContact",
       "Ha továbbra is így marad",
       "vásárlási email címedről",
+      "Add meg ezt is",
       "Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni",
       "SITE_LEGAL.supportEmail",
     ],

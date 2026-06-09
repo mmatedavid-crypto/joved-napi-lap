@@ -15,6 +15,7 @@ type OrderResponsePayload = {
 };
 
 type OrderView = {
+  id: string;
   product_name: string;
   price_huf: number;
   express: boolean | null;
@@ -32,6 +33,10 @@ function maskEmail(email: string): string {
   if (!local || !domain) return "a vásárlási email címed";
   const visible = local.slice(0, Math.min(2, local.length));
   return `${visible}${local.length > 2 ? "..." : ""}@${domain}`;
+}
+
+function shortOrderId(id: string | undefined | null): string | undefined {
+  return id ? id.slice(0, 8).toUpperCase() : undefined;
 }
 
 export const Route = createFileRoute("/koszonjuk")({
@@ -165,6 +170,11 @@ function Page() {
                 {formatHuf(order.price_huf)}
                 {order.express ? " · express" : ""}
               </p>
+              {shortOrderId(order.id) && (
+                <p className="mt-2 text-xs tracking-[0.16em] text-ivory/45">
+                  Rendelés: {shortOrderId(order.id)}
+                </p>
+              )}
               {order.deliver_by && order.status !== "delivered" && (
                 <p className="mt-2 text-sm text-ivory/55">
                   Várható elkészülés: {new Date(order.deliver_by).toLocaleString("hu-HU")}
@@ -186,7 +196,7 @@ function Page() {
                 <p className="mt-3 text-sm text-ivory/50">
                   Ha az oldal nem frissül, írj nekünk a rendelés email címéről, és utánanézünk.
                 </p>
-                <SupportContact className="mt-4" />
+                <SupportContact className="mt-4" orderId={order.id} />
               </Section>
             )}
 
@@ -228,9 +238,10 @@ function Page() {
                   elkészítjük kézzel, vagy visszatérítjük.
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
-                  A gyors azonosításhoz írd meg a termék nevét és a vásárlás nagyjábóli időpontját.
+                  A gyors azonosításhoz írd meg a rövid rendelésazonosítót, a termék nevét és a
+                  vásárlás nagyjábóli időpontját.
                 </p>
-                <SupportContact className="mt-4" />
+                <SupportContact className="mt-4" orderId={order.id} />
               </Section>
             )}
 
@@ -258,14 +269,16 @@ function Page() {
   );
 }
 
-function SupportContact({ className = "" }: { className?: string }) {
+function SupportContact({ className = "", orderId }: { className?: string; orderId?: string }) {
+  const shortId = shortOrderId(orderId);
   return (
     <p className={`text-sm leading-relaxed text-ivory/58 ${className}`.trim()}>
       Ügyfélszolgálat:{" "}
       <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
         {SITE_LEGAL.supportEmail}
       </a>
-      . A gyors azonosításhoz a vásárlási email címedről írj.
+      . A gyors azonosításhoz a vásárlási email címedről írj
+      {shortId ? `, és add meg ezt: ${shortId}.` : "."}
     </p>
   );
 }

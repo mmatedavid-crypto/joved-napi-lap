@@ -56,6 +56,10 @@ type OrderResponsePayload = {
   body?: string;
 };
 
+function shortOrderId(id: string | undefined | null): string | undefined {
+  return id ? id.slice(0, 8).toUpperCase() : undefined;
+}
+
 function Page() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -221,6 +225,9 @@ function Page() {
                           {STATUS_HU[o.status] ?? o.status}
                           {o.express ? " · express" : ""}
                         </div>
+                        <div className="mt-1 text-[11px] tracking-[0.14em] text-ivory/38">
+                          Rendelés: {shortOrderId(o.id)}
+                        </div>
                         {o.deliver_by && o.status !== "delivered" && o.status !== "failed" && (
                           <div className="mt-1 text-xs text-ivory/45">
                             Várható elkészülés: {new Date(o.deliver_by).toLocaleString("hu-HU")}
@@ -258,7 +265,7 @@ function Page() {
                         <p className="text-sm text-ivory/62">
                           Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni.
                         </p>
-                        <ProfileSupportContact className="mt-2" />
+                        <ProfileSupportContact className="mt-2" orderId={o.id} />
                       </div>
                     )}
 
@@ -309,7 +316,7 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
         <p className="text-xs leading-relaxed text-ivory/55">
           A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet.
         </p>
-        <ProfileSupportContact className="mt-2" />
+        <ProfileSupportContact className="mt-2" orderId={order.id} />
       </div>
     );
   }
@@ -326,13 +333,15 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
   }
 
   if (order.status === "failed") {
+    const shortId = shortOrderId(order.id);
     return (
       <p className="mt-3 rounded-md border border-gold/20 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-ivory/65">
         A feldolgozás elakadt, de a rendelés nem vész el. Írj a vásárlási email címedről:{" "}
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
         </a>
-        . Vagy pótoljuk az olvasatot, vagy utánanézünk a visszatérítésnek.
+        {shortId ? `. Add meg ezt is: ${shortId}.` : "."} Vagy pótoljuk az olvasatot, vagy
+        utánanézünk a visszatérítésnek.
       </p>
     );
   }
@@ -340,14 +349,21 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
   return null;
 }
 
-function ProfileSupportContact({ className = "" }: { className?: string }) {
+function ProfileSupportContact({
+  className = "",
+  orderId,
+}: {
+  className?: string;
+  orderId?: string;
+}) {
+  const shortId = shortOrderId(orderId);
   return (
     <p className={`text-xs leading-relaxed text-ivory/55 ${className}`.trim()}>
       Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
       <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
         {SITE_LEGAL.supportEmail}
       </a>
-      .
+      {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
     </p>
   );
 }
