@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
+import { SITE_LEGAL } from "@/lib/legal";
 import { getMyOrders } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 import {
@@ -210,6 +211,8 @@ function Page() {
                       <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
                     </div>
 
+                    <OrderStatusNote order={o} />
+
                     {canOpen && (
                       <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
                         <summary className="cursor-pointer list-none text-sm text-gold transition-colors group-open:text-gold/90">
@@ -269,6 +272,44 @@ function getOrderPayload(payload: unknown): OrderResponsePayload | null {
   const body = typeof data.body === "string" ? data.body : undefined;
   if (!title && !body) return null;
   return { title, body };
+}
+
+function OrderStatusNote({ order }: { order: ProfileOrder }) {
+  if (order.status === "delivered") return null;
+
+  if (order.status === "pending_payment") {
+    return (
+      <p className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2 text-xs leading-relaxed text-ivory/55">
+        A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet; ha
+        továbbra is így marad, írj nekünk, és utánanézünk.
+      </p>
+    );
+  }
+
+  if (order.status === "paid" || order.status === "processing") {
+    return (
+      <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-ivory/62">
+        Az olvasat készül. Amikor elkészül, itt megnyithatod, és emailben is jelzünk.{" "}
+        {order.deliver_by
+          ? `Várhatóan ${new Date(order.deliver_by).toLocaleString("hu-HU")}-ig érkezik.`
+          : "Az azonnali termékek általában pár percen belül megjelennek."}
+      </p>
+    );
+  }
+
+  if (order.status === "failed") {
+    return (
+      <p className="mt-3 rounded-md border border-gold/20 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-ivory/65">
+        A feldolgozás elakadt, de a rendelés nem vész el. Írj a vásárlási email címedről:{" "}
+        <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+          {SITE_LEGAL.supportEmail}
+        </a>
+        . Vagy pótoljuk az olvasatot, vagy utánanézünk a visszatérítésnek.
+      </p>
+    );
+  }
+
+  return null;
 }
 
 function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {

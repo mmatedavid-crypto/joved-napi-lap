@@ -58,6 +58,17 @@ const checks: Check[] = [
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],
   },
   {
+    name: "profile explains paid order status",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "OrderStatusNote",
+      "A fizetés állapotát még egyeztetjük",
+      "Az olvasat készül",
+      "A feldolgozás elakadt",
+      "SITE_LEGAL.supportEmail",
+    ],
+  },
+  {
     name: "order reconciliation migration exists",
     file: "supabase/migrations/20260609143000_order_payment_reconciliation.sql",
     includes: ["stripe_environment TEXT", "payment_rechecked_at TIMESTAMPTZ"],
