@@ -55,7 +55,7 @@ for (const file of files) {
 for (const [table, occurrences] of tableCreates) {
   if (occurrences.length <= 1) continue;
 
-  const unsafe = occurrences.slice(1).filter((item) => !item.idempotent);
+  const unsafe = occurrences.filter((item) => !item.idempotent);
   for (const item of unsafe) {
     failed.push(`${item.file}: duplicate CREATE TABLE ${table} must use IF NOT EXISTS`);
   }
