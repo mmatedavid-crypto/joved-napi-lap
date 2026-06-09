@@ -37,6 +37,10 @@ for (const needle of [
   "checkoutSteps(product.category, deliveryLabel)",
   "Fizetés után azonnal elkészítjük az olvasatot.",
   "az olvasat akkor is megjelenik a profilodban, ha az email késik",
+  "deliveryAccessText(Boolean(user))",
+  "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el",
+  "A rendelési linket érdemes megtartanod",
+  "a profilodban később is visszanézhető",
   "product.depthPromise.map",
   "if (!email && user?.email) setEmail(user.email)",
 ]) {

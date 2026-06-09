@@ -166,9 +166,7 @@ export function PaywallDialog({
               </div>
               <div>
                 <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
-                <p>
-                  Az olvasat a köszönőoldalon, bejelentkezve a profilban, és emailben is elérhető.
-                </p>
+                <p>{deliveryAccessText(Boolean(user))}</p>
               </div>
               <div>
                 <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
@@ -300,6 +298,13 @@ function checkoutSteps(category: ProductDef["category"], deliveryLabel: string):
     "A rendelés állapotát a köszönőoldalon és bejelentkezve a profilodban is követheted.",
     "Elkészüléskor emailt küldünk, de az olvasat akkor is megjelenik a profilodban, ha az email késik.",
   ];
+}
+
+function deliveryAccessText(isLoggedIn: boolean): string {
+  if (isLoggedIn) {
+    return "Az olvasat a köszönőoldalon azonnal megnyílik, a profilodban később is visszanézhető, és emailben is küldünk értesítést.";
+  }
+  return "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el. A rendelési linket érdemes megtartanod.";
 }
 
 function summarizeInputPayload(
