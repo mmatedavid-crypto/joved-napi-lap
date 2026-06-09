@@ -126,6 +126,7 @@ export const PRODUCTS: ProductDef[] = [
     qualityPromise: "Az extra húzás nem dönt helyetted, hanem új nézőpontot ad.",
     priceHuf: 590,
     category: "instant",
+    sourceRoute: "/mai-lap",
   },
   {
     slug: "harom_lap_mely",
@@ -159,6 +160,7 @@ export const PRODUCTS: ProductDef[] = [
     category: "delayed",
     standardHours: 24,
     expressHours: EXPRESS_HOURS,
+    sourceRoute: "/harom-lap",
   },
   {
     slug: "dontes_komplex",

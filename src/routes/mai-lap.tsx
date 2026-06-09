@@ -35,7 +35,11 @@ function MaiLap() {
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallProduct, setPaywallProduct] = useState<"napi_lap_ai" | "extra_huzas">(
+    "napi_lap_ai",
+  );
   const [alreadyDrawnToday, setAlreadyDrawnToday] = useState(false);
+  const [extraPaidCard, setExtraPaidCard] = useState<TarotCard | null>(null);
   const aiReading = useServerFn(aiTarotReadingHU);
 
   useEffect(() => {
@@ -55,11 +59,13 @@ function MaiLap() {
     setCard(c);
     setReversed(rev);
     setReading(null);
+    setAlreadyDrawnToday(true);
     saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id, reversed: rev });
   }
 
   useEffect(() => {
     if (!card || !revealed) return;
+    const currentCard = card;
     let cancelled = false;
     setLoadingReading(true);
     aiReading({
@@ -67,14 +73,14 @@ function MaiLap() {
         spread: "single",
         cards: [
           {
-            id: card.id,
-            name: card.name,
-            keywords: card.keywords,
-            general: card.general,
-            love: card.love,
-            decision: card.decision,
-            warning: card.warning,
-            daily: card.daily,
+            id: currentCard.id,
+            name: currentCard.name,
+            keywords: currentCard.keywords,
+            general: currentCard.general,
+            love: currentCard.love,
+            decision: currentCard.decision,
+            warning: currentCard.warning,
+            daily: currentCard.daily,
             reversed,
           },
         ],
@@ -92,7 +98,7 @@ function MaiLap() {
     return () => {
       cancelled = true;
     };
-  }, [card?.id, revealed, reversed]);
+  }, [aiReading, card, revealed, reversed]);
 
   return (
     <Layout>
@@ -132,8 +138,8 @@ function MaiLap() {
               <div className="space-y-4">
                 {alreadyDrawnToday && (
                   <div className="rounded-md border border-[oklch(0.78_0.10_80/0.25)] bg-[oklch(0.78_0.10_80/0.06)] px-3 py-2 text-xs text-ivory/70 font-editorial italic">
-                    Ma már húztál lapot. Egy nap egy lap — így marad tiszta az üzenet. Holnap új lap
-                    vár.
+                    Ma már húztál lapot. Egy nap egy lap — így marad tiszta az üzenet. Ha mégis új
+                    nézőpontot szeretnél, kérhetsz extra húzást.
                   </div>
                 )}
                 <div>
@@ -175,9 +181,36 @@ function MaiLap() {
                   <div className="text-sm text-ivory/70 mb-2">
                     Mélyebb, személyre szabott üzenetet szeretnél?
                   </div>
-                  <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
+                  <button
+                    className="btn-gold"
+                    onClick={() => {
+                      setPaywallProduct("napi_lap_ai");
+                      setPaywallOpen(true);
+                    }}
+                  >
                     {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
                   </button>
+                  {alreadyDrawnToday && (
+                    <div className="mt-4 rounded-md border border-[oklch(0.78_0.10_80/0.16)] p-4">
+                      <div className="text-sm text-ivory/72">
+                        Második nézőpontot kérsz a mai napra?
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-ivory/50">
+                        Az extra húzás nem írja felül a napi lapodat. Fizetés után külön olvasatként
+                        kapsz egy új lapot és egy új szempontot arra, ami ma még benned mozog.
+                      </p>
+                      <button
+                        className="btn-ghost-gold mt-3"
+                        onClick={() => {
+                          setExtraPaidCard(pickCards(1, Date.now() % 1_000_000)[0]);
+                          setPaywallProduct("extra_huzas");
+                          setPaywallOpen(true);
+                        }}
+                      >
+                        {productCtaLabel("Extra napi húzás", "extra_huzas")}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -187,9 +220,22 @@ function MaiLap() {
       <PaywallDialog
         open={paywallOpen}
         onOpenChange={setPaywallOpen}
-        productSlug="napi_lap_ai"
+        productSlug={paywallProduct}
         sourceRoute="/mai-lap"
-        inputPayload={card ? { cardId: card.id, cardName: card.name } : undefined}
+        inputPayload={
+          card
+            ? {
+                cardId: paywallProduct === "extra_huzas" ? (extraPaidCard?.id ?? card.id) : card.id,
+                cardName:
+                  paywallProduct === "extra_huzas" ? (extraPaidCard?.name ?? card.name) : card.name,
+                question:
+                  paywallProduct === "extra_huzas"
+                    ? "Második nézőpontot kérek a mai napra."
+                    : "Mire figyeljek ma?",
+                category: paywallProduct === "extra_huzas" ? "extra napi húzás" : "mai lap",
+              }
+            : undefined
+        }
       />
     </Layout>
   );
