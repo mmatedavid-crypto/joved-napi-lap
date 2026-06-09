@@ -75,6 +75,7 @@ export function PaywallDialog({
   const isLoggedIn = Boolean(user);
   const deliverySummary = checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn);
   const accessSummary = deliveryAccessText(isLoggedIn);
+  const formatPromise = readingFormatPromise(product);
 
   return (
     <Dialog
@@ -118,6 +119,9 @@ export function PaywallDialog({
                   </li>
                 ))}
               </ul>
+              <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.12)] bg-black/15 px-3 py-2 text-xs leading-relaxed text-ivory/58">
+                <span className="font-medium text-ivory/75">Forma:</span> {formatPromise}
+              </div>
               <p className="mt-3 border-t border-[oklch(0.78_0.10_80/0.14)] pt-3 text-xs leading-relaxed text-ivory/55">
                 {product.qualityPromise}
               </p>
@@ -338,6 +342,19 @@ function deliveryAccessText(isLoggedIn: boolean): string {
     return "Az olvasat a köszönőoldalon azonnal megnyílik, a profilodban később is visszanézhető, és emailben is küldünk értesítést.";
   }
   return "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el. A rendelési linket érdemes megtartanod.";
+}
+
+function readingFormatPromise(product: ProductDef): string {
+  if (product.slug === "kelta_kereszt") {
+    return "hosszabb, 10 lapos riport több szakaszban, összefüggő lezáró résszel.";
+  }
+  if (product.category === "delayed") {
+    return "részletesebb, több szakaszos írásos elemzés, nem automatikus sablonválasz.";
+  }
+  if (product.slug === "horoszkop_szemelyre" || product.slug === "alomfejtes_rovid") {
+    return "rövid, személyes írásos olvasat 3-5 jól olvasható résszel.";
+  }
+  return "azonnali, rövid írásos olvasat néhány fókuszált bekezdésben.";
 }
 
 function summarizeInputPayload(

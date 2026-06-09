@@ -51,6 +51,12 @@ for (const needle of [
   "canStartPayment",
   "A fizetés előkészítése most nem elérhető",
   "product.depthPromise.map",
+  "const formatPromise = readingFormatPromise(product)",
+  "function readingFormatPromise(product: ProductDef)",
+  "Forma:",
+  "részletesebb, több szakaszos írásos elemzés",
+  "hosszabb, 10 lapos riport",
+  "azonnali, rövid írásos olvasat",
   "if (!email && user?.email) setEmail(user.email)",
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
