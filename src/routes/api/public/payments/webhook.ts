@@ -28,7 +28,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const supabase = await getSupabase();
   const { data: existing } = await supabase
     .from("orders")
-    .select("id, category, status")
+    .select("id, category, status, product_slug, express")
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
 
@@ -36,44 +36,49 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     console.error("checkout.session.completed for unknown session:", sessionId);
     return;
   }
-  if (existing.status !== "pending_payment") {
-    console.log("Order already processed:", existing.id);
+  if (existing.status === "delivered") {
+    console.log("Order already delivered:", existing.id);
+    return;
+  }
+  if (
+    existing.status !== "pending_payment" &&
+    existing.status !== "paid" &&
+    existing.status !== "processing"
+  ) {
+    console.log("Order is not processable from webhook:", existing.id, existing.status);
     return;
   }
 
   const newStatus = "processing";
 
   // Late-bind: a deliver_by-t a tényleges fizetés időpontjától számoljuk.
-  const { data: full } = await supabase
-    .from("orders")
-    .select("product_slug, express")
-    .eq("id", existing.id)
-    .maybeSingle();
   let deliverBy: string | null = null;
-  if (full && existing.category === "delayed") {
-    const p = PRODUCTS_BY_SLUG[full.product_slug as string];
-    const hours = full.express ? EXPRESS_HOURS : (p?.standardHours ?? 24);
+  if (existing.category === "delayed" && existing.status === "pending_payment") {
+    const p = PRODUCTS_BY_SLUG[existing.product_slug as string];
+    const hours = existing.express ? EXPRESS_HOURS : (p?.standardHours ?? 24);
     deliverBy = new Date(Date.now() + hours * 3600_000).toISOString();
   }
 
-  await supabase
-    .from("orders")
-    .update({
-      status: newStatus,
-      stripe_payment_intent: paymentIntent,
-      paid_at: new Date().toISOString(),
-      ...(deliverBy ? { deliver_by: deliverBy } : {}),
-    })
-    .eq("id", existing.id);
+  if (existing.status === "pending_payment") {
+    await supabase
+      .from("orders")
+      .update({
+        status: newStatus,
+        stripe_payment_intent: paymentIntent,
+        paid_at: new Date().toISOString(),
+        ...(deliverBy ? { deliver_by: deliverBy } : {}),
+      })
+      .eq("id", existing.id);
+  }
 
   // Fizetett rendelésekhez: szerveroldalon is elindítjuk az olvasat feldolgozását,
   // hogy ne csak a köszönő-oldal polling indítsa el (ha a vásárló bezárja a tabot).
   try {
-    const { processOrder } = await import("@/lib/payments.functions");
-    // Tűzd-és-felejtsd: a vásárló köszönő-oldala újra meghívja idempotensen.
-    processOrder({ data: { sessionId } }).catch((e) => console.error("processOrder failed:", e));
+    const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
+    const result = await processPaidOrderBySession(sessionId);
+    if (!result.ok) console.error("processPaidOrderBySession failed:", result.error);
   } catch (e) {
-    console.error("processOrder import failed:", e);
+    console.error("processPaidOrderBySession failed:", e);
   }
 }
 
