@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
+import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { getMyOrders } from "@/lib/payments.functions";
@@ -214,8 +215,8 @@ function Page() {
                           {payload.title && (
                             <h3 className="font-display text-xl text-ivory">{payload.title}</h3>
                           )}
-                          <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ivory/75">
-                            {payload.body}
+                          <div className="mt-3">
+                            <PaidReadingBody body={payload.body} />
                           </div>
                         </div>
                       </details>

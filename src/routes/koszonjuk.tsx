@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
+import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { getOrderBySession, processOrder } from "@/lib/payments.functions";
 import { formatHuf } from "@/lib/products";
@@ -165,7 +166,7 @@ function Page() {
                 return (
                   <Section eyebrow="A te olvasatod" title={payload?.title ?? undefined}>
                     {payload && typeof payload.body === "string" ? (
-                      <div className="whitespace-pre-wrap">{payload.body}</div>
+                      <PaidReadingBody body={payload.body} />
                     ) : (
                       <p>
                         Az olvasatod elkészült, de ezen az oldalon most nem tudjuk teljes szövegként
