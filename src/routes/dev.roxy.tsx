@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
@@ -30,6 +30,9 @@ import {
 import { todayKey } from "@/lib/storage";
 
 export const Route = createFileRoute("/dev/roxy")({
+  beforeLoad: () => {
+    if (import.meta.env.PROD) throw notFound();
+  },
   head: () => ({
     meta: [
       { title: "Roxy diagnostics — dev | Jövőd.hu" },
@@ -66,24 +69,6 @@ function Page() {
 
   const [rows, setRows] = useState<Row[]>([]);
   const [running, setRunning] = useState(false);
-
-  if (import.meta.env.PROD) {
-    return (
-      <Layout>
-        <div className="mx-auto max-w-3xl px-4 md:px-6 py-16">
-          <div className="surface p-6">
-            <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
-              Dev
-            </div>
-            <h1 className="font-display text-3xl text-ivory">Roxy diagnostics</h1>
-            <p className="text-sm text-ivory/60 mt-2 font-editorial">
-              Ez a diagnosztika csak fejlesztői környezetben érhető el.
-            </p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
 
   async function run(
     name: string,

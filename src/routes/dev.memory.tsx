@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
@@ -8,6 +8,9 @@ import {
 } from "@/lib/memoryDiagnostics.functions";
 
 export const Route = createFileRoute("/dev/memory")({
+  beforeLoad: () => {
+    if (import.meta.env.PROD) throw notFound();
+  },
   head: () => ({
     meta: [
       { title: "Memory diagnostics — dev | Jövőd.hu" },
@@ -16,25 +19,6 @@ export const Route = createFileRoute("/dev/memory")({
   }),
   component: Page,
 });
-
-const LOVABLE_TASK = `Supabase éles adatbázison futtasd le a repo migrációját:
-
-supabase/migrations/20260608213000_reading_memories.sql
-
-Elvárás:
-- public.reading_memories tábla létrejön
-- RLS engedélyezve
-- authenticated csak saját user_id sorait látja/írja/törli
-- service_role teljes jogosultságot kap
-- indexek létrejönnek:
-  - idx_reading_memories_user_created
-  - idx_reading_memories_user_type
-  - idx_reading_memories_anchors
-
-Futtatás után ellenőrizd:
-- /dev/memory oldalon tableReady=true legyen
-- /profil oldalon a Visszatérő mintáid blokk ne dobjon hibát
-- egy belépett felhasználó randi/döntés/3 lap/összeillés olvasata után keletkezzen reading_memories sor`;
 
 function Page() {
   const check = useServerFn(checkReadingMemoryDiagnostics);
@@ -81,11 +65,9 @@ function Page() {
           )}
         </div>
 
-        <div className="surface p-5">
-          <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Lovable teendő</div>
-          <pre className="mt-3 whitespace-pre-wrap rounded-md bg-black/30 p-4 text-xs leading-relaxed text-ivory/72">
-            {LOVABLE_TASK}
-          </pre>
+        <div className="surface p-5 text-sm leading-relaxed text-ivory/70">
+          Ez az oldal csak fejlesztői környezetben használható. Éles környezetben a memória
+          állapotát szerveroldali naplókból és migrációs ellenőrzésből kell vizsgálni.
         </div>
       </div>
     </Layout>

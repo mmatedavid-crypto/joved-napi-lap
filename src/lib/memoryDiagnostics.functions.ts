@@ -10,6 +10,16 @@ export type MemoryDiagnosticsResult = {
 
 export const checkReadingMemoryDiagnostics = createServerFn({ method: "GET" }).handler(
   async (): Promise<MemoryDiagnosticsResult> => {
+    if (process.env.NODE_ENV === "production") {
+      return {
+        ok: false,
+        tableReady: false,
+        message: "A memória-diagnosztika csak fejlesztői környezetben érhető el.",
+        code: "dev_only",
+        checkedAt: new Date().toISOString(),
+      };
+    }
+
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { error } = await supabaseAdmin
