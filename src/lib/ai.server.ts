@@ -155,6 +155,7 @@ async function lovableJSON<T>(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(20_000),
     });
   } catch (e) {
     return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
@@ -219,6 +220,7 @@ async function openaiJSON<T>(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(22_000),
     });
   } catch (e) {
     return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
