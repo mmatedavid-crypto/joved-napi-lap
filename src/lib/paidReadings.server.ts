@@ -26,11 +26,19 @@ const FORBIDDEN_PAID_PATTERNS = [
   /😊|🙂|✨|❤️|🔮/,
 ];
 
-function isGoodPaidReading(reading: PaidReadingPayload): boolean {
+function paidReadingMinimumLength(productSlug: string): number {
+  return isDeepPaidProduct(productSlug) ? 1600 : 900;
+}
+
+function paidReadingMinimumSections(productSlug: string): number {
+  return isDeepPaidProduct(productSlug) ? 5 : 4;
+}
+
+function isGoodPaidReading(reading: PaidReadingPayload, productSlug: string): boolean {
   const body = `${reading.title}\n${reading.body}`;
-  if (body.length < 900) return false;
+  if (body.length < paidReadingMinimumLength(productSlug)) return false;
   if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) return false;
-  if (reading.body.split(/\n\n+/).length < 4) return false;
+  if (reading.body.split(/\n\n+/).length < paidReadingMinimumSections(productSlug)) return false;
   return true;
 }
 
@@ -95,7 +103,7 @@ export async function generatePaidOrderReading(opts: {
       lovableModel,
       readingType: `paid:${opts.productSlug}`,
     });
-    if (ai.ok && ai.data && isGoodPaidReading(ai.data)) return ai.data;
+    if (ai.ok && ai.data && isGoodPaidReading(ai.data, opts.productSlug)) return ai.data;
   } catch {
     // The local premium draft is the safe fallback.
   }

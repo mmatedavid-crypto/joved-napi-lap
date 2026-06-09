@@ -269,6 +269,14 @@ if (!paidServer.includes("allowLovableFallback: false")) {
 if (!paidServer.includes('"gpt-5.2"') || !aiServer.includes('"gpt-5.2"')) {
   policyFailures.push("paid reading model defaults must reference GPT-5.2");
 }
+if (
+  !paidServer.includes("paidReadingMinimumLength(productSlug)") ||
+  !paidServer.includes("isDeepPaidProduct(productSlug) ? 1600 : 900") ||
+  !paidServer.includes("paidReadingMinimumSections(productSlug)") ||
+  !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug)")
+) {
+  policyFailures.push("paid AI quality gate must be stricter for deep paid products");
+}
 if (!aiServer.includes("allowLovableFallback && primaryModel !== LOVABLE_FALLBACK_MODEL")) {
   policyFailures.push("shared AI helper must make gateway fallback opt-in/controllable");
 }
