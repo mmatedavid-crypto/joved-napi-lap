@@ -1,5 +1,5 @@
 import { angelMeaning } from "./angel.hu";
-import { crystalMeaning, FALLBACK_BIRTHSTONE } from "./crystal.hu";
+import { crystalMeaning, FALLBACK_BIRTHSTONE, FALLBACK_ZODIAC_CRYSTAL } from "./crystal.hu";
 import { dreamMeaning } from "./dream.hu";
 import { dreamTextToSlug } from "./roxyNormalize";
 import { CARDS, type TarotCard } from "@/data/cards";
@@ -319,17 +319,32 @@ function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {
 
 function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
   const month = Number(input.month);
-  const crystalName = text(input.crystal) || (month ? FALLBACK_BIRTHSTONE[month] : "Hegyikristály");
+  const sign = text(input.sign) ? normalizeSignKey(text(input.sign)) : "";
+  const signName = sign ? SIGN_HU[sign] : "";
+  const crystalName =
+    text(input.crystal) ||
+    (sign ? FALLBACK_ZODIAC_CRYSTAL[sign] : "") ||
+    (month ? FALLBACK_BIRTHSTONE[month] : "Hegyikristály");
   const { name, m } = crystalMeaning(crystalName);
   return renderReading({
-    title: `${name} · személyes kristály-ajánlás`,
+    title: signName
+      ? `${name} · ${signName} személyes kristály-ajánlás`
+      : `${name} · személyes kristály-ajánlás`,
     sections: [
+      ...(signName
+        ? [
+            {
+              heading: `Miért kapcsolódhat a ${signName} minőségéhez?`,
+              text: `A ${signName} mintája felől a ${name} nem díszítő elemként érdekes, hanem önismereti jelként: azt a belső minőséget emeli ki, amelyben most a jegyed árnyaltabban tud működni.`,
+            },
+          ]
+        : []),
       { heading: "Mit jelképez?", text: m.symbol },
       { heading: "Milyen minőséget hordoz?", text: m.quality },
       { heading: "Mikor érdemes figyelned rá?", text: m.when },
       {
         heading: "Hogyan kapcsold magadhoz?",
-        text: `A ${name} itt nem gyógyító ígéret, hanem önismereti jel. Akkor dolgozik jól szimbólumként, ha nem kívülről várod a megoldást, hanem egy belső minőséget nevezel meg vele.`,
+        text: `A ${name} itt nem testi hatást ígérő eszköz, hanem önismereti jel. Akkor dolgozik jól szimbólumként, ha nem kívülről várod a megoldást, hanem egy belső minőséget nevezel meg vele.`,
       },
       {
         heading: "A te helyzetedben",

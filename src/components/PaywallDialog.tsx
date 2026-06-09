@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
+import { MONTH_HU } from "@/lib/crystal.hu";
 import { SITE_LEGAL } from "@/lib/legal";
 import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
+import { SIGN_HU } from "@/lib/roxyNormalize";
 
 interface PaywallDialogProps {
   open: boolean;
@@ -239,12 +241,34 @@ function summarizeInputPayload(
     const clean = value.trim().replace(/\s+/g, " ");
     items.push({ label, value: clean.length > max ? `${clean.slice(0, max - 1)}…` : clean });
   };
+  const addNumber = (label: string, value: unknown) => {
+    if (items.length >= 4) return;
+    if (typeof value === "number" && Number.isFinite(value)) {
+      items.push({ label, value: String(value) });
+    } else if (typeof value === "string" && /^\d+$/.test(value.trim())) {
+      items.push({ label, value: value.trim() });
+    }
+  };
+  const addMonth = (value: unknown) => {
+    if (items.length >= 4) return;
+    const month = typeof value === "number" ? value : Number(value);
+    if (!Number.isInteger(month) || month < 1 || month > 12) return;
+    items.push({ label: "Hónap", value: MONTH_HU[month - 1] });
+  };
+  const addSign = (value: unknown) => {
+    if (items.length >= 4 || typeof value !== "string" || !value.trim()) return;
+    const clean = value.trim();
+    items.push({ label: "Jegy", value: SIGN_HU[clean] ?? clean });
+  };
 
   add("Kérdés", payload.question ?? payload.q);
   add("Helyzet", payload.sit ?? payload.status ?? payload.category ?? payload.cat, 90);
   add("Téma", payload.title ?? payload.situation, 100);
-  add("Jegy", payload.sign, 40);
-  add("Szám", payload.number, 40);
+  addSign(payload.sign);
+  addNumber("Szám", payload.number);
+  addNumber("Gyökérszám", payload.root);
+  addNumber("Személyes év", payload.personalYear);
+  addMonth(payload.month);
   add("Kristály", payload.crystal, 60);
   add("Álom", payload.text, 120);
   add("Hangulat", payload.emotion, 60);

@@ -184,3 +184,20 @@ export const FALLBACK_BIRTHSTONE: Record<number, string> = {
   11: "Topáz",
   12: "Türkiz",
 };
+
+// Symbolic zodiac fallback if Roxy is unavailable. Kept intentionally simple:
+// the paid reading layer adds the personal interpretation around this source.
+export const FALLBACK_ZODIAC_CRYSTAL: Record<string, string> = {
+  aries: "Karneol",
+  taurus: "Rózsakvarc",
+  gemini: "Citrin",
+  cancer: "Holdkő",
+  leo: "Tigrisszem",
+  virgo: "Lapis lazuli",
+  libra: "Rózsakvarc",
+  scorpio: "Obszidián",
+  sagittarius: "Türkiz",
+  capricorn: "Gránát",
+  aquarius: "Ametiszt",
+  pisces: "Akvamarin",
+};

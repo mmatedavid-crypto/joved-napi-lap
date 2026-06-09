@@ -5,7 +5,12 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { aiCrystalHU, type CrystalHU } from "@/lib/roxyTranslate.functions";
 import { SIGNS_HU_ORDERED, SIGN_HU } from "@/lib/roxyNormalize";
-import { crystalMeaning, MONTH_HU, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
+import {
+  crystalMeaning,
+  MONTH_HU,
+  FALLBACK_BIRTHSTONE,
+  FALLBACK_ZODIAC_CRYSTAL,
+} from "@/lib/crystal.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
@@ -66,6 +71,7 @@ function Page() {
     // Fallback: helyi kristály-szövegtár.
     let crystalName: string | undefined;
     if (!crystalName && mode === "month") crystalName = FALLBACK_BIRTHSTONE[month];
+    if (!crystalName && mode === "zodiac") crystalName = FALLBACK_ZODIAC_CRYSTAL[sign];
     if (!crystalName) crystalName = "Hegyikristály";
     const cm = crystalMeaning(crystalName);
     setR({

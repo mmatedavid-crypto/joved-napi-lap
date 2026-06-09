@@ -51,6 +51,22 @@ const demoPayloads: Record<string, Record<string, unknown>> = {
   szammisztika_eletut: { name: "Kovács Éva Anna", dob: "1988-11-29" },
 };
 
+const extraPaidChecks: Array<{
+  name: string;
+  slug: string;
+  productName: string;
+  payload: Record<string, unknown>;
+  expect: string[];
+}> = [
+  {
+    name: "kristaly_ai:zodiac",
+    slug: "kristaly_ai",
+    productName: "Kristály ajánlás — személyesen",
+    payload: { mode: "zodiac", sign: "cancer" },
+    expect: ["Holdkő", "Rák"],
+  },
+];
+
 const forbidden = [
   "összességében",
   "fontos megjegyezni",
@@ -96,6 +112,18 @@ const paid = PRODUCTS.map((product) => {
     product.category === "instant" ? 900 : 1400,
   );
 });
+
+for (const check of extraPaidChecks) {
+  const reading = composePaidOrderReading(check.slug, check.productName, check.payload);
+  const result = inspect(check.name, reading.title, reading.body, 900);
+  for (const expected of check.expect) {
+    if (!`${reading.title}\n${reading.body}`.includes(expected)) {
+      result.ok = false;
+      result.issues.push(`hiányzó kontextus: ${expected}`);
+    }
+  }
+  paid.push(result);
+}
 
 const freeReadings = [
   {
