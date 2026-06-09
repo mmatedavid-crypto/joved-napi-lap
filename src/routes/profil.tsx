@@ -43,6 +43,7 @@ type ProfileOrder = {
   express: boolean | null;
   price_huf: number;
   category: string;
+  source_route?: string | null;
   deliver_by?: string | null;
   delivered_at?: string | null;
   response_payload?: unknown;
@@ -183,7 +184,8 @@ function Page() {
               {orders.map((o) => {
                 const payload = getOrderPayload(o.response_payload);
                 const canOpen = o.status === "delivered" && payload?.body;
-                const continuePath = PRODUCTS_BY_SLUG[o.product_slug]?.sourceRoute;
+                const continuePath =
+                  o.source_route ?? PRODUCTS_BY_SLUG[o.product_slug]?.sourceRoute;
                 return (
                   <li key={o.id} className="py-4">
                     <div className="flex items-start justify-between gap-3">

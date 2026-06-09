@@ -5,7 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { getOrderBySession, processOrder } from "@/lib/payments.functions";
-import { formatHuf } from "@/lib/products";
+import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
 type OrderResponsePayload = {
   title?: string;
@@ -21,6 +21,8 @@ type OrderView = {
   status: string;
   deliver_by?: string | null;
   guest_email?: string | null;
+  product_slug?: string | null;
+  source_route?: string | null;
   response_payload?: unknown;
 };
 
@@ -120,6 +122,26 @@ function Page() {
         )}
         {order && (
           <>
+            {(() => {
+              const continuePath =
+                order.source_route ?? PRODUCTS_BY_SLUG[order.product_slug ?? ""]?.sourceRoute;
+              return continuePath && order.status !== "delivered" ? (
+                <Section eyebrow="Innen folytathatod">
+                  <p>
+                    A rendelésedet ehhez az olvasati élményhez kötöttük. Amíg készül, visszamehetsz
+                    ugyanoda, új kérdést nézhetsz, vagy később erről a linkről megnyithatod az
+                    elkészült olvasatot.
+                  </p>
+                  <Link
+                    to={continuePath}
+                    className="mt-4 inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+                  >
+                    Vissza az olvasathoz
+                  </Link>
+                </Section>
+              ) : null;
+            })()}
+
             {order.guest_email && (
               <Section eyebrow="Hozzáférés">
                 <p>
@@ -193,8 +215,14 @@ function Page() {
 
             {order.status === "failed" && (
               <Section eyebrow="Sajnos hiba történt">
-                Nem sikerült feldolgozni az olvasatot. Kérlek írj nekünk a vásárlási email címedről;
-                vagy elkészítjük kézzel, vagy visszatérítjük.
+                <p>
+                  Nem sikerült automatikusan feldolgozni az olvasatot. Ez nem jelenti azt, hogy a
+                  vásárlásod elveszett: kérlek írj nekünk a vásárlási email címedről, és vagy
+                  elkészítjük kézzel, vagy visszatérítjük.
+                </p>
+                <p className="mt-3 text-sm text-ivory/55">
+                  A gyors azonosításhoz írd meg a termék nevét és a vásárlás nagyjábóli időpontját.
+                </p>
               </Section>
             )}
 

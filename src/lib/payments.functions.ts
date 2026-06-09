@@ -195,7 +195,7 @@ export const getOrderBySession = createServerFn({ method: "POST" })
     const { data: order } = await supabaseAdmin
       .from("orders")
       .select(
-        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email",
+        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route",
       )
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
@@ -208,7 +208,7 @@ export const getMyOrders = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("orders")
       .select(
-        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at",
+        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, source_route",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })

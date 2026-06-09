@@ -17,7 +17,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
   const { data: order } = await supabaseAdmin
     .from("orders")
     .select(
-      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, stripe_session_id, response_payload, updated_at",
+      "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, stripe_session_id, source_route, response_payload, updated_at",
     )
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
@@ -72,7 +72,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
           topic: order.product_name,
           question: memoryQuestion(order.input_payload),
           situation: memorySituation(order.input_payload),
-          source_route: null,
+          source_route: order.source_route,
           title: reading.title,
           summary: reading.body.slice(0, 700),
           one_sentence: reading.reading?.oneSentence ?? reading.title,
