@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Dialog,
@@ -35,6 +35,10 @@ export function PaywallDialog({
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [express, setExpress] = useState(false);
+
+  useEffect(() => {
+    if (!email && user?.email) setEmail(user.email);
+  }, [email, user?.email]);
 
   if (!product) return null;
 

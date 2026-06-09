@@ -29,8 +29,22 @@ for (const product of PRODUCTS) {
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
-for (const needle of ["Miben lesz személyesebb?", "product.depthPromise.map"]) {
+for (const needle of [
+  "Miben lesz személyesebb?",
+  "product.depthPromise.map",
+  "if (!email && user?.email) setEmail(user.email)",
+]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
+}
+
+const checkout = readFileSync("src/components/StripeEmbeddedCheckout.tsx", "utf8");
+for (const needle of [
+  "checkoutIdentity",
+  "clientSecretPromise.current = null",
+  "customerEmail",
+  "checkoutReturnUrl",
+]) {
+  if (!checkout.includes(needle)) failed.push(`StripeEmbeddedCheckout missing: ${needle}`);
 }
 
 if (failed.length) {

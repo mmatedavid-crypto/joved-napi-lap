@@ -1,5 +1,5 @@
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
 
@@ -14,9 +14,26 @@ export interface StripeEmbeddedCheckoutProps {
 }
 
 export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
+  const { productSlug, express, customerEmail, userId, inputPayload, sourceRoute, returnUrl } =
+    props;
   const clientSecretPromise = useRef<Promise<string> | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
+  const checkoutIdentity = JSON.stringify({
+    productSlug,
+    express,
+    customerEmail,
+    userId,
+    inputPayload,
+    sourceRoute,
+    returnUrl,
+  });
+
+  useEffect(() => {
+    clientSecretPromise.current = null;
+    setCheckoutError(null);
+  }, [checkoutIdentity]);
+
   const options = useMemo(
     () => ({
       fetchClientSecret: async (): Promise<string> => {
@@ -25,18 +42,17 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
         setCheckoutError(null);
         clientSecretPromise.current = (async () => {
           try {
-            const returnUrl =
-              props.returnUrl ||
-              `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+            const checkoutReturnUrl =
+              returnUrl || `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
             const result = await createCheckoutSession({
               data: {
-                productSlug: props.productSlug,
-                express: props.express,
-                customerEmail: props.customerEmail,
-                userId: props.userId,
-                inputPayload: props.inputPayload,
-                sourceRoute: props.sourceRoute,
-                returnUrl,
+                productSlug,
+                express,
+                customerEmail,
+                userId,
+                inputPayload,
+                sourceRoute,
+                returnUrl: checkoutReturnUrl,
                 environment: getStripeEnvironment(),
               },
             });
@@ -57,8 +73,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
         return clientSecretPromise.current;
       },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [retryKey],
+    [customerEmail, express, inputPayload, productSlug, returnUrl, sourceRoute, userId],
   );
 
   return (
