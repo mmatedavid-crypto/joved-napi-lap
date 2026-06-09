@@ -14,6 +14,7 @@ import { MONTH_HU } from "@/lib/crystal.hu";
 import { SITE_LEGAL } from "@/lib/legal";
 import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf, type ProductDef } from "@/lib/products";
 import { SIGN_HU } from "@/lib/roxyNormalize";
+import { paymentsAvailable } from "@/lib/stripe";
 
 interface PaywallDialogProps {
   open: boolean;
@@ -61,6 +62,7 @@ export function PaywallDialog({
   if (!product) return null;
 
   const canExpress = product.category === "delayed";
+  const canStartPayment = paymentsAvailable();
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
   const inputSummary = summarizeInputPayload(inputPayload);
@@ -172,6 +174,12 @@ export function PaywallDialog({
                 <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
                 <p>A kártyaadatot nem tároljuk; a fizetést Stripe dolgozza fel.</p>
               </div>
+              {!canStartPayment && (
+                <div className="rounded-md border border-gold/20 bg-black/20 px-3 py-2 text-ivory/68">
+                  A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később, vagy írj
+                  nekünk, és segítünk a rendelésben.
+                </div>
+              )}
               <div>
                 <div className="mb-1 font-medium text-ivory/82">Segítség</div>
                 <p>
@@ -251,8 +259,9 @@ export function PaywallDialog({
             </label>
 
             <button
-              disabled={!email || !emailValid || !termsAccepted}
+              disabled={!email || !emailValid || !termsAccepted || !canStartPayment}
               onClick={() => {
+                if (!canStartPayment) return;
                 trackEvent("checkout_confirmed", {
                   productSlug: product.slug,
                   category: product.category,

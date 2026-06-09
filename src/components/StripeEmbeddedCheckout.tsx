@@ -1,6 +1,6 @@
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getStripe, getStripeEnvironment } from "@/lib/stripe";
+import { getStripe, getStripeEnvironment, paymentsAvailable } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
 import { SITE_LEGAL } from "@/lib/legal";
 import { trackEvent } from "@/lib/analytics";
@@ -21,6 +21,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
   const clientSecretPromise = useRef<Promise<string> | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
+  const canLoadStripe = paymentsAvailable();
   const checkoutIdentity = JSON.stringify({
     productSlug,
     express,
@@ -91,11 +92,12 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
 
   return (
     <div id="checkout" className="overflow-hidden rounded-lg bg-white">
-      {checkoutError ? (
+      {checkoutError || !canLoadStripe ? (
         <div className="bg-[oklch(0.12_0.03_290)] p-5 text-center text-ivory">
           <div className="font-display text-xl">Nem indult el a fizetés</div>
           <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ivory/65">
-            {checkoutError}
+            {checkoutError ??
+              "A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később."}
           </p>
           <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
             Ha már próbáltad újra, írj nekünk a vásárlási email címedről:{" "}
@@ -107,7 +109,9 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
           <button
             type="button"
             className="btn-gold mt-4"
+            disabled={!canLoadStripe}
             onClick={() => {
+              if (!canLoadStripe) return;
               clientSecretPromise.current = null;
               setCheckoutError(null);
               trackEvent("checkout_retry_clicked", { productSlug, express, sourceRoute });
