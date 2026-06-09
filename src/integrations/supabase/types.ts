@@ -148,12 +148,14 @@ export type Database = {
           id: string
           input_payload: Json | null
           paid_at: string | null
+          payment_rechecked_at: string | null
           price_huf: number
           product_name: string
           product_slug: string
           response_payload: Json | null
           source_route: string | null
           status: Database["public"]["Enums"]["order_status"]
+          stripe_environment: string | null
           stripe_payment_intent: string | null
           stripe_session_id: string | null
           updated_at: string
@@ -172,12 +174,14 @@ export type Database = {
           id?: string
           input_payload?: Json | null
           paid_at?: string | null
+          payment_rechecked_at?: string | null
           price_huf: number
           product_name: string
           product_slug: string
           response_payload?: Json | null
           source_route?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          stripe_environment?: string | null
           stripe_payment_intent?: string | null
           stripe_session_id?: string | null
           updated_at?: string
@@ -196,12 +200,14 @@ export type Database = {
           id?: string
           input_payload?: Json | null
           paid_at?: string | null
+          payment_rechecked_at?: string | null
           price_huf?: number
           product_name?: string
           product_slug?: string
           response_payload?: Json | null
           source_route?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          stripe_environment?: string | null
           stripe_payment_intent?: string | null
           stripe_session_id?: string | null
           updated_at?: string
