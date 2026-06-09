@@ -51,7 +51,7 @@ const checks: Check[] = [
   {
     name: "thank-you page can read source route",
     file: "src/lib/payments.functions.ts",
-    includes: ["guest_email, source_route", "created_at, source_route"],
+    includes: ["ORDER_SELECT_BASE", "created_at", "guest_email", "source_route"],
   },
   {
     name: "paid memory keeps source route",
@@ -83,6 +83,33 @@ const checks: Check[] = [
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],
+  },
+  {
+    name: "profile can wake paid or processing orders without exposing session ids",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "processMyOrder",
+      "const wakeOrder = useServerFn(processMyOrder)",
+      "awakenedOrders",
+      'order.status === "paid" || order.status === "processing"',
+      "wakeOrder({ data: { orderId: order.id } })",
+      "const refreshed = await call({})",
+    ],
+  },
+  {
+    name: "profile order wakeup is server-side and strips private payment fields",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      "ORDER_SELECT_PROFILE_WITH_RECONCILIATION",
+      "stripe_session_id",
+      "reconcilePendingPayment(order, sessionId)",
+      "export const processMyOrder",
+      '.eq("user_id", context.userId)',
+      "processPaidOrderBySession(order.stripe_session_id)",
+      "function stripPrivateOrderFields",
+      "_stripeSessionId",
+      "reconciled.map(stripPrivateOrderFields)",
+    ],
   },
   {
     name: "profile explains paid order status",

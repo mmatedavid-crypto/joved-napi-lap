@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
@@ -7,7 +7,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { clearGuestPersonalization } from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
-import { getMyOrders } from "@/lib/payments.functions";
+import { getMyOrders, processMyOrder } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 import {
   clearMyReadingMemories,
@@ -64,6 +64,7 @@ function Page() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const call = useServerFn(getMyOrders);
+  const wakeOrder = useServerFn(processMyOrder);
   const loadMemory = useServerFn(getMyReadingMemoryOverview);
   const clearMemory = useServerFn(clearMyReadingMemories);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
@@ -74,6 +75,7 @@ function Page() {
   const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [memoryClearing, setMemoryClearing] = useState(false);
   const [memoryCleared, setMemoryCleared] = useState(false);
+  const awakenedOrders = useRef(new Set<string>());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/bejelentkezes" });
@@ -81,12 +83,28 @@ function Page() {
 
   useEffect(() => {
     if (!user) return;
-    call({})
-      .then((r) => {
-        setOrders(r.orders ?? []);
-        setOrdersLoading(false);
-      })
-      .catch(() => setOrdersLoading(false));
+    let stop = false;
+    async function loadOrders() {
+      const r = await call({});
+      if (stop) return;
+      const nextOrders = r.orders ?? [];
+      setOrders(nextOrders);
+      setOrdersLoading(false);
+
+      const wakeable = nextOrders.filter(
+        (order) =>
+          (order.status === "paid" || order.status === "processing") &&
+          !awakenedOrders.current.has(order.id),
+      );
+      if (!wakeable.length) return;
+      for (const order of wakeable) awakenedOrders.current.add(order.id);
+      await Promise.allSettled(wakeable.map((order) => wakeOrder({ data: { orderId: order.id } })));
+      if (stop) return;
+      const refreshed = await call({});
+      if (!stop) setOrders(refreshed.orders ?? []);
+    }
+
+    loadOrders().catch(() => setOrdersLoading(false));
     loadMemory({})
       .then((r) => {
         setMemories(r.memories ?? []);
@@ -95,7 +113,10 @@ function Page() {
         setMemoriesLoading(false);
       })
       .catch(() => setMemoriesLoading(false));
-  }, [user, call, loadMemory]);
+    return () => {
+      stop = true;
+    };
+  }, [user, call, wakeOrder, loadMemory]);
 
   async function handleClearMemory() {
     if (

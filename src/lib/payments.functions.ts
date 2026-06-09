@@ -27,6 +27,7 @@ const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
 const ORDER_SELECT_BASE =
   "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
+const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 
 async function resolveOrCreateCustomer(
   stripe: Stripe,
@@ -340,17 +341,71 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
 export const getMyOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    let orderResult = await context.supabase
       .from("orders")
-      .select(
-        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, source_route",
-      )
+      .select(ORDER_SELECT_PROFILE_WITH_RECONCILIATION)
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })
       .limit(50);
-    if (error) throw error;
-    return { orders: data ?? [] };
+    if (isMissingColumnError(orderResult.error)) {
+      console.warn(
+        "orders reconciliation columns unavailable; reading profile orders without recheck",
+      );
+      orderResult = await context.supabase
+        .from("orders")
+        .select(`${ORDER_SELECT_BASE}, stripe_session_id`)
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+    }
+    if (orderResult.error) throw orderResult.error;
+
+    const reconciled = await Promise.all(
+      (orderResult.data ?? []).map(async (order) => {
+        const sessionId =
+          typeof order.stripe_session_id === "string" ? order.stripe_session_id : "";
+        if (!sessionId) return order;
+        return reconcilePendingPayment(order, sessionId);
+      }),
+    );
+
+    return { orders: reconciled.map(stripPrivateOrderFields) };
   });
+
+export const processMyOrder = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { orderId: string }) => {
+    if (!data.orderId || typeof data.orderId !== "string") throw new Error("Hiányzó rendelés ID");
+    return data;
+  })
+  .handler(async ({ context, data }) => {
+    const { data: order, error } = await context.supabase
+      .from("orders")
+      .select("id, user_id, status, stripe_session_id")
+      .eq("id", data.orderId)
+      .eq("user_id", context.userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!order?.stripe_session_id) return { ok: false, error: "Rendelés nem található" };
+    if (order.status !== "paid" && order.status !== "processing") {
+      return { ok: false, error: "Még nincs feldolgozható állapotban" };
+    }
+
+    const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
+    return processPaidOrderBySession(order.stripe_session_id);
+  });
+
+function stripPrivateOrderFields<T extends Record<string, unknown>>(order: T) {
+  const {
+    stripe_session_id: _stripeSessionId,
+    stripe_environment: _stripeEnvironment,
+    stripe_payment_intent: _stripePaymentIntent,
+    payment_rechecked_at: _paymentRecheckedAt,
+    ...publicOrder
+  } = order;
+  return publicOrder;
+}
 
 // Generálja a fizetett olvasat tartalmát és megjelöli a rendelést "delivered"-ként.
 // Idempotens: ha már delivered, nem fut újra.
