@@ -51,6 +51,24 @@ const checks: Check[] = [
       "deleteCookie(COMPATIBILITY_STATUS_KEY)",
     ],
   },
+  {
+    name: "guest memory notice is visible and controllable",
+    file: "src/components/GuestMemoryNotice.tsx",
+    includes: [
+      "guest_reading_memory_count",
+      "clearGuestPersonalization",
+      "ne minden alkalom",
+      "idegenként induljon",
+      "Helyi minta törlése",
+      "Adatkezelés",
+      "guest_memory_notice_dismissed",
+    ],
+  },
+  {
+    name: "layout mounts guest memory notice",
+    file: "src/components/Layout.tsx",
+    includes: ["GuestMemoryNotice", "<GuestMemoryNotice />"],
+  },
 ];
 
 const failed: string[] = [];

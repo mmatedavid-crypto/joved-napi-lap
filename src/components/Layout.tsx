@@ -2,6 +2,7 @@ import { Link, Outlet } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Logo } from "./Logo";
 import { BottomNav } from "./BottomNav";
+import { GuestMemoryNotice } from "./GuestMemoryNotice";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
 import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
 
@@ -173,6 +174,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </footer>
+      <GuestMemoryNotice />
       <BottomNav />
     </div>
   );
