@@ -1,4 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
+import { PaywallDialog } from "@/components/PaywallDialog";
 import { Section } from "@/components/Section";
 import {
   HOROSCOPE_PERIODS,
@@ -12,6 +14,7 @@ import {
   type HoroscopeNewsArticle,
   type HoroscopeNewsSection,
 } from "@/lib/horoscopeNews";
+import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
 const SITE_URL = "https://jovod.hu";
@@ -114,6 +117,7 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
 
 function HoroscopeArticlePage() {
   const article = Route.useLoaderData() as HoroscopeNewsArticle;
+  const [paywall, setPaywall] = useState(false);
   const siblingSigns = SIGNS_HU_ORDERED.map((sign) => ({
     sign,
     name: SIGN_HU[sign],
@@ -146,6 +150,26 @@ function HoroscopeArticlePage() {
         ))}
       </div>
 
+      <section className="mt-10 surface p-5 md:p-7">
+        <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+              Személyes olvasat
+            </div>
+            <h2 className="font-display text-2xl text-ivory mt-1">
+              {article.signName} horoszkóp a te helyzetedre
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-ivory/62">
+              Ha nem csak általános jegyszöveget szeretnél, kérhetsz rövid, személyes olvasatot a
+              mostani témádhoz igazítva.
+            </p>
+          </div>
+          <button className="btn-gold" onClick={() => setPaywall(true)}>
+            {productCtaLabel("Személyes horoszkóp", "horoszkop_szemelyre")}
+          </button>
+        </div>
+      </section>
+
       <nav className="mt-10 surface p-5">
         <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-3">
           További jegyek
@@ -166,6 +190,16 @@ function HoroscopeArticlePage() {
           ))}
         </div>
       </nav>
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="horoszkop_szemelyre"
+        sourceRoute={horoscopeArticlePath(article.period, article.sign)}
+        inputPayload={{
+          sign: article.signName,
+          situation: `${PERIOD_LABEL[article.period]} horoszkóp · ${periodDateLabel(article.period)}`,
+        }}
+      />
     </article>
   );
 }
