@@ -10,7 +10,7 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v1";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 
 function todayKey(): string {
@@ -112,6 +112,25 @@ type ArticleAI = {
   moonPhase?: string;
 };
 
+function cleanHoroscopeNewsText(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const softened = value
+    .replace(/\bengedd el\b/gi, "hagyd magad mögött")
+    .replace(/\bfigyelj a jelekre\b/gi, "vedd észre a finom jelzéseket")
+    .replace(/\bhallgass a szívedre\b/gi, "a saját érzéseidre is figyelj")
+    .replace(/\blégy önmagad\b/gi, "maradj hiteles")
+    .replace(/\bkommunikálj nyíltan és őszintén\b/gi, "fogalmazz tisztán");
+  const cleaned = cleanHUText(softened);
+  return cleaned?.replace(/(^|[.!?]\s+)([a-záéíóöőúüű])/g, (_, prefix: string, letter: string) =>
+    `${prefix}${letter.toLocaleUpperCase("hu-HU")}`,
+  );
+}
+
+function cleanHoroscopeNewsHeading(value: unknown): string | undefined {
+  const cleaned = cleanHoroscopeNewsText(value);
+  return cleaned ? cleaned.charAt(0).toLocaleUpperCase("hu-HU") + cleaned.slice(1) : undefined;
+}
+
 function normalizeArticle(
   raw: ArticleAI,
   meta: {
@@ -124,13 +143,13 @@ function normalizeArticle(
     fallbackUsed: boolean;
   },
 ): HoroscopeNewsArticle | null {
-  const title = cleanHUText(raw.title);
-  const lead = cleanHUText(raw.lead);
+  const title = cleanHoroscopeNewsText(raw.title);
+  const lead = cleanHoroscopeNewsText(raw.lead);
   const sections = Array.isArray(raw.sections)
     ? raw.sections
         .map((s) => ({
-          heading: cleanHUText(s.heading) ?? "",
-          text: cleanHUText(s.text) ?? "",
+          heading: cleanHoroscopeNewsHeading(s.heading) ?? "",
+          text: cleanHoroscopeNewsText(s.text) ?? "",
         }))
         .filter((s) => s.heading && s.text)
     : [];
