@@ -42,6 +42,11 @@ const checks: Check[] = [
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
+      'const NEWS_TRANSLATION_VERSION = "news-horo-hu-v3"',
+      "TECHNICAL_FALLBACK_RE",
+      "function hasTechnicalFallbackText",
+      "cached && !hasTechnicalFallbackText(cached)",
+      "if (hasTechnicalFallbackText(raw)) return null",
       "SIGN_FALLBACK_ARCHETYPE",
       "periodFocus",
       "Heti hangulat",

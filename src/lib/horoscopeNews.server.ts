@@ -10,8 +10,11 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v2";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v3";
 const DAY_SECONDS = 60 * 60 * 24;
+
+const TECHNICAL_FALLBACK_RE =
+  /háttéradat|nem érhető el|általános magyar tartalmat|\bprovider\b|\bendpoint\b|\broxy\b|\bapi\b|\bfallback\b/i;
 
 function todayKey(): string {
   return new Date().toISOString().slice(0, 10);
@@ -52,6 +55,15 @@ async function readCache<T>(cacheKey: string): Promise<T | null> {
   } catch {
     return null;
   }
+}
+
+function hasTechnicalFallbackText(value: unknown): boolean {
+  if (typeof value === "string") return TECHNICAL_FALLBACK_RE.test(value);
+  if (Array.isArray(value)) return value.some((item) => hasTechnicalFallbackText(item));
+  if (!value || typeof value !== "object") return false;
+  return Object.values(value as Record<string, unknown>).some((item) =>
+    hasTechnicalFallbackText(item),
+  );
 }
 
 async function writeCache(
@@ -226,6 +238,7 @@ function normalizeArticle(
     fallbackUsed: boolean;
   },
 ): HoroscopeNewsArticle | null {
+  if (hasTechnicalFallbackText(raw)) return null;
   const title = cleanHoroscopeNewsText(raw.title);
   const lead = cleanHoroscopeNewsText(raw.lead);
   const sections = Array.isArray(raw.sections)
@@ -237,7 +250,7 @@ function normalizeArticle(
         .filter((s) => s.heading && s.text)
     : [];
   if (!title || !lead || !sections.length) return null;
-  return {
+  const article = {
     ...meta,
     signName: SIGN_HU[meta.sign],
     title,
@@ -246,6 +259,10 @@ function normalizeArticle(
     luckyColor: cleanHUText(raw.luckyColor),
     luckyNumber: typeof raw.luckyNumber === "number" ? raw.luckyNumber : undefined,
     moonPhase: cleanHUText(raw.moonPhase),
+  };
+  if (hasTechnicalFallbackText(article)) return null;
+  return {
+    ...article,
   };
 }
 
@@ -311,7 +328,7 @@ export async function getHoroscopeNewsArticle(opts: {
   const periodRoxy = PERIOD_TO_ROXY[opts.period];
   const translationKey = `horo-news:${NEWS_TRANSLATION_VERSION}:${opts.period}:${sign}:${dateKey}`;
   const cached = await readCache<HoroscopeNewsArticle>(translationKey);
-  if (cached) return { ...cached, translationCached: true };
+  if (cached && !hasTechnicalFallbackText(cached)) return { ...cached, translationCached: true };
 
   const { callRoxy } = await import("./roxy.server");
   const endpoint = `/astrology/horoscope/${sign}/${periodRoxy}`;
