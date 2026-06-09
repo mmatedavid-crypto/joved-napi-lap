@@ -32,7 +32,16 @@ export type GuestReadingContext = {
   contextText: string;
   themeSummary: string;
   insightText: string;
+  insights: GuestReadingInsights;
   distinctCompatibilityCount: number;
+};
+
+export type GuestReadingInsights = {
+  weeklySummary: string;
+  monthlySummary: string;
+  recurringQuestion: string;
+  changeSinceLast: string;
+  gentleNudge: string;
 };
 
 const KEY = "guest_reading_memory";
@@ -133,33 +142,95 @@ function periodLine(memories: GuestReadingMemory[], days: number, label: string)
     : `${label}: ${rows.length} olvasat, leginkább ${typeLabel} felől keresel irányt.`;
 }
 
-function buildInsightText(memories: GuestReadingMemory[]): string {
-  if (!memories.length) return "";
+function sharedAnchors(a: GuestReadingMemory, b: GuestReadingMemory): string[] {
+  const bAnchors = new Set(b.anchors ?? []);
+  return (a.anchors ?? []).filter((anchor) => bAnchors.has(anchor));
+}
+
+function distinctCompatibilityTopics(memories: GuestReadingMemory[], days?: number): number {
+  const rows = days ? memoriesSince(memories, days) : memories;
+  return new Set(
+    rows
+      .filter((memory) => memory.readingType === "compatibility")
+      .map((memory) => memory.topic || memory.situation || memory.title)
+      .filter(Boolean),
+  ).size;
+}
+
+function buildRecurringQuestion(memories: GuestReadingMemory[]): string {
+  if (memories.length < 2) {
+    return "Még alakul, milyen kérdéshez térsz vissza. Néhány olvasat után pontosabban kirajzolódik az ív.";
+  }
+  const themes = topAnchors(memories, 3);
+  if (themes.length) {
+    return `Újra és újra ezek körül keresel tisztább választ: ${themes.join(", ")}.`;
+  }
+  const type = countValues(memories.map((memory) => memory.readingType))[0]?.[0];
+  const typeLabel = type ? (TYPE_LABELS[type] ?? type) : "önismereti kérdések";
+  return `Most főleg a ${typeLabel} felől térsz vissza ugyanahhoz a belső kérdéshez.`;
+}
+
+function buildChangeSinceLast(memories: GuestReadingMemory[]): string {
   const latest = memories[0];
   const previous = memories[1];
-  const lines = [periodLine(memories, 7, "Heti minta"), periodLine(memories, 30, "Havi ív")];
+  if (!latest || !previous) {
+    return "A múltkorihoz képesti változás akkor lesz láthatóbb, ha lesz mihez visszamérni a mai kérdésedet.";
+  }
+  const overlap = sharedAnchors(latest, previous);
+  if (latest.readingType === previous.readingType && overlap.length) {
+    return `A múltkori motívum még visszajön, de most pontosabb kérdésként: ${overlap.slice(0, 2).join(", ")}.`;
+  }
+  if (latest.readingType === previous.readingType) {
+    return "Ugyanahhoz a területhez tértél vissza, de most más oldalról nézed. Ez már nem teljesen ugyanaz a kérdés.";
+  }
+  if (overlap.length) {
+    return `Más témában kérdezel, mégis visszatér egy közös motívum: ${overlap.slice(0, 2).join(", ")}.`;
+  }
+  return "A fókuszod elmozdult: most más rétegből keresel választ, mint legutóbb.";
+}
+
+function buildGentleNudge(memories: GuestReadingMemory[]): string {
+  const compatibilityCount = distinctCompatibilityTopics(memories, 30);
+  if (compatibilityCount >= 3) {
+    return "Több emberrel is megnézted az összeillést. Finoman figyeld, milyen érzést, biztonságot vagy hiányt keresel újra több kapcsolatban.";
+  }
+  const decisionCount = memoriesSince(
+    memories.filter((memory) => memory.readingType === "decision"),
+    30,
+  ).length;
+  if (decisionCount >= 3) {
+    return "Több döntési kérdés után nem csak a választás számít, hanem az is, melyik irány mellett érzed magad kevésbé szétszórtnak.";
+  }
+  const themes = topAnchors(memoriesSince(memories, 30), 2);
+  if (themes.length) {
+    return `A következő olvasatnál érdemes lehet észrevenned, hogy a ${themes.join(" és ")} mögött ugyanaz a belső igény áll-e.`;
+  }
+  return "A mintázatod még finoman rajzolódik ki; nem kell siettetni.";
+}
+
+function buildGuestInsights(memories: GuestReadingMemory[]): GuestReadingInsights {
+  return {
+    weeklySummary: periodLine(memories, 7, "Heti minta").replace(/^Heti minta: /, ""),
+    monthlySummary: periodLine(memories, 30, "Havi ív").replace(/^Havi ív: /, ""),
+    recurringQuestion: buildRecurringQuestion(memories),
+    changeSinceLast: buildChangeSinceLast(memories),
+    gentleNudge: buildGentleNudge(memories),
+  };
+}
+
+function buildInsightText(memories: GuestReadingMemory[], insights: GuestReadingInsights): string {
+  if (!memories.length) return "";
+  const lines = [
+    `Heti minta: ${insights.weeklySummary}`,
+    `Havi ív: ${insights.monthlySummary}`,
+    `Miben kérdezel újra: ${insights.recurringQuestion}`,
+    `Múltkorihoz képest: ${insights.changeSinceLast}`,
+  ];
   const themes = topAnchors(memories, 3);
   if (themes.length) {
     lines.push(`Visszatérő motívumok: ${themes.join(", ")}.`);
   }
-  if (latest && previous) {
-    const overlap = latest.anchors.filter((anchor) => previous.anchors.includes(anchor));
-    lines.push(
-      overlap.length
-        ? `A múltkorihoz képest egy motívum még visszajön: ${overlap.slice(0, 2).join(", ")}.`
-        : "A múltkorihoz képest most más oldalról keresel választ.",
-    );
-  }
-  const compatibilityCount = new Set(
-    memories
-      .filter((memory) => memory.readingType === "compatibility")
-      .map((memory) => memory.topic || memory.situation || memory.title),
-  ).size;
-  if (compatibilityCount >= 3) {
-    lines.push(
-      "Több összeillést is megnéztél: finoman figyeld, milyen minőséget keresel újra több emberben.",
-    );
-  }
+  lines.push(`Finom irány: ${insights.gentleNudge}`);
   return lines.join("\n");
 }
 
@@ -209,6 +280,15 @@ export function recordGuestReadingMemory(input: {
   saveLocal(KEY, rows);
   saveCookie(COOKIE_TOTAL_KEY, String(rows.length), 180);
   saveCookie(COOKIE_LAST_TYPE_KEY, input.readingType, 180);
+  if (input.readingType === "compatibility") {
+    const count = distinctCompatibilityTopics(rows, 30);
+    saveLocal(
+      COMPATIBILITY_KEY,
+      rows.filter((row) => row.readingType === "compatibility"),
+    );
+    saveCookie(COMPATIBILITY_COUNT_KEY, String(count), 30);
+    if (input.situation) saveCookie(COMPATIBILITY_STATUS_KEY, input.situation, 30);
+  }
 }
 
 export function getGuestReadingContext(
@@ -224,20 +304,19 @@ export function getGuestReadingContext(
     .filter((memory) => !input.readingType || memory.readingType === input.readingType)
     .filter((memory) => topicMatches(memory, input.topic, input.situation))
     .slice(0, input.limit ?? 8);
-  const insightText = buildInsightText(scoped.length ? scoped : all.slice(0, input.limit ?? 8));
+  const insightSource = scoped.length ? scoped : all.slice(0, input.limit ?? 8);
+  const insights = buildGuestInsights(insightSource);
+  const insightText = buildInsightText(insightSource, insights);
   const themeSummary = topAnchors(scoped.length ? scoped : all, 4).length
     ? `Visszatérő vendég témák: ${topAnchors(scoped.length ? scoped : all, 4).join(", ")}.`
     : "";
-  const distinctCompatibilityCount = new Set(
-    all
-      .filter((memory) => memory.readingType === "compatibility")
-      .map((memory) => memory.topic || memory.situation || memory.title),
-  ).size;
+  const distinctCompatibilityCount = distinctCompatibilityTopics(all, 30);
   return {
     memories: scoped,
     contextText: buildContextText(scoped, insightText),
     themeSummary,
     insightText,
+    insights,
     distinctCompatibilityCount,
   };
 }

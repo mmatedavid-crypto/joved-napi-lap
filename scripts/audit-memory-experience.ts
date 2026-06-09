@@ -52,6 +52,32 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "guest memory builds a real returning-user arc",
+    file: "src/lib/guestReadingMemory.ts",
+    includes: [
+      "export type GuestReadingInsights",
+      "weeklySummary",
+      "monthlySummary",
+      "recurringQuestion",
+      "changeSinceLast",
+      "gentleNudge",
+      "Miben kérdezel újra",
+      "Múltkorihoz képest",
+    ],
+  },
+  {
+    name: "guest compatibility pattern is tracked before signup",
+    file: "src/lib/guestReadingMemory.ts",
+    includes: [
+      "distinctCompatibilityTopics(rows, 30)",
+      "saveLocal(",
+      "COMPATIBILITY_KEY",
+      "saveCookie(COMPATIBILITY_COUNT_KEY",
+      "saveCookie(COMPATIBILITY_STATUS_KEY",
+      "Több emberrel is megnézted az összeillést",
+    ],
+  },
+  {
     name: "guest memory notice is visible and controllable",
     file: "src/components/GuestMemoryNotice.tsx",
     includes: [
