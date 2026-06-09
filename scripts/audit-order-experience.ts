@@ -100,6 +100,16 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "paid reading body can be copied for later use",
+    file: "src/components/PaidReadingBody.tsx",
+    includes: [
+      "navigator.clipboard.writeText",
+      "Olvasat másolása",
+      "Kimásolva",
+      "később is visszanézheted",
+    ],
+  },
+  {
     name: "delivered email exposes recovery path",
     file: "src/lib/email-templates/order-delivered.tsx",
     includes: [

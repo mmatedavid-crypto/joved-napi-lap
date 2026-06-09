@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type ReadingBlock = {
   heading?: string;
   text: string;
@@ -5,8 +7,37 @@ type ReadingBlock = {
 
 export function PaidReadingBody({ body }: { body: string }) {
   const blocks = parsePaidReadingBody(body);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
+
+  async function copyReading() {
+    try {
+      await navigator.clipboard.writeText(body.trim());
+      setCopyState("copied");
+    } catch {
+      setCopyState("failed");
+    } finally {
+      window.setTimeout(() => setCopyState("idle"), 2200);
+    }
+  }
+
   return (
     <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gold/10 pb-3">
+        <p className="text-xs leading-relaxed text-ivory/45">
+          Az olvasatot később is visszanézheted; itt gyorsan ki is másolhatod magadnak.
+        </p>
+        <button
+          type="button"
+          onClick={copyReading}
+          className="inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60 hover:text-gold/85"
+        >
+          {copyState === "copied"
+            ? "Kimásolva"
+            : copyState === "failed"
+              ? "Most nem sikerült"
+              : "Olvasat másolása"}
+        </button>
+      </div>
       {blocks.map((block, index) => (
         <section key={`${block.heading ?? "block"}-${index}`} className="space-y-2">
           {block.heading && (
