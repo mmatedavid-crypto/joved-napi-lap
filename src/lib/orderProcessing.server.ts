@@ -160,17 +160,23 @@ async function queueDeliveredEmail(order: {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   try {
-    const { data: emailState, error: stateError } = await supabaseAdmin
+    const claimTime = new Date().toISOString();
+    const { data: emailClaim, error: stateError } = await supabaseAdmin
       .from("orders")
-      .select("delivery_email_queued_at")
+      .update({
+        delivery_email_queued_at: claimTime,
+        delivery_email_error: null,
+      })
       .eq("id", order.id)
+      .is("delivery_email_queued_at", null)
+      .select("id")
       .maybeSingle();
 
     if (stateError) {
       console.warn("order delivery email state unavailable:", stateError.message);
       return;
     }
-    if (emailState?.delivery_email_queued_at) return;
+    if (!emailClaim) return;
 
     const { enqueueTransactionalEmail, resolveOrderRecipientEmail } =
       await import("@/lib/email/sendTransactional.server");
@@ -182,7 +188,10 @@ async function queueDeliveredEmail(order: {
     if (!recipientEmail) {
       await supabaseAdmin
         .from("orders")
-        .update({ delivery_email_error: "missing_recipient_email" })
+        .update({
+          delivery_email_queued_at: null,
+          delivery_email_error: "missing_recipient_email",
+        })
         .eq("id", order.id);
       return;
     }
@@ -199,24 +208,25 @@ async function queueDeliveredEmail(order: {
       },
     });
 
-    await supabaseAdmin
-      .from("orders")
-      .update(
-        result.ok
-          ? {
-              delivery_email_queued_at: new Date().toISOString(),
-              delivery_email_error: null,
-            }
-          : { delivery_email_error: result.error.slice(0, 500) },
-      )
-      .eq("id", order.id);
+    if (!result.ok) {
+      await supabaseAdmin
+        .from("orders")
+        .update({
+          delivery_email_queued_at: null,
+          delivery_email_error: result.error.slice(0, 500),
+        })
+        .eq("id", order.id);
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("order delivered email queue failed:", message);
     try {
       await supabaseAdmin
         .from("orders")
-        .update({ delivery_email_error: message.slice(0, 500) })
+        .update({
+          delivery_email_queued_at: null,
+          delivery_email_error: message.slice(0, 500),
+        })
         .eq("id", order.id);
     } catch (updateError) {
       console.warn("order delivery email error state failed:", updateError);
