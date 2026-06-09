@@ -10,9 +10,20 @@ import {
 } from "@/lib/products";
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
+type OrderForPaymentRecheck = {
+  id: string;
+  status: string;
+  category: string;
+  product_slug: string;
+  express: boolean;
+  stripe_environment?: string | null;
+  stripe_payment_intent?: string | null;
+  payment_rechecked_at?: string | null;
+};
 
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
+const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
 
 async function resolveOrCreateCustomer(
   stripe: Stripe,
@@ -137,6 +148,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           express: wantsExpress,
           status: "pending_payment",
           stripe_session_id: session.id,
+          stripe_environment: data.environment,
           input_payload: (data.inputPayload ?? null) as never,
           source_route: data.sourceRoute ?? null,
           deliver_by: deliverBy,
@@ -192,15 +204,92 @@ export const getOrderBySession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order } = await supabaseAdmin
+    const { data: initialOrder } = await supabaseAdmin
       .from("orders")
       .select(
-        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route",
+        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route, stripe_environment, stripe_payment_intent, payment_rechecked_at",
       )
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
+
+    const order = await reconcilePendingPayment(initialOrder, data.sessionId);
     return { order };
   });
+
+async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
+  order: T,
+  sessionId: string,
+): Promise<T> {
+  if (!order || order.status !== "pending_payment") return order;
+  const env = order.stripe_environment;
+  if (env !== "sandbox" && env !== "live") return order;
+
+  const lastRecheck = order.payment_rechecked_at
+    ? new Date(order.payment_rechecked_at).getTime()
+    : 0;
+  if (Number.isFinite(lastRecheck) && Date.now() - lastRecheck < PAYMENT_RECHECK_INTERVAL_MS) {
+    return order;
+  }
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const recheckedAt = new Date().toISOString();
+  await supabaseAdmin
+    .from("orders")
+    .update({ payment_rechecked_at: recheckedAt })
+    .eq("id", order.id)
+    .eq("status", "pending_payment");
+
+  try {
+    const { createStripeClient } = await import("@/lib/stripe.server");
+    const stripe = createStripeClient(env);
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const paymentIntent =
+      typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : (session.payment_intent?.id ?? order.stripe_payment_intent ?? null);
+
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      return { ...order, payment_rechecked_at: recheckedAt };
+    }
+
+    let deliverBy: string | null = null;
+    if (order.category === "delayed") {
+      const product = PRODUCTS_BY_SLUG[order.product_slug];
+      const hours = order.express ? EXPRESS_HOURS : (product?.standardHours ?? 24);
+      deliverBy = new Date(Date.now() + hours * 3600_000).toISOString();
+    }
+
+    const { data: paidOrder } = await supabaseAdmin
+      .from("orders")
+      .update({
+        status: "paid",
+        stripe_payment_intent: paymentIntent,
+        paid_at: new Date().toISOString(),
+        payment_rechecked_at: recheckedAt,
+        ...(deliverBy ? { deliver_by: deliverBy } : {}),
+      })
+      .eq("id", order.id)
+      .eq("status", "pending_payment")
+      .select(
+        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route, stripe_environment, stripe_payment_intent, payment_rechecked_at",
+      )
+      .maybeSingle();
+
+    if (paidOrder) {
+      try {
+        const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
+        await processPaidOrderBySession(sessionId);
+      } catch (error) {
+        console.warn("order reconciliation processing failed:", error);
+      }
+      return paidOrder as T;
+    }
+  } catch (error) {
+    console.warn("checkout payment reconciliation failed:", error);
+  }
+
+  return { ...order, payment_rechecked_at: recheckedAt };
+}
 
 export const getMyOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

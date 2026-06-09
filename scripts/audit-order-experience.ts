@@ -10,7 +10,22 @@ const checks: Check[] = [
   {
     name: "checkout stores source route",
     file: "src/lib/payments.functions.ts",
-    includes: ["source_route: data.sourceRoute ?? null"],
+    includes: ["source_route: data.sourceRoute ?? null", "stripe_environment: data.environment"],
+  },
+  {
+    name: "pending payment can be reconciled server-side",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      "PAYMENT_RECHECK_INTERVAL_MS",
+      "reconcilePendingPayment",
+      "stripe.checkout.sessions.retrieve(sessionId)",
+      "session.payment_status",
+    ],
+  },
+  {
+    name: "webhook marks payment recheck state",
+    file: "src/routes/api/public/payments/webhook.ts",
+    includes: ["payment_rechecked_at: new Date().toISOString()"],
   },
   {
     name: "thank-you page can read source route",
@@ -31,6 +46,11 @@ const checks: Check[] = [
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],
+  },
+  {
+    name: "order reconciliation migration exists",
+    file: "supabase/migrations/20260609143000_order_payment_reconciliation.sql",
+    includes: ["stripe_environment TEXT", "payment_rechecked_at TIMESTAMPTZ"],
   },
 ];
 

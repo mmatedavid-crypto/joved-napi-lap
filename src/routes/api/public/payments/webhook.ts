@@ -66,6 +66,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
         status: newStatus,
         stripe_payment_intent: paymentIntent,
         paid_at: new Date().toISOString(),
+        payment_rechecked_at: new Date().toISOString(),
         ...(deliverBy ? { deliver_by: deliverBy } : {}),
       })
       .eq("id", existing.id)
