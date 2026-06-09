@@ -24,6 +24,9 @@ type OrderForPaymentRecheck = {
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
+const ORDER_SELECT_BASE =
+  "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
+const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 
 async function resolveOrCreateCustomer(
   stripe: Stripe,
@@ -136,25 +139,23 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       }
 
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { error: orderError } = await supabaseAdmin
-        .from("orders")
-        .insert({
-          user_id: data.userId ?? null,
-          guest_email: data.userId ? null : data.customerEmail,
-          product_slug: data.productSlug,
-          product_name: product.name,
-          category: product.category,
-          price_huf: totalHuf,
-          express: wantsExpress,
-          status: "pending_payment",
-          stripe_session_id: session.id,
-          stripe_environment: data.environment,
-          input_payload: (data.inputPayload ?? null) as never,
-          source_route: data.sourceRoute ?? null,
-          deliver_by: deliverBy,
-        })
-        .select("id")
-        .single();
+      const orderInsert = {
+        user_id: data.userId ?? null,
+        guest_email: data.userId ? null : data.customerEmail,
+        product_slug: data.productSlug,
+        product_name: product.name,
+        category: product.category,
+        price_huf: totalHuf,
+        express: wantsExpress,
+        status: "pending_payment",
+        stripe_session_id: session.id,
+        stripe_environment: data.environment,
+        input_payload: (data.inputPayload ?? null) as never,
+        source_route: data.sourceRoute ?? null,
+        deliver_by: deliverBy,
+      };
+      const orderResult = await insertOrderWithMigrationFallback(supabaseAdmin, orderInsert);
+      const orderError = orderResult.error;
 
       if (orderError) {
         console.error("createCheckoutSession order insert failed:", {
@@ -172,6 +173,42 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       return { error: safeCheckoutErrorMessage(error) };
     }
   });
+
+async function insertOrderWithMigrationFallback(
+  supabaseAdmin: (typeof import("@/integrations/supabase/client.server"))["supabaseAdmin"],
+  orderInsert: Record<string, unknown>,
+) {
+  const result = await supabaseAdmin
+    .from("orders")
+    .insert(orderInsert as never)
+    .select("id")
+    .single();
+  if (!isMissingColumnError(result.error)) return result;
+
+  const {
+    stripe_environment: _stripeEnvironment,
+    payment_rechecked_at: _paymentRecheckedAt,
+    ...safeInsert
+  } = orderInsert;
+  console.warn(
+    "orders reconciliation columns unavailable; inserting order without fallback fields",
+  );
+  return supabaseAdmin
+    .from("orders")
+    .insert(safeInsert as never)
+    .select("id")
+    .single();
+}
+
+function isMissingColumnError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as { code?: string; message?: string };
+  return (
+    err.code === "42703" ||
+    /column .* does not exist/i.test(err.message ?? "") ||
+    /Could not find .* column/i.test(err.message ?? "")
+  );
+}
 
 function safeCheckoutErrorMessage(error: unknown): string {
   const message = error instanceof Error ? error.message : "";
@@ -204,15 +241,24 @@ export const getOrderBySession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: initialOrder } = await supabaseAdmin
+    let orderResult = await supabaseAdmin
       .from("orders")
-      .select(
-        "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route, stripe_environment, stripe_payment_intent, payment_rechecked_at",
-      )
+      .select(ORDER_SELECT_WITH_RECONCILIATION)
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
 
-    const order = await reconcilePendingPayment(initialOrder, data.sessionId);
+    if (isMissingColumnError(orderResult.error)) {
+      console.warn(
+        "orders reconciliation columns unavailable; reading order without fallback fields",
+      );
+      orderResult = await supabaseAdmin
+        .from("orders")
+        .select(ORDER_SELECT_BASE)
+        .eq("stripe_session_id", data.sessionId)
+        .maybeSingle();
+    }
+
+    const order = await reconcilePendingPayment(orderResult.data, data.sessionId);
     return { order };
   });
 

@@ -13,11 +13,21 @@ const checks: Check[] = [
     includes: ["source_route: data.sourceRoute ?? null", "stripe_environment: data.environment"],
   },
   {
+    name: "checkout survives pending migration",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      "insertOrderWithMigrationFallback",
+      "isMissingColumnError",
+      "inserting order without fallback fields",
+    ],
+  },
+  {
     name: "pending payment can be reconciled server-side",
     file: "src/lib/payments.functions.ts",
     includes: [
       "PAYMENT_RECHECK_INTERVAL_MS",
       "reconcilePendingPayment",
+      "ORDER_SELECT_BASE",
       "stripe.checkout.sessions.retrieve(sessionId)",
       "session.payment_status",
     ],
