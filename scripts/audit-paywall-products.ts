@@ -47,8 +47,16 @@ for (const needle of [
   "clientSecretPromise.current = null",
   "customerEmail",
   "checkoutReturnUrl",
+  "safeCheckoutErrorMessage(error)",
+  "SITE_LEGAL.supportEmail",
+  "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.",
+  "vásárlási email címedről",
 ]) {
   if (!checkout.includes(needle)) failed.push(`StripeEmbeddedCheckout missing: ${needle}`);
+}
+
+if (checkout.includes("setCheckoutError(message ||")) {
+  failed.push("StripeEmbeddedCheckout must not display raw checkout error messages");
 }
 
 if (failed.length) {

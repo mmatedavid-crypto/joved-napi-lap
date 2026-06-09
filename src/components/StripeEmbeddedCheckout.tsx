@@ -2,6 +2,7 @@ import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export interface StripeEmbeddedCheckoutProps {
   productSlug: string;
@@ -62,10 +63,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
             return result.clientSecret;
           } catch (error) {
             clientSecretPromise.current = null;
-            const message = error instanceof Error ? error.message : "";
-            setCheckoutError(
-              message || "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra később.",
-            );
+            setCheckoutError(safeCheckoutErrorMessage(error));
             throw error;
           }
         })();
@@ -83,6 +81,13 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
           <div className="font-display text-xl">Nem indult el a fizetés</div>
           <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ivory/65">
             {checkoutError}
+          </p>
+          <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
+            Ha már próbáltad újra, írj nekünk a vásárlási email címedről:{" "}
+            <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+              {SITE_LEGAL.supportEmail}
+            </a>
+            .
           </p>
           <button
             type="button"
@@ -103,4 +108,15 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
       )}
     </div>
   );
+}
+
+function safeCheckoutErrorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  if (message === "Érvénytelen email cím") {
+    return "Kérlek ellenőrizd az email címet, mert erre küldjük az olvasat értesítését is.";
+  }
+  if (message === "Ismeretlen termék") {
+    return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Kérlek válassz újra a termékek közül.";
+  }
+  return "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 }
