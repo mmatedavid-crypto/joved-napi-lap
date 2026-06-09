@@ -236,6 +236,14 @@ export const processOrder = createServerFn({ method: "POST" })
         }
       }
 
+      await queueDeliveredEmail({
+        id: order.id,
+        productName: order.product_name,
+        userId: order.user_id,
+        guestEmail: order.guest_email,
+        reading,
+      });
+
       return { ok: true, response: reading };
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
@@ -246,6 +254,80 @@ export const processOrder = createServerFn({ method: "POST" })
       return { ok: false, error: message };
     }
   });
+
+async function queueDeliveredEmail(order: {
+  id: string;
+  productName: string;
+  userId: string | null;
+  guestEmail: string | null;
+  reading: { title?: string; body?: string };
+}): Promise<void> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+  try {
+    const { data: emailState, error: stateError } = await supabaseAdmin
+      .from("orders")
+      .select("delivery_email_queued_at")
+      .eq("id", order.id)
+      .maybeSingle();
+
+    if (stateError) {
+      console.warn("order delivery email state unavailable:", stateError.message);
+      return;
+    }
+    if (emailState?.delivery_email_queued_at) return;
+
+    const { enqueueTransactionalEmail, resolveOrderRecipientEmail } =
+      await import("@/lib/email/sendTransactional.server");
+    const recipientEmail = await resolveOrderRecipientEmail({
+      user_id: order.userId,
+      guest_email: order.guestEmail,
+    });
+
+    if (!recipientEmail) {
+      await supabaseAdmin
+        .from("orders")
+        .update({ delivery_email_error: "missing_recipient_email" })
+        .eq("id", order.id);
+      return;
+    }
+
+    const result = await enqueueTransactionalEmail({
+      templateName: "order-delivered",
+      recipientEmail,
+      idempotencyKey: `order-delivered:${order.id}`,
+      templateData: {
+        productName: order.productName,
+        title: order.reading.title,
+        body: order.reading.body,
+        orderId: order.id,
+      },
+    });
+
+    await supabaseAdmin
+      .from("orders")
+      .update(
+        result.ok
+          ? {
+              delivery_email_queued_at: new Date().toISOString(),
+              delivery_email_error: null,
+            }
+          : { delivery_email_error: result.error.slice(0, 500) },
+      )
+      .eq("id", order.id);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn("order delivered email queue failed:", message);
+    try {
+      await supabaseAdmin
+        .from("orders")
+        .update({ delivery_email_error: message.slice(0, 500) })
+        .eq("id", order.id);
+    } catch (updateError) {
+      console.warn("order delivery email error state failed:", updateError);
+    }
+  }
+}
 
 function memoryQuestion(payload: unknown): string | null {
   if (!payload || typeof payload !== "object") return null;

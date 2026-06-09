@@ -134,6 +134,8 @@ export type Database = {
           created_at: string;
           deliver_by: string | null;
           delivered_at: string | null;
+          delivery_email_error: string | null;
+          delivery_email_queued_at: string | null;
           error_message: string | null;
           express: boolean;
           guest_email: string | null;
@@ -156,6 +158,8 @@ export type Database = {
           created_at?: string;
           deliver_by?: string | null;
           delivered_at?: string | null;
+          delivery_email_error?: string | null;
+          delivery_email_queued_at?: string | null;
           error_message?: string | null;
           express?: boolean;
           guest_email?: string | null;
@@ -178,6 +182,8 @@ export type Database = {
           created_at?: string;
           deliver_by?: string | null;
           delivered_at?: string | null;
+          delivery_email_error?: string | null;
+          delivery_email_queued_at?: string | null;
           error_message?: string | null;
           express?: boolean;
           guest_email?: string | null;

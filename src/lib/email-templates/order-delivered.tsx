@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import {
   Body,
@@ -39,7 +40,7 @@ const OrderDeliveredEmail = ({
         <Container style={container}>
           <Section>
             <Heading style={brand}>Jövőd.hu</Heading>
-            <Text style={muted}>Elkészült az olvasatod ✨</Text>
+            <Text style={muted}>Elkészült az olvasatod.</Text>
           </Section>
 
           <Section style={card}>
