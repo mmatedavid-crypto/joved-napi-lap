@@ -6,7 +6,7 @@ import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { getMyOrders } from "@/lib/payments.functions";
-import { formatHuf } from "@/lib/products";
+import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 import {
   clearMyReadingMemories,
   getMyReadingMemoryOverview,
@@ -36,6 +36,7 @@ const STATUS_HU: Record<string, string> = {
 
 type ProfileOrder = {
   id: string;
+  product_slug: string;
   product_name: string;
   created_at: string;
   status: string;
@@ -182,6 +183,7 @@ function Page() {
               {orders.map((o) => {
                 const payload = getOrderPayload(o.response_payload);
                 const canOpen = o.status === "delivered" && payload?.body;
+                const continuePath = PRODUCTS_BY_SLUG[o.product_slug]?.sourceRoute;
                 return (
                   <li key={o.id} className="py-4">
                     <div className="flex items-start justify-between gap-3">
@@ -227,6 +229,15 @@ function Page() {
                         Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni. Írj
                         nekünk a vásárlási email címedről, és utánanézünk.
                       </p>
+                    )}
+
+                    {continuePath && (
+                      <Link
+                        to={continuePath}
+                        className="mt-3 inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-xs text-ivory/65 hover:border-gold/60 hover:text-gold"
+                      >
+                        Új kérdést nézek ehhez
+                      </Link>
                     )}
                   </li>
                 );
