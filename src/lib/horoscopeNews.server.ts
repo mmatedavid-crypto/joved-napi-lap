@@ -112,6 +112,17 @@ type ArticleAI = {
   moonPhase?: string;
 };
 
+function cleanHoroscopeNewsText(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const softened = value
+    .replace(/\bengedd el\b/gi, "hagyd magad mögött")
+    .replace(/\bfigyelj a jelekre\b/gi, "vedd észre a finom jelzéseket")
+    .replace(/\bhallgass a szívedre\b/gi, "a saját érzéseidre is figyelj")
+    .replace(/\blégy önmagad\b/gi, "maradj hiteles")
+    .replace(/\bkommunikálj nyíltan és őszintén\b/gi, "fogalmazz tisztán");
+  return cleanHUText(softened);
+}
+
 function normalizeArticle(
   raw: ArticleAI,
   meta: {
@@ -124,13 +135,13 @@ function normalizeArticle(
     fallbackUsed: boolean;
   },
 ): HoroscopeNewsArticle | null {
-  const title = cleanHUText(raw.title);
-  const lead = cleanHUText(raw.lead);
+  const title = cleanHoroscopeNewsText(raw.title);
+  const lead = cleanHoroscopeNewsText(raw.lead);
   const sections = Array.isArray(raw.sections)
     ? raw.sections
         .map((s) => ({
-          heading: cleanHUText(s.heading) ?? "",
-          text: cleanHUText(s.text) ?? "",
+          heading: cleanHoroscopeNewsText(s.heading) ?? "",
+          text: cleanHoroscopeNewsText(s.text) ?? "",
         }))
         .filter((s) => s.heading && s.text)
     : [];
