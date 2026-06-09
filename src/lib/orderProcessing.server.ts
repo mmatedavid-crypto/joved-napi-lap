@@ -130,7 +130,7 @@ async function claimOrderForProcessing(order: {
       updated_at: nowIso,
     })
     .eq("id", order.id)
-    .eq("status", order.status)
+    .eq("status", order.status as never)
     .eq("updated_at", order.updated_at)
     .select("id")
     .maybeSingle();
