@@ -74,6 +74,17 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile exposes support contact for stuck orders",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "ProfileSupportContact",
+      "Ha továbbra is így marad",
+      "vásárlási email címedről",
+      "Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni",
+      "SITE_LEGAL.supportEmail",
+    ],
+  },
+  {
     name: "order reconciliation migration exists",
     file: "supabase/migrations/20260609143000_order_payment_reconciliation.sql",
     includes: ["stripe_environment TEXT", "payment_rechecked_at TIMESTAMPTZ"],

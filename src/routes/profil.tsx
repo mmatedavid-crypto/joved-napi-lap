@@ -254,10 +254,12 @@ function Page() {
                     )}
 
                     {o.status === "delivered" && !payload?.body && (
-                      <p className="mt-3 text-sm text-ivory/55">
-                        Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni. Írj
-                        nekünk a vásárlási email címedről, és utánanézünk.
-                      </p>
+                      <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
+                        <p className="text-sm text-ivory/62">
+                          Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni.
+                        </p>
+                        <ProfileSupportContact className="mt-2" />
+                      </div>
                     )}
 
                     {continuePath && (
@@ -303,10 +305,12 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
 
   if (order.status === "pending_payment") {
     return (
-      <p className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2 text-xs leading-relaxed text-ivory/55">
-        A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet; ha
-        továbbra is így marad, írj nekünk, és utánanézünk.
-      </p>
+      <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2">
+        <p className="text-xs leading-relaxed text-ivory/55">
+          A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet.
+        </p>
+        <ProfileSupportContact className="mt-2" />
+      </div>
     );
   }
 
@@ -334,6 +338,18 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
   }
 
   return null;
+}
+
+function ProfileSupportContact({ className = "" }: { className?: string }) {
+  return (
+    <p className={`text-xs leading-relaxed text-ivory/55 ${className}`.trim()}>
+      Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
+      <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+        {SITE_LEGAL.supportEmail}
+      </a>
+      .
+    </p>
+  );
 }
 
 function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {
