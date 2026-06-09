@@ -138,13 +138,21 @@ const checks: Check[] = [
     ],
   },
   {
-    name: "paid reading body can be copied for later use",
+    name: "paid reading body can be copied or downloaded for later use",
     file: "src/components/PaidReadingBody.tsx",
     includes: [
       "navigator.clipboard.writeText",
+      "URL.createObjectURL",
+      "URL.revokeObjectURL",
+      'type: "text/plain;charset=utf-8"',
+      "link.download",
+      "jovod-olvasat-",
       "Olvasat másolása",
       "Kimásolva",
+      "Olvasat letöltése",
+      "Letöltés indult",
       "később is visszanézheted",
+      "kimásolhatod vagy letöltheted",
     ],
   },
   {
