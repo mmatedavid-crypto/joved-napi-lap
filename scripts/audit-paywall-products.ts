@@ -32,6 +32,8 @@ const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
 for (const needle of [
   "Miben lesz személyesebb?",
   "Vásárlás menete",
+  'trackEvent("paywall_opened"',
+  'trackEvent("checkout_confirmed"',
   "checkoutSteps(product.category, deliveryLabel)",
   "Fizetés után azonnal elkészítjük az olvasatot.",
   "az olvasat akkor is megjelenik a profilodban, ha az email késik",
@@ -49,6 +51,11 @@ for (const needle of [
   "checkoutReturnUrl",
   "safeCheckoutErrorMessage(error)",
   "SITE_LEGAL.supportEmail",
+  'trackEvent("checkout_started"',
+  'trackEvent("checkout_succeeded"',
+  'trackEvent("checkout_failed"',
+  'trackEvent("checkout_retry_clicked"',
+  "safeCheckoutErrorReason(error)",
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.",
   "vásárlási email címedről",
 ]) {
@@ -57,6 +64,23 @@ for (const needle of [
 
 if (checkout.includes("setCheckoutError(message ||")) {
   failed.push("StripeEmbeddedCheckout must not display raw checkout error messages");
+}
+if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
+  failed.push("Stripe checkout analytics must not include customer email");
+}
+
+const analytics = readFileSync("src/lib/analytics.ts", "utf8");
+for (const eventName of [
+  "paywall_opened",
+  "checkout_confirmed",
+  "checkout_started",
+  "checkout_succeeded",
+  "checkout_failed",
+  "checkout_retry_clicked",
+]) {
+  if (!analytics.includes(`"${eventName}"`)) {
+    failed.push(`analytics EventName missing: ${eventName}`);
+  }
 }
 
 if (failed.length) {

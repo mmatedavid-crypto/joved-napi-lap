@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
+import { trackEvent } from "@/lib/analytics";
 import { MONTH_HU } from "@/lib/crystal.hu";
 import { SITE_LEGAL } from "@/lib/legal";
 import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf, type ProductDef } from "@/lib/products";
@@ -35,10 +36,27 @@ export function PaywallDialog({
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [express, setExpress] = useState(false);
+  const trackedOpenKey = useRef<string | null>(null);
 
   useEffect(() => {
     if (!email && user?.email) setEmail(user.email);
   }, [email, user?.email]);
+
+  useEffect(() => {
+    if (!open || !product) {
+      trackedOpenKey.current = null;
+      return;
+    }
+    const openKey = `${product.slug}:${sourceRoute ?? ""}`;
+    if (trackedOpenKey.current === openKey) return;
+    trackedOpenKey.current = openKey;
+    trackEvent("paywall_opened", {
+      productSlug: product.slug,
+      category: product.category,
+      sourceRoute,
+      hasInput: Boolean(inputPayload && Object.keys(inputPayload).length > 0),
+    });
+  }, [inputPayload, open, product, sourceRoute]);
 
   if (!product) return null;
 
@@ -236,7 +254,15 @@ export function PaywallDialog({
 
             <button
               disabled={!email || !emailValid || !termsAccepted}
-              onClick={() => setConfirmed(true)}
+              onClick={() => {
+                trackEvent("checkout_confirmed", {
+                  productSlug: product.slug,
+                  category: product.category,
+                  express: express && canExpress,
+                  sourceRoute,
+                });
+                setConfirmed(true);
+              }}
               className="w-full btn-gold disabled:cursor-not-allowed disabled:opacity-45 disabled:saturate-50 disabled:shadow-none"
             >
               Tovább a fizetéshez · {formatHuf(total)}

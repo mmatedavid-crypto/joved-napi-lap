@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
 import { SITE_LEGAL } from "@/lib/legal";
+import { trackEvent } from "@/lib/analytics";
 
 export interface StripeEmbeddedCheckoutProps {
   productSlug: string;
@@ -45,6 +46,13 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
           try {
             const checkoutReturnUrl =
               returnUrl || `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+            const environment = getStripeEnvironment();
+            trackEvent("checkout_started", {
+              productSlug,
+              express,
+              sourceRoute,
+              environment,
+            });
             const result = await createCheckoutSession({
               data: {
                 productSlug,
@@ -54,16 +62,23 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
                 inputPayload,
                 sourceRoute,
                 returnUrl: checkoutReturnUrl,
-                environment: getStripeEnvironment(),
+                environment,
               },
             });
 
             if ("error" in result) throw new Error(result.error);
             if (!result.clientSecret) throw new Error("Nem jött vissza checkout azonosító");
+            trackEvent("checkout_succeeded", { productSlug, express, sourceRoute, environment });
             return result.clientSecret;
           } catch (error) {
             clientSecretPromise.current = null;
             setCheckoutError(safeCheckoutErrorMessage(error));
+            trackEvent("checkout_failed", {
+              productSlug,
+              express,
+              sourceRoute,
+              reason: safeCheckoutErrorReason(error),
+            });
             throw error;
           }
         })();
@@ -95,6 +110,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
             onClick={() => {
               clientSecretPromise.current = null;
               setCheckoutError(null);
+              trackEvent("checkout_retry_clicked", { productSlug, express, sourceRoute });
               setRetryKey((value) => value + 1);
             }}
           >
@@ -108,6 +124,13 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
       )}
     </div>
   );
+}
+
+function safeCheckoutErrorReason(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  if (message === "Érvénytelen email cím") return "invalid_email";
+  if (message === "Ismeretlen termék") return "unknown_product";
+  return "checkout_start_failed";
 }
 
 function safeCheckoutErrorMessage(error: unknown): string {
