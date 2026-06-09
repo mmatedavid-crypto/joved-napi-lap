@@ -26,6 +26,13 @@ const FORBIDDEN_PAID_PATTERNS = [
   /😊|🙂|✨|❤️|🔮/,
 ];
 
+type PaidReadingQualityResult = {
+  ok: boolean;
+  issues: string[];
+  chars: number;
+  sections: number;
+};
+
 function paidReadingMinimumLength(productSlug: string): number {
   return isDeepPaidProduct(productSlug) ? 1600 : 900;
 }
@@ -34,12 +41,23 @@ function paidReadingMinimumSections(productSlug: string): number {
   return isDeepPaidProduct(productSlug) ? 5 : 4;
 }
 
-function isGoodPaidReading(reading: PaidReadingPayload, productSlug: string): boolean {
+function inspectPaidReadingQuality(
+  reading: PaidReadingPayload,
+  productSlug: string,
+): PaidReadingQualityResult {
   const body = `${reading.title}\n${reading.body}`;
-  if (body.length < paidReadingMinimumLength(productSlug)) return false;
-  if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) return false;
-  if (reading.body.split(/\n\n+/).length < paidReadingMinimumSections(productSlug)) return false;
-  return true;
+  const sections = reading.body.split(/\n\n+/).filter((part) => part.trim().length > 0).length;
+  const issues: string[] = [];
+  const minLength = paidReadingMinimumLength(productSlug);
+  const minSections = paidReadingMinimumSections(productSlug);
+  if (body.length < minLength) issues.push(`too_short:${body.length}<${minLength}`);
+  if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) issues.push("forbidden_text");
+  if (sections < minSections) issues.push(`too_few_sections:${sections}<${minSections}`);
+  return { ok: issues.length === 0, issues, chars: body.length, sections };
+}
+
+function isGoodPaidReading(reading: PaidReadingPayload, productSlug: string): boolean {
+  return inspectPaidReadingQuality(reading, productSlug).ok;
 }
 
 function isDeepPaidProduct(productSlug: string): boolean {
@@ -103,7 +121,17 @@ export async function generatePaidOrderReading(opts: {
       lovableModel,
       readingType: `paid:${opts.productSlug}`,
     });
-    if (ai.ok && ai.data && isGoodPaidReading(ai.data, opts.productSlug)) return ai.data;
+    if (ai.ok && ai.data) {
+      if (isGoodPaidReading(ai.data, opts.productSlug)) return ai.data;
+      const quality = inspectPaidReadingQuality(ai.data, opts.productSlug);
+      console.warn("[paid_reading_quality_rejected]", {
+        productSlug: opts.productSlug,
+        readingType: `paid:${opts.productSlug}`,
+        chars: quality.chars,
+        sections: quality.sections,
+        issues: quality.issues,
+      });
+    }
   } catch {
     // The local premium draft is the safe fallback.
   }

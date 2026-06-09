@@ -273,7 +273,10 @@ if (
   !paidServer.includes("paidReadingMinimumLength(productSlug)") ||
   !paidServer.includes("isDeepPaidProduct(productSlug) ? 1600 : 900") ||
   !paidServer.includes("paidReadingMinimumSections(productSlug)") ||
-  !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug)")
+  !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug)") ||
+  !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug)") ||
+  !paidServer.includes("[paid_reading_quality_rejected]") ||
+  !paidServer.includes("issues: quality.issues")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
 }
