@@ -60,14 +60,17 @@ function UnsubscribePage() {
           {status === "loading" && <p>Egy pillanat, ellenőrizzük a linket…</p>}
           {status === "invalid" && <p>Ez a leiratkozási link érvénytelen vagy lejárt.</p>}
           {status === "already" && (
-            <p>Ez az email cím már le van iratkozva. Nem küldünk több üzenetet.</p>
+            <p>
+              Ez az email cím már le van iratkozva a nem kötelező emailekről. Rendeléshez kapcsolódó
+              kézbesítési vagy ügyfélszolgálati értesítés még érkezhet.
+            </p>
           )}
           {status === "error" && <p>Valami megakadt. Kérlek próbáld újra később.</p>}
           {status === "valid" && (
             <>
               <p>
-                Biztosan leiratkozol a Jövőd.hu emailjeiről? Ezután nem küldünk több üzenetet erre a
-                címre.
+                Biztosan leiratkozol a Jövőd.hu nem kötelező emailjeiről? Rendeléshez kapcsolódó
+                kézbesítési vagy ügyfélszolgálati értesítés továbbra is érkezhet.
               </p>
               <button
                 onClick={confirm}
@@ -78,7 +81,12 @@ function UnsubscribePage() {
               </button>
             </>
           )}
-          {status === "done" && <p>Sikeresen leiratkoztál. Köszönjük, hogy velünk voltál.</p>}
+          {status === "done" && (
+            <p>
+              Sikeresen leiratkoztál a nem kötelező emailekről. A rendelési értesítéseket továbbra
+              is megkapod, ha vásárolsz.
+            </p>
+          )}
         </div>
       </div>
     </main>

@@ -10,6 +10,8 @@ export interface TemplateEntry {
   previewData?: TemplateData;
   /** Fixed recipient — overrides caller-provided recipientEmail when set. */
   to?: string;
+  /** True for order/access emails that must still be delivered after marketing unsubscribe. */
+  essentialTransactional?: boolean;
 }
 
 /**
@@ -21,5 +23,5 @@ export interface TemplateEntry {
  *   // then add to TEMPLATES: 'welcome': welcomeTemplate
  */
 export const TEMPLATES: Record<string, TemplateEntry> = {
-  "order-delivered": orderDeliveredTemplate,
+  "order-delivered": { ...orderDeliveredTemplate, essentialTransactional: true },
 };

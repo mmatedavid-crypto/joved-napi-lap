@@ -37,32 +37,37 @@ export async function enqueueTransactionalEmail(
   const recipient = template.to || input.recipientEmail;
   if (!recipient) return { ok: false, error: "recipientEmail required" };
   const normalized = recipient.toLowerCase();
+  const essentialTransactional = Boolean(template.essentialTransactional);
 
   // Suppression check
   const { data: suppressed } = await supabaseAdmin
     .from("suppressed_emails")
-    .select("id")
+    .select("id, reason")
     .eq("email", normalized)
     .maybeSingle();
-  if (suppressed) return { ok: false, error: "email_suppressed" };
+  if (suppressed && (!essentialTransactional || suppressed.reason !== "unsubscribe")) {
+    return { ok: false, error: "email_suppressed" };
+  }
 
   // Unsubscribe token (one per email)
-  let unsubscribeToken: string;
-  const { data: existingTok } = await supabaseAdmin
-    .from("email_unsubscribe_tokens")
-    .select("token, used_at")
-    .eq("email", normalized)
-    .maybeSingle();
-  if (existingTok && !existingTok.used_at) {
-    unsubscribeToken = existingTok.token;
-  } else if (existingTok && existingTok.used_at) {
-    return { ok: false, error: "email_suppressed" };
-  } else {
-    unsubscribeToken = generateToken();
-    const { error: tokErr } = await supabaseAdmin
+  let unsubscribeToken: string | undefined;
+  if (!essentialTransactional) {
+    const { data: existingTok } = await supabaseAdmin
       .from("email_unsubscribe_tokens")
-      .insert({ email: normalized, token: unsubscribeToken });
-    if (tokErr) return { ok: false, error: `unsubscribe token: ${tokErr.message}` };
+      .select("token, used_at")
+      .eq("email", normalized)
+      .maybeSingle();
+    if (existingTok && !existingTok.used_at) {
+      unsubscribeToken = existingTok.token;
+    } else if (existingTok && existingTok.used_at) {
+      return { ok: false, error: "email_suppressed" };
+    } else {
+      unsubscribeToken = generateToken();
+      const { error: tokErr } = await supabaseAdmin
+        .from("email_unsubscribe_tokens")
+        .insert({ email: normalized, token: unsubscribeToken });
+      if (tokErr) return { ok: false, error: `unsubscribe token: ${tokErr.message}` };
+    }
   }
 
   const templateData = input.templateData ?? {};
@@ -95,7 +100,7 @@ export async function enqueueTransactionalEmail(
       purpose: "transactional",
       label: input.templateName,
       idempotency_key: idempotencyKey,
-      unsubscribe_token: unsubscribeToken,
+      ...(unsubscribeToken ? { unsubscribe_token: unsubscribeToken } : {}),
       queued_at: new Date().toISOString(),
     },
   });

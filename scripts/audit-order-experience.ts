@@ -97,6 +97,42 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "order delivered email is essential transactional",
+    file: "src/lib/email-templates/registry.ts",
+    includes: ["essentialTransactional?: boolean", "essentialTransactional: true"],
+  },
+  {
+    name: "internal order delivery bypasses unsubscribe suppression only",
+    file: "src/lib/email/sendTransactional.server.ts",
+    includes: [
+      "const essentialTransactional = Boolean(template.essentialTransactional)",
+      'suppressed.reason !== "unsubscribe"',
+      "if (!essentialTransactional)",
+      "...(unsubscribeToken ? { unsubscribe_token: unsubscribeToken } : {})",
+    ],
+  },
+  {
+    name: "lovable send route preserves essential order email delivery",
+    file: "src/routes/lovable/email/transactional/send.ts",
+    includes: [
+      "const essentialTransactional = Boolean(template.essentialTransactional)",
+      'suppressed.reason !== "unsubscribe"',
+      "if (!essentialTransactional)",
+      "...(unsubscribeToken ? { unsubscribe_token: unsubscribeToken } : {})",
+    ],
+  },
+  {
+    name: "unsubscribe page clarifies transactional order notices",
+    file: "src/routes/unsubscribe.tsx",
+    includes: [
+      "nem kötelező emailekről",
+      "Rendeléshez kapcsolódó",
+      "kézbesítési vagy ügyfélszolgálati értesítés",
+      "rendelési értesítéseket",
+      "továbbra",
+    ],
+  },
+  {
     name: "order reconciliation migration exists",
     file: "supabase/migrations/20260609143000_order_payment_reconciliation.sql",
     includes: ["stripe_environment TEXT", "payment_rechecked_at TIMESTAMPTZ"],

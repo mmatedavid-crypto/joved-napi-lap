@@ -100,6 +100,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
         // the caller-provided recipientEmail. This allows notification templates
         // to always send to a fixed address (e.g., site owner from env var).
         const effectiveRecipient = template.to || recipientEmail;
+        const essentialTransactional = Boolean(template.essentialTransactional);
 
         if (!effectiveRecipient) {
           return Response.json(
@@ -113,7 +114,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
         // 2. Check suppression list (fail-closed: if we can't verify, don't send)
         const { data: suppressed, error: suppressionError } = await supabase
           .from("suppressed_emails")
-          .select("id")
+          .select("id, reason")
           .eq("email", effectiveRecipient.toLowerCase())
           .maybeSingle();
 
@@ -125,7 +126,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
           return Response.json({ error: "Failed to verify suppression status" }, { status: 500 });
         }
 
-        if (suppressed) {
+        if (suppressed && (!essentialTransactional || suppressed.reason !== "unsubscribe")) {
           // Log the suppressed attempt
           await supabase.from("email_send_log").insert({
             message_id: messageId,
@@ -143,68 +144,19 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
         // 3. Get or create unsubscribe token (one token per email address)
         const normalizedEmail = effectiveRecipient.toLowerCase();
-        let unsubscribeToken: string;
+        let unsubscribeToken: string | undefined;
 
-        // Check for existing token for this email
-        const { data: existingToken, error: tokenLookupError } = await supabase
-          .from("email_unsubscribe_tokens")
-          .select("token, used_at")
-          .eq("email", normalizedEmail)
-          .maybeSingle();
-
-        if (tokenLookupError) {
-          console.error("Token lookup failed", {
-            error: tokenLookupError,
-            email_redacted: redactEmail(normalizedEmail),
-          });
-          await supabase.from("email_send_log").insert({
-            message_id: messageId,
-            template_name: templateName,
-            recipient_email: effectiveRecipient,
-            status: "failed",
-            error_message: "Failed to look up unsubscribe token",
-          });
-          return Response.json({ error: "Failed to prepare email" }, { status: 500 });
-        }
-
-        if (existingToken && !existingToken.used_at) {
-          // Reuse existing unused token
-          unsubscribeToken = existingToken.token;
-        } else if (!existingToken) {
-          // Create new token — upsert handles concurrent inserts gracefully
-          unsubscribeToken = generateToken();
-          const { error: tokenError } = await supabase
+        if (!essentialTransactional) {
+          // Check for existing token for this email
+          const { data: existingToken, error: tokenLookupError } = await supabase
             .from("email_unsubscribe_tokens")
-            .upsert(
-              { token: unsubscribeToken, email: normalizedEmail },
-              { onConflict: "email", ignoreDuplicates: true },
-            );
-
-          if (tokenError) {
-            console.error("Failed to create unsubscribe token", {
-              error: tokenError,
-            });
-            await supabase.from("email_send_log").insert({
-              message_id: messageId,
-              template_name: templateName,
-              recipient_email: effectiveRecipient,
-              status: "failed",
-              error_message: "Failed to create unsubscribe token",
-            });
-            return Response.json({ error: "Failed to prepare email" }, { status: 500 });
-          }
-
-          // If another request raced us, our upsert was silently ignored.
-          // Re-read to get the actual stored token.
-          const { data: storedToken, error: reReadError } = await supabase
-            .from("email_unsubscribe_tokens")
-            .select("token")
+            .select("token, used_at")
             .eq("email", normalizedEmail)
             .maybeSingle();
 
-          if (reReadError || !storedToken) {
-            console.error("Failed to read back unsubscribe token after upsert", {
-              error: reReadError,
+          if (tokenLookupError) {
+            console.error("Token lookup failed", {
+              error: tokenLookupError,
               email_redacted: redactEmail(normalizedEmail),
             });
             await supabase.from("email_send_log").insert({
@@ -212,25 +164,76 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
               template_name: templateName,
               recipient_email: effectiveRecipient,
               status: "failed",
-              error_message: "Failed to confirm unsubscribe token storage",
+              error_message: "Failed to look up unsubscribe token",
             });
             return Response.json({ error: "Failed to prepare email" }, { status: 500 });
           }
-          unsubscribeToken = storedToken.token;
-        } else {
-          // Token exists but is already used — email should have been caught by suppression check above.
-          // This is a safety fallback; log and skip sending.
-          console.warn("Unsubscribe token already used but email not suppressed", {
-            email_redacted: redactEmail(normalizedEmail),
-          });
-          await supabase.from("email_send_log").insert({
-            message_id: messageId,
-            template_name: templateName,
-            recipient_email: effectiveRecipient,
-            status: "suppressed",
-            error_message: "Unsubscribe token used but email missing from suppressed list",
-          });
-          return Response.json({ success: false, reason: "email_suppressed" });
+
+          if (existingToken && !existingToken.used_at) {
+            // Reuse existing unused token
+            unsubscribeToken = existingToken.token;
+          } else if (!existingToken) {
+            // Create new token — upsert handles concurrent inserts gracefully
+            unsubscribeToken = generateToken();
+            const { error: tokenError } = await supabase
+              .from("email_unsubscribe_tokens")
+              .upsert(
+                { token: unsubscribeToken, email: normalizedEmail },
+                { onConflict: "email", ignoreDuplicates: true },
+              );
+
+            if (tokenError) {
+              console.error("Failed to create unsubscribe token", {
+                error: tokenError,
+              });
+              await supabase.from("email_send_log").insert({
+                message_id: messageId,
+                template_name: templateName,
+                recipient_email: effectiveRecipient,
+                status: "failed",
+                error_message: "Failed to create unsubscribe token",
+              });
+              return Response.json({ error: "Failed to prepare email" }, { status: 500 });
+            }
+
+            // If another request raced us, our upsert was silently ignored.
+            // Re-read to get the actual stored token.
+            const { data: storedToken, error: reReadError } = await supabase
+              .from("email_unsubscribe_tokens")
+              .select("token")
+              .eq("email", normalizedEmail)
+              .maybeSingle();
+
+            if (reReadError || !storedToken) {
+              console.error("Failed to read back unsubscribe token after upsert", {
+                error: reReadError,
+                email_redacted: redactEmail(normalizedEmail),
+              });
+              await supabase.from("email_send_log").insert({
+                message_id: messageId,
+                template_name: templateName,
+                recipient_email: effectiveRecipient,
+                status: "failed",
+                error_message: "Failed to confirm unsubscribe token storage",
+              });
+              return Response.json({ error: "Failed to prepare email" }, { status: 500 });
+            }
+            unsubscribeToken = storedToken.token;
+          } else {
+            // Token exists but is already used — email should have been caught by suppression check above.
+            // This is a safety fallback; log and skip sending.
+            console.warn("Unsubscribe token already used but email not suppressed", {
+              email_redacted: redactEmail(normalizedEmail),
+            });
+            await supabase.from("email_send_log").insert({
+              message_id: messageId,
+              template_name: templateName,
+              recipient_email: effectiveRecipient,
+              status: "suppressed",
+              error_message: "Unsubscribe token used but email missing from suppressed list",
+            });
+            return Response.json({ success: false, reason: "email_suppressed" });
+          }
         }
 
         // 4. Render React Email template to HTML and plain text
@@ -268,7 +271,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
             purpose: "transactional",
             label: templateName,
             idempotency_key: idempotencyKey,
-            unsubscribe_token: unsubscribeToken,
+            ...(unsubscribeToken ? { unsubscribe_token: unsubscribeToken } : {}),
             queued_at: new Date().toISOString(),
           },
         });
