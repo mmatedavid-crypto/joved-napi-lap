@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/alomfejtes")({
@@ -83,6 +84,24 @@ function Page() {
     }
     if (reading) {
       setResult(reading);
+      const guestMemory = getGuestReadingContext({
+        readingType: "dream",
+        topic: reading.title,
+        situation: emotion,
+        limit: 5,
+      });
+      setMemoryNote(guestMemory.themeSummary || guestMemory.insightText || "");
+      recordGuestReadingMemory({
+        readingType: "dream",
+        topic: reading.title,
+        question: text.trim() || undefined,
+        situation: EMOTION_LABEL[emotion] ?? emotion,
+        sourceRoute: "/alomfejtes",
+        title: reading.title,
+        summary: reading.oneLine || reading.notice || reading.surface || reading.title,
+        oneSentence: reading.oneLine,
+        anchors: [reading.title, EMOTION_LABEL[emotion] ?? emotion],
+      });
       if (user) {
         try {
           const memory = await loadMemory({
@@ -236,7 +255,21 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="alomfejtes_rovid"
         sourceRoute="/alomfejtes"
-        inputPayload={result ? { title: result.title, text, emotion } : { text, emotion }}
+        inputPayload={
+          result
+            ? {
+                title: result.title,
+                text,
+                emotion,
+                memoryContext:
+                  getGuestReadingContext({
+                    readingType: "dream",
+                    topic: result.title,
+                    situation: emotion,
+                  }).contextText || undefined,
+              }
+            : { text, emotion }
+        }
       />
     </Layout>
   );

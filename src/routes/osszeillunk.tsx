@@ -13,6 +13,7 @@ import {
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -63,7 +64,19 @@ function Page() {
       status,
     });
     setComparisonContext(browserPattern.contextText);
-    let memoryContext = browserPattern.contextText;
+    const guestMemory = getGuestReadingContext({
+      readingType: "compatibility",
+      topic: status,
+      situation: status,
+      limit: 6,
+    });
+    let memoryContext = [
+      guestMemory.contextText,
+      guestMemory.themeSummary,
+      browserPattern.contextText,
+    ]
+      .filter(Boolean)
+      .join("\n");
     if (user) {
       try {
         const memory = await loadMemory({
@@ -90,6 +103,22 @@ function Page() {
       if (r.ok && r.reading && r.profile) {
         setProfile(r.profile);
         setReading(r.reading);
+        recordGuestReadingMemory({
+          readingType: "compatibility",
+          topic: `${na || "én"} + ${nb || "ő"} · ${status}`,
+          situation: status,
+          sourceRoute: "/osszeillunk",
+          title: r.reading.title,
+          summary: r.reading.oneSentence,
+          oneSentence: r.reading.oneSentence,
+          anchors: [
+            status,
+            `${r.profile.personA.lifePathNumber}`,
+            `${r.profile.personB.lifePathNumber}`,
+            `${r.profile.relationshipNumber}`,
+            ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
+          ],
+        });
         if (user) {
           saveMemory({
             data: {
@@ -132,6 +161,21 @@ function Page() {
     });
     setProfile(fallbackProfile);
     setReading(composeCompatibilityReading(fallbackProfile));
+    recordGuestReadingMemory({
+      readingType: "compatibility",
+      topic: `${na || "én"} + ${nb || "ő"} · ${status}`,
+      situation: status,
+      sourceRoute: "/osszeillunk",
+      title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
+      summary: `Összeillés: ${fallbackProfile.score}%, ${fallbackProfile.relationshipNumber}-es kapcsolatminta.`,
+      oneSentence: `A kapcsolat mintája ${fallbackProfile.relationshipNumber}-es ritmust mutat.`,
+      anchors: [
+        status,
+        `${fallbackProfile.personA.lifePathNumber}`,
+        `${fallbackProfile.personB.lifePathNumber}`,
+        ...(browserPattern.isComparing ? ["több összeillés", "választási minta"] : []),
+      ],
+    });
     if (user) {
       saveMemory({
         data: {

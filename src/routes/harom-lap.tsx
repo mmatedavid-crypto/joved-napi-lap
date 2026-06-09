@@ -10,6 +10,7 @@ import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/harom-lap")({
@@ -66,7 +67,14 @@ function HaromLap() {
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
-      let memoryContext: string | undefined;
+      const guestMemory = getGuestReadingContext({
+        readingType: "tarot",
+        topic: question || category,
+        situation: category,
+        limit: 5,
+      });
+      let memoryContext: string | undefined =
+        guestMemory.contextText || guestMemory.themeSummary || undefined;
       if (user) {
         try {
           const memory = await loadMemory({
@@ -107,6 +115,17 @@ function HaromLap() {
         if (cancelled) return;
         if (r.ok && r.reading) {
           setReading(r.reading);
+          recordGuestReadingMemory({
+            readingType: "tarot",
+            topic: question || category,
+            question: question || undefined,
+            situation: category,
+            sourceRoute: "/harom-lap",
+            title: r.reading.oneLine || "Három lapos húzás",
+            summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
+            oneSentence: r.reading.oneLine,
+            anchors: [category, ...cards.map((card) => card.name)],
+          });
           if (user) {
             saveMemory({
               data: {
@@ -270,7 +289,17 @@ function HaromLap() {
         onOpenChange={setPaywall}
         productSlug="harom_lap_mely"
         sourceRoute="/harom-lap"
-        inputPayload={{ cards: cards?.map((c) => c.name), question, category }}
+        inputPayload={{
+          cards: cards?.map((c) => c.name),
+          question,
+          category,
+          memoryContext:
+            getGuestReadingContext({
+              readingType: "tarot",
+              topic: question || category,
+              situation: category,
+            }).contextText || undefined,
+        }}
       />
     </Layout>
   );

@@ -11,6 +11,7 @@ import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/randi-elott")({
@@ -68,7 +69,14 @@ function Page() {
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
-      let memoryContext: string | undefined;
+      const guestMemory = getGuestReadingContext({
+        readingType: "love",
+        topic: q || sit,
+        situation: sit,
+        limit: 5,
+      });
+      let memoryContext: string | undefined =
+        guestMemory.contextText || guestMemory.themeSummary || undefined;
       if (user) {
         try {
           const memory = await loadMemory({
@@ -104,6 +112,17 @@ function Page() {
         if (cancelled) return;
         if (r.ok && r.reading) {
           setReading(r.reading);
+          recordGuestReadingMemory({
+            readingType: "love",
+            topic: q || sit,
+            question: q || undefined,
+            situation: sit,
+            sourceRoute: "/randi-elott",
+            title: "Randi előtt",
+            summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
+            oneSentence: r.reading.oneLine,
+            anchors: [sit, ...cards.map((card) => card.name)],
+          });
           if (user) {
             saveMemory({
               data: {
@@ -278,7 +297,18 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="parkapcsolat_elemzes"
         sourceRoute="/randi-elott"
-        inputPayload={{ myName, hisName, myDob, hisDob, sit, q, cards: cards?.map((c) => c.name) }}
+        inputPayload={{
+          myName,
+          hisName,
+          myDob,
+          hisDob,
+          sit,
+          q,
+          cards: cards?.map((c) => c.name),
+          memoryContext:
+            getGuestReadingContext({ readingType: "love", topic: q || sit, situation: sit })
+              .contextText || undefined,
+        }}
       />
     </Layout>
   );

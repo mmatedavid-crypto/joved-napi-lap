@@ -14,6 +14,7 @@ import { PaywallDialog } from "@/components/PaywallDialog";
 import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dontes-elott")({
@@ -84,6 +85,17 @@ function Page() {
           const n = normalizeRoxyIching(r.data);
           const h = hexHU(n.primary?.number);
           setHex({ number: n.primary?.number, name: h.name, m: h.m });
+          recordGuestReadingMemory({
+            readingType: "decision",
+            topic: q || cat,
+            question: q || undefined,
+            situation: cat,
+            sourceRoute: "/dontes-elott",
+            title: `I-Ching · ${h.name}`,
+            summary: h.m.oneLine,
+            oneSentence: h.m.oneLine,
+            anchors: [cat, h.name, mode],
+          });
           trackEvent("iching_completed", { hex: n.primary?.number });
         } else throw new Error("iching-fail");
       } catch {
@@ -108,7 +120,14 @@ function Page() {
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
-      let memoryContext: string | undefined;
+      const guestMemory = getGuestReadingContext({
+        readingType: "decision",
+        topic: q || cat,
+        situation: cat,
+        limit: 5,
+      });
+      let memoryContext: string | undefined =
+        guestMemory.contextText || guestMemory.themeSummary || undefined;
       if (user) {
         try {
           const memory = await loadMemory({
@@ -144,6 +163,17 @@ function Page() {
         if (cancelled) return;
         if (r.ok && r.reading) {
           setReading(r.reading);
+          recordGuestReadingMemory({
+            readingType: "decision",
+            topic: q || cat,
+            question: q || undefined,
+            situation: cat,
+            sourceRoute: "/dontes-elott",
+            title: "Döntés előtt",
+            summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
+            oneSentence: r.reading.oneLine,
+            anchors: [cat, ...cards.map((card) => card.name)],
+          });
           if (user) {
             saveMemory({
               data: {
@@ -363,7 +393,16 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="dontes_komplex"
         sourceRoute="/dontes-elott"
-        inputPayload={{ q, cat, mode, cards: cards?.map((c) => c.name), hex: hex?.name }}
+        inputPayload={{
+          q,
+          cat,
+          mode,
+          cards: cards?.map((c) => c.name),
+          hex: hex?.name,
+          memoryContext:
+            getGuestReadingContext({ readingType: "decision", topic: q || cat, situation: cat })
+              .contextText || undefined,
+        }}
       />
     </Layout>
   );
