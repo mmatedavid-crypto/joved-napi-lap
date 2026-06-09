@@ -177,7 +177,7 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="szammisztika_eletut"
         sourceRoute="/szammisztika"
-        inputPayload={{ dob, name }}
+        inputPayload={{ dob, name, callName, preferredName: callName }}
       />
     </Layout>
   );

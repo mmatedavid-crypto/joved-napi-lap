@@ -16,6 +16,8 @@ import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functi
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
 import { useAuth } from "@/hooks/useAuth";
+import { PaywallDialog } from "@/components/PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/osszeillunk")({
   head: () => ({
@@ -53,6 +55,7 @@ function Page() {
   const [profile, setProfile] = useState<CompatibilityProfile | null>(null);
   const [reading, setReading] = useState<QualityReading | null>(null);
   const [comparisonContext, setComparisonContext] = useState("");
+  const [paywall, setPaywall] = useState(false);
 
   async function calc(e: React.FormEvent) {
     e.preventDefault();
@@ -298,9 +301,50 @@ function Page() {
                 <em>{reading.oneSentence}</em>
               </Section>
             </div>
+            <div className="surface p-5 text-center">
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
+                Mélyebb elemzés
+              </div>
+              <div className="font-display text-xl text-ivory mt-1">
+                Kapcsolati dinamika, nem csak százalék
+              </div>
+              <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-ivory/62">
+                A részletes elemzés a születési mintákon túl a kapcsolat státuszára is reflektál:
+                ismerkedésnél tempóra, ex-történetnél visszatérési mintára, hosszú távnál
+                biztonságra és szabadságra.
+              </p>
+              <button className="btn-gold mt-4" onClick={() => setPaywall(true)}>
+                {productCtaLabel("Párkapcsolat — mély elemzés", "parkapcsolat_elemzes")}
+              </button>
+            </div>
           </div>
         )}
       </div>
+      <PaywallDialog
+        open={paywall}
+        onOpenChange={setPaywall}
+        productSlug="parkapcsolat_elemzes"
+        sourceRoute="/osszeillunk"
+        inputPayload={{
+          myName: na,
+          hisName: nb,
+          myDob: a,
+          hisDob: b,
+          sit: status,
+          q:
+            status === "ex / visszatérő történet"
+              ? "Visszatérhet-e ez a kapcsolat más mintával, vagy csak rövid fellángolás lenne?"
+              : "Milyen dinamika van köztünk, és mire kell figyelnünk?",
+          score: profile?.score,
+          relationshipNumber: profile?.relationshipNumber,
+          memoryContext:
+            getGuestReadingContext({
+              readingType: "compatibility",
+              topic: status,
+              situation: status,
+            }).contextText || undefined,
+        }}
+      />
     </Layout>
   );
 }
