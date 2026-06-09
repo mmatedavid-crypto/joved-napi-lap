@@ -104,8 +104,11 @@ export function PaywallDialog({
             )}
 
             <div>
-              <label className="block text-sm text-ivory/80 mb-1">Email cím a vásárláshoz</label>
+              <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
+                Email cím a vásárláshoz
+              </label>
               <input
+                id="checkout-email"
                 type="email"
                 required
                 value={email}

@@ -168,19 +168,40 @@ function Page() {
         <form onSubmit={calc} className="surface p-6 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-ivory/80 mb-2">A férfi neve (opcionális)</label>
-              <input value={na} onChange={(e) => setNa(e.target.value)} className={inp} />
+              <label htmlFor="compat-name-a" className="block text-sm text-ivory/80 mb-2">
+                A férfi neve (opcionális)
+              </label>
+              <input
+                id="compat-name-a"
+                value={na}
+                onChange={(e) => setNa(e.target.value)}
+                className={inp}
+              />
             </div>
             <div>
-              <label className="block text-sm text-ivory/80 mb-2">A nő neve (opcionális)</label>
-              <input value={nb} onChange={(e) => setNb(e.target.value)} className={inp} />
+              <label htmlFor="compat-name-b" className="block text-sm text-ivory/80 mb-2">
+                A nő neve (opcionális)
+              </label>
+              <input
+                id="compat-name-b"
+                value={nb}
+                onChange={(e) => setNb(e.target.value)}
+                className={inp}
+              />
             </div>
             <HUDateInput label="Férfi születési dátuma" required value={a} onChange={setA} />
             <HUDateInput label="Nő születési dátuma" required value={b} onChange={setB} />
           </div>
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">A kapcsolat státusza</label>
-            <select value={status} onChange={(e) => setStatus(e.target.value)} className={sel}>
+            <label htmlFor="compat-status" className="block text-sm text-ivory/80 mb-2">
+              A kapcsolat státusza
+            </label>
+            <select
+              id="compat-status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className={sel}
+            >
               {STATUS.map((s) => (
                 <option key={s}>{s}</option>
               ))}

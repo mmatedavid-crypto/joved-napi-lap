@@ -136,8 +136,11 @@ function Page() {
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={submit} className="surface p-6 space-y-4">
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">Mit álmodtál?</label>
+            <label htmlFor="dream-text" className="block text-sm text-ivory/80 mb-2">
+              Mit álmodtál?
+            </label>
             <textarea
+              id="dream-text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={4}

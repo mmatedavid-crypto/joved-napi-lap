@@ -96,8 +96,11 @@ function Page() {
         <form onSubmit={calc} className="surface p-6 space-y-5">
           <HUDateInput label="Születési dátumod" required value={dob} onChange={setDob} />
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">Teljes neved (opcionális)</label>
+            <label htmlFor="numerology-full-name" className="block text-sm text-ivory/80 mb-2">
+              Teljes neved (opcionális)
+            </label>
             <input
+              id="numerology-full-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Pl. Példa Anna Bella — családnév + keresztnevek"
@@ -105,10 +108,11 @@ function Page() {
             />
           </div>
           <div>
-            <label className="block text-sm text-ivory/80 mb-2">
+            <label htmlFor="numerology-call-name" className="block text-sm text-ivory/80 mb-2">
               Ahogy szólítanak (opcionális)
             </label>
             <input
+              id="numerology-call-name"
               value={callName}
               onChange={(e) => setCallName(e.target.value)}
               placeholder="Pl. Anna"

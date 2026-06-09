@@ -188,8 +188,9 @@ function Page() {
             }}
             className="surface p-6 space-y-5"
           >
-            <Field label="A helyzet röviden (opcionális)">
+            <Field id="decision-question" label="A helyzet röviden (opcionális)">
               <textarea
+                id="decision-question"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 rows={3}
@@ -218,16 +219,22 @@ function Page() {
               </div>
             </Field>
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="Kategória">
-                <select value={cat} onChange={(e) => setCat(e.target.value)} className={selectCls}>
+              <Field id="decision-category" label="Kategória">
+                <select
+                  id="decision-category"
+                  value={cat}
+                  onChange={(e) => setCat(e.target.value)}
+                  className={selectCls}
+                >
                   {CATS.map((c) => (
                     <option key={c}>{c}</option>
                   ))}
                 </select>
               </Field>
               {(mode === "tarot" || mode === "both") && (
-                <Field label="Húzás típusa">
+                <Field id="decision-draw-type" label="Húzás típusa">
                   <select
+                    id="decision-draw-type"
                     value={type}
                     onChange={(e) => setType(Number(e.target.value) as 1 | 3)}
                     className={selectCls}
@@ -364,10 +371,12 @@ function Page() {
 
 const selectCls =
   "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none";
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ id, label, children }: { id?: string; label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm text-ivory/80 mb-2">{label}</label>
+      <label htmlFor={id} className="block text-sm text-ivory/80 mb-2">
+        {label}
+      </label>
       {children}
     </div>
   );

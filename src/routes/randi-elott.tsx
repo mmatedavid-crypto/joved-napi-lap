@@ -141,11 +141,17 @@ function Page() {
         {!cards && (
           <form onSubmit={draw} className="surface p-6 space-y-5">
             <div className="grid md:grid-cols-2 gap-4">
-              <F label="Te (név, opcionális)">
-                <input value={myName} onChange={(e) => setMyName(e.target.value)} className={inp} />
-              </F>
-              <F label="Ő (név, opcionális)">
+              <F id="date-my-name" label="Te (név, opcionális)">
                 <input
+                  id="date-my-name"
+                  value={myName}
+                  onChange={(e) => setMyName(e.target.value)}
+                  className={inp}
+                />
+              </F>
+              <F id="date-his-name" label="Ő (név, opcionális)">
+                <input
+                  id="date-his-name"
                   value={hisName}
                   onChange={(e) => setHisName(e.target.value)}
                   className={inp}
@@ -162,23 +168,30 @@ function Page() {
                 onChange={setHisDob}
               />
             </div>
-            <F label="A helyzet">
-              <select value={sit} onChange={(e) => setSit(e.target.value)} className={sel}>
+            <F id="date-situation" label="A helyzet">
+              <select
+                id="date-situation"
+                value={sit}
+                onChange={(e) => setSit(e.target.value)}
+                className={sel}
+              >
                 {SITUATIONS.map((s) => (
                   <option key={s}>{s}</option>
                 ))}
               </select>
             </F>
-            <F label="Konkrét kérdés (opcionális)">
+            <F id="date-question" label="Konkrét kérdés (opcionális)">
               <input
+                id="date-question"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Pl. Komolyan gondolja?"
                 className={inp}
               />
             </F>
-            <F label="Húzás típusa">
+            <F id="date-draw-type" label="Húzás típusa">
               <select
+                id="date-draw-type"
                 value={type}
                 onChange={(e) => setType(Number(e.target.value) as 1 | 3)}
                 className={sel}
@@ -274,10 +287,12 @@ const inp =
   "w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none";
 const sel =
   "w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none";
-function F({ label, children }: { label: string; children: React.ReactNode }) {
+function F({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm text-ivory/80 mb-2">{label}</label>
+      <label htmlFor={id} className="block text-sm text-ivory/80 mb-2">
+        {label}
+      </label>
       {children}
     </div>
   );

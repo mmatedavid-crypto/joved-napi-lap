@@ -88,8 +88,11 @@ function Page() {
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={submit} className="surface p-6 space-y-3">
-          <label className="block text-sm text-ivory/80">A szám</label>
+          <label htmlFor="angel-number" className="block text-sm text-ivory/80">
+            A szám
+          </label>
           <input
+            id="angel-number"
             value={num}
             onChange={(e) => setNum(e.target.value.replace(/\D/g, "").slice(0, 12))}
             placeholder="Pl. 111, 222, 333, 777, 1111"
