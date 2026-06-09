@@ -20,6 +20,7 @@ export async function aiJSON<T>(opts: {
   model?: string;
   openaiModel?: string;
   lovableModel?: string;
+  allowLovableFallback?: boolean;
   providerPreference?: "lovable_first" | "openai_first";
   readingType?: string;
 }): Promise<AiResult<T>> {
@@ -27,10 +28,14 @@ export async function aiJSON<T>(opts: {
   const preference = opts.providerPreference ?? "lovable_first";
   const openaiModel = opts.openaiModel ?? opts.model ?? OPENAI_MODEL;
   const lovableModel = opts.lovableModel ?? opts.model ?? LOVABLE_MODEL;
+  const allowLovableFallback = opts.allowLovableFallback ?? true;
+  let openaiAttempted = false;
+  let lastError: string | undefined;
 
   if (preference === "openai_first") {
     const openaiKey = process.env.OPENAI_API_KEY;
     if (openaiKey) {
+      openaiAttempted = true;
       const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model: openaiModel });
       if (r.ok) {
         logAiCall({
@@ -51,6 +56,7 @@ export async function aiJSON<T>(opts: {
         readingType: opts.readingType,
         fallbackUsed: true,
       });
+      lastError = r.error;
     }
   }
 
@@ -71,9 +77,10 @@ export async function aiJSON<T>(opts: {
       });
       return r;
     }
-    // ha az elsődleges modell hibázik (pl. 402, 429, vagy temp. hiba),
-    // próbáljunk egy gyorsabb Gemini fallbacket ugyanazon a gateway-en
-    if (primaryModel !== LOVABLE_FALLBACK_MODEL) {
+    lastError = r.error;
+    // Ha az elsődleges gateway modell hibázik, bizonyos nem fizetős utaknál
+    // megengedett a gyorsabb fallback. Prémium olvasatnál ezt letiltjuk.
+    if (allowLovableFallback && primaryModel !== LOVABLE_FALLBACK_MODEL) {
       const r2 = await lovableJSON<T>({
         ...opts,
         apiKey: lovableKey,
@@ -90,12 +97,13 @@ export async function aiJSON<T>(opts: {
         });
         return r2;
       }
+      lastError = r2.error;
     }
   }
 
   // Másodlagos: közvetlen OpenAI hívás (ha van saját kulcs)
   const openaiKey = process.env.OPENAI_API_KEY;
-  if (openaiKey) {
+  if (openaiKey && !openaiAttempted) {
     const model = openaiModel;
     const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model });
     logAiCall({
@@ -106,10 +114,11 @@ export async function aiJSON<T>(opts: {
       readingType: opts.readingType,
       fallbackUsed: !r.ok,
     });
+    if (!r.ok) lastError = r.error;
     return r;
   }
 
-  return { ok: false, data: null, error: "no_ai_provider_available" };
+  return { ok: false, data: null, error: lastError ?? "no_ai_provider_available" };
 }
 
 async function lovableJSON<T>(opts: {

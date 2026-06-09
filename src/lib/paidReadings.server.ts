@@ -90,6 +90,7 @@ export async function generatePaidOrderReading(opts: {
       schemaName: "PaidReading",
       schema: PAID_READING_SCHEMA as unknown as Record<string, unknown>,
       providerPreference: "openai_first",
+      allowLovableFallback: false,
       openaiModel,
       lovableModel,
       readingType: `paid:${opts.productSlug}`,

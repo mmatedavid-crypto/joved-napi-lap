@@ -259,7 +259,7 @@ export async function getHoroscopeNewsArticle(opts: {
     schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-news:${opts.period}`,
     // Közvetlen OpenAI hívás a saját OPENAI_API_KEY-vel. A Lovable Gateway-n
-    // a gpt-5.5 SSR-ben 40+ másodperc volt, ami timeoutolt és fallbackra
+    // a GPT-5.2 SSR-ben korábban túl lassú volt, ami timeoutolt és fallbackra
     // ejtette az oldalt. Az OpenAI Responses API gyorsabb és stabilabb.
     providerPreference: "openai_first",
     openaiModel: "gpt-5.2",

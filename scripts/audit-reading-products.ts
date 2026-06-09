@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { PRODUCTS } from "../src/lib/products";
 import { composePaidOrderReading } from "../src/lib/paidReadings";
 import { CARDS } from "../src/data/cards";
@@ -255,6 +256,28 @@ const contextChecks = [
 
 console.log(JSON.stringify({ paid, free: freeReadings, context: contextChecks }, null, 2));
 const failed = [...paid, ...freeReadings, ...contextChecks].filter((item) => !item.ok);
+const policyFailures: string[] = [];
+const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
+const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
+
+if (!paidServer.includes('providerPreference: "openai_first"')) {
+  policyFailures.push("paid readings must prefer the strongest OpenAI/GPT route");
+}
+if (!paidServer.includes("allowLovableFallback: false")) {
+  policyFailures.push("paid readings must not fall back to a weaker gateway model");
+}
+if (!paidServer.includes('"gpt-5.2"') || !aiServer.includes('"gpt-5.2"')) {
+  policyFailures.push("paid reading model defaults must reference GPT-5.2");
+}
+if (!aiServer.includes("allowLovableFallback && primaryModel !== LOVABLE_FALLBACK_MODEL")) {
+  policyFailures.push("shared AI helper must make gateway fallback opt-in/controllable");
+}
+if (policyFailures.length) {
+  console.error("\nFailed paid AI policy audit:");
+  for (const item of policyFailures) console.error(`- ${item}`);
+  process.exit(1);
+}
+
 if (failed.length) {
   console.error("\nFailed quality audit:");
   for (const item of failed) console.error(`- ${item.name}: ${item.issues.join("; ")}`);
