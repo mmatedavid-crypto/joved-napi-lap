@@ -131,7 +131,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "harom_lap_mely",
     priceId: "harom_lap_mely_price",
     name: "Három lap — mély elemzés",
-    short: "Három lapos húzás részletes elemzése fizetés után, az oldalon.",
+    short: "Részletes, összefüggő háromlapos elemzés 24 órán belül.",
     includes: [
       "múlt, jelen és jövő külön értelmezése",
       "a három lap közös történetének szintézise",
@@ -148,7 +148,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "kelta_kereszt",
     priceId: "kelta_kereszt_price",
     name: "Kelta kereszt — nagy spread",
-    short: "10 lapos klasszikus kelta kereszt fizetés után, az oldalon.",
+    short: "10 lapos, nagy tarot-riport mélyebb kérdésekhez.",
     includes: [
       "10 lapos klasszikus kelta kereszt szerkezet",
       "akadály, háttér, tudatos és rejtett réteg",
@@ -164,7 +164,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "dontes_komplex",
     priceId: "dontes_komplex_price",
     name: "Döntés előtt — komplex elemzés",
-    short: "Komplex döntéselőkészítő olvasat fizetés után, az oldalon.",
+    short: "Komplex olvasat, ha egy döntést szeretnél tisztábban látni.",
     includes: [
       "a megadott döntési helyzet értelmezése",
       "mi húz vissza és mi nyithat utat",
@@ -181,7 +181,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "parkapcsolat_elemzes",
     priceId: "parkapcsolat_elemzes_price",
     name: "Párkapcsolat — mély elemzés",
-    short: "Randi előtt vagy összeillés részletes olvasata fizetés után, az oldalon.",
+    short: "Mélyebb kapcsolati elemzés randi, ex vagy összeillés kérdéshez.",
     includes: [
       "kapcsolati dinamika és tempó",
       "vonzalom, kommunikáció és hosszú táv bontása",
@@ -199,7 +199,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "szammisztika_eletut",
     priceId: "szammisztika_eletut_price",
     name: "Számmisztika — életút elemzés",
-    short: "Teljes numerológiai életút elemzés fizetés után, az oldalon.",
+    short: "Személyes numerológiai életút-elemzés névvel és születési dátummal.",
     includes: [
       "sorsszám és születésnap száma",
       "teljes név esetén belső vágy, külső kép és kifejeződés",

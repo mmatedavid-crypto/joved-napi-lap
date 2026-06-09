@@ -71,6 +71,12 @@ export function PaywallDialog({
               <div className="text-xs text-ivory/55 mt-1">
                 {deliveryLabel} · a profilodban és ezen az oldalon
               </div>
+              {product.category === "delayed" && (
+                <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
+                  A részletes elemzést gondosabb szövegezéssel készítjük. Elkészüléskor ezen a
+                  rendelési oldalon nyílik meg, és emailben is jelzünk.
+                </p>
+              )}
             </div>
 
             <div className="rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/15 p-4">

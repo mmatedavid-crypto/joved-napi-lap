@@ -258,7 +258,8 @@ function Page() {
               </div>
               <div className="font-display text-xl text-ivory">Párkapcsolat — mély elemzés</div>
               <p className="font-editorial text-ivory/60 mt-1">
-                Két ember energiájának részletes olvasata fizetés után, az oldalon.
+                Mélyebb kapcsolati olvasat 24 órán belül, email értesítéssel és közvetlen rendelési
+                hozzáféréssel.
               </p>
               <button className="btn-gold mt-3" onClick={() => setPaywall(true)}>
                 {productCtaLabel("Megrendelem", "parkapcsolat_elemzes")}
