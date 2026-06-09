@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
+import { SITE_LEGAL } from "@/lib/legal";
 import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
 interface PaywallDialogProps {
@@ -36,6 +37,7 @@ export function PaywallDialog({
   if (!product) return null;
 
   const canExpress = product.category === "delayed";
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
   const deliveryLabel =
     product.category === "instant"
@@ -86,6 +88,31 @@ export function PaywallDialog({
               </p>
             </div>
 
+            <div className="space-y-3 rounded-md border border-gold/15 bg-gold/[0.06] p-4 text-xs leading-relaxed text-ivory/62">
+              <div>
+                <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
+                <p>
+                  Az olvasat a köszönőoldalon, bejelentkezve a profilban, és emailben is elérhető.
+                </p>
+              </div>
+              <div>
+                <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
+                <p>A kártyaadatot nem tároljuk; a fizetést Stripe dolgozza fel.</p>
+              </div>
+              <div>
+                <div className="mb-1 font-medium text-ivory/82">Segítség</div>
+                <p>
+                  Technikai hiba esetén pótoljuk a teljesítést vagy utánanézünk:{" "}
+                  <a
+                    className="text-gold hover:text-gold/80"
+                    href={`mailto:${SITE_LEGAL.supportEmail}`}
+                  >
+                    {SITE_LEGAL.supportEmail}
+                  </a>
+                </p>
+              </div>
+            </div>
+
             {canExpress && (
               <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
                 <input
@@ -119,6 +146,11 @@ export function PaywallDialog({
               {!user && (
                 <p className="text-xs text-ivory/45 mt-1">Vendég vásárlás — fiók nem kötelező.</p>
               )}
+              {email && !emailValid && (
+                <p className="mt-1 text-xs text-gold/75">
+                  Kérlek ellenőrizd az email címet, ide küldjük az olvasatot is.
+                </p>
+              )}
             </div>
 
             <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
@@ -137,19 +169,23 @@ export function PaywallDialog({
                 <Link to="/adatkezelesi-tajekoztato" className="text-gold hover:text-gold/80">
                   adatkezelési tájékoztatót
                 </Link>{" "}
-                és kérem a digitális tartalom teljesítésének megkezdését a fizetés után.
+                valamint az{" "}
+                <Link to="/elallasi-tajekoztato" className="text-gold hover:text-gold/80">
+                  elállási tájékoztatót
+                </Link>
+                ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után.
               </span>
             </label>
 
             <button
-              disabled={!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !termsAccepted}
+              disabled={!email || !emailValid || !termsAccepted}
               onClick={() => setConfirmed(true)}
               className="w-full btn-gold disabled:cursor-not-allowed disabled:opacity-45 disabled:saturate-50 disabled:shadow-none"
             >
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
             <p className="text-[10px] text-ivory/40 text-center">
-              Biztonságos kártyás fizetés. Bankkártya, Apple Pay, Google Pay.
+              Szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi vagy pénzügyi tanácsadás.
             </p>
           </div>
         ) : (
