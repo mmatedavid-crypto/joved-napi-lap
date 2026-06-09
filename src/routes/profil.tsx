@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
+import { clearGuestPersonalization } from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
 import { getMyOrders } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
@@ -68,6 +69,7 @@ function Page() {
   const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [memoryClearing, setMemoryClearing] = useState(false);
+  const [memoryCleared, setMemoryCleared] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/bejelentkezes" });
@@ -92,15 +94,21 @@ function Page() {
   }, [user, call, loadMemory]);
 
   async function handleClearMemory() {
-    if (!window.confirm("Töröljük az olvasati memóriádat? A korábbi rendeléseid megmaradnak.")) {
+    if (
+      !window.confirm(
+        "Töröljük az olvasati memóriádat ebből a fiókból és ebből a böngészőből? A korábbi rendeléseid megmaradnak.",
+      )
+    ) {
       return;
     }
     setMemoryClearing(true);
     try {
       await clearMemory({});
+      clearGuestPersonalization();
       setMemories([]);
       setThemeSummary("");
       setInsights(null);
+      setMemoryCleared(true);
     } finally {
       setMemoryClearing(false);
     }
@@ -119,10 +127,22 @@ function Page() {
       <PageHeader eyebrow="Profil" title="A te oldalad" lead={user.email ?? undefined} />
       <div className="mx-auto max-w-2xl px-4 pb-20 space-y-4">
         <Section eyebrow="Visszatérő mintáid">
+          <p className="mb-4 text-sm leading-relaxed text-ivory/58">
+            Itt csak rövid olvasati mintákat őrzünk: milyen témákhoz térsz vissza, milyen kérdést
+            tettél fel, és mi volt az olvasat lényege. Ezt azért használjuk, hogy ne minden nap
+            idegenként induljon az oldal, de nem készítünk belőle biztos jövőállítást vagy szakmai
+            profilt.
+          </p>
           {memoriesLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
           {!memoriesLoading && memories.length === 0 && (
             <p className="text-ivory/70">
               Ahogy használod az oldalt, itt finoman kirajzolódnak a visszatérő kérdéseid és témáid.
+            </p>
+          )}
+          {memoryCleared && (
+            <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm text-ivory/68">
+              Töröltük az olvasati memóriát a fiókodból és a helyi böngészőmintát ebből a
+              böngészőből.
             </p>
           )}
           {!memoriesLoading && memories.length > 0 && (
@@ -164,8 +184,12 @@ function Page() {
                 disabled={memoryClearing}
                 className="text-xs text-ivory/45 hover:text-gold"
               >
-                {memoryClearing ? "Törlés…" : "Olvasati memória törlése"}
+                {memoryClearing ? "Törlés…" : "Olvasati memória törlése a fiókból és böngészőből"}
               </button>
+              <p className="text-xs leading-relaxed text-ivory/42">
+                A törlés nem érinti a rendelési előzményeket és a számlázási célból szükséges
+                adatokat. A részleteket az adatkezelési tájékoztatóban találod.
+              </p>
             </div>
           )}
         </Section>
