@@ -42,6 +42,7 @@ const COMPATIBILITY_KEY = "compatibility_checks";
 const COMPATIBILITY_COUNT_KEY = "compatibility_distinct_30d";
 const COMPATIBILITY_STATUS_KEY = "compatibility_last_status";
 const MAX_ITEMS = 36;
+const RETENTION_DAYS = 180;
 
 const TYPE_LABELS: Record<string, string> = {
   tarot: "tarot",
@@ -73,8 +74,10 @@ function cleanAnchors(values: (string | undefined)[] | undefined): string[] {
 
 function readAll(): GuestReadingMemory[] {
   const rows = loadLocal<GuestReadingMemory[]>(KEY) ?? [];
+  const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
   return rows
     .filter((row) => row?.summary && row?.createdAt)
+    .filter((row) => new Date(row.createdAt).getTime() >= cutoff)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, MAX_ITEMS);
 }

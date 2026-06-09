@@ -131,7 +131,7 @@ function Page() {
             Itt csak rövid olvasati mintákat őrzünk: milyen témákhoz térsz vissza, milyen kérdést
             tettél fel, és mi volt az olvasat lényege. Ezt azért használjuk, hogy ne minden nap
             idegenként induljon az oldal, de nem készítünk belőle biztos jövőállítást vagy szakmai
-            profilt.
+            profilt. A vendég böngészőminták legfeljebb 180 napig maradnak meg.
           </p>
           {memoriesLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
           {!memoriesLoading && memories.length === 0 && (

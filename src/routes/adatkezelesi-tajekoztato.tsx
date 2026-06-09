@@ -71,7 +71,8 @@ function PrivacyPage() {
           Bejelentkezve ezek az adatok a felhasználói fiókodhoz kapcsolódhatnak. Vendégként a
           személyesebb olvasati ív helyi böngészőadatként marad nálad, például localStorage-ban és
           néhány rövid cookie-jelzésben. Ilyen jelzés lehet, hogy több különböző összeillést néztél
-          meg, vagy hogy visszatérően döntési, kapcsolati vagy álomtémákat kérdezel.
+          meg, vagy hogy visszatérően döntési, kapcsolati vagy álomtémákat kérdezel. A helyi vendég
+          olvasati mintákat legfeljebb 180 napig használjuk.
         </p>
         <p>
           Az új olvasatok ezt csak finoman használják: visszatérő témára, heti-havi ívre vagy
@@ -92,8 +93,9 @@ function PrivacyPage() {
           kapcsolatot néztél meg rövid időn belül.
         </p>
         <p>
-          Ezek az adatok nem bankkártyaadatok, és nem helyettesítenek szakmai tanácsadást. A
-          böngésződben tárolt helyi adatok a böngésző beállításaiban törölhetők.
+          Ezek az adatok nem bankkártyaadatok, és nem helyettesítenek szakmai tanácsadást. A régi
+          olvasati minták automatikusan kikerülnek a személyesítésből, a böngésződben tárolt helyi
+          adatok pedig a böngésző beállításaiban is törölhetők.
         </p>
         <div className="mt-4 rounded-md border border-[oklch(0.78_0.10_80/0.16)] p-4">
           <p className="text-sm text-ivory/70">
