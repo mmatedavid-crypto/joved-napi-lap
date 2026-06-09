@@ -466,7 +466,7 @@ export function composePaidOrderReading(
     const category = text(input.category) || "általános élethelyzet";
     const reading = composeThreeCardTarot({
       readingType: "3 lapos húzás",
-      cards: cardsFromPayload(input, 3),
+      cards: completeCardsFromPayload(input, 3),
       question,
       category,
     });
@@ -489,7 +489,7 @@ export function composePaidOrderReading(
     const category = text(input.cat) || text(input.category) || "döntés előtt";
     const reading = composeThreeCardTarot({
       readingType: "Döntés előtt",
-      cards: cardsFromPayload(input, 3),
+      cards: completeCardsFromPayload(input, 3),
       question,
       category,
     });

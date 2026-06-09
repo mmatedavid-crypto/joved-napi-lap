@@ -65,6 +65,28 @@ const extraPaidChecks: Array<{
     payload: { mode: "zodiac", sign: "cancer" },
     expect: ["Holdkő", "Rák"],
   },
+  {
+    name: "harom_lap_mely:partial_payload",
+    slug: "harom_lap_mely",
+    productName: "Három lap — mély elemzés",
+    payload: {
+      cards: ["A Szeretők"],
+      question: "Miért ismétlődik ez a helyzet?",
+      category: "kapcsolat",
+    },
+    expect: ["Múlt", "Jelen", "Jövő", "A három lap együtt"],
+  },
+  {
+    name: "dontes_komplex:partial_payload",
+    slug: "dontes_komplex",
+    productName: "Döntés előtt — komplex elemzés",
+    payload: {
+      cards: ["A Hold"],
+      q: "Váltsak irányt most?",
+      cat: "munka",
+    },
+    expect: ["Múlt", "Jelen", "Jövő", "Mit tisztít a döntés"],
+  },
 ];
 
 const forbidden = [
