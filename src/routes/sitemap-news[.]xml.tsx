@@ -42,12 +42,22 @@ function publicationDateFor(period: HoroscopePeriodHU): string {
     .replace(".000Z", "+00:00");
 }
 
+function isNewsFresh(publicationDate: string, now = new Date()): boolean {
+  const published = new Date(publicationDate).getTime();
+  if (!Number.isFinite(published)) return false;
+  const ageMs = now.getTime() - published;
+  return ageMs >= 0 && ageMs <= 48 * 60 * 60 * 1000;
+}
+
 export const Route = createFileRoute("/sitemap-news.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const origin = originFromRequest(request);
-        const urls = allHoroscopeArticlePaths();
+        const generatedAt = new Date();
+        const urls = allHoroscopeArticlePaths()
+          .map((u) => ({ ...u, publicationDate: publicationDateFor(u.period) }))
+          .filter((u) => isNewsFresh(u.publicationDate, generatedAt));
         const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
@@ -60,7 +70,7 @@ ${urls
         <news:name>Jövőd.hu</news:name>
         <news:language>hu</news:language>
       </news:publication>
-      <news:publication_date>${publicationDateFor(u.period)}</news:publication_date>
+      <news:publication_date>${u.publicationDate}</news:publication_date>
       <news:title>${xmlEscape(horoscopeSeoTitle(u.period, u.signName))}</news:title>
     </news:news>
   </url>`,
