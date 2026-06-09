@@ -1,5 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, notFound, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { Section } from "@/components/Section";
 import {
@@ -112,8 +112,60 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
       ],
     };
   },
+  pendingComponent: HoroscopeArticlePending,
   component: HoroscopeArticlePage,
 });
+
+const HOROSCOPE_PENDING_STEPS = [
+  "Friss háttéradatot kérünk le, nem előre megírt sablont mutatunk.",
+  "A csillagjegy időszakmintáját rendezzük olvasható magyar szöveggé.",
+  "A szerelem, munka és belső fókusz részeit külön igazítjuk.",
+  "A nyers forrást átnézzük, hogy ne maradjon benne gépies vagy idegen hang.",
+  "Az olvasatot rövidre, de használhatóra csiszoljuk.",
+] as const;
+
+function HoroscopeArticlePending() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const [stepIndex, setStepIndex] = useState(0);
+  const match = pathname.match(/^\/horoszkop\/([^/]+)\/([^/]+)/);
+  const period = match?.[1] as HoroscopePeriodHU | undefined;
+  const signSlug = match?.[2];
+  const periodLabel =
+    period && HOROSCOPE_PERIODS.includes(period) ? PERIOD_LABEL[period] : "Horoszkóp";
+  const sign = signSlug ? SIGN_BY_SLUG[signSlug] : undefined;
+  const signName = sign ? SIGN_HU[sign] : "a jegyed";
+
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setStepIndex((current) => (current + 1) % HOROSCOPE_PENDING_STEPS.length),
+      2200,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <article className="mx-auto max-w-3xl px-4 md:px-6 pt-10 pb-20">
+      <div className="surface p-6 md:p-8 text-center">
+        <div className="mx-auto mb-5 h-12 w-12 rounded-full border border-gold/30 flex items-center justify-center">
+          <span className="h-2.5 w-2.5 rounded-full bg-gold shadow-[0_0_24px_oklch(0.78_0.10_80/0.8)]" />
+        </div>
+        <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)]">
+          {periodLabel} · {signName} · {period ? periodDateLabel(period) : ""}
+        </div>
+        <h1 className="font-display text-3xl md:text-4xl text-ivory mt-4">
+          Készül a friss horoszkópod
+        </h1>
+        <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
+          Nálunk nem egy előre megírt horoszkóp-szöveg kerül eléd. A mostani időszakhoz tartozó
+          háttéradatot vesszük alapul, és abból készítünk természetes magyar olvasatot.
+        </p>
+        <div className="mt-6 rounded-md border border-gold/15 bg-[oklch(0.13_0.03_292/0.72)] px-4 py-3 text-sm text-ivory/68">
+          {HOROSCOPE_PENDING_STEPS[stepIndex]}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 function HoroscopeArticlePage() {
   const article = Route.useLoaderData() as HoroscopeNewsArticle;

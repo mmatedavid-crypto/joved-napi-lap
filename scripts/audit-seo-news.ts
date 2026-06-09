@@ -39,6 +39,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope article communicates live preparation during slow loads",
+    file: "src/routes/horoszkop.$period.$sign.tsx",
+    includes: [
+      "pendingComponent: HoroscopeArticlePending",
+      "HOROSCOPE_PENDING_STEPS",
+      "nem előre megírt sablont",
+      "Készül a friss horoszkópod",
+      "háttéradatot vesszük alapul",
+      "természetes magyar olvasatot",
+    ],
+  },
+  {
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
