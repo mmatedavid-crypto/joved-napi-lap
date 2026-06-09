@@ -11,7 +11,7 @@ import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout"
 import { useAuth } from "@/hooks/useAuth";
 import { MONTH_HU } from "@/lib/crystal.hu";
 import { SITE_LEGAL } from "@/lib/legal";
-import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
+import { EXPRESS_PRICE_HUF, PRODUCTS_BY_SLUG, formatHuf, type ProductDef } from "@/lib/products";
 import { SIGN_HU } from "@/lib/roxyNormalize";
 
 interface PaywallDialogProps {
@@ -136,6 +136,17 @@ export function PaywallDialog({
 
             <div className="space-y-3 rounded-md border border-gold/15 bg-gold/[0.06] p-4 text-xs leading-relaxed text-ivory/62">
               <div>
+                <div className="mb-2 font-medium text-ivory/82">Vásárlás menete</div>
+                <ol className="space-y-1.5">
+                  {checkoutSteps(product.category, deliveryLabel).map((step) => (
+                    <li key={step} className="flex gap-2">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div>
                 <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
                 <p>
                   Az olvasat a köszönőoldalon, bejelentkezve a profilban, és emailben is elérhető.
@@ -247,6 +258,22 @@ export function PaywallDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+function checkoutSteps(category: ProductDef["category"], deliveryLabel: string): string[] {
+  if (category === "instant") {
+    return [
+      "Fizetés után azonnal elkészítjük az olvasatot.",
+      "A köszönőoldalon rögtön megnyílik, és bejelentkezve a profilodban is visszanézhető.",
+      "Emailben is jelzünk, ezért fontos a pontos email cím.",
+    ];
+  }
+
+  return [
+    `Fizetés után rögzítjük a kérdésedet és a megadott adatokat; az olvasat ${deliveryLabel} készül el.`,
+    "A rendelés állapotát a köszönőoldalon és bejelentkezve a profilodban is követheted.",
+    "Elkészüléskor emailt küldünk, de az olvasat akkor is megjelenik a profilodban, ha az email késik.",
+  ];
 }
 
 function summarizeInputPayload(

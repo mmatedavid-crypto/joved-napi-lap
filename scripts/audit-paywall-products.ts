@@ -31,6 +31,10 @@ for (const product of PRODUCTS) {
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
 for (const needle of [
   "Miben lesz személyesebb?",
+  "Vásárlás menete",
+  "checkoutSteps(product.category, deliveryLabel)",
+  "Fizetés után azonnal elkészítjük az olvasatot.",
+  "az olvasat akkor is megjelenik a profilodban, ha az email késik",
   "product.depthPromise.map",
   "if (!email && user?.email) setEmail(user.email)",
 ]) {
