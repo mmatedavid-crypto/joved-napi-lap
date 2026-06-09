@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/Section";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/useAuth";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/bejelentkezes")({
   head: () => ({
@@ -69,7 +70,7 @@ function Page() {
         navigate({ to: "/profil" });
       }
     } catch (e: unknown) {
-      setErr(e instanceof Error ? e.message : "Hiba történt.");
+      setErr(safeAuthErrorMessage(e, mode));
     } finally {
       setBusy(false);
     }
@@ -122,7 +123,17 @@ function Page() {
             {mode === "signin" ? "Belépés" : "Regisztráció"}
           </button>
           {msg && <p className="text-sm text-gold">{msg}</p>}
-          {err && <p className="text-sm text-red-300">{err}</p>}
+          {err && (
+            <p className="text-sm leading-relaxed text-red-300">
+              {err}{" "}
+              <a
+                className="text-gold hover:text-gold/80"
+                href={`mailto:${SITE_LEGAL.supportEmail}`}
+              >
+                Segítünk.
+              </a>
+            </p>
+          )}
           <button
             type="button"
             onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
@@ -141,4 +152,27 @@ function Page() {
       </div>
     </Layout>
   );
+}
+
+function safeAuthErrorMessage(error: unknown, mode: "signin" | "signup"): string {
+  const raw = error instanceof Error ? error.message.toLocaleLowerCase("hu-HU") : "";
+  if (raw.includes("invalid login") || raw.includes("invalid credentials")) {
+    return "Nem egyezik az email cím és a jelszó. Ellenőrizd az adatokat, vagy regisztrálj új fiókot.";
+  }
+  if (raw.includes("email not confirmed") || raw.includes("not confirmed")) {
+    return "Ezt az email címet még meg kell erősíteni. Nézd meg a postaládádat, és utána próbáld újra.";
+  }
+  if (raw.includes("already registered") || raw.includes("already exists")) {
+    return "Ezzel az email címmel már van fiók. Válts belépésre, és próbáld meg úgy.";
+  }
+  if (raw.includes("password") && raw.includes("6")) {
+    return "A jelszó legyen legalább 6 karakter hosszú.";
+  }
+  if (raw.includes("rate") || raw.includes("too many")) {
+    return "Túl sok próbálkozás történt rövid idő alatt. Várj egy kicsit, majd próbáld újra.";
+  }
+  if (mode === "signup") {
+    return "Most nem sikerült létrehozni a fiókot. Próbáld újra pár perc múlva.";
+  }
+  return "Most nem sikerült belépni. Próbáld újra pár perc múlva.";
 }

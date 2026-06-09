@@ -88,7 +88,7 @@ function Page() {
           setTimeout(tick, 2500);
         }
       } catch (e: unknown) {
-        setErr(e instanceof Error ? e.message : "Hiba");
+        setErr(safeOrderStatusErrorMessage(e));
         setLoading(false);
       }
     }
@@ -281,4 +281,12 @@ function SupportContact({ className = "", orderId }: { className?: string; order
       {shortId ? `, és add meg ezt: ${shortId}.` : "."}
     </p>
   );
+}
+
+function safeOrderStatusErrorMessage(error: unknown): string {
+  const raw = error instanceof Error ? error.message.toLocaleLowerCase("hu-HU") : "";
+  if (raw.includes("rendelés nem található")) {
+    return "Ezt a rendelési linket most nem találtuk. Ellenőrizd, hogy a fizetés utáni teljes linket nyitottad-e meg.";
+  }
+  return "Az állapotlekérés most megakadt. A rendelés nem vész el; frissítsd az oldalt pár perc múlva.";
 }
