@@ -39,6 +39,7 @@ export function PaywallDialog({
   const canExpress = product.category === "delayed";
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
+  const inputSummary = summarizeInputPayload(inputPayload);
   const deliveryLabel =
     product.category === "instant"
       ? "azonnal, fizetés után"
@@ -93,6 +94,25 @@ export function PaywallDialog({
                 {product.qualityPromise}
               </p>
             </div>
+
+            {inputSummary.length > 0 && (
+              <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+                <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                  Amit figyelembe veszünk
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                  {inputSummary.map((item) => (
+                    <li
+                      key={`${item.label}:${item.value}`}
+                      className="grid gap-1 sm:grid-cols-[7rem_1fr]"
+                    >
+                      <span className="text-ivory/45">{item.label}</span>
+                      <span>{item.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="space-y-3 rounded-md border border-gold/15 bg-gold/[0.06] p-4 text-xs leading-relaxed text-ivory/62">
               <div>
@@ -207,4 +227,40 @@ export function PaywallDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+function summarizeInputPayload(
+  payload: Record<string, unknown> | undefined,
+): Array<{ label: string; value: string }> {
+  if (!payload) return [];
+  const items: Array<{ label: string; value: string }> = [];
+  const add = (label: string, value: unknown, max = 140) => {
+    if (items.length >= 4 || typeof value !== "string" || !value.trim()) return;
+    const clean = value.trim().replace(/\s+/g, " ");
+    items.push({ label, value: clean.length > max ? `${clean.slice(0, max - 1)}…` : clean });
+  };
+
+  add("Kérdés", payload.question ?? payload.q);
+  add("Helyzet", payload.sit ?? payload.status ?? payload.category ?? payload.cat, 90);
+  add("Téma", payload.title ?? payload.situation, 100);
+  add("Jegy", payload.sign, 40);
+  add("Szám", payload.number, 40);
+  add("Kristály", payload.crystal, 60);
+  add("Álom", payload.text, 120);
+  add("Hangulat", payload.emotion, 60);
+
+  const cards = payload.cards;
+  if (items.length < 4 && Array.isArray(cards) && cards.length > 0) {
+    const names = cards.filter((card): card is string => typeof card === "string").slice(0, 4);
+    if (names.length) items.push({ label: "Lapok", value: names.join(", ") });
+  }
+
+  const dates = [payload.myDob, payload.hisDob, payload.birthDateA, payload.birthDateB].filter(
+    (value): value is string => typeof value === "string" && value.trim().length > 0,
+  );
+  if (items.length < 4 && dates.length >= 2) {
+    items.push({ label: "Dátumok", value: `${dates[0]} · ${dates[1]}` });
+  }
+
+  return items.slice(0, 4);
 }
