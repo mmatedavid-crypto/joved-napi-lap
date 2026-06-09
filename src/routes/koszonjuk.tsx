@@ -154,10 +154,15 @@ function Page() {
                     {payload && typeof payload.body === "string" ? (
                       <div className="whitespace-pre-wrap">{payload.body}</div>
                     ) : (
-                      <pre className="text-sm whitespace-pre-wrap">
-                        {JSON.stringify(order.response_payload, null, 2)}
-                      </pre>
+                      <p>
+                        Az olvasatod elkészült, de ezen az oldalon most nem tudjuk teljes szövegként
+                        megjeleníteni. Ha bejelentkeztél, nézd meg a profilodban; ha vendégként
+                        vásároltál, írj nekünk a vásárlási email címedről, és utánanézünk.
+                      </p>
                     )}
+                    <p className="mt-4 text-sm text-ivory/55">
+                      Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
+                    </p>
                   </Section>
                 );
               })()}

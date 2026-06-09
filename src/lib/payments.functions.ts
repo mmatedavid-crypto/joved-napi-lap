@@ -180,12 +180,24 @@ export const processOrder = createServerFn({ method: "POST" })
     const { data: order } = await supabaseAdmin
       .from("orders")
       .select(
-        "id, product_slug, product_name, category, status, input_payload, user_id, guest_email",
+        "id, product_slug, product_name, category, status, input_payload, user_id, guest_email, response_payload",
       )
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
     if (!order) return { ok: false, error: "Rendelés nem található" };
-    if (order.status === "delivered") return { ok: true, alreadyDone: true };
+    if (order.status === "delivered") {
+      const deliveredReading = normalizeDeliveredReading(order.response_payload);
+      if (deliveredReading) {
+        await queueDeliveredEmail({
+          id: order.id,
+          productName: order.product_name,
+          userId: order.user_id,
+          guestEmail: order.guest_email,
+          reading: deliveredReading,
+        });
+      }
+      return { ok: true, alreadyDone: true };
+    }
     if (order.status !== "paid" && order.status !== "processing") {
       return { ok: false, error: "Még nincs kifizetve" };
     }
@@ -254,6 +266,15 @@ export const processOrder = createServerFn({ method: "POST" })
       return { ok: false, error: message };
     }
   });
+
+function normalizeDeliveredReading(payload: unknown): { title?: string; body?: string } | null {
+  if (!payload || typeof payload !== "object") return null;
+  const data = payload as Record<string, unknown>;
+  const title = typeof data.title === "string" ? data.title : undefined;
+  const body = typeof data.body === "string" ? data.body : undefined;
+  if (!title && !body) return null;
+  return { title, body };
+}
 
 async function queueDeliveredEmail(order: {
   id: string;

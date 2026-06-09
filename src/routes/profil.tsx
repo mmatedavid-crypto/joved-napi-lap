@@ -40,6 +40,15 @@ type ProfileOrder = {
   status: string;
   express: boolean | null;
   price_huf: number;
+  category: string;
+  deliver_by?: string | null;
+  delivered_at?: string | null;
+  response_payload?: unknown;
+};
+
+type OrderResponsePayload = {
+  title?: string;
+  body?: string;
 };
 
 function Page() {
@@ -169,19 +178,58 @@ function Page() {
           )}
           {!ordersLoading && orders.length > 0 && (
             <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
-              {orders.map((o) => (
-                <li key={o.id} className="py-3 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-ivory">{o.product_name}</div>
-                    <div className="text-xs text-ivory/55 mt-0.5">
-                      {new Date(o.created_at).toLocaleString("hu-HU")} ·{" "}
-                      {STATUS_HU[o.status] ?? o.status}
-                      {o.express ? " · express" : ""}
+              {orders.map((o) => {
+                const payload = getOrderPayload(o.response_payload);
+                const canOpen = o.status === "delivered" && payload?.body;
+                return (
+                  <li key={o.id} className="py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-ivory">{o.product_name}</div>
+                        <div className="text-xs text-ivory/55 mt-0.5">
+                          {new Date(o.created_at).toLocaleString("hu-HU")} ·{" "}
+                          {STATUS_HU[o.status] ?? o.status}
+                          {o.express ? " · express" : ""}
+                        </div>
+                        {o.deliver_by && o.status !== "delivered" && o.status !== "failed" && (
+                          <div className="mt-1 text-xs text-ivory/45">
+                            Várható elkészülés: {new Date(o.deliver_by).toLocaleString("hu-HU")}
+                          </div>
+                        )}
+                        {o.delivered_at && o.status === "delivered" && (
+                          <div className="mt-1 text-xs text-ivory/45">
+                            Elkészült: {new Date(o.delivered_at).toLocaleString("hu-HU")}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
                     </div>
-                  </div>
-                  <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
-                </li>
-              ))}
+
+                    {canOpen && (
+                      <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
+                        <summary className="cursor-pointer list-none text-sm text-gold transition-colors group-open:text-gold/90">
+                          Olvasat megnyitása
+                        </summary>
+                        <div className="mt-4 border-t border-gold/10 pt-4">
+                          {payload.title && (
+                            <h3 className="font-display text-xl text-ivory">{payload.title}</h3>
+                          )}
+                          <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ivory/75">
+                            {payload.body}
+                          </div>
+                        </div>
+                      </details>
+                    )}
+
+                    {o.status === "delivered" && !payload?.body && (
+                      <p className="mt-3 text-sm text-ivory/55">
+                        Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni. Írj
+                        nekünk a vásárlási email címedről, és utánanézünk.
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </Section>
@@ -198,6 +246,15 @@ function Page() {
       </div>
     </Layout>
   );
+}
+
+function getOrderPayload(payload: unknown): OrderResponsePayload | null {
+  if (!payload || typeof payload !== "object") return null;
+  const data = payload as Record<string, unknown>;
+  const title = typeof data.title === "string" ? data.title : undefined;
+  const body = typeof data.body === "string" ? data.body : undefined;
+  if (!title && !body) return null;
+  return { title, body };
 }
 
 function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {
