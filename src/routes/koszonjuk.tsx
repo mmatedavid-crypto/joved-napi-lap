@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
+import { SITE_LEGAL } from "@/lib/legal";
 import { getOrderBySession, processOrder } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
@@ -118,6 +119,7 @@ function Page() {
           <Section eyebrow="Kapcsolódási hiba">
             Nem a fizetéseddel van baj; csak az állapotlekérés akadt meg. Frissítsd az oldalt pár
             perc múlva, vagy írj nekünk a vásárlási email címedről.
+            <SupportContact className="mt-4" />
           </Section>
         )}
         {order && (
@@ -184,6 +186,7 @@ function Page() {
                 <p className="mt-3 text-sm text-ivory/50">
                   Ha az oldal nem frissül, írj nekünk a rendelés email címéről, és utánanézünk.
                 </p>
+                <SupportContact className="mt-4" />
               </Section>
             )}
 
@@ -199,11 +202,15 @@ function Page() {
                     {payload && typeof payload.body === "string" ? (
                       <PaidReadingBody body={payload.body} />
                     ) : (
-                      <p>
-                        Az olvasatod elkészült, de ezen az oldalon most nem tudjuk teljes szövegként
-                        megjeleníteni. Ha bejelentkeztél, nézd meg a profilodban; ha vendégként
-                        vásároltál, írj nekünk a vásárlási email címedről, és utánanézünk.
-                      </p>
+                      <>
+                        <p>
+                          Az olvasatod elkészült, de ezen az oldalon most nem tudjuk teljes
+                          szövegként megjeleníteni. Ha bejelentkeztél, nézd meg a profilodban; ha
+                          vendégként vásároltál, írj nekünk a vásárlási email címedről, és
+                          utánanézünk.
+                        </p>
+                        <SupportContact className="mt-4" />
+                      </>
                     )}
                     <p className="mt-4 text-sm text-ivory/55">
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
@@ -223,6 +230,7 @@ function Page() {
                 <p className="mt-3 text-sm text-ivory/55">
                   A gyors azonosításhoz írd meg a termék nevét és a vásárlás nagyjábóli időpontját.
                 </p>
+                <SupportContact className="mt-4" />
               </Section>
             )}
 
@@ -247,5 +255,17 @@ function Page() {
         )}
       </div>
     </Layout>
+  );
+}
+
+function SupportContact({ className = "" }: { className?: string }) {
+  return (
+    <p className={`text-sm leading-relaxed text-ivory/58 ${className}`.trim()}>
+      Ügyfélszolgálat:{" "}
+      <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+        {SITE_LEGAL.supportEmail}
+      </a>
+      . A gyors azonosításhoz a vásárlási email címedről írj.
+    </p>
   );
 }

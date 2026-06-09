@@ -53,6 +53,11 @@ const checks: Check[] = [
     includes: ["Innen folytathatod", "Vissza az olvasathoz"],
   },
   {
+    name: "thank-you page exposes support contact",
+    file: "src/routes/koszonjuk.tsx",
+    includes: ["SupportContact", "SITE_LEGAL.supportEmail", "Ügyfélszolgálat"],
+  },
+  {
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],
