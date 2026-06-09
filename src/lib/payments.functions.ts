@@ -328,7 +328,7 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
       } catch (error) {
         console.warn("order reconciliation processing failed:", error);
       }
-      return paidOrder as T;
+      return paidOrder as unknown as T;
     }
   } catch (error) {
     console.warn("checkout payment reconciliation failed:", error);
