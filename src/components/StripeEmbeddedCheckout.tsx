@@ -1,5 +1,5 @@
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
 
@@ -14,12 +14,15 @@ export interface StripeEmbeddedCheckoutProps {
 }
 
 export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
+  const clientSecretPromise = useRef<Promise<string> | null>(null);
   const options = useMemo(
     () => ({
       fetchClientSecret: async (): Promise<string> => {
+        if (clientSecretPromise.current) return clientSecretPromise.current;
+
         const returnUrl =
           props.returnUrl || `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
-        const result = await createCheckoutSession({
+        clientSecretPromise.current = createCheckoutSession({
           data: {
             productSlug: props.productSlug,
             express: props.express,
@@ -30,10 +33,18 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
             returnUrl,
             environment: getStripeEnvironment(),
           },
-        });
-        if ("error" in result) throw new Error(result.error);
-        if (!result.clientSecret) throw new Error("Nem jött vissza checkout azonosító");
-        return result.clientSecret;
+        })
+          .then((result) => {
+            if ("error" in result) throw new Error(result.error);
+            if (!result.clientSecret) throw new Error("Nem jött vissza checkout azonosító");
+            return result.clientSecret;
+          })
+          .catch((error) => {
+            clientSecretPromise.current = null;
+            throw error;
+          });
+
+        return clientSecretPromise.current;
       },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
