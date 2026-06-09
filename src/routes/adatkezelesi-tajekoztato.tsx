@@ -34,7 +34,8 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
         <p>
           A szolgáltatás használatakor kezelhetünk email címet, rendelési adatot, fizetési
           állapotot, a kiválasztott olvasat típusát, a felhasználó által megadott kérdést vagy
-          születési adatot, valamint technikai és analitikai adatokat.
+          születési adatot, olvasati előzményt és visszatérő témamintát, valamint technikai és
+          analitikai adatokat.
         </p>
         <p>Bankkártyaadatot nem tárolunk; a fizetést külső fizetési szolgáltató kezeli.</p>
       </LegalSection>
@@ -44,6 +45,32 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
           Az adatokat a digitális olvasat elkészítéséhez, a rendelés teljesítéséhez,
           ügyfélszolgálati segítséghez, visszaélések megelőzéséhez, valamint a szolgáltatás
           minőségének javításához használjuk.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Személyesebb olvasati memória">
+        <p>
+          Ha bejelentkezve használod az oldalt, az olvasatok rövid összefoglalóját és néhány
+          visszatérő motívumát eltárolhatjuk, hogy később ne minden alkalommal idegenként kezeljen a
+          rendszer. Ez segíthet abban, hogy az új olvasatok finoman reflektáljanak arra, milyen
+          témákhoz térsz vissza, vagy miben változott a fókuszod.
+        </p>
+        <p>
+          Ez az emlékezet önismereti és szolgáltatásminőségi célú; nem használjuk orvosi,
+          pszichológiai, jogi vagy pénzügyi profilalkotásra.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Cookie-k és helyi böngészőadatok">
+        <p>
+          A működéshez és a személyesebb élményhez használhatunk cookie-t, localStorage-t vagy
+          sessionStorage-t. Ilyen lehet például egy napi húzás megjegyzése, egy folyamatban lévő
+          olvasat átmeneti adata, vagy az, hogy az összeillés kalkulátorban több különböző
+          kapcsolatot néztél meg rövid időn belül.
+        </p>
+        <p>
+          Ezek az adatok nem bankkártyaadatok, és nem helyettesítenek szakmai tanácsadást. A
+          böngésződben tárolt helyi adatok a böngésző beállításaiban törölhetők.
         </p>
       </LegalSection>
 

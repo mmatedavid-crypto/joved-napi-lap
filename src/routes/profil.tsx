@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { getMyOrders } from "@/lib/payments.functions";
 import { formatHuf } from "@/lib/products";
 import {
+  clearMyReadingMemories,
   getMyReadingMemoryOverview,
   type ReadingMemory,
   type ReadingMemoryInsights,
@@ -46,12 +47,14 @@ function Page() {
   const navigate = useNavigate();
   const call = useServerFn(getMyOrders);
   const loadMemory = useServerFn(getMyReadingMemoryOverview);
+  const clearMemory = useServerFn(clearMyReadingMemories);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [memories, setMemories] = useState<ReadingMemory[]>([]);
   const [themeSummary, setThemeSummary] = useState("");
   const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
+  const [memoryClearing, setMemoryClearing] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/bejelentkezes" });
@@ -74,6 +77,21 @@ function Page() {
       })
       .catch(() => setMemoriesLoading(false));
   }, [user, call, loadMemory]);
+
+  async function handleClearMemory() {
+    if (!window.confirm("Töröljük az olvasati memóriádat? A korábbi rendeléseid megmaradnak.")) {
+      return;
+    }
+    setMemoryClearing(true);
+    try {
+      await clearMemory({});
+      setMemories([]);
+      setThemeSummary("");
+      setInsights(null);
+    } finally {
+      setMemoryClearing(false);
+    }
+  }
 
   if (loading || !user) {
     return (
@@ -128,6 +146,13 @@ function Page() {
                   </li>
                 ))}
               </ul>
+              <button
+                onClick={handleClearMemory}
+                disabled={memoryClearing}
+                className="text-xs text-ivory/45 hover:text-gold"
+              >
+                {memoryClearing ? "Törlés…" : "Olvasati memória törlése"}
+              </button>
             </div>
           )}
         </Section>

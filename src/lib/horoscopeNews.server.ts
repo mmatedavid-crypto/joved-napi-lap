@@ -121,8 +121,9 @@ function cleanHoroscopeNewsText(value: unknown): string | undefined {
     .replace(/\blégy önmagad\b/gi, "maradj hiteles")
     .replace(/\bkommunikálj nyíltan és őszintén\b/gi, "fogalmazz tisztán");
   const cleaned = cleanHUText(softened);
-  return cleaned?.replace(/(^|[.!?]\s+)([a-záéíóöőúüű])/g, (_, prefix: string, letter: string) =>
-    `${prefix}${letter.toLocaleUpperCase("hu-HU")}`,
+  return cleaned?.replace(
+    /(^|[.!?]\s+)([a-záéíóöőúüű])/g,
+    (_, prefix: string, letter: string) => `${prefix}${letter.toLocaleUpperCase("hu-HU")}`,
   );
 }
 

@@ -9,7 +9,7 @@ export const SITE_LEGAL = {
     taxNumber: "26558534-2-13",
     companyRegistrationNumber: "13-10-042640",
   },
-  updatedAt: "2026. június 8.",
+  updatedAt: "2026. június 9.",
 } as const;
 
 export const ENTERTAINMENT_DISCLAIMER =

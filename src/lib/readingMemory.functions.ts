@@ -326,3 +326,14 @@ export const getMyReadingMemoryOverview = createServerFn({ method: "GET" })
       insights,
     };
   });
+
+export const clearMyReadingMemories = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { error } = await context.supabase
+      .from("reading_memories")
+      .delete()
+      .eq("user_id", context.userId);
+    if (error) throw error;
+    return { ok: true };
+  });
