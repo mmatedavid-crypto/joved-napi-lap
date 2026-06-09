@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
 import { Layout } from "@/components/Layout";
-import { RitualTable } from "@/components/RitualTable";
 import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
+
+const RitualTable = lazy(() =>
+  import("@/components/RitualTable").then((module) => ({ default: module.RitualTable })),
+);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,7 +42,17 @@ function Index() {
       <PersonalDailyBriefing />
 
       <section className="mx-auto max-w-none px-0 md:px-3 pb-12">
-        <RitualTable />
+        <Suspense
+          fallback={
+            <div className="mx-auto max-w-5xl px-4 md:px-6 py-10">
+              <div className="surface p-5 text-center text-sm text-ivory/55">
+                A rituálék betöltése…
+              </div>
+            </div>
+          }
+        >
+          <RitualTable />
+        </Suspense>
       </section>
 
       <section className="mx-auto max-w-5xl px-4 md:px-6 pb-16">
