@@ -159,6 +159,15 @@ const contextChecks = [
     required: ["Elfogadjam az új munkalehetőséget", "munka"],
   },
   {
+    name: "context:paid_horoscope_sign",
+    body: composePaidOrderReading(
+      "horoszkop_szemelyre",
+      "Horoszkóp — személyre szabott",
+      demoPayloads.horoszkop_szemelyre,
+    ).body,
+    required: ["Bak", "felelősség", "személyes"],
+  },
+  {
     name: "context:paid_ex_return",
     body: composePaidOrderReading(
       "parkapcsolat_elemzes",

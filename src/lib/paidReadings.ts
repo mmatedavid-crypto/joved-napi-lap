@@ -11,8 +11,10 @@ import {
   calculateNumerologyProfile,
   composeNumerologyReading,
 } from "./readingQuality/numerologyEngine";
+import { composeHoroscopeReading } from "./readingQuality/horoscopeEngine";
 import { composeThreeCardTarot } from "./readingQuality/tarotEngine";
 import { SAFETY_NOTE, type QualityReading } from "./readingQuality/styleRules";
+import { SIGN_HU } from "./roxyNormalize";
 
 export type PaidReadingPayload = {
   title: string;
@@ -30,6 +32,23 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function cardByName(name: string): TarotCard {
   return CARDS.find((card) => card.name === name || card.id === name) ?? CARDS[0];
+}
+
+function normalizeSignKey(value: string): string {
+  const clean = value
+    .trim()
+    .toLocaleLowerCase("hu-HU")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+  if (SIGN_HU[value]) return value;
+  for (const [key, hu] of Object.entries(SIGN_HU)) {
+    const normalizedHu = hu
+      .toLocaleLowerCase("hu-HU")
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "");
+    if (clean === key || clean === normalizedHu) return key;
+  }
+  return "aries";
 }
 
 function cardsFromPayload(input: Record<string, unknown>, count = 3): TarotCard[] {
@@ -222,6 +241,52 @@ function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload
   return renderReading(reading);
 }
 
+function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
+  const name = text(input.name);
+  const rawSign = text(input.sign) || text(input.zodiac) || "Bak";
+  const signKey = normalizeSignKey(rawSign);
+  const signName = SIGN_HU[signKey] ?? rawSign;
+  const situation = text(input.situation) || text(input.question) || text(input.q);
+  const personalYear = text(input.personalYear);
+  const base = composeHoroscopeReading({
+    sign: signKey,
+    dateKey: text(input.dateKey) || new Date().toISOString().slice(0, 10),
+  });
+
+  base.title = name ? `${signName} horoszkóp · ${name}` : `${signName} horoszkóp · személyesen`;
+  base.sections.splice(
+    1,
+    0,
+    {
+      heading: "Miért rólad szólhat ma?",
+      text: name
+        ? `${name}, ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: mikor tartasz túl erősen valamit kézben, és mikor engedsz épp annyit, hogy a helyzet mozdulni tudjon.`
+        : `Ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: mikor tartasz túl erősen valamit kézben, és mikor engedsz épp annyit, hogy a helyzet mozdulni tudjon.`,
+    },
+    ...(situation
+      ? [
+          {
+            heading: "A megadott helyzeted felől",
+            text: `A „${situation}” témájában a mai horoszkóp nem kész választ ad. A ${signName} mintája inkább arra hívhatja fel a figyelmed, hogy melyik reakciód születik valódi belső rendből, és melyik csak abból, hogy szeretnéd gyorsan kontroll alá venni a bizonytalanságot.`,
+          },
+        ]
+      : []),
+    {
+      heading: "Személyes ritmus",
+      text: personalYear
+        ? `A ${personalYear}-es személyes év árnyalatot ad ehhez: ma nem csak az számít, mit szeretnél elérni, hanem az is, milyen tempóban maradsz hiteles. A jó irány most nem feltétlenül látványosabb, inkább pontosabb.`
+        : "Ha megadod a születési dátumod is, a személyes év és hónap később finomabban megmutathatja, miért pont ez a napi téma erős nálad.",
+    },
+  );
+  base.sections.push({
+    heading: "Ezt vidd magaddal",
+    text: `A ${signName} mai üzenete akkor lesz használható, ha nem elvárásként olvasod. Válassz egyetlen helyzetet, ahol nem túlbiztosítani akarod magad, hanem tisztábban érzékelni, mihez van valódi belső nyugalmad.`,
+  });
+  base.oneSentence = `${signName} ma nem nagy bizonyosságot kér, hanem pontosabb belső időzítést.`;
+  base.meta = { ...base.meta, fallbackUsed: true, readingType: "paid:horoscope" };
+  return renderReading(base);
+}
+
 function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {
   const number = text(input.number) || "111";
   const root = typeof input.root === "number" ? input.root : undefined;
@@ -379,7 +444,7 @@ export function composePaidOrderReading(
   if (productSlug === "angyalszam_ai") return premiumAngel(input);
   if (productSlug === "kristaly_ai") return premiumCrystal(input);
   if (productSlug === "alomfejtes_rovid") return premiumDream(input);
-  if (productSlug === "horoszkop_szemelyre") return premiumDailyCompass(input);
+  if (productSlug === "horoszkop_szemelyre") return premiumHoroscope(input);
   if (productSlug === "kelta_kereszt") return premiumCelticCross(input);
   if (productSlug === "harom_lap_mely") {
     const question = text(input.question) || text(input.q);

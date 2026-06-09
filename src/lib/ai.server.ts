@@ -3,10 +3,9 @@
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
-// A Lovable AI Gateway alapból openai/gpt-5.5 -tel megy: ez a "gpt-5.5
-// stílus", amit a felhasználó megfelelőnek tart. Ha valamiért hibázik,
-// fallback Geminire.
-const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.5";
+// A prémium szövegező réteg külső API-n GPT 5.2-t használhat. A konkrét
+// gateway-modell env-ből felülírható, de az alapértelmezett referencia 5.2.
+const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.2";
 const LOVABLE_FALLBACK_MODEL = process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
 const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
 
@@ -55,7 +54,7 @@ export async function aiJSON<T>(opts: {
     }
   }
 
-  // Lovable AI Gateway (alapból openai/gpt-5.5). Ez marad az elsődleges
+  // Lovable AI Gateway. Ez marad az elsődleges
   // útvonal azoknál az olvasatoknál, ahol nincs külön prémium preferencia.
   const lovableKey = process.env.LOVABLE_API_KEY;
   if (lovableKey) {

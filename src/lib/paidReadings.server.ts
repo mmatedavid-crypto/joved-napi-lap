@@ -49,8 +49,8 @@ function resolvePremiumModels(productSlug: string): { openaiModel: string; lovab
     lovableModel:
       process.env.LOVABLE_PREMIUM_READING_MODEL ??
       (deep
-        ? (process.env.LOVABLE_DEEP_READING_MODEL ?? "openai/gpt-5.5")
-        : (process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.5")),
+        ? (process.env.LOVABLE_DEEP_READING_MODEL ?? "openai/gpt-5.2")
+        : (process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.2")),
   };
 }
 
