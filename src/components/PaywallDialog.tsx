@@ -72,6 +72,9 @@ export function PaywallDialog({
       : express
         ? "6 órán belül"
         : `${product.standardHours ?? 24} órán belül`;
+  const isLoggedIn = Boolean(user);
+  const deliverySummary = checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn);
+  const accessSummary = deliveryAccessText(isLoggedIn);
 
   return (
     <Dialog
@@ -95,13 +98,12 @@ export function PaywallDialog({
           <div className="space-y-4">
             <div className="text-center">
               <div className="font-display text-4xl text-gold-gradient">{formatHuf(total)}</div>
-              <div className="text-xs text-ivory/55 mt-1">
-                {deliveryLabel} · a profilodban és ezen az oldalon
-              </div>
+              <div className="text-xs text-ivory/55 mt-1">{deliverySummary}</div>
               {product.category === "delayed" && (
                 <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
                   A részletes elemzést gondosabb szövegezéssel készítjük. Elkészüléskor ezen a
-                  rendelési oldalon nyílik meg, és emailben is jelzünk.
+                  rendelési oldalon nyílik meg, emailben is jelzünk, bejelentkezve pedig a
+                  profilodban is visszanézhető.
                 </p>
               )}
             </div>
@@ -158,7 +160,7 @@ export function PaywallDialog({
               <div>
                 <div className="mb-2 font-medium text-ivory/82">Vásárlás menete</div>
                 <ol className="space-y-1.5">
-                  {checkoutSteps(product.category, deliveryLabel).map((step) => (
+                  {checkoutSteps(product.category, deliveryLabel, isLoggedIn).map((step) => (
                     <li key={step} className="flex gap-2">
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
                       <span>{step}</span>
@@ -168,7 +170,7 @@ export function PaywallDialog({
               </div>
               <div>
                 <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
-                <p>{deliveryAccessText(Boolean(user))}</p>
+                <p>{accessSummary}</p>
               </div>
               <div>
                 <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
@@ -293,19 +295,41 @@ export function PaywallDialog({
   );
 }
 
-function checkoutSteps(category: ProductDef["category"], deliveryLabel: string): string[] {
+function checkoutDeliverySummary(
+  category: ProductDef["category"],
+  deliveryLabel: string,
+  isLoggedIn: boolean,
+): string {
+  const access = isLoggedIn
+    ? "ezen az oldalon, emailben és a profilodban"
+    : "ezen az oldalon és emailben";
+  if (category === "instant") return `${deliveryLabel} · ${access}`;
+  return `${deliveryLabel} · ${access}`;
+}
+
+function checkoutSteps(
+  category: ProductDef["category"],
+  deliveryLabel: string,
+  isLoggedIn: boolean,
+): string[] {
   if (category === "instant") {
     return [
       "Fizetés után azonnal elkészítjük az olvasatot.",
-      "A köszönőoldalon rögtön megnyílik, és bejelentkezve a profilodban is visszanézhető.",
+      isLoggedIn
+        ? "A köszönőoldalon rögtön megnyílik, és a profilodban is visszanézhető."
+        : "A köszönőoldalon rögtön megnyílik; vendégként a biztonságos linket és az emailt érdemes megtartanod.",
       "Emailben is jelzünk, ezért fontos a pontos email cím.",
     ];
   }
 
   return [
     `Fizetés után rögzítjük a kérdésedet és a megadott adatokat; az olvasat ${deliveryLabel} készül el.`,
-    "A rendelés állapotát a köszönőoldalon és bejelentkezve a profilodban is követheted.",
-    "Elkészüléskor emailt küldünk, de az olvasat akkor is megjelenik a profilodban, ha az email késik.",
+    isLoggedIn
+      ? "A rendelés állapotát a köszönőoldalon és a profilodban is követheted."
+      : "A rendelés állapotát a köszönőoldali biztonságos linken követheted.",
+    isLoggedIn
+      ? "Elkészüléskor emailt küldünk, de az olvasat akkor is megjelenik a profilodban, ha az email késik."
+      : "Elkészüléskor emailt küldünk, de az olvasat a köszönőoldali linken is megnyílik, ha az email késik.",
   ];
 }
 

@@ -34,10 +34,16 @@ for (const needle of [
   "Vásárlás menete",
   'trackEvent("paywall_opened"',
   'trackEvent("checkout_confirmed"',
-  "checkoutSteps(product.category, deliveryLabel)",
+  "checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn)",
+  "checkoutSteps(product.category, deliveryLabel, isLoggedIn)",
   "Fizetés után azonnal elkészítjük az olvasatot.",
+  "ezen az oldalon, emailben és a profilodban",
+  "ezen az oldalon és emailben",
+  "vendégként a biztonságos linket és az emailt érdemes megtartanod",
+  "A rendelés állapotát a köszönőoldali biztonságos linken követheted",
+  "az olvasat a köszönőoldali linken is megnyílik, ha az email késik",
   "az olvasat akkor is megjelenik a profilodban, ha az email késik",
-  "deliveryAccessText(Boolean(user))",
+  "const accessSummary = deliveryAccessText(isLoggedIn)",
   "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el",
   "A rendelési linket érdemes megtartanod",
   "a profilodban később is visszanézhető",
@@ -78,6 +84,10 @@ if (checkout.includes("setCheckoutError(message ||")) {
 }
 if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
   failed.push("Stripe checkout analytics must not include customer email");
+}
+
+if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
+  failed.push("PaywallDialog must not promise profile access to every guest checkout");
 }
 
 const analytics = readFileSync("src/lib/analytics.ts", "utf8");
