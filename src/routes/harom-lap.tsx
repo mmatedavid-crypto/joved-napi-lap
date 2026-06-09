@@ -150,10 +150,11 @@ function HaromLap() {
             className="surface p-6 md:p-7 space-y-5 max-w-2xl mx-auto"
           >
             <div>
-              <label className="block text-sm text-ivory/80 mb-2">
+              <label htmlFor="three-card-question" className="block text-sm text-ivory/80 mb-2">
                 Mire kérdezel? <span className="text-ivory/50">(opcionális)</span>
               </label>
               <input
+                id="three-card-question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Pl. Most lépjek-e tovább ebben?"
@@ -161,8 +162,11 @@ function HaromLap() {
               />
             </div>
             <div>
-              <label className="block text-sm text-ivory/80 mb-2">Kategória</label>
+              <label htmlFor="three-card-category" className="block text-sm text-ivory/80 mb-2">
+                Kategória
+              </label>
               <select
+                id="three-card-category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
@@ -192,6 +196,8 @@ function HaromLap() {
                     <CardFace card={c} reversed={reversedFlags[i] === true} />
                   ) : (
                     <button
+                      type="button"
+                      aria-label={`${LABELS[i]} lap felfedése`}
                       onClick={() => setRevealed((r) => r.map((v, j) => (j === i ? true : v)))}
                       className="block w-full"
                     >

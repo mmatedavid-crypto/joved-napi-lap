@@ -141,7 +141,7 @@ export function PaywallDialog({
             <button
               disabled={!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !termsAccepted}
               onClick={() => setConfirmed(true)}
-              className="w-full btn-gold"
+              className="w-full btn-gold disabled:cursor-not-allowed disabled:opacity-45 disabled:saturate-50 disabled:shadow-none"
             >
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
