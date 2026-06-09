@@ -24,6 +24,13 @@ type OrderView = {
   response_payload?: unknown;
 };
 
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!local || !domain) return "a vásárlási email címed";
+  const visible = local.slice(0, Math.min(2, local.length));
+  return `${visible}${local.length > 2 ? "..." : ""}@${domain}`;
+}
+
 export const Route = createFileRoute("/koszonjuk")({
   validateSearch: (s: Record<string, unknown>): { session_id?: string } => ({
     session_id: typeof s.session_id === "string" ? s.session_id : undefined,
@@ -123,6 +130,9 @@ function Page() {
                   Amikor elkészül, emailben is elküldjük. Ha később nem találod, a vásárlási email
                   címről írj nekünk, és visszakeressük.
                 </p>
+                <p className="mt-2 text-xs text-ivory/45">
+                  Rögzített cím: {maskEmail(order.guest_email)}
+                </p>
               </Section>
             )}
 
@@ -150,8 +160,7 @@ function Page() {
                   profilodban is eléred az elkészült olvasatot.
                 </p>
                 <p className="mt-3 text-sm text-ivory/50">
-                  Ha az oldal nem frissül, írj nekünk a rendelés email címéről
-                  {order.guest_email ? ` (${order.guest_email})` : ""}, és utánanézünk.
+                  Ha az oldal nem frissül, írj nekünk a rendelés email címéről, és utánanézünk.
                 </p>
               </Section>
             )}
