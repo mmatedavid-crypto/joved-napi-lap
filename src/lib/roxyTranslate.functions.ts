@@ -13,6 +13,11 @@ import {
   guardAITextObject,
   polishCrystalNameHU,
 } from "./huTextGuard";
+import {
+  normalizeRoxyDraw,
+  normalizeRoxyTarotDaily,
+  type RoxyDrawnCard,
+} from "./roxyNormalize";
 
 const SignSchema = z.enum([
   "aries",
@@ -542,3 +547,184 @@ function guardNumerologyHU(value: unknown): NumerologyHU | null {
     oneLine: { oneLine: true },
   });
 }
+
+// ─── Tarot ────────────────────────────────────────────────────────────────
+// Roxy /tarot/daily és /tarot/draw nyers angol mezőit fordítjuk magyarra
+// kártya-szinten. Per-kártya cache → ugyanazt a lapot soha nem fordítjuk
+// kétszer. Az UI a Roxy localId-ból építi a magyar nevet + képet.
+
+export type TarotCardHU = {
+  cardName: string;
+  reversed: boolean;
+  meaning: string;
+  love?: string;
+  career?: string;
+  finances?: string;
+  health?: string;
+  spirituality?: string;
+  oneLine?: string;
+};
+
+export type TarotSlot = {
+  roxy: RoxyDrawnCard;
+  hu: TarotCardHU;
+};
+
+const TAROT_CARD_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    cardName: { type: "string" },
+    meaning: { type: "string" },
+    love: { type: "string" },
+    career: { type: "string" },
+    finances: { type: "string" },
+    health: { type: "string" },
+    spirituality: { type: "string" },
+    oneLine: { type: "string" },
+  },
+  required: ["cardName", "meaning"],
+};
+
+function guardTarotCardHU(value: unknown, reversed: boolean): TarotCardHU | null {
+  const guarded = guardAITextObject<Omit<TarotCardHU, "reversed">>(
+    value,
+    ["cardName", "meaning"],
+    { oneLine: { oneLine: true } },
+  );
+  if (!guarded) return null;
+  return { ...guarded, reversed };
+}
+
+async function translateOneTarotCard(card: RoxyDrawnCard): Promise<TarotCardHU | null> {
+  const orient = card.reversed ? "r" : "u";
+  const key = aiCacheKey("tarot", "card", card.roxyId || card.localId || card.roxyName, orient);
+  const cached = guardTarotCardHU(await readCache(key), card.reversed);
+  if (cached) return cached;
+
+  // Ha a Roxy nem küldött forrásszöveget, nincs mit fordítani.
+  const hasSource =
+    card.meaningEn ||
+    card.loveEn ||
+    card.careerEn ||
+    card.financesEn ||
+    card.healthEn ||
+    card.spiritualityEn;
+  if (!hasSource) return null;
+
+  const source = {
+    cardName: card.roxyName,
+    reversed: card.reversed,
+    keywords: card.keywordsEn ?? [],
+    meaning: card.meaningEn ?? null,
+    love: card.loveEn ?? null,
+    career: card.careerEn ?? null,
+    finances: card.financesEn ?? null,
+    health: card.healthEn ?? null,
+    spirituality: card.spiritualityEn ?? null,
+  };
+
+  const t = await translateWithAI<Omit<TarotCardHU, "reversed">>({
+    source,
+    domainHint: `Tarot lap jelentése (${card.reversed ? "fordított" : "álló"} állás). A 'cardName' a lap magyar neve (pl. 'Kelyhek ásza', 'A Bolond'). Minden mezőt csak akkor adj vissza, ha a forrásban szerepel — semmit ne találj ki. A 'meaning' 3-5 mondat, a témaspecifikus mezők 2-3 mondat.`,
+    schemaName: "TarotCardHU",
+    schema: TAROT_CARD_SCHEMA,
+  });
+  const reading = guardTarotCardHU(t.data, card.reversed);
+  if (!t.ok || !reading) return null;
+
+  await writeCache(key, "/ai/tarot-card", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
+  return reading;
+}
+
+async function translateCards(cards: RoxyDrawnCard[]): Promise<TarotSlot[]> {
+  const huList = await Promise.all(cards.map((c) => translateOneTarotCard(c)));
+  return cards
+    .map((roxy, i) => {
+      const hu = huList[i];
+      return hu ? ({ roxy, hu } as TarotSlot) : null;
+    })
+    .filter((s): s is TarotSlot => s !== null);
+}
+
+// "Mai lap" — Roxy /tarot/daily + per-kártya magyarítás.
+export const aiTarotDailyHU = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ dateKey: z.string().min(8).max(20) }).parse)
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      slot: TarotSlot | null;
+      message?: string;
+    }> => {
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: "/tarot/daily",
+        body: { seed: `daily:${data.dateKey}`, date: data.dateKey },
+        cacheKey: `tarot:daily:${data.dateKey}`,
+        ttlSeconds: DAY_SECONDS,
+      });
+      if (!r.ok || !r.data)
+        return { ok: false, cached: false, slot: null, message: "Most nem értem el a napi lapot." };
+      const payload = normalizeRoxyTarotDaily(r.data);
+      if (!payload.card)
+        return { ok: false, cached: false, slot: null, message: "Üres válasz a forrásból." };
+      const slots = await translateCards([payload.card]);
+      if (slots.length === 0)
+        return {
+          ok: false,
+          cached: false,
+          slot: null,
+          message: "A magyarítás most nem sikerült.",
+        };
+      return { ok: true, cached: r.cached, slot: slots[0] };
+    },
+  );
+
+// Általános húzás (1..5 lap) — Roxy /tarot/draw + per-kártya magyarítás.
+export const aiTarotDrawHU = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      count: z.number().int().min(1).max(5),
+      seed: z.string().min(1).max(80).optional(),
+      allowReversals: z.boolean().optional(),
+    }).parse,
+  )
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      slots: TarotSlot[];
+      message?: string;
+    }> => {
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: "/tarot/draw",
+        body: {
+          count: data.count,
+          allowReversals: data.allowReversals ?? true,
+          seed: data.seed,
+        },
+        cacheKey: `tarot:draw:${data.count}:${data.seed ?? "nosd"}:${data.allowReversals ? 1 : 0}`,
+        ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
+      });
+      if (!r.ok || !r.data)
+        return { ok: false, cached: false, slots: [], message: "Most nem érkezett meg a húzás." };
+      const cards = normalizeRoxyDraw(r.data);
+      if (cards.length === 0)
+        return { ok: false, cached: false, slots: [], message: "Üres válasz a forrásból." };
+      const slots = await translateCards(cards);
+      if (slots.length === 0)
+        return {
+          ok: false,
+          cached: false,
+          slots: [],
+          message: "A magyarítás most nem sikerült.",
+        };
+      return { ok: true, cached: r.cached, slots };
+    },
+  );

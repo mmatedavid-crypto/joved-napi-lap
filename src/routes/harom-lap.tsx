@@ -6,12 +6,11 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
-import { aiTarotReadingHU, roxyTarotThreeCard, type TarotReadingHU } from "@/lib/roxy.functions";
-import { normalizeRoxySpread } from "@/lib/roxyNormalize";
-import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
+import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
-import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -42,43 +41,42 @@ const CATEGORIES = [
 ];
 const LABELS = ["Múlt", "Jelen", "Jövő"] as const;
 
+function localCardFromSlot(slot: TarotSlot): TarotCard {
+  const id = slot.roxy.localId;
+  const found = id ? CARDS.find((c) => c.id === id) : null;
+  return found ?? CARDS[0];
+}
+
 function HaromLap() {
   const { user } = useAuth();
   const [question, setQuestion] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
-  const [drawn, setDrawn] = useState<LocalDrawn[] | null>(null);
+  const [slots, setSlots] = useState<TarotSlot[] | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
-  const [reading, setReading] = useState<TarotReadingHU | null>(null);
-  const [loadingReading, setLoadingReading] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
   const [paywallProduct, setPaywallProduct] = useState<"harom_lap_mely" | "kelta_kereszt">(
     "harom_lap_mely",
   );
-  const aiReading = useServerFn(aiTarotReadingHU);
-  const drawSpread = useServerFn(roxyTarotThreeCard);
-  const loadMemory = useServerFn(getReadingContext);
+  const drawCards = useServerFn(aiTarotDrawHU);
   const saveMemory = useServerFn(saveReadingMemory);
 
   async function draw() {
     setDrawing(true);
     setDrawError(null);
-    setReading(null);
     try {
       const seed = `three:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
-      const r = await drawSpread({ data: { seed, question: question || undefined } });
+      const r = await drawCards({ data: { count: 3, allowReversals: true, seed } });
       if (!r.ok) {
         setDrawError("A húzás most nem érkezett meg. Próbáld újra egy pillanat múlva.");
         return;
       }
-      const spread = normalizeRoxySpread(r.data);
-      const mapped = mapRoxyToLocal(spread.positions.map((p) => p.card!).filter(Boolean));
-      if (mapped.length < 3) {
+      if (r.slots.length < 3) {
         setDrawError("A húzás nem teljes — próbáld újra.");
         return;
       }
-      setDrawn(mapped.slice(0, 3));
+      setSlots(r.slots.slice(0, 3));
       setRevealed([false, false, false]);
     } finally {
       setDrawing(false);
@@ -86,86 +84,37 @@ function HaromLap() {
   }
 
   useEffect(() => {
-    if (!drawn || !revealed.every(Boolean)) return;
-    const drawnLocal = drawn;
-    let cancelled = false;
-    setLoadingReading(true);
-    async function load() {
-      const guestMemory = getGuestReadingContext({
-        readingType: "tarot",
-        topic: question || category,
-        situation: category,
-        limit: 5,
-      });
-      let memoryContext: string | undefined =
-        guestMemory.contextText || guestMemory.themeSummary || undefined;
-      if (user) {
-        try {
-          const memory = await loadMemory({
-            data: {
-              readingType: "tarot",
-              topic: question || category,
-              situation: category,
-              limit: 5,
-            },
-          });
-          memoryContext = memory.contextText || memory.themeSummary || undefined;
-        } catch {
-          /* memory is optional */
-        }
-      }
-      return aiReading({
+    if (!slots || !revealed.every(Boolean)) return;
+    const cardNames = slots.map((s) => localCardFromSlot(s).name);
+    const oneLine = slots[2]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Három lapos húzás";
+    const summary = slots.map((s, i) => `${LABELS[i]}: ${s.hu.meaning}`).join(" ");
+    recordGuestReadingMemory({
+      readingType: "tarot",
+      topic: question || category,
+      question: question || undefined,
+      situation: category,
+      sourceRoute: "/harom-lap",
+      title: oneLine,
+      summary,
+      oneSentence: oneLine,
+      anchors: [category, ...cardNames],
+    });
+    if (user) {
+      saveMemory({
         data: {
-          spread: "three",
-          cards: drawnLocal.map((d) => toAIInput(d)),
+          readingType: "tarot",
+          topic: question || category,
           question: question || undefined,
-          category,
-          memoryContext,
+          situation: category,
+          sourceRoute: "/harom-lap",
+          title: oneLine,
+          summary,
+          oneSentence: oneLine,
+          anchors: [category, ...cardNames],
         },
-      });
+      }).catch(() => {});
     }
-    load()
-      .then((r) => {
-        if (cancelled) return;
-        if (r.ok && r.reading) {
-          setReading(r.reading);
-          const cardNames = drawnLocal.map((d) => d.card.name);
-          recordGuestReadingMemory({
-            readingType: "tarot",
-            topic: question || category,
-            question: question || undefined,
-            situation: category,
-            sourceRoute: "/harom-lap",
-            title: r.reading.oneLine || "Három lapos húzás",
-            summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
-            oneSentence: r.reading.oneLine,
-            anchors: [category, ...cardNames],
-          });
-          if (user) {
-            saveMemory({
-              data: {
-                readingType: "tarot",
-                topic: question || category,
-                question: question || undefined,
-                situation: category,
-                sourceRoute: "/harom-lap",
-                title: r.reading.oneLine || "Három lapos húzás",
-                summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
-                oneSentence: r.reading.oneLine,
-                anchors: [category, ...cardNames],
-              },
-            }).catch(() => {});
-          }
-        }
-        setLoadingReading(false);
-      })
-      .catch(() => {
-        if (!cancelled) setLoadingReading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [aiReading, drawn, category, loadMemory, question, revealed, saveMemory, user]);
+  }, [slots, revealed, category, question, saveMemory, user]);
 
   return (
     <Layout>
@@ -175,7 +124,7 @@ function HaromLap() {
         lead="Három lap, egy ív. Nem külön-külön, hanem együtt mond valamit."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20 space-y-8">
-        {!drawn && (
+        {!slots && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -225,16 +174,16 @@ function HaromLap() {
           situation={category}
         />
 
-        {drawn && (
+        {slots && (
           <>
             <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
-              {drawn.map((d, i) => (
+              {slots.map((s, i) => (
                 <div key={i}>
                   <div className="text-center text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2">
                     {LABELS[i]}
                   </div>
                   {revealed[i] ? (
-                    <CardFace card={d.card} reversed={d.reversed} />
+                    <CardFace card={localCardFromSlot(s)} reversed={s.roxy.reversed} />
                   ) : (
                     <button
                       type="button"
@@ -251,49 +200,23 @@ function HaromLap() {
 
             {revealed.every(Boolean) && (
               <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                {loadingReading && !reading && (
-                  <ReadingLoadingState
-                    kind="tarot"
-                    title="A három lap története készül"
-                    className="md:col-span-2"
-                  />
-                )}
-                {reading && (
-                  <>
-                    {question.trim() && reading.questionAnswer && (
-                      <Section eyebrow="A kérdésedre" title={`„${question.trim()}”`}>
-                        {reading.questionAnswer}
-                      </Section>
-                    )}
-                    {reading.past && (
-                      <Section eyebrow="Múlt — honnan jön ez a helyzet?">{reading.past}</Section>
-                    )}
-                    {reading.present && (
-                      <Section eyebrow="Jelen — mi történik most valójában?">
-                        {reading.present}
-                      </Section>
-                    )}
-                    {reading.future && (
-                      <Section eyebrow="Jövő — merre mozdulhat?">{reading.future}</Section>
-                    )}
-                    {reading.together && (
-                      <Section eyebrow="A három lap együtt">{reading.together}</Section>
-                    )}
-                    {reading.warn && (
-                      <Section eyebrow="Mire figyelj most?">{reading.warn}</Section>
-                    )}
-                    {reading.oneLine && (
-                      <Section eyebrow="Egy mondatban az üzenet">
-                        <em>{reading.oneLine}</em>
-                      </Section>
-                    )}
-                  </>
+                {slots.map((s, i) => (
+                  <Section key={i} eyebrow={LABELS[i]} title={localCardFromSlot(s).name}>
+                    {s.hu.meaning}
+                  </Section>
+                ))}
+                {slots[2]?.hu.oneLine && (
+                  <div className="md:col-span-2">
+                    <Section eyebrow="Egy mondatban az üzenet">
+                      <em>{slots[2].hu.oneLine}</em>
+                    </Section>
+                  </div>
                 )}
               </div>
             )}
 
             <div className="text-center pt-4">
-              <button onClick={() => setDrawn(null)} className="btn-ghost-gold">
+              <button onClick={() => setSlots(null)} className="btn-ghost-gold">
                 Új húzás
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
@@ -342,7 +265,7 @@ function HaromLap() {
         productSlug={paywallProduct}
         sourceRoute="/harom-lap"
         inputPayload={{
-          cards: drawn?.map((d) => d.card.name),
+          cards: slots?.map((s) => localCardFromSlot(s).name),
           question,
           category,
           memoryContext:
