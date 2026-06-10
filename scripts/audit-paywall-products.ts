@@ -88,6 +88,11 @@ for (const needle of [
   "hosszabb, 10 lapos riport",
   "azonnali, rövid írásos olvasat",
   "if (!email && user?.email) setEmail(user.email)",
+  'add("Név", payload.name ?? payload.fullName',
+  'add("Megszólítás", payload.callName ?? payload.preferredName',
+  'addPair("Nevek", payload.myName ?? payload.fullNameA',
+  'add("Születési dátum", payload.dob ?? payload.birthDate',
+  'addPair("Dátumok", payload.myDob ?? payload.birthDateA',
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
 }

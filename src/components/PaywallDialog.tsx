@@ -506,7 +506,21 @@ function summarizeInputPayload(
     const clean = value.trim();
     items.push({ label: "Jegy", value: SIGN_HU[clean] ?? clean });
   };
+  const addPair = (label: string, a: unknown, b: unknown, max = 120) => {
+    if (items.length >= 4) return;
+    const values = [a, b]
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+      .map((value) => value.trim().replace(/\s+/g, " "));
+    if (!values.length) return;
+    const clean = values.join(" · ");
+    items.push({ label, value: clean.length > max ? `${clean.slice(0, max - 1)}…` : clean });
+  };
 
+  add("Név", payload.name ?? payload.fullName, 80);
+  add("Megszólítás", payload.callName ?? payload.preferredName, 60);
+  addPair("Nevek", payload.myName ?? payload.fullNameA, payload.hisName ?? payload.fullNameB);
+  add("Születési dátum", payload.dob ?? payload.birthDate, 30);
+  addPair("Dátumok", payload.myDob ?? payload.birthDateA, payload.hisDob ?? payload.birthDateB, 80);
   add("Kérdés", payload.question ?? payload.q);
   add("Helyzet", payload.sit ?? payload.status ?? payload.category ?? payload.cat, 90);
   add("Téma", payload.title ?? payload.situation, 100);
@@ -523,13 +537,6 @@ function summarizeInputPayload(
   if (items.length < 4 && Array.isArray(cards) && cards.length > 0) {
     const names = cards.filter((card): card is string => typeof card === "string").slice(0, 4);
     if (names.length) items.push({ label: "Lapok", value: names.join(", ") });
-  }
-
-  const dates = [payload.myDob, payload.hisDob, payload.birthDateA, payload.birthDateB].filter(
-    (value): value is string => typeof value === "string" && value.trim().length > 0,
-  );
-  if (items.length < 4 && dates.length >= 2) {
-    items.push({ label: "Dátumok", value: `${dates[0]} · ${dates[1]}` });
   }
 
   return items.slice(0, 4);
