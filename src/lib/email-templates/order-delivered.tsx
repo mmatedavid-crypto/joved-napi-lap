@@ -42,6 +42,9 @@ const OrderDeliveredEmail = ({
   const readingBlocks = parseReadingBlocks(body);
   const openUrl = accessUrl ?? `${siteUrl}/profil`;
   const shortOrderId = orderId ? orderId.slice(0, 8) : undefined;
+  const accessIntro = isGuest
+    ? "A teljes olvasatot ezen a biztonságos rendelési linken is eléred. Vendég vásárlásnál ezt a linket érdemes megtartanod."
+    : "A teljes olvasatot ezen a biztonságos linken és a profilodban is eléred. Ha az emailt később keresed vissza, innen közvetlenül meg tudod nyitni.";
   const missingBodyText = isGuest
     ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről."
     : "A részletes olvasatot ezen a linken és a profilodban is eléred.";
@@ -57,10 +60,8 @@ const OrderDeliveredEmail = ({
           </Section>
 
           <Section style={accessCard}>
-            <Text style={accessText}>
-              A teljes olvasatot ezen a biztonságos linken is eléred. Vendég vásárlásnál ezt a
-              linket érdemes megtartanod.
-            </Text>
+            <Text style={accessText}>{accessIntro}</Text>
+            {shortOrderId && <Text style={accessMeta}>Rendelés: {shortOrderId}</Text>}
             <Button href={openUrl} style={button}>
               Olvasat megnyitása
             </Button>
@@ -179,6 +180,13 @@ const accessText = {
   fontSize: "14px",
   lineHeight: "1.6",
   margin: "0 0 16px 0",
+};
+const accessMeta = {
+  color: "#d8c282",
+  fontSize: "12px",
+  letterSpacing: "0.08em",
+  margin: "-4px 0 16px 0",
+  textTransform: "uppercase" as const,
 };
 const button = {
   backgroundColor: "#c9a85d",

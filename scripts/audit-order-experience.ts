@@ -195,6 +195,11 @@ const checks: Check[] = [
     includes: [
       "isGuest?: boolean",
       "isGuest = false",
+      "const accessIntro = isGuest",
+      "ezen a biztonságos linken és a profilodban is eléred",
+      "Ha az emailt később keresed vissza",
+      "accessMeta",
+      "Rendelés: {shortOrderId}",
       "missingBodyText",
       "SITE_LEGAL.supportEmail",
       "Ha a gomb nem nyílik meg",
