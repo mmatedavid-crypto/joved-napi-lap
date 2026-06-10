@@ -7,6 +7,8 @@ import {
 
 const DEFAULT_LIMIT = 6;
 const MAX_LIMIT = 36;
+const DEFAULT_CONCURRENCY = 2;
+const MAX_CONCURRENCY = 4;
 
 function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get("Authorization");
@@ -29,11 +31,18 @@ function parseOffset(value: string | null): number {
   return Math.max(0, Math.floor(parsed));
 }
 
+function parseConcurrency(value: string | null): number {
+  const parsed = Number(value ?? DEFAULT_CONCURRENCY);
+  if (!Number.isFinite(parsed)) return DEFAULT_CONCURRENCY;
+  return Math.max(1, Math.min(MAX_CONCURRENCY, Math.floor(parsed)));
+}
+
 function selectedTargets(url: URL) {
   const period = url.searchParams.get("period");
   const signSlug = url.searchParams.get("sign");
   const limit = parseLimit(url.searchParams.get("limit"));
   const offset = parseOffset(url.searchParams.get("offset"));
+  const concurrency = parseConcurrency(url.searchParams.get("concurrency"));
   const allTargets = allHoroscopeArticlePaths();
   const periodTargets =
     period && HOROSCOPE_PERIODS.includes(period as HoroscopePeriodHU)
@@ -48,8 +57,57 @@ function selectedTargets(url: URL) {
     total: signTargets.length,
     offset,
     limit,
+    concurrency,
     nextOffset: offset + targets.length < signTargets.length ? offset + targets.length : null,
   };
+}
+
+type PrewarmTarget = ReturnType<typeof allHoroscopeArticlePaths>[number];
+
+async function warmTarget(
+  target: PrewarmTarget,
+  getHoroscopeNewsArticle: typeof import("@/lib/horoscopeNews.server").getHoroscopeNewsArticle,
+) {
+  const itemStarted = Date.now();
+  try {
+    const article = await getHoroscopeNewsArticle({
+      period: target.period,
+      signSlug: target.signSlug,
+    });
+    return {
+      period: target.period,
+      sign: target.signSlug,
+      ok: true,
+      fallbackUsed: article.fallbackUsed,
+      sourceCached: article.sourceCached,
+      translationCached: article.translationCached,
+      sections: article.sections.length,
+      latencyMs: Date.now() - itemStarted,
+    };
+  } catch {
+    return {
+      period: target.period,
+      sign: target.signSlug,
+      ok: false,
+      fallbackUsed: true,
+      latencyMs: Date.now() - itemStarted,
+    };
+  }
+}
+
+async function warmTargetsInBatches(
+  targets: PrewarmTarget[],
+  concurrency: number,
+  getHoroscopeNewsArticle: typeof import("@/lib/horoscopeNews.server").getHoroscopeNewsArticle,
+) {
+  const results = [];
+  for (let index = 0; index < targets.length; index += concurrency) {
+    const batch = targets.slice(index, index + concurrency);
+    results.push(
+      ...(await Promise.all(batch.map((target) => warmTarget(target, getHoroscopeNewsArticle)))),
+    );
+  }
+  return results;
 }
 
 async function handlePrewarm(request: Request) {
@@ -61,35 +119,16 @@ async function handlePrewarm(request: Request) {
   const selection = selectedTargets(url);
   const { getHoroscopeNewsArticle } = await import("@/lib/horoscopeNews.server");
   const started = Date.now();
-  const results = [];
-
-  for (const target of selection.targets) {
-    const itemStarted = Date.now();
-    try {
-      const article = await getHoroscopeNewsArticle({
-        period: target.period,
-        signSlug: target.signSlug,
-      });
-      results.push({
-        period: target.period,
-        sign: target.signSlug,
-        ok: true,
-        fallbackUsed: article.fallbackUsed,
-        sourceCached: article.sourceCached,
-        translationCached: article.translationCached,
-        sections: article.sections.length,
-        latencyMs: Date.now() - itemStarted,
-      });
-    } catch {
-      results.push({
-        period: target.period,
-        sign: target.signSlug,
-        ok: false,
-        fallbackUsed: true,
-        latencyMs: Date.now() - itemStarted,
-      });
-    }
-  }
+  const results = await warmTargetsInBatches(
+    selection.targets,
+    selection.concurrency,
+    getHoroscopeNewsArticle,
+  );
+  const fallbackCount = results.filter((item) => item.fallbackUsed).length;
+  const qualityOkCount = results.length - fallbackCount;
+  const retryTargets = results
+    .filter((item) => item.fallbackUsed)
+    .map((item) => ({ period: item.period, sign: item.sign }));
 
   return Response.json(
     {
@@ -97,9 +136,12 @@ async function handlePrewarm(request: Request) {
       totalTargets: selection.total,
       offset: selection.offset,
       limit: selection.limit,
+      concurrency: selection.concurrency,
       nextOffset: selection.nextOffset,
       warmed: results.length,
-      fallbackCount: results.filter((item) => item.fallbackUsed).length,
+      qualityOkCount,
+      fallbackCount,
+      retryTargets,
       latencyMs: Date.now() - started,
       results,
     },
