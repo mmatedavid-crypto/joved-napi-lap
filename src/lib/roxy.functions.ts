@@ -644,6 +644,46 @@ const TarotCardInput = z.object({
   reversed: z.boolean().optional(),
 });
 
+type TarotCardInputT = z.infer<typeof TarotCardInput>;
+
+// Lecsupaszított prompt a napi egy lapra: csak a lap tiszta értelmezése.
+// Szándékosan nem örökli a buildQualitySystemPrompt általános szabályait
+// (ex/döntés/randi/kategória), mert ott a modell minden lapra hasonló
+// sablon-záróképletet adott. Itt a lap karakteréből kell dolgoznia.
+function buildDailySingleSystemPrompt(): string {
+  return [
+    "Magyar tarot-olvasatot írsz a mai napra. Egy lapot kapsz.",
+    "Csak ennek a lapnak a karakteréből, kulcsszavaiból és (ha fordított) blokkolt vagy túltolt oldalából dolgozz.",
+    "Ne adj általános életbölcsességet vagy sablonos zárómondatot ('Ma lassíts.', 'Csinálj egy dolgot lassabban.' stb.).",
+    "A lap nevét ne írd a szövegbe.",
+    "A oneSentence legyen rövid, konkrét és ehhez a laphoz illő — más laphoz másképp szólna.",
+    "Hangnem: természetes, személyes, nem misztikus, nem szolgáltatói magyarázat.",
+    "Válasz JSON: { title, sections: [{ heading, text }], oneSentence, safetyNote }. A heading pontosan a kért szekciónév.",
+  ].join("\n");
+}
+
+function buildDailySingleUserPrompt(input: {
+  card: TarotCardInputT;
+  requiredSections: string[];
+}): string {
+  const c = input.card;
+  return [
+    `Szekciók ebben a sorrendben, pontosan ezekkel a fejlécekkel: ${input.requiredSections.join(" | ")}`,
+    "A lap (csak ebből dolgozz):",
+    JSON.stringify(
+      {
+        kulcsszavak: c.keywords ?? [],
+        forditott: c.reversed === true,
+        altalanos: c.general ?? null,
+        napi: c.daily ?? null,
+      },
+      null,
+      2,
+    ),
+    "Írj rövid, konkrét olvasatot a mai napra. Két szekció, mindegyik 2-4 mondat.",
+  ].join("\n\n");
+}
+
 export const aiTarotReadingHU = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
@@ -767,15 +807,25 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
 
       const requiredSections = sectionMap.map((s) => s.heading);
       const started = Date.now();
+      // Napi egy lap esetén szándékosan lecsupaszított promptot használunk:
+      // ne kapjon ex/döntés/randi/kategória szabályokat, amelyek miatt
+      // a modell minden laphoz hasonló sablon-záróképletet adott.
+      const system = isDailySingle ? buildDailySingleSystemPrompt() : buildQualitySystemPrompt();
+      const userPrompt = isDailySingle
+        ? buildDailySingleUserPrompt({
+            card: data.cards[0],
+            requiredSections,
+          })
+        : buildQualityUserPrompt({
+            readingType: "tarot",
+            mode: "free",
+            userInput: { spread: data.spread, question: data.question, category: data.category },
+            sourceData: { ...sourceData, memoryContext: data.memoryContext ?? null },
+            requiredSections,
+          });
       const ai = await aiJSON<QualityReading>({
-        system: buildQualitySystemPrompt(),
-        user: buildQualityUserPrompt({
-          readingType: "tarot",
-          mode: "free",
-          userInput: { spread: data.spread, question: data.question, category: data.category },
-          sourceData: { ...sourceData, memoryContext: data.memoryContext ?? null },
-          requiredSections,
-        }),
+        system,
+        user: userPrompt,
         schemaName: "QualityReading",
         schema: QUALITY_OUTPUT_SCHEMA as unknown as Record<string, unknown>,
         model: READING_QUALITY_MODEL,
