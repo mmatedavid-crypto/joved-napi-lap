@@ -175,7 +175,7 @@ const checks: Check[] = [
       "Személyes olvasat",
       "Letöltve:",
       "szimbolikus, önismereti digitális tartalom",
-      "ugyfelszolgalat@jovod.hu",
+      "SITE_LEGAL.supportEmail",
       "link.download",
       "jovod-olvasat-",
       "Olvasat másolása",

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SITE_LEGAL } from "@/lib/legal";
 
 type ReadingBlock = {
   heading?: string;
@@ -125,7 +126,7 @@ function formatDownloadedReading(body: string): string {
     body.trim(),
     "",
     "Ez az olvasat szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
-    "Kapcsolat: ugyfelszolgalat@jovod.hu",
+    `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
   ].join("\n");
 }
 

@@ -9,6 +9,12 @@ type Check = {
 
 const checks: Check[] = [
   {
+    name: "support email is centralized through legal config",
+    file: "src/components/PaidReadingBody.tsx",
+    includes: ["SITE_LEGAL.supportEmail", "`Kapcsolat: ${SITE_LEGAL.supportEmail}`"],
+    excludes: ["ugyfelszolgalat@jovod.hu", "preagzrt@gmail.com"],
+  },
+  {
     name: "login page never displays raw auth provider errors",
     file: "src/routes/bejelentkezes.tsx",
     includes: [
