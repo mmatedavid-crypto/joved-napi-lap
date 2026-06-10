@@ -325,6 +325,34 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope paid entries carry returning-user context",
+    file: "src/routes/horoszkop.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "getGuestReadingContext",
+      "openPersonalHoroscopePaywall",
+      'readingType: "horoscope"',
+      'readingType="horoscope"',
+      "horoscopeSituation",
+      "memoryContext",
+      'productSlug="horoszkop_szemelyre"',
+    ],
+  },
+  {
+    name: "horoscope article paid CTA carries returning-user context",
+    file: "src/routes/horoszkop.$period.$sign.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "getGuestReadingContext",
+      "openPersonalHoroscopePaywall",
+      'readingType: "horoscope"',
+      'readingType="horoscope"',
+      "articleSituation",
+      "memoryContext",
+      'productSlug="horoszkop_szemelyre"',
+    ],
+  },
+  {
     name: "compatibility fallback memory reflects status and repeated comparisons",
     file: "src/routes/osszeillunk.tsx",
     includes: [

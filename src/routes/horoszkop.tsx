@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { PaywallDialog } from "@/components/PaywallDialog";
@@ -9,6 +10,7 @@ import {
   PERIOD_LABEL,
   periodDateLabel,
 } from "@/lib/horoscopeNews";
+import { getGuestReadingContext } from "@/lib/guestReadingMemory";
 import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
@@ -38,6 +40,7 @@ function HoroszkopIndex() {
   const [sign, setSign] = useState("capricorn");
   const [situation, setSituation] = useState("");
   const [paywall, setPaywall] = useState(false);
+  const [memoryContext, setMemoryContext] = useState<string | undefined>(undefined);
   if (pathname !== "/horoszkop") {
     return (
       <Layout>
@@ -47,6 +50,20 @@ function HoroszkopIndex() {
   }
 
   const paths = allHoroscopeArticlePaths();
+  const signName = SIGN_HU[sign] ?? sign;
+  const horoscopeSituation = situation.trim() || "személyes horoszkóp";
+
+  function openPersonalHoroscopePaywall() {
+    const memory = getGuestReadingContext({
+      readingType: "horoscope",
+      topic: signName,
+      situation: horoscopeSituation,
+      limit: 8,
+    });
+    setMemoryContext(memory.contextText || memory.themeSummary || undefined);
+    setPaywall(true);
+  }
+
   return (
     <Layout>
       <PageHeader
@@ -69,7 +86,7 @@ function HoroszkopIndex() {
                 horoszkópot a jegyedhez és a mostani kérdésedhez igazítva.
               </p>
             </div>
-            <button className="btn-gold" onClick={() => setPaywall(true)}>
+            <button className="btn-gold" onClick={openPersonalHoroscopePaywall}>
               {productCtaLabel("Személyes horoszkóp", "horoszkop_szemelyre")}
             </button>
           </div>
@@ -118,6 +135,12 @@ function HoroszkopIndex() {
               />
             </div>
           </div>
+          <GuestMemoryInsightPanel
+            readingType="horoscope"
+            topic={signName}
+            situation={horoscopeSituation}
+            className="mt-5"
+          />
         </section>
         {HOROSCOPE_PERIODS.map((period) => (
           <section key={period} className="space-y-4">
@@ -156,8 +179,9 @@ function HoroszkopIndex() {
         sourceRoute="/horoszkop"
         inputPayload={{
           name,
-          sign: SIGN_HU[sign] ?? sign,
+          sign: signName,
           situation,
+          memoryContext,
         }}
       />
     </Layout>

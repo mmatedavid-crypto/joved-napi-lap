@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { Section } from "@/components/Section";
@@ -15,6 +16,7 @@ import {
   type HoroscopeNewsArticle,
   type HoroscopeNewsSection,
 } from "@/lib/horoscopeNews";
+import { getGuestReadingContext } from "@/lib/guestReadingMemory";
 import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
@@ -182,6 +184,7 @@ function HoroscopeArticlePending() {
 function HoroscopeArticlePage() {
   const article = Route.useLoaderData() as HoroscopeNewsArticle;
   const [paywall, setPaywall] = useState(false);
+  const [memoryContext, setMemoryContext] = useState<string | undefined>(undefined);
   const siblingSigns = SIGNS_HU_ORDERED.map((sign) => ({
     sign,
     name: SIGN_HU[sign],
@@ -192,6 +195,18 @@ function HoroscopeArticlePage() {
     label: PERIOD_LABEL[period],
     path: horoscopeArticlePath(period, article.sign),
   }));
+  const articleSituation = `${PERIOD_LABEL[article.period]} horoszkóp · ${periodDateLabel(article.period)}`;
+
+  function openPersonalHoroscopePaywall() {
+    const memory = getGuestReadingContext({
+      readingType: "horoscope",
+      topic: article.signName,
+      situation: articleSituation,
+      limit: 8,
+    });
+    setMemoryContext(memory.contextText || memory.themeSummary || undefined);
+    setPaywall(true);
+  }
 
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-4 pb-20">
@@ -233,10 +248,16 @@ function HoroscopeArticlePage() {
               mostani témádhoz igazítva.
             </p>
           </div>
-          <button className="btn-gold" onClick={() => setPaywall(true)}>
+          <button className="btn-gold" onClick={openPersonalHoroscopePaywall}>
             {productCtaLabel("Személyes horoszkóp", "horoszkop_szemelyre")}
           </button>
         </div>
+        <GuestMemoryInsightPanel
+          readingType="horoscope"
+          topic={article.signName}
+          situation={articleSituation}
+          className="mt-5"
+        />
       </section>
 
       <nav className="mt-10 surface p-5">
@@ -291,7 +312,8 @@ function HoroscopeArticlePage() {
         inputPayload={{
           sign: article.signName,
           period: PERIOD_LABEL[article.period],
-          situation: `${PERIOD_LABEL[article.period]} horoszkóp · ${periodDateLabel(article.period)}`,
+          situation: articleSituation,
+          memoryContext,
           articleLead: article.lead,
           articleSections: article.sections.slice(0, 4).map((section) => ({
             heading: section.heading,
