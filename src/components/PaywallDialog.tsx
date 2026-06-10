@@ -339,9 +339,9 @@ function checkoutSteps(
 
 function deliveryAccessText(isLoggedIn: boolean): string {
   if (isLoggedIn) {
-    return "Az olvasat a köszönőoldalon azonnal megnyílik, a profilodban később is visszanézhető, és emailben is küldünk értesítést.";
+    return "Az olvasat a köszönőoldalon azonnal megnyílik, a profilodban később is visszanézhető, kimásolható és letölthető, emailben pedig értesítést küldünk.";
   }
-  return "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el. A rendelési linket érdemes megtartanod.";
+  return "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el. A rendelési linket érdemes megtartanod; az elkészült olvasat kimásolható és letölthető.";
 }
 
 function readingFormatPromise(product: ProductDef): string {

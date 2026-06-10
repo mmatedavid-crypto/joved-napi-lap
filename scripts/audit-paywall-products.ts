@@ -47,6 +47,8 @@ for (const needle of [
   "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el",
   "A rendelési linket érdemes megtartanod",
   "a profilodban később is visszanézhető",
+  "kimásolható és letölthető",
+  "az elkészült olvasat kimásolható és letölthető",
   "paymentsAvailable",
   "canStartPayment",
   "A fizetés előkészítése most nem elérhető",
