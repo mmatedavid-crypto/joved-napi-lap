@@ -16,6 +16,8 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -31,6 +33,32 @@ export const Route = createFileRoute("/szammisztika")({
   component: Page,
 });
 
+function rememberNumerologyReading(reading: QualityReading, profile: NumerologyProfile) {
+  const topic = `${profile.lifePathNumber}-es sorsszám`;
+  recordGuestReadingMemory({
+    readingType: "numerology",
+    topic,
+    situation: `személyes év: ${profile.personalYearNumber}`,
+    sourceRoute: "/szammisztika",
+    title: `${topic} · ${reading.title}`,
+    summary:
+      [
+        reading.oneSentence,
+        `Születésnap száma: ${profile.birthDayNumber}`,
+        `Személyes hónap: ${profile.personalMonthNumber}`,
+      ]
+        .filter(Boolean)
+        .join(" ") || `${topic} olvasat.`,
+    oneSentence: reading.oneSentence,
+    anchors: [
+      topic,
+      `${profile.birthDayNumber}-es születésnap szám`,
+      `${profile.personalYearNumber}-es személyes év`,
+      `${profile.personalMonthNumber}-es személyes hónap`,
+    ],
+  });
+}
+
 function Page() {
   const callQuality = useServerFn(qualityNumerologyReading);
   const [dob, setDob] = useState("");
@@ -41,7 +69,7 @@ function Page() {
   const [profile, setProfile] = useState<NumerologyProfile | null>(null);
   const [paywall, setPaywall] = useState(false);
 
-  async function fetchReading(d: string, nm?: string, cn?: string) {
+  async function fetchReading(d: string, nm?: string, cn?: string, remember = false) {
     setLoading(true);
     try {
       const r = await callQuality({
@@ -54,6 +82,7 @@ function Page() {
       if (r.ok && r.reading) {
         setResult(r.reading);
         setProfile(r.profile);
+        if (remember && r.profile) rememberNumerologyReading(r.reading, r.profile);
         setLoading(false);
         return;
       }
@@ -62,7 +91,9 @@ function Page() {
     }
     const fallbackProfile = calculateNumerologyProfile({ birthDate: d, fullName: nm });
     setProfile(fallbackProfile);
-    setResult(composeNumerologyReading(fallbackProfile));
+    const fallbackReading = composeNumerologyReading(fallbackProfile);
+    setResult(fallbackReading);
+    if (remember) rememberNumerologyReading(fallbackReading, fallbackProfile);
     trackEvent("roxy_fallback_used", { domain: "numerology" });
     setLoading(false);
   }
@@ -83,7 +114,7 @@ function Page() {
     e.preventDefault();
     if (!dob) return;
     saveLocal("numerology:last", { dob, name, callName });
-    fetchReading(dob, name, callName);
+    fetchReading(dob, name, callName, true);
   }
 
   return (
@@ -132,6 +163,12 @@ function Page() {
         {loading && !result && (
           <ReadingLoadingState kind="numerology" title="A számmisztikai olvasat készül" />
         )}
+
+        <GuestMemoryInsightPanel
+          readingType="numerology"
+          topic={profile ? `${profile.lifePathNumber}-es sorsszám` : undefined}
+          situation={profile ? `személyes év: ${profile.personalYearNumber}` : undefined}
+        />
 
         {result && (
           <div className="space-y-4">

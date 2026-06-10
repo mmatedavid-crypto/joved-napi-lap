@@ -291,6 +291,23 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "numerology page records safe explicit guest memory",
+    file: "src/routes/szammisztika.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "recordGuestReadingMemory",
+      "rememberNumerologyReading",
+      'readingType: "numerology"',
+      'sourceRoute: "/szammisztika"',
+      "fetchReading(dob, name, callName, true)",
+      'readingType="numerology"',
+      "profile.lifePathNumber",
+      "profile.personalYearNumber",
+      "Születésnap száma:",
+      "Személyes hónap:",
+    ],
+  },
+  {
     name: "compatibility fallback memory reflects status and repeated comparisons",
     file: "src/routes/osszeillunk.tsx",
     includes: [
