@@ -1057,3 +1057,124 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
       };
     },
   );
+
+// ─── Natal chart (Sprint 3) ───────────────────────────────────────────────
+// Roxy POST /astrology/natal-chart body: { date, time, latitude, longitude, timezone }
+// Forrás: planets[], houses[], ascendant, midheaven, sunSign, moonSign stb.
+// Magyar kimenet: kulcsbolygók (Nap, Hold, Aszcendens) magyarul + 3-4 mondatos
+// magyar összefoglaló a kapott angol részleges leírások alapján. Cache 30 nap
+// (azonos születési adat → azonos képlet).
+
+export type NatalPlanetHU = {
+  key: string;       // "sun" | "moon" | "ascendant" | "mercury" | ...
+  nameHu: string;    // "Nap" / "Hold" / "Aszcendens" / "Merkúr" ...
+  signHu: string;    // "Bika"
+  house?: number;    // 1..12
+  oneLine?: string;  // 1 mondat erre a bolygóra
+};
+
+export type NatalChartHU = {
+  sun: NatalPlanetHU;
+  moon: NatalPlanetHU;
+  ascendant?: NatalPlanetHU;
+  others: NatalPlanetHU[]; // Merkúr, Vénusz, Mars, Jupiter, Szaturnusz, ...
+  summary: string;         // 3-4 mondatos magyar áttekintés
+  oneLine: string;
+};
+
+const NATAL_PLANET_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    key: { type: "string" },
+    nameHu: { type: "string" },
+    signHu: { type: "string" },
+    house: { type: "number" },
+    oneLine: { type: "string" },
+  },
+  required: ["key", "nameHu", "signHu"],
+};
+
+const NATAL_CHART_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    sun: NATAL_PLANET_SCHEMA,
+    moon: NATAL_PLANET_SCHEMA,
+    ascendant: NATAL_PLANET_SCHEMA,
+    others: { type: "array", items: NATAL_PLANET_SCHEMA },
+    summary: { type: "string" },
+    oneLine: { type: "string" },
+  },
+  required: ["sun", "moon", "others", "summary", "oneLine"],
+};
+
+const NatalInputSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD"),
+  time: z.string().regex(/^\d{2}:\d{2}$/, "HH:MM"),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  timezone: z.string().min(1).max(80), // IANA preferred (e.g. "Europe/Budapest")
+  placeLabel: z.string().min(1).max(160).optional(),
+});
+
+export const aiNatalChartHU = createServerFn({ method: "POST" })
+  .inputValidator(NatalInputSchema.parse)
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: NatalChartHU | null;
+      message?: string;
+    }> => {
+      const cacheKey = aiCacheKey(
+        "natal",
+        data.date,
+        data.time,
+        data.latitude.toFixed(3),
+        data.longitude.toFixed(3),
+        data.timezone,
+      );
+      const cached = await readCache(cacheKey);
+      if (cached && typeof cached === "object") {
+        return { ok: true, cached: true, reading: cached as NatalChartHU };
+      }
+
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: "/astrology/natal-chart",
+        method: "POST",
+        body: {
+          date: data.date,
+          time: data.time + ":00",
+          latitude: data.latitude,
+          longitude: data.longitude,
+          timezone: data.timezone,
+        },
+        cacheKey: `astro:natal:${data.date}:${data.time}:${data.latitude.toFixed(3)}:${data.longitude.toFixed(3)}:${data.timezone}`,
+        ttlSeconds: 60 * 60 * 24 * 30,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "A születési képletet most nem érem el.",
+        };
+
+      const t = await translateWithAI<NatalChartHU>({
+        source: r.data,
+        domainHint:
+          "Nyugati születési képlet (natal chart). A kapott angol payload tartalmazza a bolygók jegyét, házát, az aszcendenst és midheaven-t. Magyar kimenet: 'sun', 'moon' kötelező; 'ascendant' ha a forrásban van. Az 'others' tartalmazza a Merkúrt, Vénuszt, Marsot, Jupitert, Szaturnuszt, és — ha a forrás adja — az Uránuszt, Neptunuszt, Plútót. A 'nameHu' magyar bolygónév (Nap, Hold, Aszcendens, Merkúr, Vénusz, Mars, Jupiter, Szaturnusz, Uránusz, Neptunusz, Plútó). A 'signHu' a jegy magyar neve (Kos, Bika, Ikrek, Rák, Oroszlán, Szűz, Mérleg, Skorpió, Nyilas, Bak, Vízöntő, Halak). A 'house' szám 1-12 ha a forrás adja. Az 'oneLine' minden bolygóra egy mondat a forrásban szereplő leírásból, max 18 szó. A 'summary' 3-4 mondatos magyar áttekintés a Nap-Hold-Aszcendens hármasáról és a két legerősebb mintáról, kizárólag a forrásban szereplő tartalom alapján. Semmit ne találj ki, ne adj orvosi/jogi/pénzügyi ígéretet.",
+        schemaName: "NatalChartHU",
+        schema: NATAL_CHART_SCHEMA,
+      });
+      if (!t.ok || !t.data)
+        return { ok: false, cached: false, reading: null, message: t.error ?? "Magyarítási hiba." };
+
+      await writeCache(cacheKey, "/ai/natal-chart", t.data, 60 * 60 * 24 * 30);
+      return { ok: true, cached: false, reading: t.data };
+    },
+  );
