@@ -23,7 +23,9 @@ export function PaidReadingBody({ body }: { body: string }) {
 
   function downloadReading() {
     try {
-      const file = new Blob([body.trim()], { type: "text/plain;charset=utf-8" });
+      const file = new Blob([formatDownloadedReading(body)], {
+        type: "text/plain;charset=utf-8",
+      });
       const url = URL.createObjectURL(file);
       const link = document.createElement("a");
       link.href = url;
@@ -107,6 +109,24 @@ function parsePaidReadingBody(body: string): ReadingBlock[] {
       }
       return { text: lines.join("\n") || part };
     });
+}
+
+function formatDownloadedReading(body: string): string {
+  const date = new Intl.DateTimeFormat("hu-HU", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date());
+  return [
+    "Jövőd.hu",
+    "Személyes olvasat",
+    `Letöltve: ${date}`,
+    "",
+    body.trim(),
+    "",
+    "Ez az olvasat szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
+    "Kapcsolat: ugyfelszolgalat@jovod.hu",
+  ].join("\n");
 }
 
 function isLikelyHeading(value: string): boolean {
