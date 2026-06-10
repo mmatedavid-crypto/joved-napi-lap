@@ -128,11 +128,12 @@ function HoroscopeArticlePending() {
   const signName = sign ? SIGN_HU[sign] : "a jegyed";
   const periodRange = period ? periodDateLabel(period) : "a mostani időszak";
   const loadingSteps = [
-    `${signName} ${periodLabel.toLowerCase()} forrását kérjük le a mostani időszakra.`,
-    `A ${periodRange} háttéradatait rendezzük magyar cikké.`,
+    `${signName} ${periodLabel.toLowerCase()} forrását kérjük le erre az időszakra.`,
+    `A ${periodRange} jelzését rendezzük magyar cikké.`,
+    "A holdfázist, színt és számot külön megtartjuk, ha a forrás adja.",
     "A forrásszöveget hűen fordítjuk, nem rövidítjük le sablonos üzenetté.",
     "Külön figyeljük a hangulat, kapcsolatok, munka és fókusz részeit.",
-    "Ha a friss forrás lassan érkezik, először korábbi jó minőségű cache-t keresünk.",
+    "Ha a friss forrás lassan érkezik, korábbi jó minőségű mentést keresünk.",
   ] as const;
 
   return (
@@ -149,7 +150,7 @@ function HoroscopeArticlePending() {
         </h1>
         <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
           Nálunk nem egy előre megírt horoszkóp-szöveg kerül eléd. A mostani időszakhoz tartozó
-          háttéradatot vesszük alapul, és abból készítünk természetes magyar olvasatot.
+          jegyforrást vesszük alapul, és abból készítünk természetes magyar olvasatot.
         </p>
         <ReadingLoadingState
           kind="horoscope"
@@ -160,7 +161,7 @@ function HoroscopeArticlePending() {
         <div className="mt-5 grid gap-2 text-left text-sm text-ivory/58 sm:grid-cols-3">
           <div className="rounded-md border border-gold/10 px-3 py-2">
             <span className="block text-gold/75">1. Forrás</span>
-            <span>Időszak és jegy szerinti horoszkóp-adat.</span>
+            <span>Időszak és jegy szerinti horoszkópforrás.</span>
           </div>
           <div className="rounded-md border border-gold/10 px-3 py-2">
             <span className="block text-gold/75">2. Magyarítás</span>

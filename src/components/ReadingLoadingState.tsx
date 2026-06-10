@@ -18,9 +18,10 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
   ],
   horoscope: [
     "Nem előre megírt horoszkópot veszünk le a polcról.",
-    "A mostani időszak háttéradatait rendezzük olvasható magyar üzenetté.",
+    "A jegyhez és időszakhoz tartozó forrást rendezzük olvasható magyar üzenetté.",
+    "Ha érkezik holdfázis, szín vagy szám, azt külön megtartjuk.",
     "A szerelem, munka és belső fókusz részeit külön igazítjuk.",
-    "A csillagállás jelzéseit óvatos, józan nyelvre fordítjuk.",
+    "A nyers forrásból természetes, józan magyar horoszkóp készül.",
   ],
   compatibility: [
     "A két születési mintát egymás mellé tesszük.",
