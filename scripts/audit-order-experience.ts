@@ -262,6 +262,20 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "order delivered email still queues if delivery email state migration is pending",
+    file: "src/lib/orderProcessing.server.ts",
+    includes: [
+      "let canPersistDeliveryEmailState = true",
+      "isMissingColumnError(stateError)",
+      "canPersistDeliveryEmailState = false",
+      "queueing delivered email without state claim",
+      "if (canPersistDeliveryEmailState)",
+      "function isMissingColumnError",
+      "column .* does not exist",
+      "Could not find .* column",
+    ],
+  },
+  {
     name: "order delivered email is essential transactional",
     file: "src/lib/email-templates/registry.ts",
     includes: ["essentialTransactional?: boolean", "essentialTransactional: true"],

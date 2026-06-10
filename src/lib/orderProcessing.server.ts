@@ -166,6 +166,7 @@ async function queueDeliveredEmail(order: {
 
   try {
     const claimTime = new Date().toISOString();
+    let canPersistDeliveryEmailState = true;
     const { data: emailClaim, error: stateError } = await supabaseAdmin
       .from("orders")
       .update({
@@ -178,10 +179,17 @@ async function queueDeliveredEmail(order: {
       .maybeSingle();
 
     if (stateError) {
-      console.warn("order delivery email state unavailable:", stateError.message);
+      if (!isMissingColumnError(stateError)) {
+        console.warn("order delivery email state unavailable:", stateError.message);
+        return;
+      }
+      canPersistDeliveryEmailState = false;
+      console.warn(
+        "orders delivery email state columns unavailable; queueing delivered email without state claim",
+      );
+    } else if (!emailClaim) {
       return;
     }
-    if (!emailClaim) return;
 
     const { enqueueTransactionalEmail, resolveOrderRecipientEmail } =
       await import("@/lib/email/sendTransactional.server");
@@ -191,13 +199,15 @@ async function queueDeliveredEmail(order: {
     });
 
     if (!recipientEmail) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          delivery_email_queued_at: null,
-          delivery_email_error: "missing_recipient_email",
-        })
-        .eq("id", order.id);
+      if (canPersistDeliveryEmailState) {
+        await supabaseAdmin
+          .from("orders")
+          .update({
+            delivery_email_queued_at: null,
+            delivery_email_error: "missing_recipient_email",
+          })
+          .eq("id", order.id);
+      }
       return;
     }
 
@@ -218,13 +228,15 @@ async function queueDeliveredEmail(order: {
     });
 
     if (!result.ok) {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          delivery_email_queued_at: null,
-          delivery_email_error: result.error.slice(0, 500),
-        })
-        .eq("id", order.id);
+      if (canPersistDeliveryEmailState) {
+        await supabaseAdmin
+          .from("orders")
+          .update({
+            delivery_email_queued_at: null,
+            delivery_email_error: result.error.slice(0, 500),
+          })
+          .eq("id", order.id);
+      }
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -241,6 +253,16 @@ async function queueDeliveredEmail(order: {
       console.warn("order delivery email error state failed:", updateError);
     }
   }
+}
+
+function isMissingColumnError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as { code?: string; message?: string };
+  return (
+    err.code === "42703" ||
+    /column .* does not exist/i.test(err.message ?? "") ||
+    /Could not find .* column/i.test(err.message ?? "")
+  );
 }
 
 function memoryQuestion(payload: unknown): string | null {
