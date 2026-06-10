@@ -31,6 +31,7 @@ import { Route as ElallasiTajekoztatoRouteImport } from './routes/elallasi-tajek
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
 import { Route as AszfRouteImport } from './routes/aszf'
+import { Route as ArakRouteImport } from './routes/arak'
 import { Route as AngyalszamJelenteseRouteImport } from './routes/angyalszam-jelentese'
 import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as AlomfejtesJelentesRouteImport } from './routes/alomfejtes-jelentes'
@@ -158,6 +159,11 @@ const AszfRoute = AszfRouteImport.update({
   path: '/aszf',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArakRoute = ArakRouteImport.update({
+  id: '/arak',
+  path: '/arak',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AngyalszamJelenteseRoute = AngyalszamJelenteseRouteImport.update({
   id: '/angyalszam-jelentese',
   path: '/angyalszam-jelentese',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
+  '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
+  '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -332,6 +340,7 @@ export interface FileRoutesById {
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
   '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
+  '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
@@ -374,6 +383,7 @@ export interface FileRouteTypes {
     | '/alomfejtes-jelentes'
     | '/angyalszam'
     | '/angyalszam-jelentese'
+    | '/arak'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/alomfejtes-jelentes'
     | '/angyalszam'
     | '/angyalszam-jelentese'
+    | '/arak'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -454,6 +465,7 @@ export interface FileRouteTypes {
     | '/alomfejtes-jelentes'
     | '/angyalszam'
     | '/angyalszam-jelentese'
+    | '/arak'
     | '/aszf'
     | '/bejelentkezes'
     | '/dontes-elott'
@@ -495,6 +507,7 @@ export interface RootRouteChildren {
   AlomfejtesJelentesRoute: typeof AlomfejtesJelentesRoute
   AngyalszamRoute: typeof AngyalszamRoute
   AngyalszamJelenteseRoute: typeof AngyalszamJelenteseRoute
+  ArakRoute: typeof ArakRoute
   AszfRoute: typeof AszfRoute
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
@@ -684,6 +697,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AszfRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arak': {
+      id: '/arak'
+      path: '/arak'
+      fullPath: '/arak'
+      preLoaderRoute: typeof ArakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/angyalszam-jelentese': {
       id: '/angyalszam-jelentese'
       path: '/angyalszam-jelentese'
@@ -818,6 +838,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlomfejtesJelentesRoute: AlomfejtesJelentesRoute,
   AngyalszamRoute: AngyalszamRoute,
   AngyalszamJelenteseRoute: AngyalszamJelenteseRoute,
+  ArakRoute: ArakRoute,
   AszfRoute: AszfRoute,
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,

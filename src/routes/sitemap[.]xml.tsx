@@ -26,6 +26,7 @@ const STATIC_PATHS = [
   "/szammisztika",
   "/osszeillunk",
   "/horoszkop",
+  "/arak",
   "/mai-iranytu",
   "/angyalszam",
   "/angyalszam-jelentese",

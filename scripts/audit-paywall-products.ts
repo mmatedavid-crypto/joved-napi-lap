@@ -29,6 +29,9 @@ for (const product of PRODUCTS) {
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
+const pricingRoute = readFileSync("src/routes/arak.tsx", "utf8");
+const layout = readFileSync("src/components/Layout.tsx", "utf8");
+const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
 for (const needle of [
@@ -112,6 +115,30 @@ if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
 
 if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
   failed.push("PaywallDialog must not promise profile access to every guest checkout");
+}
+
+for (const needle of [
+  'createFileRoute("/arak")',
+  "Árak és olvasatok",
+  "PRODUCTS.filter",
+  'product.category === "instant"',
+  'product.category === "delayed"',
+  "Azonnali olvasatok",
+  "Részletes írásos elemzések",
+  "590 Ft-tól",
+  "Stripe fizetés",
+  "Menthető olvasat",
+  "Megnézem",
+  "EXPRESS_PRICE_HUF",
+]) {
+  if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
+}
+
+if (!layout.includes('{ to: "/arak", label: "Árak" }')) {
+  failed.push("Layout navigation missing pricing link");
+}
+if (!sitemap.includes('"/arak"')) {
+  failed.push("Sitemap missing pricing route");
 }
 
 for (const needle of [
