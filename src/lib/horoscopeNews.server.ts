@@ -297,6 +297,82 @@ const FALLBACK_COLORS: Record<keyof typeof SIGN_SLUGS, string> = {
   pisces: "gyöngyház",
 };
 
+const PERIOD_THEME_VARIANTS: Record<
+  HoroscopePeriodHU,
+  Array<{ theme: string; tempo: string; question: string }>
+> = {
+  napi: [
+    {
+      theme: "egy apró, de beszédes reakció",
+      tempo: "ma a gyors válasz helyett a pontosabb belső jelzés számíthat",
+      question: "mit szeretnél valóban megőrizni ebből a napból",
+    },
+    {
+      theme: "a figyelem iránya",
+      tempo: "a nap akkor lesz tisztább, ha kevesebb ingerre mondasz igent",
+      question: "mi az az egy dolog, amit nem érdemes tovább halogatnod",
+    },
+    {
+      theme: "egy régi reflex finom átírása",
+      tempo: "nem a nagy fordulat, hanem egy kisebb korrekció adhat nyugalmat",
+      question: "hol válaszolnál ma másképp, mint szoktál",
+    },
+  ],
+  heti: [
+    {
+      theme: "a hét ritmusának újrarendezése",
+      tempo: "most a következetes tempó többet érhet, mint a látványos kezdés",
+      question: "melyik visszatérő helyzet kíván tisztább határt",
+    },
+    {
+      theme: "egy kapcsolat vagy feladat valódi aránya",
+      tempo: "a hét közepére jobban látszódhat, mi kér több figyelmet és mi csak zaj",
+      question: "hol adsz többet megszokásból, mint belső igenből",
+    },
+    {
+      theme: "a belső tartalékok beosztása",
+      tempo: "nem kell mindent egyszerre elvinni; a jó sorrend most fél megoldás lehet",
+      question: "mi az, amit érdemes előbb lezárni, mielőtt újat nyitsz",
+    },
+  ],
+  havi: [
+    {
+      theme: "egy hosszabb belső irány tisztulása",
+      tempo: "ez a hónap lassabban épülhet, de amit most rendbe teszel, később tartást adhat",
+      question: "melyik döntésed mögött szeretnél nagyobb belső nyugalmat érezni",
+    },
+    {
+      theme: "a látható célok és a rejtettebb igények különbsége",
+      tempo: "a hónap nem sürget mindenre választ, inkább megmutathatja, mi vált szűkké",
+      question: "hol nőtted ki azt a szerepet, amit még mindig tartasz",
+    },
+    {
+      theme: "a kapcsolódás és önállóság aránya",
+      tempo: "ebben a hónapban az adhat erőt, ha nem csak alkalmazkodsz, hanem választasz is",
+      question: "mihez kapcsolódsz szabadon, és mihez csak megszokásból",
+    },
+  ],
+};
+
+function stableVariantIndex(seed: string, length: number): number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return length ? hash % length : 0;
+}
+
+function fallbackVariant(opts: {
+  period: HoroscopePeriodHU;
+  sign: keyof typeof SIGN_SLUGS;
+  dateKey: string;
+}) {
+  const variants = PERIOD_THEME_VARIANTS[opts.period];
+  return variants[
+    stableVariantIndex(`${opts.period}:${opts.sign}:${opts.dateKey}`, variants.length)
+  ];
+}
+
 function periodFocus(period: HoroscopePeriodHU): {
   leadPrefix: string;
   firstHeading: string;
@@ -413,27 +489,32 @@ function localFallbackArticle(opts: {
   const signArticle = SIGN_WITH_ARTICLE[opts.sign];
   const periodFrame =
     opts.period === "havi" ? "Ez a hónap" : opts.period === "heti" ? "Ez a hét" : "Ez a nap";
+  const variant = fallbackVariant({
+    period: opts.period,
+    sign: opts.sign,
+    dateKey: opts.dateKey,
+  });
   return {
     ...opts,
     signName,
     title: `${PERIOD_LABEL[opts.period]} ${signName} jegyűeknek`,
-    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. ${archetype}`,
+    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. Most ${variant.theme} kerülhet előtérbe: ${variant.tempo}. ${archetype}`,
     sections: [
       {
         heading: focus.firstHeading,
-        text: `${focus.leadPrefix} ${signArticle} alapmintája erősebben látszódhat: ${archetype} A legfontosabb kérdés most az, hogy mi az, ami valóban belőled indul, és mi az, amit csak a környezet tempója hív elő.`,
+        text: `${focus.leadPrefix} ${signArticle} alapmintája erősebben látszódhat, de most nem ugyanaz a hangsúly fontos, mint máskor. A téma inkább ${variant.theme}: ${archetype} A legfontosabb kérdés most az, hogy ${variant.question}.`,
       },
       {
         heading: focus.loveHeading,
-        text: SIGN_RELATIONSHIP_FOCUS[opts.sign],
+        text: `${SIGN_RELATIONSHIP_FOCUS[opts.sign]} Ebben az időszakban különösen azt érdemes figyelned, hogy a másik jelenléte tágítja-e a belső teredet, vagy inkább régi reakciót hív elő belőled.`,
       },
       {
         heading: focus.workHeading,
-        text: SIGN_WORK_FOCUS[opts.sign],
+        text: `${SIGN_WORK_FOCUS[opts.sign]} Ez a téma itt gyakorlati formában jelenhet meg: mi az, amit érdemes egyszerűsíteni, mielőtt újabb vállalást teszel rá.`,
       },
       {
         heading: focus.attentionHeading,
-        text: SIGN_ATTENTION_FOCUS[opts.sign],
+        text: `${SIGN_ATTENTION_FOCUS[opts.sign]} Ha csak egy dolgot viszel magaddal ebből az időszakból, kérdezd meg magadtól, hogy ${variant.question}.`,
       },
     ],
     luckyColor: FALLBACK_COLORS[opts.sign],
