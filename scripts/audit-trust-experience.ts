@@ -15,6 +15,21 @@ const checks: Check[] = [
     excludes: ["ugyfelszolgalat@jovod.hu", "preagzrt@gmail.com"],
   },
   {
+    name: "homepage explains free entry, paid price floor, and safe access",
+    file: "src/routes/index.tsx",
+    includes: [
+      "ENTRY_PRICE",
+      "formatHuf(ENTRY_PRICE)",
+      "Először próbáld ki",
+      "Fizetős olvasatok",
+      "Biztonságos hozzáférés",
+      "rejtett díj nélkül",
+      "A kártyaadatot Stripe kezeli",
+      "profilban is",
+    ],
+    excludes: ["biztosan", "garantáltan", "mindenképpen"],
+  },
+  {
     name: "login page never displays raw auth provider errors",
     file: "src/routes/bejelentkezes.tsx",
     includes: [

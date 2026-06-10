@@ -2,10 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import { Layout } from "@/components/Layout";
 import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
+import { PRODUCTS, formatHuf } from "@/lib/products";
 
 const RitualTable = lazy(() =>
   import("@/components/RitualTable").then((module) => ({ default: module.RitualTable })),
 );
+
+const ENTRY_PRICE = Math.min(...PRODUCTS.map((product) => product.priceHuf));
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -53,6 +56,38 @@ function Index() {
         >
           <RitualTable />
         </Suspense>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 md:px-6 pb-14">
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="surface p-4">
+            <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.72)]">
+              Először próbáld ki
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-ivory/68">
+              A rövid olvasatok ingyen is elindíthatók. Ha betalál a hang, kérhetsz mélyebb,
+              személyesebb változatot.
+            </p>
+          </div>
+          <div className="surface p-4">
+            <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.72)]">
+              Fizetős olvasatok
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-ivory/68">
+              A személyes olvasatok {formatHuf(ENTRY_PRICE)}-tól indulnak. Az ár mindig látszik
+              fizetés előtt, rejtett díj nélkül.
+            </p>
+          </div>
+          <div className="surface p-4">
+            <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.72)]">
+              Biztonságos hozzáférés
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-ivory/68">
+              A kártyaadatot Stripe kezeli. Az elkészült olvasat megnyitható a rendelési linken,
+              bejelentkezve pedig a profilban is.
+            </p>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-4 md:px-6 pb-16">
