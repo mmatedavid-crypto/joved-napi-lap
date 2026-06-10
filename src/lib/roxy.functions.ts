@@ -714,8 +714,14 @@ function buildDailySingleUserPrompt(input: {
       {
         kulcsszavak: c.keywords ?? [],
         forditott: c.reversed === true,
-        altalanos: c.general ?? null,
-        napi: c.daily ?? null,
+        roxyAngolForras: {
+          altalanos: c.meaningEn ?? null,
+          szerelem: c.loveEn ?? null,
+          karrier: c.careerEn ?? null,
+          penz: c.financesEn ?? null,
+          egeszseg: c.healthEn ?? null,
+          spiritualis: c.spiritualityEn ?? null,
+        },
       },
       null,
       2,
