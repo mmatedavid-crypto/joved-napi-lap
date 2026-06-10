@@ -1,89 +1,37 @@
-# Fizetési és felhasználói rendszer — jovod.hu
+## Mit építünk
 
-## Áttekintés
-Egyszeri vásárlás Stripe-pal (vendégként is). Regisztráció ingyenes és előzményt ment. Nagyobb tételeknél 12–24 órás emailes válasz, +990 Ft-os "express" gyorsítóval (6 óra).
+A `roxyTranslate.functions.ts` már bevált mintáját (Roxy nyers angol → szigorú „csak fordítok, nem találok ki" AI-réteg → magyar JSON → cache) kiterjesztjük a tarotra. A jelenlegi `aiTarotReadingHU` (ami **fogalmazó** módban dolgozik a `readingQuality/prompts.ts` alapján) többé nem szerepel a tarot folyamokban.
 
-## 1. Termékkatalógus
+Fontos: ebben a kódbázisban a „Roxy translate" **nem** egy külön Roxy API endpoint, hanem a `roxyTranslate.functions.ts` szigorú-fordító réteg. A horoszkóp, kristály, angyalszám, álom, számmisztika MIND így működik már — a tarot kimaradt. Ezt pótoljuk.
 
-**Azonnali (490–990 Ft):**
-- Napi lap AI értelmezés — 490 Ft
-- Mai iránytű AI — 590 Ft
-- Angyalszám AI — 490 Ft
-- Kristály ajánlás AI — 490 Ft
-- Álomfejtés AI (rövid) — 790 Ft
-- Horoszkóp AI személyre szabva — 990 Ft
-- Extra napi húzás (cap feloldása) — 490 Ft
+## Új szerver fn-ek (`src/lib/roxyTranslate.functions.ts`)
 
-**Késleltetett, 12–24 órán belül emailben (1990–2990 Ft):**
-- Három lap mély elemzés — 1990 Ft
-- Kelta kereszt / nagy spread — 2990 Ft
-- Döntés előtt komplex elemzés — 2490 Ft
-- Randi előtt / összeillünk párkapcsolat-elemzés — 2490 Ft
-- Számmisztika életút-elemzés — 2490 Ft
+1. **`aiTarotDailyHU({ dateKey })`** — Roxy `/tarot/daily` → `TarotCardHU`
+   - Mezők: `cardName` (magyar, a meglévő `cards.ts` neve), `reversed`, `meaning`, `love`, `career`, `finances`, `health`, `spirituality`, `oneLine`.
+   - Cache: 24h.
 
-**Express gyorsító:** +990 Ft → 6 órán belüli válasz (csak késleltetett termékekhez)
+2. **`aiTarotDrawHU({ count, seed?, allowReversals, question? })`** — Roxy `/tarot/draw` → `TarotSpreadHU`
+   - Mezők: `cards: TarotCardHU[]`, `oneLine` (összefoglaló a forrásból, ha van).
+   - Cache: seed alapján 7 nap, seed nélkül nincs cache.
 
-## 2. Felhasználói modell
+Mindkettő ugyanazt a `TRANSLATOR_SYSTEM` promptot használja, és `guardAITextObject`-tel ellenőrzi a kimenetet (tiltott panelmondatok, magyar nyelv).
 
-- **Vendég:** email megadás kötelező vásárláskor → a megrendelés és a válasz az emailhez van kötve. Nincs előzmény-megtekintés.
-- **Regisztrált (Google / Apple):** ugyanaz, plusz az `előzmények` oldalon visszanézheti a korábbi húzásokat és válaszokat. Regisztráció ingyenes, semmi extra fizetős funkciót nem ad — csak history-t.
-- A vendég és a regisztrált email azonos → vásárláskor a rendszer felajánlja: "Regisztrálj és nézd vissza később".
+## Átállított oldalak (5)
 
-## 3. Fizetési flow
+- `src/components/PersonalDailyBriefing.tsx` (főoldal): `SpreadDeck` helyett `CardBack` reveal mint a `/mai-lap`-nál; tartalom `aiTarotDailyHU`-ból. A `drawnCard.general` és `drawnCard.daily` helyi szövegek kivezetve. Az enrichment (horoszkóp, kristály, sorsszám) változatlan.
+- `src/routes/mai-lap.tsx`: `roxyTarotDraw` + `aiTarotReadingHU` helyett `aiTarotDailyHU`. Az „extra húzás" `aiTarotDrawHU(count=1, seed=random)`-ot hív.
+- `src/routes/harom-lap.tsx`: `aiTarotDrawHU(count=3, seed=...)`.
+- `src/routes/dontes-elott.tsx`: `aiTarotDrawHU(count=1, question)`.
+- `src/routes/randi-elott.tsx`: `aiTarotDrawHU(count=1, question)`.
 
-1. Felhasználó terméket választ → "Megvásárlás" gomb
-2. Email mező (ha nincs bejelentkezve) → Stripe Checkout
-3. Sikeres fizetés után Stripe webhook → `orders` tábla `paid` állapotra
-4. **Azonnali termék:** ott helyben generálja az AI választ (meglévő szerver-fn-ekkel), megjeleníti + emailben is elküldi
-5. **Késleltetett termék:** "Köszönjük, 12–24 órán belül emailben küldjük" képernyő, sorba kerül, cron 5 percenként feldolgozza, email kimegy a válasszal
-6. Express gyorsító: külön line item a Stripe Checkout-on, a cron prioritást ad
+A lap-objektumokat (kép, magyar név) továbbra is a `mapRoxyToLocal` / `roxyCardMap.ts` adja — a `cards.ts` `name`, `image`, `keywords` része megmarad.
 
-## 4. Mit építünk
+## Mit nem érintünk most
 
-### Backend
-- **Auth bekapcsolása:** Google + Apple OAuth (Lovable Cloud managed). Email/jelszó letiltva.
-- **Adatbázis:**
-  - `profiles` — user ID, email, created_at
-  - `products` — termék katalógus (id, slug, name, price_huf, category, delivery_minutes)
-  - `orders` — id, user_id (nullable), guest_email, product_slug, status, stripe_session_id, input_payload, response_payload, paid_at, deliver_by, delivered_at, express
-  - `order_history` view — bejelentkezett user saját rendelései
-- **Stripe (beépített) bekapcsolása** `enable_stripe_payments`-szel, automatic_tax + 0.5% (mert magyar seller, full compliance nem elérhető)
-- **Server functions:**
-  - `createCheckoutSession` — termék + email + (express?) → Stripe Checkout URL
-  - `stripeWebhook` (`/api/public/stripe/webhook`) — aláírás-ellenőrzés, `orders` frissítés, azonnali termékeknél AI hívás
-  - `getMyOrders` — bejelentkezett user előzményei
-- **Késleltetett feldolgozó:** `/api/public/cron/process-delayed-orders` + pg_cron 5 percenként → lekér pending késleltetett orders-t, AI hívás, email küldés
-- **Email:** Lovable beépített app emails — `order-confirmation`, `delayed-result` template-ek
+- A `cards.ts` prózai mezőinek (`general/love/decision/warning/daily`) tényleges törlését, valamint a `paidReadings.ts` / `RitualTable.tsx` / `tarotEngine.ts` átállítását külön körben végezzük — most csak a 4 ingyenes tarot folyam + főoldal kerül Roxy-fordító útvonalra, hogy a tartalom-minőség azonnal megugorjon és láthassuk az eredményt.
+- `aiTarotReadingHU` egyelőre marad a fájlban (még hivatkozhat rá a `paidReadings`); a következő körben távolítjuk el, amikor a fizetős és RitualTable folyamot is átállítjuk.
 
-### Frontend
-- **Termék kártya komponens** árazással, "Megvásárlás" gombbal
-- **Checkout dialog:** email mező + express checkbox (csak késleltetettnél) + "Tovább a fizetéshez"
-- **Sikeres fizetés visszatérő oldal** (`/koszonjuk?session_id=...`): azonnali eredmény VAGY "Emailben küldjük" üzenet
-- **`/elozmenyek` oldal** (csak bejelentkezve): rendelések listája, válasz újranézése
-- **`/belepes` oldal:** Google + Apple gombok
-- **Layout módosítás:** ha be van jelentkezve → profil ikon az "Előzmények" linkkel; ha nincs → "Belépés" gomb
-- **Fizetős funkciók paywall:** meglévő ingyenes route-okon (mai-lap, álomfejtés, stb.) az "AI értelmezés" gombot mostantól vásárláshoz köti
+## Kockázat
 
-## 5. Mit NEM építünk most
-- Saját számlázás / NAV online számla — Stripe Tax + cég bejegyzés után manuális számlázó programmal (Számlázz.hu, Billingo) intézed
-- Visszatérítés UI — Stripe Dashboard-ból kezelhető
-- Marketing emailek — nem támogatott
-- Apple Sign In credentials BYOC — managed verzióval indulunk
-
-## 6. Sorrend
-1. Stripe bekapcsolása + adatbázis schema (products, orders, profiles)
-2. Google + Apple auth + `/belepes` + `/elozmenyek`
-3. Termék katalógus seedelése + Stripe termékek létrehozása
-4. Checkout dialog + `createCheckoutSession` + visszatérő oldal
-5. Stripe webhook + azonnali termékek AI flow-ja
-6. Email infrastruktúra + cron + késleltetett termékek
-7. Meglévő route-ok paywall-osítása
-
-## Megjegyzések
-- Stripe bekapcsolása előtt **Pro plan** kell. Ha még nincs, ezt elsőként meg kell oldanod.
-- A bekapcsolás után először teszt-környezet jön létre, valódi pénz csak akkor mozog, ha céget alapítasz és Stripe-on átmegy a verifikáció.
-- A 0.5% tax calculation surcharge a magyar EV miatt szükséges — a vásárlótól szedi be, neked nem költség.
-
----
-
-Jóváhagyod ezt a tervet, vagy módosítsunk valamit (árak, termékkör, late delivery idők)?
+- A Roxy `/tarot/daily` és `/tarot/draw` válaszsémája részben különböző (single card vs. cards array). Két külön translate fn kezeli őket, közös guard-dal.
+- Az AI-fordítás 1-3 mp késleltetést ad — `ReadingLoadingState`-tel kezelve, mint eddig.
