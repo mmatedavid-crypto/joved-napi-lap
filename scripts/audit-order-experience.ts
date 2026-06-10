@@ -268,6 +268,24 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile delivered reading asks for quality feedback safely",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "ProfilePaidReadingFeedback",
+      "Minőségi visszajelzés",
+      "Eltalált",
+      "Részben talált",
+      "Nem volt elég pontos",
+      "paid_reading_feedback_clicked",
+      'source: "profile"',
+      "profileFeedbackMailto",
+      "Rendelés:",
+      "Termék:",
+      "olvasat teljes szövegét nem tesszük bele automatikusan",
+      "SITE_LEGAL.supportEmail",
+    ],
+  },
+  {
     name: "delivered email exposes recovery path",
     file: "src/lib/email-templates/order-delivered.tsx",
     includes: [

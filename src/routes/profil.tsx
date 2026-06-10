@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
+import { trackEvent } from "@/lib/analytics";
 import {
   clearGuestPersonalization,
   getGuestReadingMemoriesForAccountImport,
@@ -351,6 +352,7 @@ function Page() {
                               orderReference={shortOrderId(o.id)}
                             />
                           </div>
+                          <ProfilePaidReadingFeedback order={o} />
                         </div>
                       </details>
                     )}
@@ -502,6 +504,84 @@ function ProfileSupportContact({
       {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
     </p>
   );
+}
+
+function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
+  const feedbackOptions = [
+    {
+      label: "Eltalált",
+      value: "accurate",
+      body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
+    },
+    {
+      label: "Részben talált",
+      value: "partial",
+      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.",
+    },
+    {
+      label: "Nem volt elég pontos",
+      value: "missed",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.",
+    },
+  ] as const;
+  const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
+
+  return (
+    <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
+      <p className="mt-2 text-xs leading-relaxed text-ivory/58">
+        Ha az olvasat nem volt elég pontos, jelezd nyugodtan. Rendelés alapján visszanézzük, és
+        segítünk pontosítani vagy javítani.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {feedbackOptions.map((option) => (
+          <a
+            key={option.value}
+            href={profileFeedbackMailto({
+              order,
+              shortId,
+              feedback: option.label,
+              body: option.body,
+            })}
+            onClick={() =>
+              trackEvent("paid_reading_feedback_clicked", {
+                productSlug: order.product_slug,
+                status: order.status,
+                feedback: option.value,
+                source: "profile",
+              })
+            }
+            className="rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-xs text-ivory/70 hover:border-gold hover:text-gold"
+          >
+            {option.label}
+          </a>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] leading-relaxed text-ivory/42">
+        A levélbe csak a rendelés rövid azonosítója és a termék neve kerül előre kitöltve, az
+        olvasat teljes szövegét nem tesszük bele automatikusan.
+      </p>
+    </div>
+  );
+}
+
+function profileFeedbackMailto(opts: {
+  order: ProfileOrder;
+  shortId: string;
+  feedback: string;
+  body: string;
+}): string {
+  const subject = `Jövőd.hu visszajelzés · ${opts.shortId}`;
+  const body = [
+    opts.body,
+    "",
+    `Visszajelzés: ${opts.feedback}`,
+    `Rendelés: ${opts.shortId}`,
+    `Termék: ${opts.order.product_name}`,
+    "",
+    "Röviden ezt szeretném hozzátenni:",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function MemoryNextSteps({
