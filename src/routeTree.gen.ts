@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
+import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as SorsszamKalkulatorRouteImport } from './routes/sorsszam-kalkulator'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -58,6 +59,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
   id: '/tarot-napi-lap',
   path: '/tarot-napi-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SzuletesiKepletRoute = SzuletesiKepletRouteImport.update({
+  id: '/szuletesi-keplet',
+  path: '/szuletesi-keplet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
@@ -285,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -327,6 +334,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -370,6 +378,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -414,6 +423,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/dev/memory'
@@ -456,6 +466,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/dev/memory'
@@ -498,6 +509,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/dev/memory'
@@ -541,6 +553,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SorsszamKalkulatorRoute: typeof SorsszamKalkulatorRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
+  SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   DevMemoryRoute: typeof DevMemoryRoute
@@ -569,6 +582,13 @@ declare module '@tanstack/react-router' {
       path: '/tarot-napi-lap'
       fullPath: '/tarot-napi-lap'
       preLoaderRoute: typeof TarotNapiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/szuletesi-keplet': {
+      id: '/szuletesi-keplet'
+      path: '/szuletesi-keplet'
+      fullPath: '/szuletesi-keplet'
+      preLoaderRoute: typeof SzuletesiKepletRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/szammisztika': {
@@ -880,6 +900,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SorsszamKalkulatorRoute: SorsszamKalkulatorRoute,
   SzammisztikaRoute: SzammisztikaRoute,
+  SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotNapiLapRoute: TarotNapiLapRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   DevMemoryRoute: DevMemoryRoute,
