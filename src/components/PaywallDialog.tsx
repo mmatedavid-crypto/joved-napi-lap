@@ -129,6 +129,20 @@ export function PaywallDialog({
 
             <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
               <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                Ez akkor jó választás, ha
+              </div>
+              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                {choiceFitPromise(product).map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
                 Miben lesz személyesebb?
               </div>
               <ul className="mt-3 space-y-2 text-sm text-ivory/68">
@@ -383,6 +397,56 @@ function readingFormatPromise(product: ProductDef): string {
     return "rövid, személyes írásos olvasat 3-5 jól olvasható résszel.";
   }
   return "azonnali, rövid írásos olvasat néhány fókuszált bekezdésben.";
+}
+
+function choiceFitPromise(product: ProductDef): string[] {
+  if (product.slug === "kelta_kereszt") {
+    return [
+      "nem egyetlen igen-nem kérdésed van, hanem több egymásba kapaszkodó szál",
+      "szeretnéd látni, mi tart vissza, mi mozgat belül és merre nyílhat tovább a helyzet",
+      "ráérsz megvárni a részletesebb, hosszabb írásos riportot",
+    ];
+  }
+  if (product.slug === "parkapcsolat_elemzes") {
+    return [
+      "nem csak százalékot szeretnél, hanem érteni akarod kettőtök dinamikáját",
+      "ex, visszatérő történet vagy új ismeretség esetén különösen fontos a helyzet típusa",
+      "a vonzalom mellett a kommunikáció és hosszabb távú minta is érdekel",
+    ];
+  }
+  if (product.slug === "dontes_komplex") {
+    return [
+      "nem azt várod, hogy valaki döntsön helyetted, hanem tisztábban szeretnéd látni a mintát",
+      "a kérdés mögött egyszerre van félelem, vágy és gyakorlati következmény",
+      "részletesebb, több nézőpontú választ szeretnél egy rövid lapjelentésnél",
+    ];
+  }
+  if (product.category === "delayed") {
+    return [
+      "a kérdésed napok óta visszatér, és egy rövid válasz kevés lenne",
+      "fontos, hogy a megadott adataid és a helyzeted több szakaszban jelenjen meg",
+      "nem azonnali impulzust, hanem átgondoltabb írásos elemzést szeretnél",
+    ];
+  }
+  if (product.slug === "horoszkop_szemelyre") {
+    return [
+      "az általános jegyszöveg helyett a saját mostani témádra kérsz rövid választ",
+      "elég egy gyors, személyes napi irány, nem hosszú asztrológiai riportot keresel",
+      "fontos, hogy a szöveg józan maradjon és ne ígérjen biztos jövőt",
+    ];
+  }
+  if (product.slug === "alomfejtes_rovid") {
+    return [
+      "van egy erős álomkép vagy érzés, amit önismereti jelként szeretnél kibontani",
+      "nem diagnózist vársz, hanem rövid, érthető szimbolikus értelmezést",
+      "a konkrét álomszövegedre reagáló választ szeretnél",
+    ];
+  }
+  return [
+    "gyors, olcsó próbaolvasatot szeretnél, mielőtt mélyebb elemzést kérsz",
+    "egy konkrét kérdésre vagy napi helyzetre elég néhány fókuszált bekezdés",
+    "azonnali visszajelzést keresel, nem hosszú írásos riportot",
+  ];
 }
 
 function qualityReviewPromise(product: ProductDef): string[] {
