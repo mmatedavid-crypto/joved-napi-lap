@@ -52,6 +52,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope article cross-links same sign across all periods",
+    file: "src/routes/horoszkop.$period.$sign.tsx",
+    includes: [
+      "const periodLinks = HOROSCOPE_PERIODS.map",
+      "horoscopeArticlePath(period, article.sign)",
+      "{article.signName} időszakai",
+      "periodLinks.map",
+      "item.period === article.period",
+      "periodDateLabel(item.period)",
+    ],
+  },
+  {
     name: "horoscope news can be prewarmed through a protected internal route",
     file: "src/routes/api/internal/horoscope-news/prewarm.ts",
     includes: [

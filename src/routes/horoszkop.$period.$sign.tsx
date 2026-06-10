@@ -161,6 +161,11 @@ function HoroscopeArticlePage() {
     name: SIGN_HU[sign],
     path: horoscopeArticlePath(article.period, sign),
   }));
+  const periodLinks = HOROSCOPE_PERIODS.map((period) => ({
+    period,
+    label: PERIOD_LABEL[period],
+    path: horoscopeArticlePath(period, article.sign),
+  }));
 
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-4 pb-20">
@@ -207,6 +212,30 @@ function HoroscopeArticlePage() {
           </button>
         </div>
       </section>
+
+      <nav className="mt-10 surface p-5">
+        <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-3">
+          {article.signName} időszakai
+        </div>
+        <div className="grid gap-2 sm:grid-cols-3 text-sm">
+          {periodLinks.map((item) => (
+            <Link
+              key={item.period}
+              to={item.path}
+              className={`rounded-md border px-3 py-2 transition-colors ${
+                item.period === article.period
+                  ? "border-gold text-gold"
+                  : "border-[oklch(0.78_0.10_80/0.18)] text-ivory/75 hover:text-gold"
+              }`}
+            >
+              <span className="block">{item.label}</span>
+              <span className="mt-0.5 block text-xs text-ivory/45">
+                {periodDateLabel(item.period)}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </nav>
 
       <nav className="mt-10 surface p-5">
         <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-3">
