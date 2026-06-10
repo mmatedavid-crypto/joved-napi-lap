@@ -31,6 +31,8 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 export const Route = createFileRoute("/mai-iranytu")({
   head: () => ({
@@ -64,6 +66,29 @@ type Compass = {
 };
 
 type Stored = { dob?: string; name?: string; sign?: string };
+
+function rememberDailyCompass(out: Compass, sign: string) {
+  const signName = sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined;
+  recordGuestReadingMemory({
+    readingType: "daily_compass",
+    topic: "mai iránytű",
+    situation: signName,
+    sourceRoute: "/mai-iranytu",
+    title: signName ? `Mai iránytű · ${signName}` : "Mai iránytű",
+    summary:
+      [
+        out.oneLine,
+        out.cardName ? `Mai lap: ${out.cardName}` : undefined,
+        out.moon ? `Holdjel: ${out.moon}` : undefined,
+        out.bio ? `Belső ritmus: ${out.bio}` : undefined,
+        out.crystalName ? `Mai jel: ${out.crystalName}` : undefined,
+      ]
+        .filter(Boolean)
+        .join(" ") || "Mai iránytű olvasat.",
+    oneSentence: out.oneLine,
+    anchors: [out.cardName, out.moon, out.bio, out.crystalName, signName],
+  });
+}
 
 function Page() {
   const tarot = useServerFn(roxyTarotDaily);
@@ -203,6 +228,7 @@ function Page() {
     else if (out.moon) out.oneLine = `${out.moon} — figyelj a finomságokra.`;
 
     setC(out);
+    rememberDailyCompass(out, sign);
     setLoading(false);
     trackEvent("daily_compass_completed");
   }
@@ -257,6 +283,12 @@ function Page() {
         </form>
 
         {loading && !c && <ReadingLoadingState kind="daily" title="A mai iránytű készül" />}
+
+        <GuestMemoryInsightPanel
+          readingType="daily_compass"
+          topic="mai iránytű"
+          situation={sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined}
+        />
 
         {c && (
           <div className="space-y-4">

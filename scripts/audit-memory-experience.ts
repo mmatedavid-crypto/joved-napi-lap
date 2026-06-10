@@ -276,6 +276,21 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "daily compass route records and surfaces guest memory",
+    file: "src/routes/mai-iranytu.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "recordGuestReadingMemory",
+      "rememberDailyCompass",
+      'readingType: "daily_compass"',
+      'sourceRoute: "/mai-iranytu"',
+      'topic: "mai iránytű"',
+      'readingType="daily_compass"',
+      'topic="mai iránytű"',
+      "daily_compass_completed",
+    ],
+  },
+  {
     name: "compatibility fallback memory reflects status and repeated comparisons",
     file: "src/routes/osszeillunk.tsx",
     includes: [
