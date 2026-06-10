@@ -30,6 +30,43 @@ const ALLOWED_SERVER_IMPORT_SOURCES = [
   "src/lib/stripe.server.ts",
 ];
 
+const DEV_ROUTE_GUARDS = [
+  {
+    file: "src/routes/dev.roxy.tsx",
+    includes: [
+      'createFileRoute("/dev/roxy")',
+      "beforeLoad",
+      "import.meta.env.PROD",
+      "throw notFound()",
+      'content: "noindex,nofollow"',
+      "Csak normalizált kimenetet mutatunk",
+    ],
+    excludes: ["roxy.data", "response_payload", "ROXY_API_KEY"],
+  },
+  {
+    file: "src/routes/dev.memory.tsx",
+    includes: [
+      'createFileRoute("/dev/memory")',
+      "beforeLoad",
+      "import.meta.env.PROD",
+      "throw notFound()",
+      'content: "noindex,nofollow"',
+      "csak fejlesztői környezetben használható",
+    ],
+    excludes: ["SUPABASE_SERVICE_ROLE_KEY", "response_payload"],
+  },
+  {
+    file: "src/lib/memoryDiagnostics.functions.ts",
+    includes: [
+      'process.env.NODE_ENV === "production"',
+      "dev_only",
+      "A memória-diagnosztika csak fejlesztői környezetben érhető el",
+      "Hiányzik egy szerveroldali Supabase beállítás",
+    ],
+    excludes: ["SUPABASE_SERVICE_ROLE_KEY", "response_payload"],
+  },
+];
+
 function walk(dir: string): string[] {
   const files: string[] = [];
   for (const entry of readdirSync(dir)) {
@@ -62,6 +99,18 @@ for (const file of sourceFiles()) {
   if (!SERVER_IMPORT_PATTERN.test(body)) continue;
   if (ALLOWED_SERVER_IMPORT_SOURCES.some((allowed) => file.startsWith(allowed))) continue;
   issues.push(`${file}: module-level .server import`);
+}
+
+for (const check of DEV_ROUTE_GUARDS) {
+  const body = readFileSync(check.file, "utf8");
+  for (const needle of check.includes) {
+    if (!body.includes(needle)) issues.push(`${check.file}: missing dev guard marker ${needle}`);
+  }
+  for (const forbidden of check.excludes) {
+    if (body.includes(forbidden)) {
+      issues.push(`${check.file}: forbidden diagnostic exposure ${forbidden}`);
+    }
+  }
 }
 
 if (issues.length) {

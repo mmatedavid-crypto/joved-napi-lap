@@ -99,10 +99,11 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
         payment_rechecked_at: _paymentRecheckedAt,
         ...fallbackPaidUpdate
       } = paidUpdate;
+      const legacyPaidUpdate: OrderUpdate = fallbackPaidUpdate;
       console.warn("orders reconciliation columns unavailable in webhook; using paid fallback");
       await supabase
         .from("orders")
-        .update(fallbackPaidUpdate)
+        .update(legacyPaidUpdate)
         .eq("id", existing.id)
         .eq("status", "pending_payment");
     } else if (paidResult.error) {

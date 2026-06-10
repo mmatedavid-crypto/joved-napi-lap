@@ -55,7 +55,7 @@ export const checkReadingMemoryDiagnostics = createServerFn({ method: "GET" }).h
         ok: false,
         tableReady: false,
         message: message.includes("Missing Supabase server environment variables")
-          ? "Hiányzik a szerveroldali SUPABASE_URL vagy SUPABASE_SERVICE_ROLE_KEY."
+          ? "Hiányzik egy szerveroldali Supabase beállítás."
           : "A memória-diagnosztika nem érhető el ebben a környezetben.",
         checkedAt: new Date().toISOString(),
       };

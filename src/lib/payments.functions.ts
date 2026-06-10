@@ -12,6 +12,7 @@ import {
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
+type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
 type PublicOrderFields = Pick<
   OrderRow,
   | "id"
@@ -357,15 +358,17 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
       deliverBy = new Date(Date.now() + hours * 3600_000).toISOString();
     }
 
+    const paidUpdate: OrderUpdate = {
+      status: "paid",
+      stripe_payment_intent: paymentIntent,
+      paid_at: new Date().toISOString(),
+      payment_rechecked_at: recheckedAt,
+      ...(deliverBy ? { deliver_by: deliverBy } : {}),
+    };
+
     const { data: paidOrder } = await supabaseAdmin
       .from("orders")
-      .update({
-        status: "paid",
-        stripe_payment_intent: paymentIntent,
-        paid_at: new Date().toISOString(),
-        payment_rechecked_at: recheckedAt,
-        ...(deliverBy ? { deliver_by: deliverBy } : {}),
-      })
+      .update(paidUpdate)
       .eq("id", order.id)
       .eq("status", "pending_payment")
       .select(
