@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const CLIENT_DIR = "dist/client";
@@ -83,6 +84,17 @@ function sourceFiles(): string[] {
 }
 
 const issues: string[] = [];
+
+const trackedEnvOutput = spawnSync("git", ["ls-files", ".env", ".env.*"], {
+  encoding: "utf8",
+}).stdout;
+const trackedEnvFiles = trackedEnvOutput
+  .split(/\r?\n/)
+  .filter(Boolean)
+  .filter((file) => file !== ".env.example");
+for (const file of trackedEnvFiles) {
+  issues.push(`${file}: environment file must not be tracked`);
+}
 
 for (const file of walk(CLIENT_DIR)) {
   if (!/\.(js|css|html|json|txt|xml)$/.test(file)) continue;
