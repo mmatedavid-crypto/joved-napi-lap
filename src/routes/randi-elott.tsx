@@ -4,15 +4,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
-import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { HUDateInput } from "@/components/HUDateInput";
-import { aiTarotReadingHU, roxyTarotDraw, roxyTarotLove, type TarotReadingHU } from "@/lib/roxy.functions";
-import { normalizeRoxyDraw, normalizeRoxySpread } from "@/lib/roxyNormalize";
-import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
+import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
-import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -40,6 +38,12 @@ const SITUATIONS = [
   "nem tudom, mit akar",
 ];
 
+function localCardFromSlot(slot: TarotSlot): TarotCard {
+  const id = slot.roxy.localId;
+  const found = id ? CARDS.find((c) => c.id === id) : null;
+  return found ?? CARDS[0];
+}
+
 function Page() {
   const { user } = useAuth();
   const [myDob, setMyDob] = useState("");
@@ -49,137 +53,62 @@ function Page() {
   const [sit, setSit] = useState(SITUATIONS[0]);
   const [q, setQ] = useState("");
   const [type, setType] = useState<1 | 3>(1);
-  const [drawn, setDrawn] = useState<LocalDrawn[] | null>(null);
-  const [reading, setReading] = useState<TarotReadingHU | null>(null);
-  const [loadingReading, setLoadingReading] = useState(false);
+  const [slots, setSlots] = useState<TarotSlot[] | null>(null);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
-  const aiReading = useServerFn(aiTarotReadingHU);
-  const drawOne = useServerFn(roxyTarotDraw);
-  const drawLove = useServerFn(roxyTarotLove);
-  const loadMemory = useServerFn(getReadingContext);
+  const drawCards = useServerFn(aiTarotDrawHU);
   const saveMemory = useServerFn(saveReadingMemory);
 
   async function draw(e: React.FormEvent) {
     e.preventDefault();
     setDrawing(true);
     setDrawError(null);
-    setReading(null);
     try {
       const seed = `love:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
-      const question = q || sit;
-      if (type === 1) {
-        const r = await drawOne({ data: { count: 1, allowReversals: true, seed } });
-        if (!r.ok) {
-          setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
-          return;
-        }
-        const mapped = mapRoxyToLocal(normalizeRoxyDraw(r.data));
-        if (mapped.length < 1) {
-          setDrawError("Üres húzás — próbáld újra.");
-          return;
-        }
-        setDrawn(mapped.slice(0, 1));
-      } else {
-        const r = await drawLove({ data: { seed, question } });
-        if (!r.ok) {
-          setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
-          return;
-        }
-        const spread = normalizeRoxySpread(r.data);
-        const cards = spread.positions
-          .slice(0, 3)
-          .map((p) => p.card!)
-          .filter(Boolean);
-        const mapped = mapRoxyToLocal(cards);
-        if (mapped.length < 3) {
-          setDrawError("A húzás nem teljes — próbáld újra.");
-          return;
-        }
-        setDrawn(mapped);
+      const r = await drawCards({ data: { count: type, allowReversals: true, seed } });
+      if (!r.ok || r.slots.length < type) {
+        setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
+        return;
       }
+      setSlots(r.slots.slice(0, type));
     } finally {
       setDrawing(false);
     }
   }
 
   useEffect(() => {
-    if (!drawn) return;
-    const drawnLocal = drawn;
-    let cancelled = false;
-    setLoadingReading(true);
-    async function load() {
-      const guestMemory = getGuestReadingContext({
-        readingType: "love",
-        topic: q || sit,
-        situation: sit,
-        limit: 5,
-      });
-      let memoryContext: string | undefined =
-        guestMemory.contextText || guestMemory.themeSummary || undefined;
-      if (user) {
-        try {
-          const memory = await loadMemory({
-            data: { readingType: "love", topic: q || sit, situation: sit, limit: 5 },
-          });
-          memoryContext = memory.contextText || memory.themeSummary || undefined;
-        } catch {
-          /* memory is optional */
-        }
-      }
-      return aiReading({
+    if (!slots) return;
+    const cardNames = slots.map((s) => localCardFromSlot(s).name);
+    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Randi előtt";
+    const summary = slots.map((s) => s.hu.love ?? s.hu.meaning).join(" ");
+    recordGuestReadingMemory({
+      readingType: "love",
+      topic: q || sit,
+      question: q || undefined,
+      situation: sit,
+      sourceRoute: "/randi-elott",
+      title: "Randi előtt",
+      summary,
+      oneSentence: oneLine,
+      anchors: [sit, ...cardNames],
+    });
+    if (user) {
+      saveMemory({
         data: {
-          spread: drawnLocal.length === 3 ? "love-3" : "love-1",
-          cards: drawnLocal.map((d) => toAIInput(d)),
-          question: q || sit,
-          category: sit,
-          memoryContext,
+          readingType: "love",
+          topic: q || sit,
+          question: q || undefined,
+          situation: sit,
+          sourceRoute: "/randi-elott",
+          title: "Randi előtt",
+          summary,
+          oneSentence: oneLine,
+          anchors: [sit, ...cardNames],
         },
-      });
+      }).catch(() => {});
     }
-    load()
-      .then((r) => {
-        if (cancelled) return;
-        if (r.ok && r.reading) {
-          setReading(r.reading);
-          const cardNames = drawnLocal.map((d) => d.card.name);
-          recordGuestReadingMemory({
-            readingType: "love",
-            topic: q || sit,
-            question: q || undefined,
-            situation: sit,
-            sourceRoute: "/randi-elott",
-            title: "Randi előtt",
-            summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
-            oneSentence: r.reading.oneLine,
-            anchors: [sit, ...cardNames],
-          });
-          if (user) {
-            saveMemory({
-              data: {
-                readingType: "love",
-                topic: q || sit,
-                question: q || undefined,
-                situation: sit,
-                sourceRoute: "/randi-elott",
-                title: "Randi előtt",
-                summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
-                oneSentence: r.reading.oneLine,
-                anchors: [sit, ...cardNames],
-              },
-            }).catch(() => {});
-          }
-        }
-        setLoadingReading(false);
-      })
-      .catch(() => {
-        if (!cancelled) setLoadingReading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [drawn, aiReading, loadMemory, q, saveMemory, sit, user]);
+  }, [slots, q, saveMemory, sit, user]);
 
   return (
     <Layout>
@@ -189,7 +118,7 @@ function Page() {
         lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
-        {!drawn && (
+        {!slots && (
           <form onSubmit={draw} className="surface p-6 space-y-5">
             <div className="grid md:grid-cols-2 gap-4">
               <F id="date-my-name" label="Te (név, opcionális)">
@@ -258,67 +187,49 @@ function Page() {
           </form>
         )}
         <GuestMemoryInsightPanel readingType="love" topic={q || sit} situation={sit} />
-        {drawn && (
+        {slots && (
           <>
             <div
-              className={`grid gap-4 ${drawn.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
+              className={`grid gap-4 ${slots.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
             >
-              {drawn.map((d, i) => (
+              {slots.map((s, i) => (
                 <CardFace
                   key={i}
-                  card={d.card}
-                  reversed={d.reversed}
-                  label={drawn.length === 3 ? ["Te", "Köztetek", "Ő"][i] : undefined}
+                  card={localCardFromSlot(s)}
+                  reversed={s.roxy.reversed}
+                  label={slots.length === 3 ? ["Te", "Köztetek", "Ő"][i] : undefined}
                 />
               ))}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {loadingReading && !reading && (
-                <ReadingLoadingState
-                  kind="tarot"
-                  title="A kapcsolati olvasat készül"
-                  className="md:col-span-2"
-                />
-              )}
-              {reading && (
+              {slots.length === 3 ? (
                 <>
-                  {q.trim() && reading.questionAnswer && (
-                    <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
-                      {reading.questionAnswer}
+                  {slots.map((s, i) => (
+                    <Section
+                      key={i}
+                      eyebrow={["Te", "A helyzet köztetek", "Ő"][i]}
+                      title={localCardFromSlot(s).name}
+                    >
+                      {s.hu.love ?? s.hu.meaning}
                     </Section>
-                  )}
-                  {drawn.length === 3 ? (
-                    <>
-                      {reading.you && (
-                        <Section eyebrow="Te" title={drawn[0].card.name}>
-                          {reading.you}
-                        </Section>
-                      )}
-                      {reading.between && (
-                        <Section eyebrow="A helyzet köztetek" title={drawn[1].card.name}>
-                          {reading.between}
-                        </Section>
-                      )}
-                      {reading.them && (
-                        <Section eyebrow="Ő" title={drawn[2].card.name}>
-                          {reading.them}
-                        </Section>
-                      )}
-                    </>
-                  ) : (
-                    (reading.cardMessage || reading.intro) && (
-                      <Section eyebrow="A helyzet üzenete" title={drawn[0].card.name}>
-                        {reading.cardMessage ?? reading.intro}
-                      </Section>
-                    )
-                  )}
-                  {reading.warn && <Section eyebrow="Mire figyelj?">{reading.warn}</Section>}
-                  {reading.oneLine && (
-                    <Section eyebrow="Egy mondatban">
-                      <em>{reading.oneLine}</em>
-                    </Section>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <Section eyebrow="A lap üzenete" title={localCardFromSlot(slots[0]).name}>
+                    {slots[0].hu.meaning}
+                  </Section>
+                  {slots[0].hu.love && (
+                    <Section eyebrow="Szerelmi vonalon">{slots[0].hu.love}</Section>
                   )}
                 </>
+              )}
+              {slots[slots.length - 1]?.hu.oneLine && (
+                <div className="md:col-span-2">
+                  <Section eyebrow="Egy mondatban">
+                    <em>{slots[slots.length - 1].hu.oneLine}</em>
+                  </Section>
+                </div>
               )}
             </div>
             <div className="surface p-5">
@@ -335,7 +246,7 @@ function Page() {
               </button>
             </div>
             <div className="text-center">
-              <button className="btn-ghost-gold" onClick={() => setDrawn(null)}>
+              <button className="btn-ghost-gold" onClick={() => setSlots(null)}>
                 Új húzás
               </button>
             </div>
@@ -354,7 +265,7 @@ function Page() {
           hisDob,
           sit,
           q,
-          cards: drawn?.map((d) => d.card.name),
+          cards: slots?.map((s) => localCardFromSlot(s).name),
           memoryContext:
             getGuestReadingContext({ readingType: "love", topic: q || sit, situation: sit })
               .contextText || undefined,

@@ -4,23 +4,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
-import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
-import {
-  roxyIchingDailyCast,
-  aiTarotReadingHU,
-  roxyTarotDraw,
-  roxyTarotCareer,
-  type TarotReadingHU,
-} from "@/lib/roxy.functions";
-import { normalizeRoxyIching, normalizeRoxyDraw, normalizeRoxySpread } from "@/lib/roxyNormalize";
-import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
+import { roxyIchingDailyCast } from "@/lib/roxy.functions";
+import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
+import { normalizeRoxyIching } from "@/lib/roxyNormalize";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { hexHU } from "@/lib/iching.hu";
 import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
-import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
+import { saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -42,16 +36,27 @@ const CATS = ["szerelem", "munka", "pénz", "család", "költözés", "ex / viss
 
 type Mode = "tarot" | "iching" | "both";
 
+function localCardFromSlot(slot: TarotSlot): TarotCard {
+  const id = slot.roxy.localId;
+  const found = id ? CARDS.find((c) => c.id === id) : null;
+  return found ?? CARDS[0];
+}
+
+function pickDomain(cat: string): "love" | "career" | "finances" {
+  if (cat === "szerelem" || cat === "család" || cat === "ex / visszatérés") return "love";
+  if (cat === "pénz") return "finances";
+  return "career";
+}
+
 function Page() {
   const { user } = useAuth();
   const callIching = useServerFn(roxyIchingDailyCast);
-  const drawOne = useServerFn(roxyTarotDraw);
-  const drawCareer = useServerFn(roxyTarotCareer);
+  const drawCards = useServerFn(aiTarotDrawHU);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState(CATS[0]);
   const [type, setType] = useState<1 | 3>(1);
   const [mode, setMode] = useState<Mode>("tarot");
-  const [drawn, setDrawn] = useState<LocalDrawn[] | null>(null);
+  const [slots, setSlots] = useState<TarotSlot[] | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>([]);
   const [hex, setHex] = useState<{
     number?: number;
@@ -59,47 +64,27 @@ function Page() {
     m: ReturnType<typeof hexHU>["m"];
   } | null>(null);
   const [ichingFailed, setIchingFailed] = useState(false);
-  const [reading, setReading] = useState<TarotReadingHU | null>(null);
-  const [loadingReading, setLoadingReading] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
-  const aiReading = useServerFn(aiTarotReadingHU);
-  const loadMemory = useServerFn(getReadingContext);
   const saveMemory = useServerFn(saveReadingMemory);
 
   async function draw() {
     setIchingFailed(false);
-    setReading(null);
     setDrawError(null);
     setDrawing(true);
     try {
       if (mode === "tarot" || mode === "both") {
         const seed = `decision:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
-        let mapped: LocalDrawn[] = [];
-        if (type === 1) {
-          const r = await drawOne({ data: { count: 1, allowReversals: true, seed } });
-          if (r.ok) mapped = mapRoxyToLocal(normalizeRoxyDraw(r.data)).slice(0, 1);
-        } else {
-          // 3 lap a döntéshez — career spread első 3 pozícióját használjuk.
-          const r = await drawCareer({ data: { seed, question: q || cat } });
-          if (r.ok) {
-            const spread = normalizeRoxySpread(r.data);
-            const cards = spread.positions
-              .slice(0, 3)
-              .map((p) => p.card!)
-              .filter(Boolean);
-            mapped = mapRoxyToLocal(cards);
-          }
-        }
-        if (mapped.length === 0) {
+        const r = await drawCards({ data: { count: type, allowReversals: true, seed } });
+        if (!r.ok || r.slots.length < type) {
           setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
           return;
         }
-        setDrawn(mapped);
-        setRevealed(new Array(mapped.length).fill(false));
+        setSlots(r.slots.slice(0, type));
+        setRevealed(new Array(type).fill(false));
       } else {
-        setDrawn(null);
+        setSlots(null);
         setRevealed([]);
       }
     } finally {
@@ -142,83 +127,41 @@ function Page() {
   }
 
   useEffect(() => {
-    if (!drawn || !revealed.length || !revealed.every(Boolean)) return;
-    const drawnLocal = drawn;
-    let cancelled = false;
-    setLoadingReading(true);
-    async function load() {
-      const guestMemory = getGuestReadingContext({
-        readingType: "decision",
-        topic: q || cat,
-        situation: cat,
-        limit: 5,
-      });
-      let memoryContext: string | undefined =
-        guestMemory.contextText || guestMemory.themeSummary || undefined;
-      if (user) {
-        try {
-          const memory = await loadMemory({
-            data: { readingType: "decision", topic: q || cat, situation: cat, limit: 5 },
-          });
-          memoryContext = memory.contextText || memory.themeSummary || undefined;
-        } catch {
-          /* memory is optional */
-        }
-      }
-      return aiReading({
+    if (!slots || !revealed.length || !revealed.every(Boolean)) return;
+    const cardNames = slots.map((s) => localCardFromSlot(s).name);
+    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Döntési húzás";
+    const summary = slots.map((s) => s.hu.meaning).join(" ");
+    recordGuestReadingMemory({
+      readingType: "decision",
+      topic: q || cat,
+      question: q || undefined,
+      situation: cat,
+      sourceRoute: "/dontes-elott",
+      title: "Döntés előtt",
+      summary,
+      oneSentence: oneLine,
+      anchors: [cat, ...cardNames],
+    });
+    if (user) {
+      saveMemory({
         data: {
-          spread: drawnLocal.length === 3 ? "decision-3" : "decision-1",
-          cards: drawnLocal.map((d) => toAIInput(d)),
+          readingType: "decision",
+          topic: q || cat,
           question: q || undefined,
-          category: cat,
-          memoryContext,
+          situation: cat,
+          sourceRoute: "/dontes-elott",
+          title: "Döntés előtt",
+          summary,
+          oneSentence: oneLine,
+          anchors: [cat, ...cardNames],
         },
-      });
+      }).catch(() => {});
     }
-    load()
-      .then((r) => {
-        if (cancelled) return;
-        if (r.ok && r.reading) {
-          setReading(r.reading);
-          const cardNames = drawnLocal.map((d) => d.card.name);
-          recordGuestReadingMemory({
-            readingType: "decision",
-            topic: q || cat,
-            question: q || undefined,
-            situation: cat,
-            sourceRoute: "/dontes-elott",
-            title: "Döntés előtt",
-            summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
-            oneSentence: r.reading.oneLine,
-            anchors: [cat, ...cardNames],
-          });
-          if (user) {
-            saveMemory({
-              data: {
-                readingType: "decision",
-                topic: q || cat,
-                question: q || undefined,
-                situation: cat,
-                sourceRoute: "/dontes-elott",
-                title: "Döntés előtt",
-                summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
-                oneSentence: r.reading.oneLine,
-                anchors: [cat, ...cardNames],
-              },
-            }).catch(() => {});
-          }
-        }
-        setLoadingReading(false);
-      })
-      .catch(() => {
-        if (!cancelled) setLoadingReading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [drawn, revealed, aiReading, cat, loadMemory, q, saveMemory, user]);
+  }, [slots, revealed, cat, q, saveMemory, user]);
 
-  const main = drawn?.[Math.min(1, (drawn?.length ?? 1) - 1)];
+  const domain = pickDomain(cat);
+  const domainLabel =
+    domain === "love" ? "Szerelemben" : domain === "finances" ? "Pénzügyek" : "Munka és tervek";
 
   return (
     <Layout>
@@ -228,7 +171,7 @@ function Page() {
         lead="Egy csendes pillanat, mielőtt cselekszel."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
-        {!drawn && !hex && (
+        {!slots && !hex && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -300,18 +243,18 @@ function Page() {
           </form>
         )}
         <GuestMemoryInsightPanel readingType="decision" topic={q || cat} situation={cat} />
-        {drawn && (
+        {slots && (
           <>
             <div
-              className={`grid gap-4 ${drawn.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
+              className={`grid gap-4 ${slots.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
             >
-              {drawn.map((d, i) =>
+              {slots.map((s, i) =>
                 revealed[i] ? (
                   <CardFace
                     key={i}
-                    card={d.card}
-                    reversed={d.reversed}
-                    label={drawn.length === 3 ? ["Múlt", "Jelen", "Jövő"][i] : undefined}
+                    card={localCardFromSlot(s)}
+                    reversed={s.roxy.reversed}
+                    label={slots.length === 3 ? ["Múlt", "Jelen", "Jövő"][i] : undefined}
                   />
                 ) : (
                   <button
@@ -324,40 +267,46 @@ function Page() {
                 ),
               )}
             </div>
-            {revealed.every(Boolean) && main && (
+            {revealed.every(Boolean) && (
               <div className="grid md:grid-cols-2 gap-4">
-                {loadingReading && !reading && (
-                  <ReadingLoadingState
-                    kind="tarot"
-                    title="A döntési olvasat készül"
-                    className="md:col-span-2"
-                  />
-                )}
-                {reading && (
+                {slots.length === 3 ? (
                   <>
-                    {q.trim() && reading.questionAnswer && (
-                      <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
-                        {reading.questionAnswer}
+                    {slots.map((s, i) => (
+                      <Section
+                        key={i}
+                        eyebrow={["Múlt", "Jelen", "Jövő"][i]}
+                        title={localCardFromSlot(s).name}
+                      >
+                        {s.hu.meaning}
                       </Section>
+                    ))}
+                    {slots[2]?.hu[domain] && (
+                      <div className="md:col-span-2">
+                        <Section eyebrow={domainLabel}>{slots[2].hu[domain]!}</Section>
+                      </div>
                     )}
-                    {(reading.intro || reading.cardMessage) && (
-                      <Section eyebrow="A lap üzenete">
-                        {reading.intro ?? reading.cardMessage}
-                      </Section>
+                    {slots[slots.length - 1]?.hu.oneLine && (
+                      <div className="md:col-span-2">
+                        <Section eyebrow="Egy mondatban">
+                          <em>{slots[slots.length - 1].hu.oneLine}</em>
+                        </Section>
+                      </div>
                     )}
-                    {reading.pro && (
-                      <Section eyebrow="Mi szól mellette?">{reading.pro}</Section>
+                  </>
+                ) : (
+                  <>
+                    <Section eyebrow="A lap üzenete" title={localCardFromSlot(slots[0]).name}>
+                      {slots[0].hu.meaning}
+                    </Section>
+                    {slots[0].hu[domain] && (
+                      <Section eyebrow={domainLabel}>{slots[0].hu[domain]!}</Section>
                     )}
-                    {reading.contra && (
-                      <Section eyebrow="Mi szól ellene?">{reading.contra}</Section>
-                    )}
-                    {reading.warn && (
-                      <Section eyebrow="Mire figyelj?">{reading.warn}</Section>
-                    )}
-                    {(reading.nextStep || reading.oneLine) && (
-                      <Section eyebrow="Következő lépés">
-                        <em>{reading.nextStep ?? reading.oneLine}</em>
-                      </Section>
+                    {slots[0].hu.oneLine && (
+                      <div className="md:col-span-2">
+                        <Section eyebrow="Egy mondatban">
+                          <em>{slots[0].hu.oneLine}</em>
+                        </Section>
+                      </div>
                     )}
                   </>
                 )}
@@ -394,12 +343,12 @@ function Page() {
             </div>
           </div>
         )}
-        {(drawn || hex) && (
+        {(slots || hex) && (
           <div className="text-center">
             <button
               className="btn-ghost-gold"
               onClick={() => {
-                setDrawn(null);
+                setSlots(null);
                 setHex(null);
                 setIchingFailed(false);
               }}
@@ -426,7 +375,7 @@ function Page() {
           q,
           cat,
           mode,
-          cards: drawn?.map((d) => d.card.name),
+          cards: slots?.map((s) => localCardFromSlot(s).name),
           hex: hex?.name,
           memoryContext:
             getGuestReadingContext({ readingType: "decision", topic: q || cat, situation: cat })
