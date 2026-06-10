@@ -206,9 +206,11 @@ function HaromLap() {
                   </Section>
                 ))}
                 {slots[2]?.hu.oneLine && (
-                  <Section eyebrow="Egy mondatban az üzenet" className="md:col-span-2">
-                    <em>{slots[2].hu.oneLine}</em>
-                  </Section>
+                  <div className="md:col-span-2">
+                    <Section eyebrow="Egy mondatban az üzenet">
+                      <em>{slots[2].hu.oneLine}</em>
+                    </Section>
+                  </div>
                 )}
               </div>
             )}
