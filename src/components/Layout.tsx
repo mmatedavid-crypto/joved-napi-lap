@@ -63,6 +63,12 @@ export function Layout({ children }: { children?: ReactNode }) {
                 {n.label}
               </Link>
             ))}
+            <Link
+              to="/profil"
+              className="rounded-md border border-gold/25 px-3 py-1.5 text-gold/85 transition-colors hover:border-gold/60 hover:text-gold"
+            >
+              Profil
+            </Link>
           </nav>
           <button
             onClick={() => setOpen((v) => !v)}
@@ -95,6 +101,13 @@ export function Layout({ children }: { children?: ReactNode }) {
                   {n.label}
                 </Link>
               ))}
+              <Link
+                to="/profil"
+                onClick={() => setOpen(false)}
+                className="py-2.5 px-3 rounded-md text-gold"
+              >
+                Profil és előzmények
+              </Link>
               <Link
                 to="/rolunk"
                 onClick={() => setOpen(false)}
@@ -132,6 +145,11 @@ export function Layout({ children }: { children?: ReactNode }) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link to="/profil" className="hover:text-gold">
+                  Profil és előzmények
+                </Link>
+              </li>
               <li>
                 <Link to="/rolunk" className="hover:text-gold">
                   Rólunk

@@ -30,6 +30,16 @@ const checks: Check[] = [
     excludes: ["biztosan", "garantáltan", "mindenképpen"],
   },
   {
+    name: "profile access is visible in main and mobile navigation",
+    file: "src/components/Layout.tsx",
+    includes: ['to="/profil"', "Profil", "Profil és előzmények", "hidden lg:flex", "lg:hidden"],
+  },
+  {
+    name: "mobile bottom navigation gives direct profile access",
+    file: "src/components/BottomNav.tsx",
+    includes: ['to: "/profil"', 'label: "Profil"', "M5 21a7 7 0 0 1 14 0"],
+  },
+  {
     name: "login page never displays raw auth provider errors",
     file: "src/routes/bejelentkezes.tsx",
     includes: [

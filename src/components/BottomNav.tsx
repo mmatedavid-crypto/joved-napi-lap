@@ -76,8 +76,8 @@ const ITEMS = [
     ),
   },
   {
-    to: "/rolunk",
-    label: "Több",
+    to: "/profil",
+    label: "Profil",
     icon: (
       <svg
         width="22"
@@ -89,9 +89,8 @@ const ITEMS = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <circle cx="5" cy="12" r="1.5" />
-        <circle cx="12" cy="12" r="1.5" />
-        <circle cx="19" cy="12" r="1.5" />
+        <circle cx="12" cy="8" r="3" />
+        <path d="M5 21a7 7 0 0 1 14 0" />
       </svg>
     ),
   },
