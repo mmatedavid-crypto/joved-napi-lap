@@ -59,6 +59,43 @@ async function readCache<T>(cacheKey: string): Promise<T | null> {
   }
 }
 
+async function readLatestCachedArticle(opts: {
+  period: HoroscopePeriodHU;
+  sign: keyof typeof SIGN_SLUGS;
+  signSlug: string;
+  dateKey: string;
+}): Promise<HoroscopeNewsArticle | null> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  try {
+    const { data } = await supabaseAdmin
+      .from("api_cache")
+      .select("response_payload, created_at")
+      .like("cache_key", `horo-news:${NEWS_TRANSLATION_VERSION}:${opts.period}:${opts.sign}:%`)
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    const rows = Array.isArray(data) ? data : [];
+    for (const row of rows) {
+      const article = row.response_payload as HoroscopeNewsArticle | null;
+      if (!article || hasTechnicalFallbackText(article)) continue;
+      if (article.period !== opts.period || article.sign !== opts.sign) continue;
+      if (!article.sections?.length || !article.lead || !article.title) continue;
+      return {
+        ...article,
+        signSlug: opts.signSlug,
+        dateKey: opts.dateKey,
+        sourceCached: true,
+        translationCached: true,
+        fallbackUsed: true,
+        title: `${PERIOD_LABEL[opts.period]} ${SIGN_HU[opts.sign]} jegyűeknek`,
+      };
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 function hasTechnicalFallbackText(value: unknown): boolean {
   if (typeof value === "string") return TECHNICAL_FALLBACK_RE.test(value);
   if (Array.isArray(value)) return value.some((item) => hasTechnicalFallbackText(item));
@@ -438,6 +475,13 @@ export async function getHoroscopeNewsArticle(opts: {
   });
 
   if (!roxy.ok || !roxy.data) {
+    const stale = await readLatestCachedArticle({
+      period: opts.period,
+      sign,
+      signSlug: opts.signSlug,
+      dateKey,
+    });
+    if (stale) return stale;
     return localFallbackArticle({
       period: opts.period,
       sign,
@@ -494,6 +538,13 @@ export async function getHoroscopeNewsArticle(opts: {
       : null;
 
   if (!article) {
+    const stale = await readLatestCachedArticle({
+      period: opts.period,
+      sign,
+      signSlug: opts.signSlug,
+      dateKey,
+    });
+    if (stale) return stale;
     return localFallbackArticle({
       period: opts.period,
       sign,
