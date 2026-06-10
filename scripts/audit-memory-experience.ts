@@ -128,6 +128,7 @@ const checks: Check[] = [
     file: "src/components/GuestMemoryInsightPanel.tsx",
     includes: [
       "getGuestReadingContext",
+      "setGuestPersonalizationEnabled",
       "context.memories.length < 2",
       "Ismétlődő mintád",
       "insights.recurringQuestion",
@@ -136,6 +137,9 @@ const checks: Check[] = [
       "Csak ebben a böngészőben tárolt",
       "clearGuestPersonalization",
       "Helyi minta törlése",
+      "Személyesítés kikapcsolása",
+      "Új vendégmintát nem mentünk",
+      "adatkezelési oldalon",
     ],
   },
   {

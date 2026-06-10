@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   clearGuestPersonalization,
   getGuestReadingContext,
+  setGuestPersonalizationEnabled,
   type GuestReadingContext,
   type GuestReadingType,
 } from "@/lib/guestReadingMemory";
@@ -16,13 +17,27 @@ type Props = {
 export function GuestMemoryInsightPanel({ readingType, topic, situation, className = "" }: Props) {
   const [context, setContext] = useState<GuestReadingContext | null>(null);
   const [cleared, setCleared] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     setContext(getGuestReadingContext({ readingType, topic, situation, limit: 8 }));
     setCleared(false);
+    setDisabled(false);
   }, [readingType, situation, topic]);
 
-  if (cleared || !context || context.memories.length < 2) return null;
+  if (cleared || disabled) {
+    return (
+      <div
+        className={`rounded-md border border-gold/15 bg-[oklch(0.78_0.10_80/0.045)] px-4 py-3 text-sm leading-relaxed text-ivory/62 ${className}`}
+      >
+        {disabled
+          ? "Kikapcsoltuk a helyi személyesítést ebben a böngészőben. Új vendégmintát nem mentünk, amíg vissza nem kapcsolod az adatkezelési oldalon."
+          : "Töröltük a helyi olvasati mintát ebből a böngészőből."}
+      </div>
+    );
+  }
+
+  if (!context || context.memories.length < 2) return null;
 
   const { insights } = context;
   const lines = [
@@ -36,6 +51,11 @@ export function GuestMemoryInsightPanel({ readingType, topic, situation, classNa
   function clear() {
     clearGuestPersonalization();
     setCleared(true);
+  }
+
+  function disable() {
+    setGuestPersonalizationEnabled(false);
+    setDisabled(true);
   }
 
   return (
@@ -54,6 +74,9 @@ export function GuestMemoryInsightPanel({ readingType, topic, situation, classNa
         </span>
         <button type="button" onClick={clear} className="text-ivory/55 hover:text-gold">
           Helyi minta törlése
+        </button>
+        <button type="button" onClick={disable} className="text-ivory/55 hover:text-gold">
+          Személyesítés kikapcsolása
         </button>
       </div>
     </div>
