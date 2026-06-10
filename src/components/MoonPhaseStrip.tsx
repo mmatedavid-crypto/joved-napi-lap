@@ -24,7 +24,7 @@ function phaseGlyph(name: string | undefined): string {
  * Diszkrét csík a főoldalon: hold-fázis + jegy + egy mondat.
  * Roxy /astrology/moon-phase/current → magyar fordító réteg, 6h cache.
  */
-export function MoonPhaseStrip() {
+export function MoonPhaseStrip({ variant = "full" }: { variant?: "full" | "header" } = {}) {
   const [reading, setReading] = useState<MoonPhaseHU | null>(null);
   const [loaded, setLoaded] = useState(false);
   const call = useServerFn(aiMoonPhaseHU);
@@ -45,6 +45,24 @@ export function MoonPhaseStrip() {
   }, [call]);
 
   if (!loaded || !reading) return null;
+
+  if (variant === "header") {
+    return (
+      <div
+        className="flex items-center gap-2 rounded-full border border-[oklch(0.78_0.10_80/0.18)] bg-[oklch(0.12_0.02_290/0.4)] px-3 py-1 text-xs text-ivory/80"
+        title={`${reading.phaseName}${reading.sign ? " · " + reading.sign : ""}${reading.illumination ? " · " + reading.illumination : ""}`}
+        aria-label={`Mai hold: ${reading.phaseName}${reading.sign ? ", " + reading.sign : ""}`}
+      >
+        <span aria-hidden className="text-base leading-none">
+          {phaseGlyph(reading.phaseName)}
+        </span>
+        <span className="hidden sm:inline truncate max-w-[14rem] font-editorial">
+          {reading.phaseName}
+          {reading.sign ? <span className="text-ivory/55"> · {reading.sign}</span> : null}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-3 md:px-6 mt-2">
