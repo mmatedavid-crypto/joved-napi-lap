@@ -1,54 +1,28 @@
 import { useState } from "react";
 import type { TarotCard as TCard } from "@/data/cards";
 
-import bolond from "@/assets/tarot/bolond.jpg";
-import mago from "@/assets/tarot/mago.jpg";
-import fopapno from "@/assets/tarot/fopapno.jpg";
-import csaszarno from "@/assets/tarot/csaszarno.jpg";
-import csaszar from "@/assets/tarot/csaszar.jpg";
-import fopap from "@/assets/tarot/fopap.jpg";
-import szeretok from "@/assets/tarot/szeretok.jpg";
-import diadalszeker from "@/assets/tarot/diadalszeker.jpg";
-import ero from "@/assets/tarot/ero.jpg";
-import remete from "@/assets/tarot/remete.jpg";
-import kerek from "@/assets/tarot/kerek.jpg";
-import igazsag from "@/assets/tarot/igazsag.jpg";
-import akasztott from "@/assets/tarot/akasztott.jpg";
-import halal from "@/assets/tarot/halal.jpg";
-import mertekletesseg from "@/assets/tarot/mertekletesseg.jpg";
-import ordog from "@/assets/tarot/ordog.jpg";
-import torony from "@/assets/tarot/torony.jpg";
-import csillag from "@/assets/tarot/csillag.jpg";
-import hold from "@/assets/tarot/hold.jpg";
-import nap from "@/assets/tarot/nap.jpg";
-import itelet from "@/assets/tarot/itelet.jpg";
-import vilag from "@/assets/tarot/vilag.jpg";
 import backArt from "@/assets/tarot/back.jpg";
 
-export const CARD_ART: Record<string, string> = {
-  bolond,
-  mago,
-  fopapno,
-  csaszarno,
-  csaszar,
-  fopap,
-  szeretok,
-  diadalszeker,
-  ero,
-  remete,
-  kerek,
-  igazsag,
-  akasztott,
-  halal,
-  mertekletesseg,
-  ordog,
-  torony,
-  csillag,
-  hold,
-  nap,
-  itelet,
-  vilag,
-};
+// Auto-load every tarot face image present in src/assets/tarot/ (jpg or png),
+// keyed by filename without extension. Missing cards fall back to the back art.
+// This lets us add new minor-arcana art files without touching this component.
+const ART_MODULES = import.meta.glob("@/assets/tarot/*.{jpg,png}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+export const CARD_ART: Record<string, string> = (() => {
+  const out: Record<string, string> = {};
+  for (const [path, url] of Object.entries(ART_MODULES)) {
+    const m = path.match(/\/([^/]+)\.(jpg|png)$/);
+    if (!m) continue;
+    const name = m[1];
+    if (name === "back") continue;
+    out[name] = url;
+  }
+  return out;
+})();
 
 export const CARD_BACK_ART = backArt;
 
