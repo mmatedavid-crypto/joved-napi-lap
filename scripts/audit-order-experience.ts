@@ -111,6 +111,21 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "thank-you page keeps polling when the order row is initially missing",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "orderLookupPending",
+      "setOrderLookupPending(true)",
+      "if (!r.order)",
+      "setTimeout(tick, 2500)",
+      "Fizetés egyeztetése",
+      "keressük hozzá a rendelési sort",
+      "gyorsabban küldött vissza",
+      "a rendelés nem vész el",
+      "frissíts rá később erre a teljes linkre",
+    ],
+  },
+  {
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],

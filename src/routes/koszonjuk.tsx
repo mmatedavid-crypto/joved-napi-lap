@@ -58,6 +58,7 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [pollingPaused, setPollingPaused] = useState(false);
+  const [orderLookupPending, setOrderLookupPending] = useState(false);
 
   useEffect(() => {
     if (!session_id) {
@@ -75,8 +76,17 @@ function Page() {
         if (stop) return;
         setOrder(r.order);
         setPollingPaused(false);
+        setOrderLookupPending(false);
         setLoading(false);
-        if (!r.order) return;
+        if (!r.order) {
+          setOrderLookupPending(true);
+          if (attempts < MAX_ATTEMPTS) {
+            setTimeout(tick, 2500);
+          } else {
+            setPollingPaused(true);
+          }
+          return;
+        }
         if (!triggered && (r.order.status === "processing" || r.order.status === "paid")) {
           triggered = true;
           runProcess({ data: { sessionId: session_id! } }).catch(() => {});
@@ -133,6 +143,26 @@ function Page() {
           <Section eyebrow="Kapcsolódási hiba">
             Nem a fizetéseddel van baj; csak az állapotlekérés akadt meg. Frissítsd az oldalt pár
             perc múlva, vagy írj nekünk a vásárlási email címedről.
+            <SupportContact className="mt-4" />
+          </Section>
+        )}
+        {orderLookupPending && !order && !err && (
+          <Section eyebrow="Fizetés egyeztetése">
+            <p>
+              A fizetés utáni visszairányítás megérkezett, most keressük hozzá a rendelési sort. Ez
+              néha pár frissítési körrel később jelenik meg, főleg akkor, ha a fizetési szolgáltató
+              gyorsabban küldött vissza, mint ahogy a rendelésállapot beért.
+            </p>
+            <p className="mt-3 text-sm text-ivory/60">
+              Az oldalt nyugodtan hagyd nyitva. Ha sikeres volt a fizetés, a rendelés nem vész el;
+              amint megtaláljuk, itt folytatjuk az olvasat elkészítésével.
+            </p>
+            {pollingPaused && (
+              <p className="mt-3 text-sm text-ivory/55">
+                Ha pár perc után sem változik, frissíts rá később erre a teljes linkre, vagy írj
+                nekünk a vásárlási email címedről.
+              </p>
+            )}
             <SupportContact className="mt-4" />
           </Section>
         )}
