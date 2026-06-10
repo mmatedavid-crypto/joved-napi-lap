@@ -160,9 +160,26 @@ function Page() {
           </p>
           {memoriesLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
           {!memoriesLoading && memories.length === 0 && (
-            <p className="text-ivory/70">
-              Ahogy használod az oldalt, itt finoman kirajzolódnak a visszatérő kérdéseid és témáid.
-            </p>
+            <div className="space-y-4">
+              <p className="text-ivory/70">
+                Ahogy használod az oldalt, itt finoman kirajzolódnak a visszatérő kérdéseid és
+                témáid.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <MemoryInsightCard
+                  eyebrow="Később itt látod"
+                  text="milyen témához térsz vissza újra: kapcsolat, döntés, álom, sorsszám vagy napi irány"
+                />
+                <MemoryInsightCard
+                  eyebrow="Miben segít?"
+                  text="a következő olvasat nem idegenként indul, hanem óvatosan figyel a korábbi kérdéseid ívére"
+                />
+              </div>
+              <p className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-4 py-3 text-xs leading-relaxed text-ivory/50">
+                Nem készítünk belőle személyiségprofilt, biztos jövőállítást vagy szakmai
+                minősítést. A memória törölhető, a rendelési előzményeid pedig külön megmaradnak.
+              </p>
+            </div>
           )}
           {memoryCleared && (
             <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm text-ivory/68">
