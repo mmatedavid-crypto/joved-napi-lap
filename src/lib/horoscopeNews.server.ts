@@ -43,6 +43,18 @@ function cacheDateKey(period: HoroscopePeriodHU, requested?: string): string {
   return datedKey(period, requested ?? todayKey());
 }
 
+function articlePublicationDate(period: HoroscopePeriodHU, dateKey: string): string {
+  const dayKey = period === "havi" ? `${dateKey}-01` : dateKey;
+  return `${dayKey}T06:00:00+00:00`;
+}
+
+function isNewsFresh(publicationDate: string, now = new Date()): boolean {
+  const published = new Date(publicationDate).getTime();
+  if (!Number.isFinite(published)) return false;
+  const ageMs = now.getTime() - published;
+  return ageMs >= 0 && ageMs <= 48 * 60 * 60 * 1000;
+}
+
 async function readCache<T>(cacheKey: string): Promise<T | null> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   try {
@@ -126,6 +138,42 @@ async function writeCache(
     );
   } catch {
     /* cache write must not break public pages */
+  }
+}
+
+export async function getFreshPublishedHoroscopeNewsItems(): Promise<
+  Array<{
+    article: HoroscopeNewsArticle;
+    publicationDate: string;
+  }>
+> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  try {
+    const { data } = await supabaseAdmin
+      .from("api_cache")
+      .select("response_payload, created_at")
+      .like("cache_key", `horo-news:${NEWS_TRANSLATION_VERSION}:%`)
+      .order("created_at", { ascending: false })
+      .limit(80);
+
+    const seen = new Set<string>();
+    const items: Array<{ article: HoroscopeNewsArticle; publicationDate: string }> = [];
+    const rows = Array.isArray(data) ? data : [];
+    for (const row of rows) {
+      const article = row.response_payload as HoroscopeNewsArticle | null;
+      if (!article || article.fallbackUsed || hasTechnicalFallbackText(article)) continue;
+      if (!article.period || !article.sign || !article.signSlug || !article.dateKey) continue;
+      if (!article.title || !article.lead || !article.sections?.length) continue;
+      const identity = `${article.period}:${article.sign}:${article.dateKey}`;
+      if (seen.has(identity)) continue;
+      const publicationDate = articlePublicationDate(article.period, article.dateKey);
+      if (!isNewsFresh(publicationDate)) continue;
+      seen.add(identity);
+      items.push({ article, publicationDate });
+    }
+    return items;
+  } catch {
+    return [];
   }
 }
 

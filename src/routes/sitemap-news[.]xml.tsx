@@ -1,10 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  PERIOD_LABEL,
-  allHoroscopeArticlePaths,
-  horoscopeSeoTitle,
-  type HoroscopePeriodHU,
-} from "@/lib/horoscopeNews";
+import { horoscopeSeoTitle } from "@/lib/horoscopeNews";
 
 function xmlEscape(value: string): string {
   return value
@@ -22,56 +17,27 @@ function originFromRequest(request: Request): string {
   return `${proto}://${host}`;
 }
 
-function publicationDateFor(period: HoroscopePeriodHU): string {
-  const now = new Date();
-  if (period === "havi") {
-    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 6, 0, 0))
-      .toISOString()
-      .replace(".000Z", "+00:00");
-  }
-  if (period === "heti") {
-    const d = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 6, 0, 0),
-    );
-    const day = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() - day + 1);
-    return d.toISOString().replace(".000Z", "+00:00");
-  }
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 6, 0, 0))
-    .toISOString()
-    .replace(".000Z", "+00:00");
-}
-
-function isNewsFresh(publicationDate: string, now = new Date()): boolean {
-  const published = new Date(publicationDate).getTime();
-  if (!Number.isFinite(published)) return false;
-  const ageMs = now.getTime() - published;
-  return ageMs >= 0 && ageMs <= 48 * 60 * 60 * 1000;
-}
-
 export const Route = createFileRoute("/sitemap-news.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const origin = originFromRequest(request);
-        const generatedAt = new Date();
-        const urls = allHoroscopeArticlePaths()
-          .map((u) => ({ ...u, publicationDate: publicationDateFor(u.period) }))
-          .filter((u) => isNewsFresh(u.publicationDate, generatedAt));
+        const { getFreshPublishedHoroscopeNewsItems } = await import("@/lib/horoscopeNews.server");
+        const urls = await getFreshPublishedHoroscopeNewsItems();
         const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 ${urls
   .map(
     (u) => `  <url>
-    <loc>${xmlEscape(`${origin}${u.path}`)}</loc>
+    <loc>${xmlEscape(`${origin}/horoszkop/${u.article.period}/${u.article.signSlug}`)}</loc>
     <news:news>
       <news:publication>
         <news:name>Jövőd.hu</news:name>
         <news:language>hu</news:language>
       </news:publication>
       <news:publication_date>${u.publicationDate}</news:publication_date>
-      <news:title>${xmlEscape(horoscopeSeoTitle(u.period, u.signName))}</news:title>
+      <news:title>${xmlEscape(horoscopeSeoTitle(u.article.period, u.article.signName))}</news:title>
     </news:news>
   </url>`,
   )
