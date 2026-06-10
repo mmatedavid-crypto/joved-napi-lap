@@ -6,14 +6,26 @@ type ReadingBlock = {
   text: string;
 };
 
-export function PaidReadingBody({ body }: { body: string }) {
+export function PaidReadingBody({
+  body,
+  title,
+  productName,
+  orderReference,
+}: {
+  body: string;
+  title?: string;
+  productName?: string;
+  orderReference?: string;
+}) {
   const blocks = parsePaidReadingBody(body);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [downloadState, setDownloadState] = useState<"idle" | "ready" | "failed">("idle");
 
   async function copyReading() {
     try {
-      await navigator.clipboard.writeText(body.trim());
+      await navigator.clipboard.writeText(
+        formatDownloadedReading(body, { title, productName, orderReference }).trim(),
+      );
       setCopyState("copied");
     } catch {
       setCopyState("failed");
@@ -24,9 +36,12 @@ export function PaidReadingBody({ body }: { body: string }) {
 
   function downloadReading() {
     try {
-      const file = new Blob([formatDownloadedReading(body)], {
-        type: "text/plain;charset=utf-8",
-      });
+      const file = new Blob(
+        [formatDownloadedReading(body, { title, productName, orderReference })],
+        {
+          type: "text/plain;charset=utf-8",
+        },
+      );
       const url = URL.createObjectURL(file);
       const link = document.createElement("a");
       link.href = url;
@@ -46,9 +61,16 @@ export function PaidReadingBody({ body }: { body: string }) {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gold/10 pb-3">
-        <p className="text-xs leading-relaxed text-ivory/45">
-          Az olvasatot később is visszanézheted; itt gyorsan kimásolhatod vagy letöltheted magadnak.
-        </p>
+        <div className="space-y-1">
+          <p className="text-xs leading-relaxed text-ivory/45">
+            Az olvasatot később is visszanézheted; itt gyorsan kimásolhatod vagy letöltheted
+            magadnak.
+          </p>
+          <p className="text-[11px] leading-relaxed text-ivory/38">
+            Mentéskor a fájl tartalmazza a címet
+            {orderReference ? ` és a rendelésazonosítót (${orderReference})` : ""}.
+          </p>
+        </div>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
@@ -112,22 +134,30 @@ function parsePaidReadingBody(body: string): ReadingBlock[] {
     });
 }
 
-function formatDownloadedReading(body: string): string {
+function formatDownloadedReading(
+  body: string,
+  meta: { title?: string; productName?: string; orderReference?: string } = {},
+): string {
   const date = new Intl.DateTimeFormat("hu-HU", {
     year: "numeric",
     month: "long",
     day: "numeric",
   }).format(new Date());
+  const title = meta.title || meta.productName || "Személyes olvasat";
   return [
     "Jövőd.hu",
-    "Személyes olvasat",
+    title,
+    meta.productName && meta.productName !== title ? `Termék: ${meta.productName}` : null,
+    meta.orderReference ? `Rendelés: ${meta.orderReference}` : null,
     `Letöltve: ${date}`,
     "",
     body.trim(),
     "",
     "Ez az olvasat szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
 }
 
 function isLikelyHeading(value: string): boolean {

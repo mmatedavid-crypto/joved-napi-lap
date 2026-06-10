@@ -207,7 +207,12 @@ function Page() {
                 return (
                   <Section eyebrow="A te olvasatod" title={payload?.title ?? undefined}>
                     {payload && typeof payload.body === "string" ? (
-                      <PaidReadingBody body={payload.body} />
+                      <PaidReadingBody
+                        body={payload.body}
+                        title={payload.title}
+                        productName={order.product_name}
+                        orderReference={shortOrderId(order.id)}
+                      />
                     ) : (
                       <>
                         <p>
