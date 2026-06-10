@@ -92,6 +92,20 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "thank-you page reassures when long polling stops",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "pollingPaused",
+      "MAX_ATTEMPTS",
+      "setPollingPaused(true)",
+      "OrderPollingPaused",
+      "Hosszabb ellenőrzés alatt",
+      "a rendelésed nem tűnt el",
+      "Frissíts rá később erre az oldalra",
+      "rövid rendelésazonosítót",
+    ],
+  },
+  {
     name: "profile prefers stored source route",
     file: "src/routes/profil.tsx",
     includes: ["source_route?: string | null", "o.source_route ?? PRODUCTS_BY_SLUG"],

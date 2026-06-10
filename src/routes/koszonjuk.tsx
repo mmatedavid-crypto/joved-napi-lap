@@ -57,6 +57,7 @@ function Page() {
   const [order, setOrder] = useState<OrderView | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [pollingPaused, setPollingPaused] = useState(false);
 
   useEffect(() => {
     if (!session_id) {
@@ -73,6 +74,7 @@ function Page() {
         const r = await fetchOrder({ data: { sessionId: session_id! } });
         if (stop) return;
         setOrder(r.order);
+        setPollingPaused(false);
         setLoading(false);
         if (!r.order) return;
         if (!triggered && (r.order.status === "processing" || r.order.status === "paid")) {
@@ -86,6 +88,13 @@ function Page() {
             r.order.status === "pending_payment")
         ) {
           setTimeout(tick, 2500);
+        } else if (
+          attempts >= MAX_ATTEMPTS &&
+          (r.order.status === "processing" ||
+            r.order.status === "paid" ||
+            r.order.status === "pending_payment")
+        ) {
+          setPollingPaused(true);
         }
       } catch (e: unknown) {
         setErr(safeOrderStatusErrorMessage(e));
@@ -187,6 +196,7 @@ function Page() {
                 <p>{orderPreparationLead(order)}</p>
                 <p className="mt-3 text-sm text-ivory/60">{orderPreparationDetail(order)}</p>
                 <OrderPreparationTimeline order={order} />
+                {pollingPaused && <OrderPollingPaused order={order} />}
                 <p className="mt-3 text-sm text-ivory/60">
                   Ha vendégként vásároltál, ezt az oldalt érdemes megtartanod. Ha bejelentkeztél, a
                   profilodban is eléred az elkészült olvasatot.
@@ -299,6 +309,25 @@ function OrderPreparationTimeline({ order }: { order: OrderView }) {
           </li>
         ))}
       </ol>
+    </div>
+  );
+}
+
+function OrderPollingPaused({ order }: { order: OrderView }) {
+  return (
+    <div className="mt-4 rounded-md border border-gold/15 bg-[oklch(0.13_0.03_292/0.68)] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">
+        Hosszabb ellenőrzés alatt
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/64">
+        Az automatikus frissítés most hosszabb várakozás után megállt, de a rendelésed nem tűnt el.
+        Ezt a biztonságos linket érdemes megtartanod; ha az olvasat elkészül, itt, emailben és
+        bejelentkezett vásárlásnál a profilodban is elérhető lesz.
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/55">
+        Frissíts rá később erre az oldalra. Ha sürgős, írj nekünk a vásárlási email címedről, és add
+        meg a rövid rendelésazonosítót: {shortOrderId(order.id) ?? "a köszönőoldalon látható kód"}.
+      </p>
     </div>
   );
 }
