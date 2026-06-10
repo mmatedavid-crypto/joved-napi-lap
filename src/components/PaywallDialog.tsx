@@ -90,7 +90,7 @@ export function PaywallDialog({
         }
       }}
     >
-      <DialogContent className="max-w-lg bg-[oklch(0.12_0.03_290)] border-[oklch(0.78_0.10_80/0.25)] text-ivory">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-[oklch(0.12_0.03_290)] border-[oklch(0.78_0.10_80/0.25)] text-ivory">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-ivory">{product.name}</DialogTitle>
           <DialogDescription className="text-ivory/65">{product.short}</DialogDescription>
