@@ -524,6 +524,7 @@ function summarizeInputPayload(
   add("Kérdés", payload.question ?? payload.q);
   add("Helyzet", payload.sit ?? payload.status ?? payload.category ?? payload.cat, 90);
   add("Téma", payload.title ?? payload.situation, 100);
+  add("Lap", payload.cardName, 80);
   addSign(payload.sign);
   addNumber("Szám", payload.number);
   addNumber("Gyökérszám", payload.root);

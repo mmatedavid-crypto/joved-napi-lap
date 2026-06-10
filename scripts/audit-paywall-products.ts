@@ -93,6 +93,7 @@ for (const needle of [
   'addPair("Nevek", payload.myName ?? payload.fullNameA',
   'add("Születési dátum", payload.dob ?? payload.birthDate',
   'addPair("Dátumok", payload.myDob ?? payload.birthDateA',
+  'add("Lap", payload.cardName',
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
 }
