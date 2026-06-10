@@ -94,9 +94,10 @@ export async function generatePaidOrderReading(opts: {
   inputPayload: unknown;
 }): Promise<PaidReadingPayload> {
   const draft = composePaidOrderReading(opts.productSlug, opts.productName, opts.inputPayload);
+  const { openaiModel, lovableModel } = resolvePremiumModels(opts.productSlug);
+  const generatedAt = new Date().toISOString();
   try {
     const { aiJSON } = await import("./ai.server");
-    const { openaiModel, lovableModel } = resolvePremiumModels(opts.productSlug);
     const deep = isDeepPaidProduct(opts.productSlug);
     const ai = await aiJSON<PaidReadingPayload>({
       system: [
@@ -131,7 +132,19 @@ export async function generatePaidOrderReading(opts: {
       readingType: `paid:${opts.productSlug}`,
     });
     if (ai.ok && ai.data) {
-      if (isGoodPaidReading(ai.data, opts.productSlug)) return ai.data;
+      if (isGoodPaidReading(ai.data, opts.productSlug)) {
+        return {
+          ...ai.data,
+          generation: {
+            source: "ai",
+            provider: ai.meta?.provider,
+            model: ai.meta?.model ?? openaiModel,
+            latencyMs: ai.meta?.latencyMs,
+            fallbackUsed: ai.meta?.fallbackUsed ?? false,
+            generatedAt,
+          },
+        };
+      }
       const quality = inspectPaidReadingQuality(ai.data, opts.productSlug);
       console.warn("[paid_reading_quality_rejected]", {
         productSlug: opts.productSlug,
@@ -140,9 +153,73 @@ export async function generatePaidOrderReading(opts: {
         sections: quality.sections,
         issues: quality.issues,
       });
+      return withLocalPremiumDraftMeta(draft, {
+        generatedAt,
+        qualityRejected: true,
+        qualityIssues: quality.issues,
+        attemptedModel: ai.meta?.model ?? openaiModel,
+        latencyMs: ai.meta?.latencyMs,
+      });
     }
+    return withLocalPremiumDraftMeta(draft, {
+      generatedAt,
+      qualityRejected: false,
+      qualityIssues: [sanitizeGenerationIssue(ai.error ?? "ai_unavailable")],
+      attemptedModel: ai.meta?.model ?? openaiModel,
+      latencyMs: ai.meta?.latencyMs,
+    });
   } catch {
     // The local premium draft is the safe fallback.
+    return withLocalPremiumDraftMeta(draft, {
+      generatedAt,
+      qualityRejected: false,
+      qualityIssues: ["ai_exception"],
+      attemptedModel: openaiModel,
+    });
   }
-  return draft;
+  return withLocalPremiumDraftMeta(draft, {
+    generatedAt,
+    qualityRejected: false,
+    qualityIssues: ["unknown_paid_generation_fallback"],
+    attemptedModel: openaiModel,
+  });
+}
+
+function withLocalPremiumDraftMeta(
+  draft: PaidReadingPayload,
+  opts: {
+    generatedAt: string;
+    qualityRejected: boolean;
+    qualityIssues: string[];
+    attemptedModel: string;
+    latencyMs?: number;
+  },
+): PaidReadingPayload {
+  return {
+    ...draft,
+    generation: {
+      source: "local_premium_draft",
+      model: opts.attemptedModel,
+      latencyMs: opts.latencyMs,
+      fallbackUsed: true,
+      qualityRejected: opts.qualityRejected,
+      qualityIssues: opts.qualityIssues.map(sanitizeGenerationIssue),
+      generatedAt: opts.generatedAt,
+    },
+  };
+}
+
+function sanitizeGenerationIssue(issue: string): string {
+  if (/^http_\d{3}$/.test(issue)) return issue;
+  if (
+    /^(parse_failed|invalid_json|network|ai_unavailable|ai_exception|no_ai_provider_available)$/.test(
+      issue,
+    )
+  ) {
+    return issue;
+  }
+  if (/^(too_short|too_few_sections|forbidden_text|missing_safety_frame)/.test(issue)) {
+    return issue.slice(0, 120);
+  }
+  return "paid_generation_fallback";
 }

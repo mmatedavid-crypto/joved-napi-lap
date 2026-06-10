@@ -20,6 +20,16 @@ export type PaidReadingPayload = {
   title: string;
   body: string;
   reading?: QualityReading;
+  generation?: {
+    source: "ai" | "local_premium_draft";
+    provider?: string;
+    model?: string;
+    latencyMs?: number;
+    fallbackUsed: boolean;
+    qualityRejected?: boolean;
+    qualityIssues?: string[];
+    generatedAt: string;
+  };
 };
 
 function text(value: unknown): string {

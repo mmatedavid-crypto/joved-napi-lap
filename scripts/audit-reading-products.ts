@@ -292,8 +292,32 @@ if (
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
 }
+if (
+  !paidServer.includes("generation: {") ||
+  !paidServer.includes('source: "ai"') ||
+  !paidServer.includes('source: "local_premium_draft"') ||
+  !paidServer.includes("provider: ai.meta?.provider") ||
+  !paidServer.includes("model: ai.meta?.model ?? openaiModel") ||
+  !paidServer.includes("latencyMs: ai.meta?.latencyMs") ||
+  !paidServer.includes("qualityRejected: true") ||
+  !paidServer.includes("qualityIssues: quality.issues") ||
+  !paidServer.includes("withLocalPremiumDraftMeta") ||
+  !paidServer.includes("function sanitizeGenerationIssue") ||
+  !paidServer.includes('"paid_generation_fallback"')
+) {
+  policyFailures.push("paid generation must persist internal source/model/fallback metadata");
+}
 if (!aiServer.includes("allowLovableFallback && primaryModel !== LOVABLE_FALLBACK_MODEL")) {
   policyFailures.push("shared AI helper must make gateway fallback opt-in/controllable");
+}
+if (
+  !aiServer.includes("export type AiResultMeta") ||
+  !aiServer.includes("meta?: AiResultMeta") ||
+  !aiServer.includes("function resultMeta") ||
+  !aiServer.includes('provider: "openai" | "lovable"') ||
+  !aiServer.includes("latencyMs: Date.now() - opts.started")
+) {
+  policyFailures.push("shared AI helper must return provider/model/latency metadata");
 }
 if (policyFailures.length) {
   console.error("\nFailed paid AI policy audit:");

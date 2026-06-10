@@ -9,7 +9,15 @@ const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.2";
 const LOVABLE_FALLBACK_MODEL = process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
 const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
 
-export type AiResult<T> = { ok: boolean; data: T | null; error?: string };
+export type AiResultMeta = {
+  provider?: "openai" | "lovable";
+  model?: string;
+  latencyMs: number;
+  fallbackUsed: boolean;
+  readingType?: string;
+};
+
+export type AiResult<T> = { ok: boolean; data: T | null; error?: string; meta?: AiResultMeta };
 
 export async function aiJSON<T>(opts: {
   system: string;
@@ -39,6 +47,13 @@ export async function aiJSON<T>(opts: {
       openaiAttempted = true;
       const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model: openaiModel });
       if (r.ok) {
+        const meta = resultMeta({
+          provider: "openai",
+          model: openaiModel,
+          started,
+          readingType: opts.readingType,
+          fallbackUsed: false,
+        });
         logAiCall({
           provider: "openai",
           model: openaiModel,
@@ -47,7 +62,7 @@ export async function aiJSON<T>(opts: {
           readingType: opts.readingType,
           fallbackUsed: false,
         });
-        return r;
+        return { ...r, meta };
       }
       logAiCall({
         provider: "openai",
@@ -68,15 +83,22 @@ export async function aiJSON<T>(opts: {
     const primaryModel = lovableModel;
     const r = await lovableJSON<T>({ ...opts, apiKey: lovableKey, model: primaryModel });
     if (r.ok) {
+      const meta = resultMeta({
+        provider: "lovable",
+        model: primaryModel,
+        started,
+        readingType: opts.readingType,
+        fallbackUsed: preference === "openai_first" && openaiAttempted,
+      });
       logAiCall({
         provider: "lovable",
         model: primaryModel,
         ok: true,
         started,
         readingType: opts.readingType,
-        fallbackUsed: false,
+        fallbackUsed: meta.fallbackUsed,
       });
-      return r;
+      return { ...r, meta };
     }
     lastError = r.error;
     // Ha az elsődleges gateway modell hibázik, bizonyos nem fizetős utaknál
@@ -88,6 +110,13 @@ export async function aiJSON<T>(opts: {
         model: LOVABLE_FALLBACK_MODEL,
       });
       if (r2.ok) {
+        const meta = resultMeta({
+          provider: "lovable",
+          model: LOVABLE_FALLBACK_MODEL,
+          started,
+          readingType: opts.readingType,
+          fallbackUsed: true,
+        });
         logAiCall({
           provider: "lovable",
           model: LOVABLE_FALLBACK_MODEL,
@@ -96,7 +125,7 @@ export async function aiJSON<T>(opts: {
           readingType: opts.readingType,
           fallbackUsed: true,
         });
-        return r2;
+        return { ...r2, meta };
       }
       lastError = r2.error;
     }
@@ -107,6 +136,13 @@ export async function aiJSON<T>(opts: {
   if (openaiKey && !openaiAttempted) {
     const model = openaiModel;
     const r = await openaiJSON<T>({ ...opts, apiKey: openaiKey, model });
+    const meta = resultMeta({
+      provider: "openai",
+      model,
+      started,
+      readingType: opts.readingType,
+      fallbackUsed: !r.ok,
+    });
     logAiCall({
       provider: "openai",
       model,
@@ -116,10 +152,19 @@ export async function aiJSON<T>(opts: {
       fallbackUsed: !r.ok,
     });
     if (!r.ok) lastError = r.error;
-    return r;
+    return { ...r, meta };
   }
 
-  return { ok: false, data: null, error: lastError ?? "no_ai_provider_available" };
+  return {
+    ok: false,
+    data: null,
+    error: lastError ?? "no_ai_provider_available",
+    meta: {
+      latencyMs: Date.now() - started,
+      fallbackUsed: true,
+      readingType: opts.readingType,
+    },
+  };
 }
 
 async function lovableJSON<T>(opts: {
@@ -264,4 +309,20 @@ function logAiCall(opts: {
     fallbackUsed: opts.fallbackUsed,
     ok: opts.ok,
   });
+}
+
+function resultMeta(opts: {
+  provider: "openai" | "lovable";
+  model: string;
+  started: number;
+  readingType?: string;
+  fallbackUsed: boolean;
+}): AiResultMeta {
+  return {
+    provider: opts.provider,
+    model: opts.model,
+    latencyMs: Date.now() - opts.started,
+    readingType: opts.readingType,
+    fallbackUsed: opts.fallbackUsed,
+  };
 }
