@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   clearGuestPersonalization,
@@ -72,6 +73,9 @@ export function GuestMemoryInsightPanel({ readingType, topic, situation, classNa
         <span className="text-ivory/42">
           Csak ebben a böngészőben tárolt, rövid olvasati mintákból.
         </span>
+        <Link to="/adatkezelesi-tajekoztato" className="text-ivory/55 hover:text-gold">
+          Beállítások
+        </Link>
         <button type="button" onClick={clear} className="text-ivory/55 hover:text-gold">
           Helyi minta törlése
         </button>

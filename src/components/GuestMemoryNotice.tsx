@@ -47,12 +47,23 @@ export function GuestMemoryNotice() {
     <div className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-xl rounded-md border border-gold/20 bg-[oklch(0.11_0.03_290/0.96)] px-4 py-3 shadow-2xl backdrop-blur md:bottom-5">
       {cleared ? (
         <div className="flex items-start justify-between gap-4">
-          <p className="text-sm leading-relaxed text-ivory/70">
-            {disabled
-              ? "Kikapcsoltuk a helyi személyesítést ebben a böngészőben. Új vendégmintát nem mentünk."
-              : "Töröltük a helyi olvasati mintát ebből a böngészőből."}
-          </p>
-          <button type="button" onClick={() => setCleared(false)} className="text-sm text-gold">
+          <div className="space-y-1">
+            <p className="text-sm leading-relaxed text-ivory/70">
+              {disabled
+                ? "Kikapcsoltuk a helyi személyesítést ebben a böngészőben. Új vendégmintát nem mentünk."
+                : "Töröltük a helyi olvasati mintát ebből a böngészőből."}
+            </p>
+            {disabled && (
+              <p className="text-xs leading-relaxed text-ivory/48">
+                Később az adatkezelési oldalon bármikor visszakapcsolhatod.
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setCleared(false)}
+            className="shrink-0 text-sm text-gold"
+          >
             Rendben
           </button>
         </div>
@@ -61,6 +72,10 @@ export function GuestMemoryNotice() {
           <p className="text-sm leading-relaxed text-ivory/72">
             Ebből a böngészőből emlékszünk néhány korábbi olvasati mintára, hogy ne minden alkalom
             idegenként induljon. Ezt finoman használjuk, és bármikor törölheted.
+          </p>
+          <p className="text-xs leading-relaxed text-ivory/48">
+            A minta helyben marad ebben a böngészőben; nem bankkártyaadat, nem diagnózis, és nem
+            készítünk belőle biztos jövőállítást.
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <button type="button" onClick={dismiss} className="text-gold hover:text-gold/80">
