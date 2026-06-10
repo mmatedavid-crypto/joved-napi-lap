@@ -189,7 +189,7 @@ function Page() {
         lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
-        {!cards && (
+        {!drawn && (
           <form onSubmit={draw} className="surface p-6 space-y-5">
             <div className="grid md:grid-cols-2 gap-4">
               <F id="date-my-name" label="Te (név, opcionális)">
