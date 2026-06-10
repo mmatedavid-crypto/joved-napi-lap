@@ -31,6 +31,7 @@ type PaidReadingQualityResult = {
   issues: string[];
   chars: number;
   sections: number;
+  contextHits: number;
 };
 
 function paidReadingMinimumLength(productSlug: string): number {
@@ -48,24 +49,108 @@ function hasPaidSafetyFrame(body: string): boolean {
   );
 }
 
+const CONTEXT_STOPWORDS = new Set([
+  "hogy",
+  "mert",
+  "vagy",
+  "amit",
+  "arra",
+  "ezt",
+  "most",
+  "ilyen",
+  "olvasat",
+  "szemelyes",
+  "személyes",
+  "kerdes",
+  "kérdés",
+  "helyzet",
+  "kapcsolat",
+  "elemzes",
+  "elemzés",
+]);
+
+function normalizeContextText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("hu-HU");
+}
+
+function collectContextStrings(value: unknown, depth = 0): string[] {
+  if (depth > 4 || value == null) return [];
+  if (typeof value === "string") return [value];
+  if (typeof value === "number") return [String(value)];
+  if (Array.isArray(value)) return value.flatMap((item) => collectContextStrings(item, depth + 1));
+  if (typeof value !== "object") return [];
+
+  const usefulKeys = new Set([
+    "question",
+    "situation",
+    "status",
+    "dream",
+    "symbol",
+    "number",
+    "sign",
+    "name",
+    "fullName",
+    "birthDate",
+    "birthDateA",
+    "birthDateB",
+    "articleLead",
+    "topic",
+  ]);
+
+  return Object.entries(value as Record<string, unknown>).flatMap(([key, nested]) =>
+    usefulKeys.has(key) ? collectContextStrings(nested, depth + 1) : [],
+  );
+}
+
+function inputContextAnchors(inputPayload: unknown): string[] {
+  const anchors = new Set<string>();
+  for (const raw of collectContextStrings(inputPayload)) {
+    const normalized = normalizeContextText(raw);
+    for (const match of normalized.matchAll(/[a-z0-9]{3,}/g)) {
+      const word = match[0];
+      if (word.length < 4 && !/^\d+$/.test(word)) continue;
+      if (CONTEXT_STOPWORDS.has(word)) continue;
+      anchors.add(word);
+    }
+  }
+  return [...anchors].slice(0, 16);
+}
+
+function countContextHits(body: string, anchors: string[]): number {
+  if (!anchors.length) return 0;
+  const normalizedBody = normalizeContextText(body);
+  return anchors.filter((anchor) => normalizedBody.includes(anchor)).length;
+}
+
 function inspectPaidReadingQuality(
   reading: PaidReadingPayload,
   productSlug: string,
+  inputPayload?: unknown,
 ): PaidReadingQualityResult {
   const body = `${reading.title}\n${reading.body}`;
   const sections = reading.body.split(/\n\n+/).filter((part) => part.trim().length > 0).length;
   const issues: string[] = [];
   const minLength = paidReadingMinimumLength(productSlug);
   const minSections = paidReadingMinimumSections(productSlug);
+  const anchors = inputContextAnchors(inputPayload);
+  const contextHits = countContextHits(body, anchors);
   if (body.length < minLength) issues.push(`too_short:${body.length}<${minLength}`);
   if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) issues.push("forbidden_text");
   if (sections < minSections) issues.push(`too_few_sections:${sections}<${minSections}`);
   if (!hasPaidSafetyFrame(reading.body)) issues.push("missing_safety_frame");
-  return { ok: issues.length === 0, issues, chars: body.length, sections };
+  if (anchors.length >= 2 && contextHits === 0) issues.push("missing_user_context");
+  return { ok: issues.length === 0, issues, chars: body.length, sections, contextHits };
 }
 
-function isGoodPaidReading(reading: PaidReadingPayload, productSlug: string): boolean {
-  return inspectPaidReadingQuality(reading, productSlug).ok;
+function isGoodPaidReading(
+  reading: PaidReadingPayload,
+  productSlug: string,
+  inputPayload?: unknown,
+): boolean {
+  return inspectPaidReadingQuality(reading, productSlug, inputPayload).ok;
 }
 
 function isDeepPaidProduct(productSlug: string): boolean {
@@ -132,7 +217,7 @@ export async function generatePaidOrderReading(opts: {
       readingType: `paid:${opts.productSlug}`,
     });
     if (ai.ok && ai.data) {
-      if (isGoodPaidReading(ai.data, opts.productSlug)) {
+      if (isGoodPaidReading(ai.data, opts.productSlug, opts.inputPayload)) {
         return {
           ...ai.data,
           generation: {
@@ -145,12 +230,13 @@ export async function generatePaidOrderReading(opts: {
           },
         };
       }
-      const quality = inspectPaidReadingQuality(ai.data, opts.productSlug);
+      const quality = inspectPaidReadingQuality(ai.data, opts.productSlug, opts.inputPayload);
       console.warn("[paid_reading_quality_rejected]", {
         productSlug: opts.productSlug,
         readingType: `paid:${opts.productSlug}`,
         chars: quality.chars,
         sections: quality.sections,
+        contextHits: quality.contextHits,
         issues: quality.issues,
       });
       return withLocalPremiumDraftMeta(draft, {
@@ -218,7 +304,11 @@ function sanitizeGenerationIssue(issue: string): string {
   ) {
     return issue;
   }
-  if (/^(too_short|too_few_sections|forbidden_text|missing_safety_frame)/.test(issue)) {
+  if (
+    /^(too_short|too_few_sections|forbidden_text|missing_safety_frame|missing_user_context)/.test(
+      issue,
+    )
+  ) {
     return issue.slice(0, 120);
   }
   return "paid_generation_fallback";

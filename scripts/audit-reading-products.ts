@@ -282,8 +282,12 @@ if (
   !paidServer.includes("paidReadingMinimumLength(productSlug)") ||
   !paidServer.includes("isDeepPaidProduct(productSlug) ? 1600 : 900") ||
   !paidServer.includes("paidReadingMinimumSections(productSlug)") ||
-  !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug)") ||
-  !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug)") ||
+  !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug, opts.inputPayload)") ||
+  !paidServer.includes("inputContextAnchors(inputPayload)") ||
+  !paidServer.includes("countContextHits(body, anchors)") ||
+  !paidServer.includes("missing_user_context") ||
+  !paidServer.includes("contextHits: quality.contextHits") ||
+  !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug, opts.inputPayload)") ||
   !paidServer.includes("[paid_reading_quality_rejected]") ||
   !paidServer.includes("issues: quality.issues") ||
   !paidServer.includes("hasPaidSafetyFrame") ||
