@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
 import { PRODUCTS_BY_SLUG, EXPRESS_HOURS } from "@/lib/products";
+import type { Database } from "@/integrations/supabase/types";
 
 async function getSupabase() {
   const mod = await import("@/integrations/supabase/client.server");
@@ -11,6 +12,7 @@ type CheckoutSessionLike = {
   id: string;
   payment_intent?: string | { id?: string } | null;
 };
+type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
 
 function redactStripeId(value: string | null | undefined): string {
   if (!value) return "***";
@@ -78,7 +80,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   }
 
   if (existing.status === "pending_payment") {
-    const paidUpdate = {
+    const paidUpdate: OrderUpdate = {
       status: newStatus,
       stripe_payment_intent: paymentIntent,
       paid_at: new Date().toISOString(),

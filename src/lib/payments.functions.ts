@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type Stripe from "stripe";
 import type { StripeEnv } from "@/lib/stripe.server";
+import type { Database } from "@/integrations/supabase/types";
 import {
   PRODUCTS_BY_SLUG,
   EXPRESS_PRICE_ID,
@@ -10,12 +11,13 @@ import {
 } from "@/lib/products";
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
+type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 type OrderForPaymentRecheck = {
-  id: string;
-  status: string;
-  category: string;
-  product_slug: string;
-  express: boolean;
+  id: OrderRow["id"];
+  status: OrderRow["status"];
+  category: OrderRow["category"];
+  product_slug: OrderRow["product_slug"];
+  express: OrderRow["express"];
   stripe_session_id?: string | null;
   stripe_environment?: string | null;
   stripe_payment_intent?: string | null;
@@ -29,6 +31,27 @@ const ORDER_SELECT_BASE =
   "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
+
+type ReconciliationFallbackFields = Pick<
+  OrderForPaymentRecheck,
+  "stripe_environment" | "stripe_payment_intent" | "payment_rechecked_at"
+>;
+
+function addMissingReconciliationFields<T extends Record<string, unknown>>(
+  order: T,
+): T & ReconciliationFallbackFields;
+function addMissingReconciliationFields(order: null): null;
+function addMissingReconciliationFields<T extends Record<string, unknown> | null>(
+  order: T,
+): (T & ReconciliationFallbackFields) | null {
+  if (!order) return null as never;
+  return {
+    ...order,
+    stripe_environment: null,
+    stripe_payment_intent: null,
+    payment_rechecked_at: null,
+  };
+}
 
 function redactStripeId(value: string | null | undefined): string {
   if (!value) return "***";
@@ -266,7 +289,10 @@ export const getOrderBySession = createServerFn({ method: "POST" })
         .maybeSingle();
       if (fallbackOrderResult.error) throw fallbackOrderResult.error;
 
-      const order = await reconcilePendingPayment(fallbackOrderResult.data, data.sessionId);
+      const order = await reconcilePendingPayment(
+        addMissingReconciliationFields(fallbackOrderResult.data),
+        data.sessionId,
+      );
       return { order };
     }
 
@@ -374,7 +400,9 @@ export const getMyOrders = createServerFn({ method: "GET" })
         .order("created_at", { ascending: false })
         .limit(50);
       if (fallbackOrderResult.error) throw fallbackOrderResult.error;
-      orders = fallbackOrderResult.data ?? [];
+      orders = (fallbackOrderResult.data ?? []).map((order) =>
+        addMissingReconciliationFields(order),
+      );
     } else {
       if (orderResultWithReconciliation.error) throw orderResultWithReconciliation.error;
       orders = orderResultWithReconciliation.data ?? [];
