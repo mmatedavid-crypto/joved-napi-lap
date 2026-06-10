@@ -840,6 +840,20 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           nev: c.name,
           kulcsszavak: c.keywords ?? [],
           forditott: c.reversed === true,
+          // Roxy angol forrás — ha jelen van, az AI ezt fordítsa/stilizálja,
+          // ne találjon ki új jelentést. Csak a területre releváns mezőket
+          // adjuk át, hogy a prompt rövid maradjon.
+          roxyAngolForras:
+            c.meaningEn || c.loveEn || c.careerEn || c.financesEn || c.healthEn || c.spiritualityEn
+              ? {
+                  altalanos: c.meaningEn ?? null,
+                  szerelem: c.loveEn ?? null,
+                  karrier: c.careerEn ?? null,
+                  penz: c.financesEn ?? null,
+                  egeszseg: c.healthEn ?? null,
+                  spiritualis: c.spiritualityEn ?? null,
+                }
+              : null,
         })),
         utmutato: isDailySingle
           ? "Mai lap: a lap kulcsszavaiból és nevéből indulj ki, a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe. Ne írj sablonos 'Ma lassíts' / 'Ma egy dolgot csinálj lassabban' típusú zárómondatot — minden lap mást üzen, a oneSentence legyen konkrét és a lap karakteréhez kötött."
@@ -848,6 +862,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           "Ha van konkrét kérdés vagy kategória, válaszolj rá érdemben. Ex / visszatérő történetnél érintsd, hogy visszatérés esetén mi mutat rövid fellángolást és mi mutat tartósabb szándékot, de ne mondd biztosra, hogy visszajön vagy marad. Randi/ismerkedés esetén a találkozó vagy ismerkedés tanítására és tempójára reflektálj.",
         forditottSzabaly:
           "Ha forditott=true, a lap blokkolt vagy túltolt oldalát olvasd. Nem kell kimondani, hogy fordított.",
+        roxyForrasSzabaly:
+          "Ha egy lapnál van 'roxyAngolForras', azt MINT FORDÍTANDÓ FORRÁST kezeld: a vonatkozó magyar mondatot ennek tartalmából képezd (kategória → karrier/szerelem/penz/egeszseg/spiritualis mező, ha van; ha nincs, az altalanos mező). Ne hagyd ki, és ne találj ki belőle új tényt. Ha nincs roxyAngolForras, a lap kulcsszavaiból és magyar mezőiből dolgozz.",
       };
 
       const requiredSections = sectionMap.map((s) => s.heading);
