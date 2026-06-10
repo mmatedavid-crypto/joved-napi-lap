@@ -66,6 +66,7 @@ export function PaywallDialog({
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
   const inputSummary = summarizeInputPayload(inputPayload);
+  const focusPreview = readingFocusPreview(product, inputPayload, inputSummary);
   const deliveryLabel =
     product.category === "instant"
       ? "azonnal, fizetés után"
@@ -108,6 +109,26 @@ export function PaywallDialog({
                 </p>
               )}
             </div>
+
+            {focusPreview.length > 0 && (
+              <div className="rounded-md border border-gold/20 bg-[oklch(0.78_0.10_80/0.07)] p-4">
+                <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                  Ebből indulunk ki
+                </div>
+                <ul className="mt-3 space-y-2 text-sm leading-relaxed text-ivory/70">
+                  {focusPreview.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/75" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
+                  Ez nem teljes olvasat-előzetes, hanem annak ellenőrzése, hogy a fizetett szöveg
+                  nem általános sablonból indul.
+                </p>
+              </div>
+            )}
 
             <div className="rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/15 p-4">
               <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Mit kapsz?</div>
@@ -475,6 +496,64 @@ function fulfillmentPromise(category: ProductDef["category"]): string[] {
     ];
   }
   return [...base, "az azonnali olvasatoknál pár perces feldolgozási késés még normális lehet"];
+}
+
+function readingFocusPreview(
+  product: ProductDef,
+  payload: Record<string, unknown> | undefined,
+  summary: Array<{ label: string; value: string }>,
+): string[] {
+  if (!payload || summary.length === 0) return [];
+  const get = (label: string) => summary.find((item) => item.label === label)?.value;
+  const lines: string[] = [];
+  const question = get("Kérdés");
+  const situation = get("Helyzet") ?? get("Téma");
+  const cards = get("Lapok") ?? get("Lap");
+  const sign = get("Jegy");
+  const dates = get("Dátumok") ?? get("Születési dátum");
+  const names = get("Nevek") ?? get("Név") ?? get("Megszólítás");
+  const dream = get("Álom");
+  const crystal = get("Kristály");
+  const number = get("Szám") ?? get("Gyökérszám") ?? get("Személyes év");
+
+  if (question) {
+    lines.push(`A fő fókusz a saját kérdésed lesz: „${question}”.`);
+  } else if (situation) {
+    lines.push(`A szöveg a megadott helyzetből indul ki: „${situation}”.`);
+  }
+
+  if (product.slug === "parkapcsolat_elemzes") {
+    lines.push(
+      situation
+        ? `A kapcsolat típusát külön kezeljük, ezért más hangot kap egy új ismeretség, egy ex vagy egy visszatérő történet.`
+        : "A kapcsolat mintáját nem csak százalékként, hanem kommunikáció, vonzalom és hosszabb táv szerint bontjuk ki.",
+    );
+  } else if (product.slug === "dontes_komplex") {
+    lines.push(
+      "A válasz nem dönt helyetted; azt keresi, mi húz, mi tart vissza, és hol tisztulhat a következő lépés.",
+    );
+  } else if (product.slug === "harom_lap_mely" || product.slug === "kelta_kereszt") {
+    lines.push("A lapokat nem külön-külön magyarázzuk, hanem egy összefüggő történetté rendezzük.");
+  } else if (product.slug === "horoszkop_szemelyre") {
+    lines.push("A jegyedet és a mostani témádat rövid, személyes napi iránnyá kapcsoljuk össze.");
+  } else if (product.slug === "szammisztika_eletut") {
+    lines.push(
+      "A születési adatokból és a névből nem általános jellemzést, hanem személyesebb életút-mintát készítünk.",
+    );
+  }
+
+  if (cards) lines.push(`A húzott lapok is bekerülnek a fókuszba: ${cards}.`);
+  if (dates) lines.push(`A számolási alap: ${dates}${names ? ` · ${names}` : ""}.`);
+  if (sign) lines.push(`A horoszkóp fókusza: ${sign}.`);
+  if (dream) lines.push(`Az álomszövegedből indulunk ki, nem előre írt álomszótár-szövegből.`);
+  if (crystal) lines.push(`A kristályt szimbolikus önismereti jelként kezeljük: ${crystal}.`);
+  if (number) lines.push(`A megadott számot személyesebb jelentésréteggé bontjuk: ${number}.`);
+
+  if (!lines.length) {
+    lines.push("A fizetett olvasat a megadott adataidból és a választott olvasattípusból indul.");
+  }
+
+  return lines.slice(0, 3);
 }
 
 function summarizeInputPayload(
