@@ -116,6 +116,7 @@ function Index() {
             { to: "/sorsszam-kalkulator", label: "Sorsszám" },
             { to: "/tarot-napi-lap", label: "Napi tarot" },
             { to: "/dontes-elott", label: "I-Ching" },
+            { to: "/szuletesi-keplet", label: "Születési képlet" },
           ].map((c) => (
             <Link
               key={c.to}
