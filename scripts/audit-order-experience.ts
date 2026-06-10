@@ -143,6 +143,20 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile lets customers retry failed paid reading processing safely",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "retryingOrders",
+      "async function retryOrder",
+      "wakeOrder({ data: { orderId } })",
+      "Feldolgozás újrapróbálása",
+      "ezt csak akkor engedjük, ha a fizetés igazoltan sikeres",
+      "Újrapróbálás…",
+      "retrying={retryingOrders.has(o.id)}",
+      "onRetry={() => retryOrder(o.id)}",
+    ],
+  },
+  {
     name: "profile order wakeup is server-side and strips private payment fields",
     file: "src/lib/payments.functions.ts",
     includes: [
@@ -155,6 +169,19 @@ const checks: Check[] = [
       "function stripPrivateOrderFields",
       "_stripeSessionId",
       "reconciled.map(stripPrivateOrderFields)",
+    ],
+  },
+  {
+    name: "failed order retry verifies Stripe payment before resetting processing",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      'order.status === "failed"',
+      "prepareFailedOrderRetry",
+      "stripe.checkout.sessions.retrieve(order.stripe_session_id)",
+      'session.payment_status !== "paid" && session.status !== "complete"',
+      'status: "paid"',
+      "error_message: null",
+      '.eq("status", "failed")',
     ],
   },
   {

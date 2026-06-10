@@ -75,6 +75,7 @@ function Page() {
   const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [memoryClearing, setMemoryClearing] = useState(false);
   const [memoryCleared, setMemoryCleared] = useState(false);
+  const [retryingOrders, setRetryingOrders] = useState<Set<string>>(() => new Set());
   const awakenedOrders = useRef(new Set<string>());
 
   useEffect(() => {
@@ -136,6 +137,21 @@ function Page() {
       setMemoryCleared(true);
     } finally {
       setMemoryClearing(false);
+    }
+  }
+
+  async function retryOrder(orderId: string) {
+    setRetryingOrders((current) => new Set(current).add(orderId));
+    try {
+      await wakeOrder({ data: { orderId } });
+      const refreshed = await call({});
+      setOrders(refreshed.orders ?? []);
+    } finally {
+      setRetryingOrders((current) => {
+        const next = new Set(current);
+        next.delete(orderId);
+        return next;
+      });
     }
   }
 
@@ -281,7 +297,11 @@ function Page() {
                       <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
                     </div>
 
-                    <OrderStatusNote order={o} />
+                    <OrderStatusNote
+                      order={o}
+                      retrying={retryingOrders.has(o.id)}
+                      onRetry={() => retryOrder(o.id)}
+                    />
 
                     {canOpen && (
                       <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
@@ -351,7 +371,15 @@ function getOrderPayload(payload: unknown): OrderResponsePayload | null {
   return { title, body };
 }
 
-function OrderStatusNote({ order }: { order: ProfileOrder }) {
+function OrderStatusNote({
+  order,
+  retrying,
+  onRetry,
+}: {
+  order: ProfileOrder;
+  retrying?: boolean;
+  onRetry?: () => void;
+}) {
   if (order.status === "delivered") return null;
 
   if (order.status === "pending_payment") {
@@ -381,14 +409,29 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
   if (order.status === "failed") {
     const shortId = shortOrderId(order.id);
     return (
-      <p className="mt-3 rounded-md border border-gold/20 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-ivory/65">
-        A feldolgozás elakadt, de a rendelés nem vész el. Írj a vásárlási email címedről:{" "}
-        <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
-          {SITE_LEGAL.supportEmail}
-        </a>
-        {shortId ? `. Add meg ezt is: ${shortId}.` : "."} Vagy pótoljuk az olvasatot, vagy
-        utánanézünk a visszatérítésnek.
-      </p>
+      <div className="mt-3 rounded-md border border-gold/20 bg-gold/[0.06] px-3 py-2">
+        <p className="text-xs leading-relaxed text-ivory/65">
+          A feldolgozás elakadt, de a rendelés nem vész el. Megpróbálhatod újraindítani az
+          olvasatkészítést; ezt csak akkor engedjük, ha a fizetés igazoltan sikeres.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={onRetry}
+            disabled={retrying}
+            className="inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {retrying ? "Újrapróbálás…" : "Feldolgozás újrapróbálása"}
+          </button>
+          <span className="text-xs leading-relaxed text-ivory/50">
+            Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
+            <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+              {SITE_LEGAL.supportEmail}
+            </a>
+            {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
+          </span>
+        </div>
+      </div>
     );
   }
 

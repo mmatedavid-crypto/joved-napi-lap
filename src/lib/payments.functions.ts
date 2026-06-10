@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type Stripe from "stripe";
 import type { StripeEnv } from "@/lib/stripe.server";
@@ -444,20 +445,63 @@ export const processMyOrder = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { data: order, error } = await context.supabase
       .from("orders")
-      .select("id, user_id, status, stripe_session_id")
+      .select("id, user_id, status, stripe_session_id, stripe_environment")
       .eq("id", data.orderId)
       .eq("user_id", context.userId)
       .maybeSingle();
 
     if (error) throw error;
     if (!order?.stripe_session_id) return { ok: false, error: "Rendelés nem található" };
-    if (order.status !== "paid" && order.status !== "processing") {
+    if (order.status === "failed") {
+      const retryReady = await prepareFailedOrderRetry(context.supabase, order);
+      if (!retryReady.ok) return retryReady;
+    } else if (order.status !== "paid" && order.status !== "processing") {
       return { ok: false, error: "Még nincs feldolgozható állapotban" };
     }
 
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
     return processPaidOrderBySession(order.stripe_session_id);
   });
+
+async function prepareFailedOrderRetry(
+  supabase: SupabaseClient<Database>,
+  order: {
+    id: string;
+    status: string;
+    stripe_session_id: string | null;
+    stripe_environment: string | null;
+  },
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!order.stripe_session_id) return { ok: false, error: "Rendelés nem található" };
+  if (order.stripe_environment !== "sandbox" && order.stripe_environment !== "live") {
+    return { ok: false, error: "A fizetés állapota nem ellenőrizhető" };
+  }
+
+  try {
+    const { createStripeClient } = await import("@/lib/stripe.server");
+    const stripe = createStripeClient(order.stripe_environment);
+    const session = await stripe.checkout.sessions.retrieve(order.stripe_session_id);
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      return { ok: false, error: "Még nincs feldolgozható állapotban" };
+    }
+  } catch (error) {
+    console.warn("failed order retry payment verification failed:", error);
+    return { ok: false, error: "Most nem sikerült ellenőrizni a fizetést" };
+  }
+
+  const { error } = await supabase
+    .from("orders")
+    .update({
+      status: "paid",
+      error_message: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", order.id)
+    .eq("status", "failed");
+
+  if (error) throw error;
+  return { ok: true };
+}
 
 function stripPrivateOrderFields<T extends Record<string, unknown>>(order: T) {
   const {
