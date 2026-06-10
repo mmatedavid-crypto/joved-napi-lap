@@ -12,17 +12,29 @@ import {
 
 type CheckoutSessionResult = { clientSecret: string } | { error: string };
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
-type OrderForPaymentRecheck = {
-  id: OrderRow["id"];
-  status: OrderRow["status"];
-  category: OrderRow["category"];
-  product_slug: OrderRow["product_slug"];
-  express: OrderRow["express"];
-  stripe_session_id?: string | null;
-  stripe_environment?: string | null;
-  stripe_payment_intent?: string | null;
-  payment_rechecked_at?: string | null;
-};
+type PublicOrderFields = Pick<
+  OrderRow,
+  | "id"
+  | "product_slug"
+  | "product_name"
+  | "category"
+  | "price_huf"
+  | "express"
+  | "status"
+  | "response_payload"
+  | "deliver_by"
+  | "delivered_at"
+  | "created_at"
+  | "guest_email"
+  | "source_route"
+>;
+type OrderForPaymentRecheck = PublicOrderFields &
+  Partial<
+    Pick<
+      OrderRow,
+      "stripe_session_id" | "stripe_environment" | "stripe_payment_intent" | "payment_rechecked_at"
+    >
+  >;
 
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
@@ -289,10 +301,10 @@ export const getOrderBySession = createServerFn({ method: "POST" })
         .maybeSingle();
       if (fallbackOrderResult.error) throw fallbackOrderResult.error;
 
-      const order = await reconcilePendingPayment(
-        addMissingReconciliationFields(fallbackOrderResult.data),
-        data.sessionId,
-      );
+      const fallbackOrder = fallbackOrderResult.data
+        ? addMissingReconciliationFields(fallbackOrderResult.data)
+        : null;
+      const order = await reconcilePendingPayment(fallbackOrder, data.sessionId);
       return { order };
     }
 

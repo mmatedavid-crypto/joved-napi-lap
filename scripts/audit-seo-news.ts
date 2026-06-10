@@ -69,6 +69,30 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope article paid CTA carries article context into premium reading",
+    file: "src/routes/horoszkop.$period.$sign.tsx",
+    includes: [
+      'productSlug="horoszkop_szemelyre"',
+      "articleLead: article.lead",
+      "articleSections: article.sections.slice(0, 4).map",
+      "moonPhase: article.moonPhase",
+      "luckyColor: article.luckyColor",
+      "luckyNumber: article.luckyNumber",
+    ],
+  },
+  {
+    name: "paid horoscope fallback can use article context",
+    file: "src/lib/paidReadings.ts",
+    includes: [
+      "const articleLead = text(input.articleLead)",
+      "const articleSections = horoscopeArticleSections(input.articleSections)",
+      "A friss horoszkópcikkedből",
+      "A most olvasott cikk alaphangja",
+      "A legerősebb cikkbeli fókuszok",
+      "function horoscopeArticleSections",
+    ],
+  },
+  {
     name: "horoscope news can be prewarmed through a protected internal route",
     file: "src/routes/api/internal/horoscope-news/prewarm.ts",
     includes: [

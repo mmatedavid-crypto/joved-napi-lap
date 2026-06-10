@@ -257,6 +257,11 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   const signKey = normalizeSignKey(rawSign);
   const signName = SIGN_HU[signKey] ?? rawSign;
   const situation = text(input.situation) || text(input.question) || text(input.q);
+  const articleLead = text(input.articleLead);
+  const articleSections = horoscopeArticleSections(input.articleSections);
+  const moonPhase = text(input.moonPhase);
+  const luckyColor = text(input.luckyColor);
+  const luckyNumber = text(input.luckyNumber);
   const personalYear = text(input.personalYear);
   const base = composeHoroscopeReading({
     sign: signKey,
@@ -281,6 +286,32 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
           },
         ]
       : []),
+    ...(articleLead || articleSections.length || moonPhase || luckyColor || luckyNumber
+      ? [
+          {
+            heading: "A friss horoszkópcikkedből",
+            text: [
+              articleLead ? `A most olvasott cikk alaphangja ezt hozza be: ${articleLead}` : "",
+              articleSections.length
+                ? `A legerősebb cikkbeli fókuszok: ${articleSections
+                    .map(
+                      (section) => `${section.heading.toLocaleLowerCase("hu-HU")}: ${section.text}`,
+                    )
+                    .join(" ")}`
+                : "",
+              [
+                moonPhase && `Hold: ${moonPhase}`,
+                luckyColor && `szín: ${luckyColor}`,
+                luckyNumber && `szám: ${luckyNumber}`,
+              ]
+                .filter(Boolean)
+                .join("; "),
+            ]
+              .filter(Boolean)
+              .join(" "),
+          },
+        ]
+      : []),
     {
       heading: "Személyes ritmus",
       text: personalYear
@@ -295,6 +326,19 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   base.oneSentence = `${signName} ma nem nagy bizonyosságot kér, hanem pontosabb belső időzítést.`;
   base.meta = { ...base.meta, fallbackUsed: true, readingType: "paid:horoscope" };
   return renderReading(base);
+}
+
+function horoscopeArticleSections(value: unknown): Array<{ heading: string; text: string }> {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((item) => {
+      const row = asRecord(item);
+      const heading = text(row.heading).slice(0, 80);
+      const sectionText = text(row.text).slice(0, 220);
+      return heading && sectionText ? { heading, text: sectionText } : null;
+    })
+    .filter((item): item is { heading: string; text: string } => Boolean(item))
+    .slice(0, 3);
 }
 
 function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {

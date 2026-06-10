@@ -287,7 +287,16 @@ function HoroscopeArticlePage() {
         sourceRoute={horoscopeArticlePath(article.period, article.sign)}
         inputPayload={{
           sign: article.signName,
+          period: PERIOD_LABEL[article.period],
           situation: `${PERIOD_LABEL[article.period]} horoszkóp · ${periodDateLabel(article.period)}`,
+          articleLead: article.lead,
+          articleSections: article.sections.slice(0, 4).map((section) => ({
+            heading: section.heading,
+            text: section.text,
+          })),
+          moonPhase: article.moonPhase,
+          luckyColor: article.luckyColor,
+          luckyNumber: article.luckyNumber,
         }}
       />
     </article>
