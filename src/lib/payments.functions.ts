@@ -134,27 +134,29 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const { createStripeClient } = await import("@/lib/stripe.server");
       const stripe = createStripeClient(data.environment);
 
-      const lookupKeys = [product.priceId];
       const wantsExpress = data.express && product.category === "delayed";
-      if (wantsExpress) lookupKeys.push(EXPRESS_PRICE_ID);
-
-      let prices;
-      try {
-        prices = await stripe.prices.list({ lookup_keys: lookupKeys, limit: 5 });
-      } catch (e) {
-        console.error("stripe.prices.list threw:", e);
-        throw e;
-      }
-      if (!prices || !Array.isArray(prices.data)) {
-        console.error("stripe.prices.list returned unexpected shape:", JSON.stringify(prices));
-        throw new Error("A termék ára nem található");
-      }
-      const mainPrice = prices.data.find((p) => p.lookup_key === product.priceId);
-      if (!mainPrice) throw new Error("A termék ára nem található");
-      const expressPrice = wantsExpress
-        ? prices.data.find((p) => p.lookup_key === EXPRESS_PRICE_ID)
-        : undefined;
-      if (wantsExpress && !expressPrice) throw new Error("Az express ár nem található");
+      const lineItems = [
+        {
+          price_data: {
+            currency: "huf",
+            product_data: { name: product.name },
+            unit_amount: product.priceHuf,
+          },
+          quantity: 1,
+        },
+        ...(wantsExpress
+          ? [
+              {
+                price_data: {
+                  currency: "huf",
+                  product_data: { name: "Express gyorsítás — 6 órán belül" },
+                  unit_amount: EXPRESS_PRICE_HUF,
+                },
+                quantity: 1,
+              },
+            ]
+          : []),
+      ] satisfies Stripe.Checkout.SessionCreateParams["line_items"];
 
       const customerId = await resolveOrCreateCustomer(stripe, {
         email: data.customerEmail,
@@ -169,10 +171,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           : null;
 
       const session = await stripe.checkout.sessions.create({
-        line_items: [
-          { price: mainPrice.id, quantity: 1 },
-          ...(expressPrice ? [{ price: expressPrice.id, quantity: 1 }] : []),
-        ],
+        line_items: lineItems,
         mode: "payment",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
