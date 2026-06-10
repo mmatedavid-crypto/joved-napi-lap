@@ -7,6 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 import { StripeEmbeddedCheckoutForm } from "@/components/StripeEmbeddedCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { trackEvent } from "@/lib/analytics";
@@ -110,6 +112,35 @@ export function PaywallDialog({
               )}
             </div>
 
+            <div>
+              <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
+                Email cím a vásárláshoz
+              </label>
+              <input
+                id="checkout-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="te@pelda.hu"
+                className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
+              />
+              {!user && (
+                <p className="text-xs text-ivory/45 mt-1">Vendég vásárlás — fiók nem kötelező.</p>
+              )}
+              {email && !emailValid && (
+                <p className="mt-1 text-xs text-gold/75">
+                  Kérlek ellenőrizd az email címet, ide küldjük az olvasatot is.
+                </p>
+              )}
+            </div>
+
+            <Collapsible>
+              <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/10 px-4 py-3 text-left text-sm text-ivory/80 hover:text-ivory">
+                <span>Részletek: mit kapsz, hogyan megy a vásárlás</span>
+                <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-3 space-y-4">
             {focusPreview.length > 0 && (
               <div className="rounded-md border border-gold/20 bg-[oklch(0.78_0.10_80/0.07)] p-4">
                 <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
@@ -262,6 +293,8 @@ export function PaywallDialog({
                 </p>
               </div>
             </div>
+              </CollapsibleContent>
+            </Collapsible>
 
             {canExpress && (
               <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
@@ -279,29 +312,6 @@ export function PaywallDialog({
                 </span>
               </label>
             )}
-
-            <div>
-              <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
-                Email cím a vásárláshoz
-              </label>
-              <input
-                id="checkout-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="te@pelda.hu"
-                className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
-              />
-              {!user && (
-                <p className="text-xs text-ivory/45 mt-1">Vendég vásárlás — fiók nem kötelező.</p>
-              )}
-              {email && !emailValid && (
-                <p className="mt-1 text-xs text-gold/75">
-                  Kérlek ellenőrizd az email címet, ide küldjük az olvasatot is.
-                </p>
-              )}
-            </div>
 
             <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
               <input
