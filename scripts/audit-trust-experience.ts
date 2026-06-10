@@ -76,6 +76,20 @@ const checks: Check[] = [
     ],
     excludes: ['console.error("checkout.session.completed for unknown session:", sessionId)'],
   },
+  {
+    name: "withdrawal page gives clear recovery steps for paid delivery issues",
+    file: "src/routes/elallasi-tajekoztato.tsx",
+    includes: [
+      "Hibás teljesítés vagy technikai gond",
+      "vásárláshoz használt email címet",
+      "rövid rendelésazonosítót",
+      "melyik olvasatnál akadt el",
+      "fizetés utáni",
+      "köszönőoldalt",
+      "profilod rendelési előzményeit",
+      "nem csak emailben",
+    ],
+  },
 ];
 
 const failed: string[] = [];

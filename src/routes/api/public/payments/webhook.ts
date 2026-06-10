@@ -67,7 +67,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     return;
   }
 
-  const newStatus = "paid";
+  const newStatus = "paid" as const;
 
   // Late-bind: a deliver_by-t a tényleges fizetés időpontjától számoljuk.
   let deliverBy: string | null = null;

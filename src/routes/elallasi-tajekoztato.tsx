@@ -44,6 +44,15 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
           </a>
           . Ilyenkor a rendelést ellenőrizzük, és lehetőség szerint pótoljuk a teljesítést.
         </p>
+        <p>
+          Gyorsabb ügyintézéshez írd meg a vásárláshoz használt email címet, a rendelési oldalon
+          látható rövid rendelésazonosítót, és azt, hogy melyik olvasatnál akadt el a folyamat.
+        </p>
+        <p>
+          Ha a kártyás fizetés sikeres volt, de az email késik, először a fizetés utáni
+          köszönőoldalt vagy a profilod rendelési előzményeit érdemes újranyitni. Az elkészült
+          olvasat ott is megjelenik, nem csak emailben.
+        </p>
       </LegalSection>
 
       <LegalSection title="Fontos korlát">

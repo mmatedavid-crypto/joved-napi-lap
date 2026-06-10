@@ -16,6 +16,7 @@ type OrderForPaymentRecheck = {
   category: string;
   product_slug: string;
   express: boolean;
+  stripe_session_id?: string | null;
   stripe_environment?: string | null;
   stripe_payment_intent?: string | null;
   payment_rechecked_at?: string | null;
@@ -248,24 +249,30 @@ export const getOrderBySession = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    let orderResult = await supabaseAdmin
+    const orderResultWithReconciliation = await supabaseAdmin
       .from("orders")
       .select(ORDER_SELECT_WITH_RECONCILIATION)
       .eq("stripe_session_id", data.sessionId)
       .maybeSingle();
 
-    if (isMissingColumnError(orderResult.error)) {
+    if (isMissingColumnError(orderResultWithReconciliation.error)) {
       console.warn(
         "orders reconciliation columns unavailable; reading order without fallback fields",
       );
-      orderResult = await supabaseAdmin
+      const fallbackOrderResult = await supabaseAdmin
         .from("orders")
         .select(ORDER_SELECT_BASE)
         .eq("stripe_session_id", data.sessionId)
         .maybeSingle();
+      if (fallbackOrderResult.error) throw fallbackOrderResult.error;
+
+      const order = await reconcilePendingPayment(fallbackOrderResult.data, data.sessionId);
+      return { order };
     }
 
-    const order = await reconcilePendingPayment(orderResult.data, data.sessionId);
+    if (orderResultWithReconciliation.error) throw orderResultWithReconciliation.error;
+
+    const order = await reconcilePendingPayment(orderResultWithReconciliation.data, data.sessionId);
     return { order };
   });
 
@@ -347,27 +354,34 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
 export const getMyOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    let orderResult = await context.supabase
+    const orderResultWithReconciliation = await context.supabase
       .from("orders")
       .select(ORDER_SELECT_PROFILE_WITH_RECONCILIATION)
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })
       .limit(50);
-    if (isMissingColumnError(orderResult.error)) {
+
+    let orders: OrderForPaymentRecheck[] = [];
+
+    if (isMissingColumnError(orderResultWithReconciliation.error)) {
       console.warn(
         "orders reconciliation columns unavailable; reading profile orders without recheck",
       );
-      orderResult = await context.supabase
+      const fallbackOrderResult = await context.supabase
         .from("orders")
         .select(`${ORDER_SELECT_BASE}, stripe_session_id`)
         .eq("user_id", context.userId)
         .order("created_at", { ascending: false })
         .limit(50);
+      if (fallbackOrderResult.error) throw fallbackOrderResult.error;
+      orders = fallbackOrderResult.data ?? [];
+    } else {
+      if (orderResultWithReconciliation.error) throw orderResultWithReconciliation.error;
+      orders = orderResultWithReconciliation.data ?? [];
     }
-    if (orderResult.error) throw orderResult.error;
 
     const reconciled = await Promise.all(
-      (orderResult.data ?? []).map(async (order) => {
+      orders.map(async (order) => {
         const sessionId =
           typeof order.stripe_session_id === "string" ? order.stripe_session_id : "";
         if (!sessionId) return order;
