@@ -26,6 +26,33 @@ const PRICING_FAQ = [
   },
 ] as const;
 
+const CHOICE_GUIDE = [
+  {
+    title: "Csak kipróbálnám",
+    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, olcsó, és gyorsan kiderül, megszólít-e a Jövőd.hu hangja.",
+    productSlug: "napi_lap_ai",
+    cta: "Napi lap",
+  },
+  {
+    title: "Kapcsolat vagy ex jár a fejemben",
+    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a Párkapcsolat elemzés ad több teret, nem csak százalékot.",
+    productSlug: "parkapcsolat_elemzes",
+    cta: "Kapcsolati elemzés",
+  },
+  {
+    title: "Döntés előtt állok",
+    text: "Ha nem az a kérdés, mit jósol a lap, hanem mit nem látsz tisztán, a Döntés előtt komplex elemzés a legjobb választás.",
+    productSlug: "dontes_komplex",
+    cta: "Döntési elemzés",
+  },
+  {
+    title: "Mélyebb képet szeretnék",
+    text: "Ha a helyzet több szálból áll, a Három lap vagy a Kelta kereszt ad összefüggőbb, írásos riportot.",
+    productSlug: "harom_lap_mely",
+    cta: "Mély tarot",
+  },
+] as const;
+
 export const Route = createFileRoute("/arak")({
   head: () => ({
     meta: [
@@ -84,6 +111,48 @@ function PricingPage() {
             title="Menthető olvasat"
             text="Az elkészült szöveg megnyitható, kimásolható és letölthető."
           />
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-4">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+              Melyiket válasszam?
+            </div>
+            <h2 className="mt-2 font-display text-3xl text-ivory">A kérdésedhez válassz</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
+              Nem mindenkinek ugyanaz az olvasat kell. Itt a leggyorsabb út, ha még nem tudod, hol
+              kezdd.
+            </p>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {CHOICE_GUIDE.map((item) => {
+              const product = PRODUCTS.find((candidate) => candidate.slug === item.productSlug);
+              return (
+                <article
+                  key={item.title}
+                  className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4"
+                >
+                  <h3 className="font-display text-xl leading-tight text-ivory">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ivory/64">{item.text}</p>
+                  {product && (
+                    <div className="mt-4 flex items-center justify-between gap-3 border-t border-gold/10 pt-3">
+                      <span className="text-sm text-gold tabular-nums">
+                        {formatHuf(product.priceHuf)}
+                      </span>
+                      {product.sourceRoute && (
+                        <Link
+                          to={product.sourceRoute}
+                          className="inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60"
+                        >
+                          {item.cta}
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
         </section>
 
         <PricingGroup
