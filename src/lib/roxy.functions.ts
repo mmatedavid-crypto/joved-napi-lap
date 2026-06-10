@@ -767,15 +767,25 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
 
       const requiredSections = sectionMap.map((s) => s.heading);
       const started = Date.now();
+      // Napi egy lap esetén szándékosan lecsupaszított promptot használunk:
+      // ne kapjon ex/döntés/randi/kategória szabályokat, amelyek miatt
+      // a modell minden laphoz hasonló sablon-záróképletet adott.
+      const system = isDailySingle ? buildDailySingleSystemPrompt() : buildQualitySystemPrompt();
+      const userPrompt = isDailySingle
+        ? buildDailySingleUserPrompt({
+            card: data.cards[0],
+            requiredSections,
+          })
+        : buildQualityUserPrompt({
+            readingType: "tarot",
+            mode: "free",
+            userInput: { spread: data.spread, question: data.question, category: data.category },
+            sourceData: { ...sourceData, memoryContext: data.memoryContext ?? null },
+            requiredSections,
+          });
       const ai = await aiJSON<QualityReading>({
-        system: buildQualitySystemPrompt(),
-        user: buildQualityUserPrompt({
-          readingType: "tarot",
-          mode: "free",
-          userInput: { spread: data.spread, question: data.question, category: data.category },
-          sourceData: { ...sourceData, memoryContext: data.memoryContext ?? null },
-          requiredSections,
-        }),
+        system,
+        user: userPrompt,
         schemaName: "QualityReading",
         schema: QUALITY_OUTPUT_SCHEMA as unknown as Record<string, unknown>,
         model: READING_QUALITY_MODEL,
