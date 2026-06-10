@@ -6,11 +6,11 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
-import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
-import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
+import { aiTarotReadingHU, roxyTarotDraw, roxyTarotLove, type TarotReadingHU } from "@/lib/roxy.functions";
+import { normalizeRoxyDraw, normalizeRoxySpread } from "@/lib/roxyNormalize";
+import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
 import { PaywallDialog } from "@/components/PaywallDialog";
-import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
@@ -49,25 +49,64 @@ function Page() {
   const [sit, setSit] = useState(SITUATIONS[0]);
   const [q, setQ] = useState("");
   const [type, setType] = useState<1 | 3>(1);
-  const [cards, setCards] = useState<TarotCard[] | null>(null);
-  const [reversedFlags, setReversedFlags] = useState<boolean[]>([]);
+  const [drawn, setDrawn] = useState<LocalDrawn[] | null>(null);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [drawing, setDrawing] = useState(false);
+  const [drawError, setDrawError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
   const aiReading = useServerFn(aiTarotReadingHU);
+  const drawOne = useServerFn(roxyTarotDraw);
+  const drawLove = useServerFn(roxyTarotLove);
   const loadMemory = useServerFn(getReadingContext);
   const saveMemory = useServerFn(saveReadingMemory);
 
-  function draw(e: React.FormEvent) {
+  async function draw(e: React.FormEvent) {
     e.preventDefault();
-    setCards(pickCards(type));
-    setReversedFlags(Array.from({ length: type }, () => Math.random() < 0.3));
+    setDrawing(true);
+    setDrawError(null);
     setReading(null);
+    try {
+      const seed = `love:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
+      const question = q || sit;
+      if (type === 1) {
+        const r = await drawOne({ data: { count: 1, allowReversals: true, seed } });
+        if (!r.ok) {
+          setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
+          return;
+        }
+        const mapped = mapRoxyToLocal(normalizeRoxyDraw(r.data));
+        if (mapped.length < 1) {
+          setDrawError("Üres húzás — próbáld újra.");
+          return;
+        }
+        setDrawn(mapped.slice(0, 1));
+      } else {
+        const r = await drawLove({ data: { seed, question } });
+        if (!r.ok) {
+          setDrawError("A húzás most nem érkezett meg. Próbáld újra.");
+          return;
+        }
+        const spread = normalizeRoxySpread(r.data);
+        const cards = spread.positions
+          .slice(0, 3)
+          .map((p) => p.card!)
+          .filter(Boolean);
+        const mapped = mapRoxyToLocal(cards);
+        if (mapped.length < 3) {
+          setDrawError("A húzás nem teljes — próbáld újra.");
+          return;
+        }
+        setDrawn(mapped);
+      }
+    } finally {
+      setDrawing(false);
+    }
   }
 
   useEffect(() => {
-    if (!cards) return;
-    const cardsLocal = cards;
+    if (!drawn) return;
+    const drawnLocal = drawn;
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
@@ -91,18 +130,8 @@ function Page() {
       }
       return aiReading({
         data: {
-          spread: cardsLocal.length === 3 ? "love-3" : "love-1",
-          cards: cardsLocal.map((c, i) => ({
-            id: c.id,
-            name: c.name,
-            keywords: c.keywords,
-            general: c.general,
-            love: c.love,
-            decision: c.decision,
-            warning: c.warning,
-            daily: c.daily,
-            reversed: reversedFlags[i] === true,
-          })),
+          spread: drawnLocal.length === 3 ? "love-3" : "love-1",
+          cards: drawnLocal.map((d) => toAIInput(d)),
           question: q || sit,
           category: sit,
           memoryContext,
@@ -114,6 +143,7 @@ function Page() {
         if (cancelled) return;
         if (r.ok && r.reading) {
           setReading(r.reading);
+          const cardNames = drawnLocal.map((d) => d.card.name);
           recordGuestReadingMemory({
             readingType: "love",
             topic: q || sit,
@@ -123,7 +153,7 @@ function Page() {
             title: "Randi előtt",
             summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
             oneSentence: r.reading.oneLine,
-            anchors: [sit, ...cards.map((card) => card.name)],
+            anchors: [sit, ...cardNames],
           });
           if (user) {
             saveMemory({
@@ -136,7 +166,7 @@ function Page() {
                 title: "Randi előtt",
                 summary: r.reading.questionAnswer || r.reading.cardMessage || r.reading.oneLine,
                 oneSentence: r.reading.oneLine,
-                anchors: [sit, ...cards.map((card) => card.name)],
+                anchors: [sit, ...cardNames],
               },
             }).catch(() => {});
           }
@@ -149,7 +179,7 @@ function Page() {
     return () => {
       cancelled = true;
     };
-  }, [cards, reversedFlags, aiReading, loadMemory, q, saveMemory, sit, user]);
+  }, [drawn, aiReading, loadMemory, q, saveMemory, sit, user]);
 
   return (
     <Layout>
@@ -221,21 +251,24 @@ function Page() {
                 <option value={3}>3 lapos kapcsolat-húzás</option>
               </select>
             </F>
-            <button className="btn-gold">Húzom a lapot</button>
+            <button className="btn-gold" disabled={drawing}>
+              {drawing ? "Húzás..." : "Húzom a lapot"}
+            </button>
+            {drawError && <p className="text-sm text-ivory/60">{drawError}</p>}
           </form>
         )}
         <GuestMemoryInsightPanel readingType="love" topic={q || sit} situation={sit} />
-        {cards && (
+        {drawn && (
           <>
             <div
-              className={`grid gap-4 ${cards.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
+              className={`grid gap-4 ${drawn.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
             >
-              {cards.map((c, i) => (
+              {drawn.map((d, i) => (
                 <CardFace
                   key={i}
-                  card={c}
-                  reversed={reversedFlags[i] === true}
-                  label={cards.length === 3 ? ["Te", "Köztetek", "Ő"][i] : undefined}
+                  card={d.card}
+                  reversed={d.reversed}
+                  label={drawn.length === 3 ? ["Te", "Köztetek", "Ő"][i] : undefined}
                 />
               ))}
             </div>
@@ -247,34 +280,46 @@ function Page() {
                   className="md:col-span-2"
                 />
               )}
-              {q.trim() && (
-                <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
-                  {reading?.questionAnswer ?? loveQuestionFallback(q, cards[cards.length - 1], sit)}
-                </Section>
-              )}
-              <Section eyebrow="A helyzet szerint">
-                {loveStatusReflection(sit, q, cards[cards.length - 1])}
-              </Section>
-              {cards.length === 3 ? (
+              {reading && (
                 <>
-                  <Section eyebrow="Te" title={cards[0].name}>
-                    {reading?.you ?? loveSituationFallback(sit, cards[0], "you")}
-                  </Section>
-                  <Section eyebrow="A helyzet köztetek" title={cards[1].name}>
-                    {reading?.between ?? loveSituationFallback(sit, cards[1], "between")}
-                  </Section>
-                  <Section eyebrow="Ő" title={cards[2].name}>
-                    {reading?.them ?? loveSituationFallback(sit, cards[2], "them")}
-                  </Section>
+                  {q.trim() && reading.questionAnswer && (
+                    <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>
+                      {reading.questionAnswer}
+                    </Section>
+                  )}
+                  {drawn.length === 3 ? (
+                    <>
+                      {reading.you && (
+                        <Section eyebrow="Te" title={drawn[0].card.name}>
+                          {reading.you}
+                        </Section>
+                      )}
+                      {reading.between && (
+                        <Section eyebrow="A helyzet köztetek" title={drawn[1].card.name}>
+                          {reading.between}
+                        </Section>
+                      )}
+                      {reading.them && (
+                        <Section eyebrow="Ő" title={drawn[2].card.name}>
+                          {reading.them}
+                        </Section>
+                      )}
+                    </>
+                  ) : (
+                    (reading.cardMessage || reading.intro) && (
+                      <Section eyebrow="A helyzet üzenete" title={drawn[0].card.name}>
+                        {reading.cardMessage ?? reading.intro}
+                      </Section>
+                    )
+                  )}
+                  {reading.warn && <Section eyebrow="Mire figyelj?">{reading.warn}</Section>}
+                  {reading.oneLine && (
+                    <Section eyebrow="Egy mondatban">
+                      <em>{reading.oneLine}</em>
+                    </Section>
+                  )}
                 </>
-              ) : (
-                <Section eyebrow="A helyzet üzenete" title={cards[0].name}>
-                  {reading?.cardMessage ?? reading?.intro ?? loveSituationFallback(sit, cards[0])}
-                </Section>
               )}
-              <Section eyebrow="Egy mondatban">
-                <em>{reading?.oneLine ?? cards[cards.length - 1].daily}</em>
-              </Section>
             </div>
             <div className="surface p-5">
               <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-1">
@@ -290,7 +335,7 @@ function Page() {
               </button>
             </div>
             <div className="text-center">
-              <button className="btn-ghost-gold" onClick={() => setCards(null)}>
+              <button className="btn-ghost-gold" onClick={() => setDrawn(null)}>
                 Új húzás
               </button>
             </div>
@@ -309,7 +354,7 @@ function Page() {
           hisDob,
           sit,
           q,
-          cards: cards?.map((c) => c.name),
+          cards: drawn?.map((d) => d.card.name),
           memoryContext:
             getGuestReadingContext({ readingType: "love", topic: q || sit, situation: sit })
               .contextText || undefined,
@@ -332,70 +377,4 @@ function F({ id, label, children }: { id: string; label: string; children: React
       {children}
     </div>
   );
-}
-
-function loveQuestionFallback(question: string, card: TarotCard, situation: string): string {
-  return `A „${question}” kérdésre ${withHungarianArticle(card.name)} nem biztos választ ad, inkább irányt: ${loveSituationLead(situation)} most a ${card.keywords[0].toLowerCase()} minőségét taníthatja. Érdemes lehet azt nézned, hogy a másik viselkedése mellett te nyugodtabbnak vagy bizonytalanabbnak érzed-e magad.`;
-}
-
-function loveStatusReflection(situation: string, question: string, card: TarotCard): string {
-  const keyword = card.keywords[0].toLowerCase();
-  if (situation === "ex / visszatérő történet") {
-    return `Ex vagy visszatérő történetnél a valódi kérdés ritkán csak az, hogy visszajön-e. A ${card.name} inkább azt mutatja, milyen minőségben térhet vissza ez a kapcsolat: ${keyword} formájában. Rövid visszacsúszásra utalhat, ha csak a hiány, nosztalgia vagy megszokás mozdítja meg. Tartósabb irány akkor látszik, ha a visszatérés mellett tisztább szándék, következetesebb jelenlét és másfajta felelősség is megjelenik.`;
-  }
-  if (situation === "nem ír vissza") {
-    return `A csend most nem bizonyíték arra, hogy mit érez, inkább azt mutatja, hogyan hat rád a bizonytalanság. A ${card.name} arra kérhet, hogy ne csak az üzenetet várd, hanem figyeld meg: ebben a várakozásban te mennyire maradsz önmagadnál.`;
-  }
-  if (situation === "randi előtt") {
-    return `Ez a randi most nem vizsga, hanem találkozási pont. A ${card.name} szerint azt érdemes figyelned, hogy a ${keyword} minősége oldottabbá tesz-e köztetek valamit, vagy inkább szerepbe kényszerít.`;
-  }
-  if (situation === "randi után") {
-    return `Ez a találkozó utólag nem csak abból olvasható, mit mondott a másik. A ${card.name} inkább azt kérdezi: a testedben több nyugalom vagy több feszültség maradt utána?`;
-  }
-  if (situation === "most ismerkedünk") {
-    return `Ismerkedésnél a kezdeti szikra mellett a tempó számít. A ${card.name} azt mutathatja, hogy a ${keyword} minősége akkor jó jel, ha nem csak egyszeri intenzitásként, hanem ismétlődő figyelemként is megjelenik.`;
-  }
-  if (situation === "nem tudom, mit akar") {
-    return `Ha nem látod, mit akar, ez a lap nem helyette mond választ. Inkább azt mutatja, hogy a ${keyword} körül hol homályosodik el a helyzet, és mit kellene tisztábban látnod, mielőtt még többet beleteszel.`;
-  }
-  return question.trim()
-    ? `A megadott kérdésedhez ez a helyzet a ${keyword} minőségén keresztül kapcsolódik.`
-    : `Ez a helyzet most a ${keyword} minőségét teszi láthatóvá.`;
-}
-
-function loveSituationFallback(
-  situation: string,
-  card: TarotCard,
-  position: "you" | "between" | "them" | "single" = "single",
-): string {
-  const lead = loveSituationLead(situation);
-  if (position === "you") {
-    return `${lead} azt mutathatja, hogy te most a ${card.keywords[0].toLowerCase()} minőségén keresztül érkezel ebbe a kapcsolódásba. ${card.love}`;
-  }
-  if (position === "between") {
-    return `${lead} köztetek most nem kész választ, hanem tükröt ad: ${withHungarianArticle(card.name)} szerint ez a helyzet a ${card.keywords[0].toLowerCase()} témáját hozhatja felszínre. ${card.love}`;
-  }
-  if (position === "them") {
-    return `${lead} arra is rávilágíthat, milyen minőséget érzékelsz a másik oldaláról. A ${card.name} itt óvatosan, nem biztos állításként mutat irányt: ${card.love}`;
-  }
-  return `${lead} most ezt taníthatja: ${withHungarianArticle(card.name)} szerint a ${card.keywords[0].toLowerCase()} minősége lesz az, amit érdemes észrevenned. ${card.love}`;
-}
-
-function loveSituationLead(situation: string): string {
-  switch (situation) {
-    case "randi előtt":
-      return "Ez a randi";
-    case "randi után":
-      return "Ez a találkozó";
-    case "most ismerkedünk":
-      return "Ez az ismerkedés";
-    case "nem ír vissza":
-      return "Ez a csend";
-    case "ex / visszatérő történet":
-      return "Ez a visszatérő történet";
-    case "nem tudom, mit akar":
-      return "Ez a bizonytalanság";
-    default:
-      return "Ez a helyzet";
-  }
 }
