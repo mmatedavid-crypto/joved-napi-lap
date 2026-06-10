@@ -282,9 +282,9 @@ function Page() {
                       </Section>
                     ))}
                     {slots[2]?.hu[domain] && (
-                      <Section eyebrow={domainLabel} className="md:col-span-2">
-                        {slots[2].hu[domain]!}
-                      </Section>
+                      <div className="md:col-span-2">
+                        <Section eyebrow={domainLabel}>{slots[2].hu[domain]!}</Section>
+                      </div>
                     )}
                     {slots[slots.length - 1]?.hu.oneLine && (
                       <div className="md:col-span-2">
