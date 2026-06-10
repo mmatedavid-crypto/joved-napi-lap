@@ -135,7 +135,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const stripe = createStripeClient(data.environment);
 
       const wantsExpress = data.express && product.category === "delayed";
-      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+      const lineItems = [
         {
           price_data: {
             currency: "huf",
@@ -156,7 +156,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
               },
             ]
           : []),
-      ];
+      ] satisfies Stripe.Checkout.SessionCreateParams["line_items"];
 
       const customerId = await resolveOrCreateCustomer(stripe, {
         email: data.customerEmail,
