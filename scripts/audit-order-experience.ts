@@ -69,6 +69,18 @@ const checks: Check[] = [
     includes: ["SupportContact", "SITE_LEGAL.supportEmail", "Ügyfélszolgálat"],
   },
   {
+    name: "thank-you page distinguishes instant and detailed paid preparation",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "orderPreparationLead",
+      "orderPreparationDetail",
+      "nem egy rövid automata választ",
+      "több szakaszban dolgozzuk össze",
+      "pár percig hagyd nyitva",
+      "biztonságos rendelési linket érdemes megtartanod",
+    ],
+  },
+  {
     name: "thank-you page exposes a short order reference",
     file: "src/routes/koszonjuk.tsx",
     includes: [
@@ -120,6 +132,18 @@ const checks: Check[] = [
       "Az olvasat készül",
       "A feldolgozás elakadt",
       "SITE_LEGAL.supportEmail",
+    ],
+  },
+  {
+    name: "profile distinguishes instant and detailed paid preparation",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "profileOrderPreparationLead",
+      "profileOrderPreparationDetail",
+      "nem azonnali sablonválasz",
+      "több szakaszos elemzés",
+      "Az azonnali termékek általában pár percen belül",
+      "ha az email késik, a profilban akkor is",
     ],
   },
   {

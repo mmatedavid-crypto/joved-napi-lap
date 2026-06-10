@@ -184,11 +184,8 @@ function Page() {
 
             {order.status !== "delivered" && order.status !== "failed" && (
               <Section eyebrow="Készítjük">
-                <p>
-                  A személyes olvasatod ezen az oldalon jelenik meg, amint elkészült. Az azonnali
-                  termékek általában pár percen belül megérkeznek; a részletes elemzéseket gondosabb
-                  szövegezéssel készítjük.
-                </p>
+                <p>{orderPreparationLead(order)}</p>
+                <p className="mt-3 text-sm text-ivory/60">{orderPreparationDetail(order)}</p>
                 <p className="mt-3 text-sm text-ivory/60">
                   Ha vendégként vásároltál, ezt az oldalt érdemes megtartanod. Ha bejelentkeztél, a
                   profilodban is eléred az elkészült olvasatot.
@@ -281,6 +278,23 @@ function SupportContact({ className = "", orderId }: { className?: string; order
       {shortId ? `, és add meg ezt: ${shortId}.` : "."}
     </p>
   );
+}
+
+function orderPreparationLead(order: OrderView): string {
+  if (order.category === "delayed") {
+    return "A részletes olvasatod rögzítve van. Itt nem egy rövid automata választ mutatunk: a megadott kérdést, adatokat és témát több szakaszban dolgozzuk össze.";
+  }
+  return "A személyes olvasatod ezen az oldalon jelenik meg, amint elkészült. Az azonnali termékek általában pár percen belül megérkeznek.";
+}
+
+function orderPreparationDetail(order: OrderView): string {
+  if (order.category === "delayed") {
+    const deadline = order.deliver_by ? new Date(order.deliver_by).toLocaleString("hu-HU") : null;
+    return deadline
+      ? `A vállalt határidő: ${deadline}. Addig ezt a biztonságos rendelési linket érdemes megtartanod; elkészüléskor emailben is jelzünk.`
+      : "A részletes elemzést gondosabb szövegezéssel készítjük el; amikor kész, ezen a biztonságos rendelési linken és emailben is eléred.";
+  }
+  return "Ha a fizetés már sikeres volt, de az oldal még készítést mutat, pár percig hagyd nyitva vagy frissítsd később ugyanerről a biztonságos linkről.";
 }
 
 function safeOrderStatusErrorMessage(error: unknown): string {

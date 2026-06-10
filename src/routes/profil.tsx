@@ -344,12 +344,14 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
 
   if (order.status === "paid" || order.status === "processing") {
     return (
-      <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-xs leading-relaxed text-ivory/62">
-        Az olvasat készül. Amikor elkészül, itt megnyithatod, és emailben is jelzünk.{" "}
-        {order.deliver_by
-          ? `Várhatóan ${new Date(order.deliver_by).toLocaleString("hu-HU")}-ig érkezik.`
-          : "Az azonnali termékek általában pár percen belül megjelennek."}
-      </p>
+      <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
+        <p className="text-xs leading-relaxed text-ivory/62">
+          {profileOrderPreparationLead(order)}
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-ivory/50">
+          {profileOrderPreparationDetail(order)}
+        </p>
+      </div>
     );
   }
 
@@ -368,6 +370,22 @@ function OrderStatusNote({ order }: { order: ProfileOrder }) {
   }
 
   return null;
+}
+
+function profileOrderPreparationLead(order: ProfileOrder): string {
+  if (order.category === "delayed") {
+    return "A részletes olvasat készül: nem azonnali sablonválasz, hanem több szakaszos elemzés a megadott adataid alapján.";
+  }
+  return "Az olvasat készül. Amikor elkészül, itt megnyithatod, és emailben is jelzünk.";
+}
+
+function profileOrderPreparationDetail(order: ProfileOrder): string {
+  if (order.category === "delayed") {
+    return order.deliver_by
+      ? `Várhatóan ${new Date(order.deliver_by).toLocaleString("hu-HU")}-ig érkezik. Ha az email késik, itt a profilban akkor is megjelenik.`
+      : "Amint elkészül, itt a profilban is megjelenik; emailben csak értesítünk róla.";
+  }
+  return "Az azonnali termékek általában pár percen belül megjelennek; ha az email késik, a profilban akkor is visszanézheted.";
 }
 
 function ProfileSupportContact({
