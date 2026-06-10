@@ -88,6 +88,10 @@ const OrderDeliveredEmail = ({
               </Link>
             </Text>
             <Text style={paragraph}>
+              A megnyíló oldalon az olvasatot ki is másolhatod, vagy letöltheted magadnak szöveges
+              fájlként.
+            </Text>
+            <Text style={paragraph}>
               {isGuest ? (
                 <>
                   Vendég vásárlásnál ez a biztonságos rendelési link a legfontosabb hozzáférés. Fiók
