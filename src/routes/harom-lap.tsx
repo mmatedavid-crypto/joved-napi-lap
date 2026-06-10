@@ -6,10 +6,10 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
-import { pickCards, type TarotCard } from "@/data/cards";
-import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
+import { aiTarotReadingHU, roxyTarotThreeCard, type TarotReadingHU } from "@/lib/roxy.functions";
+import { normalizeRoxySpread } from "@/lib/roxyNormalize";
+import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
 import { PaywallDialog } from "@/components/PaywallDialog";
-import { withHungarianArticle } from "@/lib/huGrammar";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
@@ -46,29 +46,48 @@ function HaromLap() {
   const { user } = useAuth();
   const [question, setQuestion] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
-  const [cards, setCards] = useState<TarotCard[] | null>(null);
-  const [reversedFlags, setReversedFlags] = useState<boolean[]>([]);
+  const [drawn, setDrawn] = useState<LocalDrawn[] | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
   const [reading, setReading] = useState<TarotReadingHU | null>(null);
   const [loadingReading, setLoadingReading] = useState(false);
+  const [drawing, setDrawing] = useState(false);
+  const [drawError, setDrawError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
   const [paywallProduct, setPaywallProduct] = useState<"harom_lap_mely" | "kelta_kereszt">(
     "harom_lap_mely",
   );
   const aiReading = useServerFn(aiTarotReadingHU);
+  const drawSpread = useServerFn(roxyTarotThreeCard);
   const loadMemory = useServerFn(getReadingContext);
   const saveMemory = useServerFn(saveReadingMemory);
 
-  function draw() {
-    setCards(pickCards(3));
-    setReversedFlags([Math.random() < 0.3, Math.random() < 0.3, Math.random() < 0.3]);
-    setRevealed([false, false, false]);
+  async function draw() {
+    setDrawing(true);
+    setDrawError(null);
     setReading(null);
+    try {
+      const seed = `three:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
+      const r = await drawSpread({ data: { seed, question: question || undefined } });
+      if (!r.ok) {
+        setDrawError("A húzás most nem érkezett meg. Próbáld újra egy pillanat múlva.");
+        return;
+      }
+      const spread = normalizeRoxySpread(r.data);
+      const mapped = mapRoxyToLocal(spread.positions.map((p) => p.card!).filter(Boolean));
+      if (mapped.length < 3) {
+        setDrawError("A húzás nem teljes — próbáld újra.");
+        return;
+      }
+      setDrawn(mapped.slice(0, 3));
+      setRevealed([false, false, false]);
+    } finally {
+      setDrawing(false);
+    }
   }
 
   useEffect(() => {
-    if (!cards || !revealed.every(Boolean)) return;
-    const cardsLocal = cards;
+    if (!drawn || !revealed.every(Boolean)) return;
+    const drawnLocal = drawn;
     let cancelled = false;
     setLoadingReading(true);
     async function load() {
@@ -98,17 +117,7 @@ function HaromLap() {
       return aiReading({
         data: {
           spread: "three",
-          cards: cardsLocal.map((c, i) => ({
-            id: c.id,
-            name: c.name,
-            keywords: c.keywords,
-            general: c.general,
-            love: c.love,
-            decision: c.decision,
-            warning: c.warning,
-            daily: c.daily,
-            reversed: reversedFlags[i] === true,
-          })),
+          cards: drawnLocal.map((d) => toAIInput(d)),
           question: question || undefined,
           category,
           memoryContext,
@@ -120,6 +129,7 @@ function HaromLap() {
         if (cancelled) return;
         if (r.ok && r.reading) {
           setReading(r.reading);
+          const cardNames = drawnLocal.map((d) => d.card.name);
           recordGuestReadingMemory({
             readingType: "tarot",
             topic: question || category,
@@ -129,7 +139,7 @@ function HaromLap() {
             title: r.reading.oneLine || "Három lapos húzás",
             summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
             oneSentence: r.reading.oneLine,
-            anchors: [category, ...cards.map((card) => card.name)],
+            anchors: [category, ...cardNames],
           });
           if (user) {
             saveMemory({
@@ -142,7 +152,7 @@ function HaromLap() {
                 title: r.reading.oneLine || "Három lapos húzás",
                 summary: r.reading.together || r.reading.questionAnswer || r.reading.oneLine,
                 oneSentence: r.reading.oneLine,
-                anchors: [category, ...cards.map((card) => card.name)],
+                anchors: [category, ...cardNames],
               },
             }).catch(() => {});
           }
@@ -155,7 +165,7 @@ function HaromLap() {
     return () => {
       cancelled = true;
     };
-  }, [aiReading, cards, category, loadMemory, question, revealed, reversedFlags, saveMemory, user]);
+  }, [aiReading, drawn, category, loadMemory, question, revealed, saveMemory, user]);
 
   return (
     <Layout>
@@ -165,7 +175,7 @@ function HaromLap() {
         lead="Három lap, egy ív. Nem külön-külön, hanem együtt mond valamit."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20 space-y-8">
-        {!cards && (
+        {!drawn && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -202,9 +212,10 @@ function HaromLap() {
                 ))}
               </select>
             </div>
-            <button type="submit" className="btn-gold w-full md:w-auto">
-              Húzom a három lapot
+            <button type="submit" className="btn-gold w-full md:w-auto" disabled={drawing}>
+              {drawing ? "Húzás..." : "Húzom a három lapot"}
             </button>
+            {drawError && <p className="text-sm text-ivory/60">{drawError}</p>}
           </form>
         )}
 
@@ -214,16 +225,16 @@ function HaromLap() {
           situation={category}
         />
 
-        {cards && (
+        {drawn && (
           <>
             <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
-              {cards.map((c, i) => (
+              {drawn.map((d, i) => (
                 <div key={i}>
                   <div className="text-center text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2">
                     {LABELS[i]}
                   </div>
                   {revealed[i] ? (
-                    <CardFace card={c} reversed={reversedFlags[i] === true} />
+                    <CardFace card={d.card} reversed={d.reversed} />
                   ) : (
                     <button
                       type="button"
@@ -247,39 +258,42 @@ function HaromLap() {
                     className="md:col-span-2"
                   />
                 )}
-                {question.trim() && (
-                  <Section eyebrow="A kérdésedre" title={`„${question.trim()}”`}>
-                    {reading?.questionAnswer ??
-                      threeCardQuestionFallback(question, cards[1], category)}
-                  </Section>
+                {reading && (
+                  <>
+                    {question.trim() && reading.questionAnswer && (
+                      <Section eyebrow="A kérdésedre" title={`„${question.trim()}”`}>
+                        {reading.questionAnswer}
+                      </Section>
+                    )}
+                    {reading.past && (
+                      <Section eyebrow="Múlt — honnan jön ez a helyzet?">{reading.past}</Section>
+                    )}
+                    {reading.present && (
+                      <Section eyebrow="Jelen — mi történik most valójában?">
+                        {reading.present}
+                      </Section>
+                    )}
+                    {reading.future && (
+                      <Section eyebrow="Jövő — merre mozdulhat?">{reading.future}</Section>
+                    )}
+                    {reading.together && (
+                      <Section eyebrow="A három lap együtt">{reading.together}</Section>
+                    )}
+                    {reading.warn && (
+                      <Section eyebrow="Mire figyelj most?">{reading.warn}</Section>
+                    )}
+                    {reading.oneLine && (
+                      <Section eyebrow="Egy mondatban az üzenet">
+                        <em>{reading.oneLine}</em>
+                      </Section>
+                    )}
+                  </>
                 )}
-                <Section eyebrow="Múlt — honnan jön ez a helyzet?">
-                  {reading?.past ?? cards[0].general}
-                </Section>
-                <Section eyebrow="Jelen — mi történik most valójában?">
-                  {reading?.present ?? cards[1].general}
-                </Section>
-                <Section eyebrow="Jövő — merre mozdulhat?">
-                  {reading?.future ?? cards[2].general}
-                </Section>
-                <Section eyebrow="A három lap együtt">
-                  {reading?.together ?? (
-                    <>
-                      Ami {cards[0].keywords[0]}-ként indult, most {cards[1].keywords[0]} formájában
-                      kér figyelmet, és {cards[2].keywords[0]} felé hív. Nem három különálló dolog —
-                      egy ív, ami most rajtad keresztül folytatódik.
-                    </>
-                  )}
-                </Section>
-                <Section eyebrow="Mire figyelj most?">{reading?.warn ?? cards[1].warning}</Section>
-                <Section eyebrow="Egy mondatban az üzenet">
-                  <em>{reading?.oneLine ?? cards[2].daily}</em>
-                </Section>
               </div>
             )}
 
             <div className="text-center pt-4">
-              <button onClick={() => setCards(null)} className="btn-ghost-gold">
+              <button onClick={() => setDrawn(null)} className="btn-ghost-gold">
                 Új húzás
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
@@ -328,7 +342,7 @@ function HaromLap() {
         productSlug={paywallProduct}
         sourceRoute="/harom-lap"
         inputPayload={{
-          cards: cards?.map((c) => c.name),
+          cards: drawn?.map((d) => d.card.name),
           question,
           category,
           memoryContext:
@@ -343,6 +357,3 @@ function HaromLap() {
   );
 }
 
-function threeCardQuestionFallback(question: string, card: TarotCard, category: string): string {
-  return `A kérdésedre ${withHungarianArticle(card.name)} azt mutatja, hogy a ${category} témájában most nem a gyors lezárás, hanem a jelen helyzet pontosabb érzékelése visz közelebb. A válasz inkább abban látszik, hogy ${card.keywords[0].toLowerCase()} minősége támogat-e vagy feszít benned.`;
-}
