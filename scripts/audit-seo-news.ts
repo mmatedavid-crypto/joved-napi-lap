@@ -49,6 +49,11 @@ const checks: Check[] = [
       "Készül a friss horoszkópod",
       "háttéradatot vesszük alapul",
       "természetes magyar olvasatot",
+      "loadingSteps",
+      "forrását kérjük le",
+      "hűen fordítjuk",
+      "korábbi jó minőségű cache-t keresünk",
+      "Csak vállalható cikk kerül indexelhető oldalra",
     ],
   },
   {

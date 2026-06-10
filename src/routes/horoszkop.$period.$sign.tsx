@@ -126,6 +126,14 @@ function HoroscopeArticlePending() {
     period && HOROSCOPE_PERIODS.includes(period) ? PERIOD_LABEL[period] : "Horoszkóp";
   const sign = signSlug ? SIGN_BY_SLUG[signSlug] : undefined;
   const signName = sign ? SIGN_HU[sign] : "a jegyed";
+  const periodRange = period ? periodDateLabel(period) : "a mostani időszak";
+  const loadingSteps = [
+    `${signName} ${periodLabel.toLowerCase()} forrását kérjük le a mostani időszakra.`,
+    `A ${periodRange} háttéradatait rendezzük magyar cikké.`,
+    "A forrásszöveget hűen fordítjuk, nem rövidítjük le sablonos üzenetté.",
+    "Külön figyeljük a hangulat, kapcsolatok, munka és fókusz részeit.",
+    "Ha a friss forrás lassan érkezik, először korábbi jó minőségű cache-t keresünk.",
+  ] as const;
 
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-10 pb-20">
@@ -147,7 +155,22 @@ function HoroscopeArticlePending() {
           kind="horoscope"
           title="A horoszkóp fordítása készül"
           className="mt-6"
+          steps={loadingSteps}
         />
+        <div className="mt-5 grid gap-2 text-left text-sm text-ivory/58 sm:grid-cols-3">
+          <div className="rounded-md border border-gold/10 px-3 py-2">
+            <span className="block text-gold/75">1. Forrás</span>
+            <span>Időszak és jegy szerinti horoszkóp-adat.</span>
+          </div>
+          <div className="rounded-md border border-gold/10 px-3 py-2">
+            <span className="block text-gold/75">2. Magyarítás</span>
+            <span>Hű fordítás, nyers angol szöveg nélkül.</span>
+          </div>
+          <div className="rounded-md border border-gold/10 px-3 py-2">
+            <span className="block text-gold/75">3. Ellenőrzés</span>
+            <span>Csak vállalható cikk kerül indexelhető oldalra.</span>
+          </div>
+        </div>
       </div>
     </article>
   );

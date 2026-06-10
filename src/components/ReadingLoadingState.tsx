@@ -58,14 +58,19 @@ type Props = {
   kind: ReadingLoadingKind;
   title?: string;
   className?: string;
+  steps?: readonly string[];
 };
 
 export function ReadingLoadingState({
   kind,
   title = "Készül az olvasatod",
   className = "",
+  steps: customSteps,
 }: Props) {
-  const steps = useMemo(() => STEPS[kind], [kind]);
+  const steps = useMemo(
+    () => (customSteps?.length ? customSteps : STEPS[kind]),
+    [customSteps, kind],
+  );
   const [stepIndex, setStepIndex] = useState(0);
 
   useEffect(() => {
