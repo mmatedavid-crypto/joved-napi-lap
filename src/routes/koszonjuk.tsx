@@ -186,6 +186,7 @@ function Page() {
               <Section eyebrow="Készítjük">
                 <p>{orderPreparationLead(order)}</p>
                 <p className="mt-3 text-sm text-ivory/60">{orderPreparationDetail(order)}</p>
+                <OrderPreparationTimeline order={order} />
                 <p className="mt-3 text-sm text-ivory/60">
                   Ha vendégként vásároltál, ezt az oldalt érdemes megtartanod. Ha bejelentkeztél, a
                   profilodban is eléred az elkészült olvasatot.
@@ -268,6 +269,37 @@ function Page() {
         )}
       </div>
     </Layout>
+  );
+}
+
+function OrderPreparationTimeline({ order }: { order: OrderView }) {
+  const steps =
+    order.category === "delayed"
+      ? [
+          "A fizetés megérkezett, a kérdésedet és a megadott adatokat rögzítettük.",
+          "A részletes olvasat több szakaszban készül, ezért nem azonnali sablonszöveget kapsz.",
+          "Amikor elkészül, ezen a linken megnyílik; emailben is jelzünk, akkor is, ha közben bezárod az oldalt.",
+        ]
+      : [
+          "A fizetés megérkezett, az olvasat feldolgozása elindult.",
+          "Az azonnali olvasat általában pár percen belül megjelenik ezen az oldalon.",
+          "Ha az email késik, ez a biztonságos rendelési link akkor is a közvetlen hozzáférésed marad.",
+        ];
+
+  return (
+    <div className="mt-4 rounded-md border border-gold/15 bg-gold/[0.06] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Mi történik most?</div>
+      <ol className="mt-3 space-y-2 text-sm leading-relaxed text-ivory/64">
+        {steps.map((step, index) => (
+          <li key={step} className="grid grid-cols-[1.5rem_1fr] gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full border border-gold/25 text-[11px] text-gold/80">
+              {index + 1}
+            </span>
+            <span>{step}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 

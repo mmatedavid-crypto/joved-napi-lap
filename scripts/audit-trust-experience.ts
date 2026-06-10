@@ -79,6 +79,11 @@ const checks: Check[] = [
     includes: [
       "safeOrderStatusErrorMessage(e)",
       "function safeOrderStatusErrorMessage",
+      "function OrderPreparationTimeline",
+      "Mi történik most?",
+      "A fizetés megérkezett, a kérdésedet és a megadott adatokat rögzítettük.",
+      "Az azonnali olvasat általában pár percen belül megjelenik ezen az oldalon.",
+      "ez a biztonságos rendelési link akkor is a közvetlen hozzáférésed marad",
       "rendelés nem található",
       "A rendelés nem vész el",
       "Ellenőrizd, hogy a fizetés utáni teljes linket nyitottad-e meg",
