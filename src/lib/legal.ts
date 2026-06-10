@@ -1,7 +1,7 @@
 export const SITE_LEGAL = {
   siteName: "Jövőd.hu",
   siteUrl: "https://jovod.hu",
-  supportEmail: "preagzrt@gmail.com",
+  supportEmail: "hello@jovod.hu",
   operator: {
     name: "Precíziós Agrokémia Zártkörűen Működő Részvénytársaság",
     shortName: "Precíziós Agrokémia Zrt.",

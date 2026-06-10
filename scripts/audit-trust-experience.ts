@@ -12,7 +12,7 @@ const checks: Check[] = [
     name: "support email is centralized through legal config",
     file: "src/components/PaidReadingBody.tsx",
     includes: ["SITE_LEGAL.supportEmail", "`Kapcsolat: ${SITE_LEGAL.supportEmail}`"],
-    excludes: ["ugyfelszolgalat@jovod.hu", "preagzrt@gmail.com"],
+    excludes: ["hello@jovod.hu", "hello@jovod.hu"],
   },
   {
     name: "homepage explains free entry, paid price floor, and safe access",
