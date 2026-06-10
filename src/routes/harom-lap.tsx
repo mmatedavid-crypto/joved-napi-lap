@@ -124,7 +124,7 @@ function HaromLap() {
         lead="Három lap, egy ív. Nem külön-külön, hanem együtt mond valamit."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20 space-y-8">
-        {!drawn && (
+        {!slots && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -174,16 +174,16 @@ function HaromLap() {
           situation={category}
         />
 
-        {drawn && (
+        {slots && (
           <>
             <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
-              {drawn.map((d, i) => (
+              {slots.map((s, i) => (
                 <div key={i}>
                   <div className="text-center text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2">
                     {LABELS[i]}
                   </div>
                   {revealed[i] ? (
-                    <CardFace card={d.card} reversed={d.reversed} />
+                    <CardFace card={localCardFromSlot(s)} reversed={s.roxy.reversed} />
                   ) : (
                     <button
                       type="button"
@@ -200,49 +200,21 @@ function HaromLap() {
 
             {revealed.every(Boolean) && (
               <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                {loadingReading && !reading && (
-                  <ReadingLoadingState
-                    kind="tarot"
-                    title="A három lap története készül"
-                    className="md:col-span-2"
-                  />
-                )}
-                {reading && (
-                  <>
-                    {question.trim() && reading.questionAnswer && (
-                      <Section eyebrow="A kérdésedre" title={`„${question.trim()}”`}>
-                        {reading.questionAnswer}
-                      </Section>
-                    )}
-                    {reading.past && (
-                      <Section eyebrow="Múlt — honnan jön ez a helyzet?">{reading.past}</Section>
-                    )}
-                    {reading.present && (
-                      <Section eyebrow="Jelen — mi történik most valójában?">
-                        {reading.present}
-                      </Section>
-                    )}
-                    {reading.future && (
-                      <Section eyebrow="Jövő — merre mozdulhat?">{reading.future}</Section>
-                    )}
-                    {reading.together && (
-                      <Section eyebrow="A három lap együtt">{reading.together}</Section>
-                    )}
-                    {reading.warn && (
-                      <Section eyebrow="Mire figyelj most?">{reading.warn}</Section>
-                    )}
-                    {reading.oneLine && (
-                      <Section eyebrow="Egy mondatban az üzenet">
-                        <em>{reading.oneLine}</em>
-                      </Section>
-                    )}
-                  </>
+                {slots.map((s, i) => (
+                  <Section key={i} eyebrow={LABELS[i]} title={localCardFromSlot(s).name}>
+                    {s.hu.meaning}
+                  </Section>
+                ))}
+                {slots[2]?.hu.oneLine && (
+                  <Section eyebrow="Egy mondatban az üzenet" className="md:col-span-2">
+                    <em>{slots[2].hu.oneLine}</em>
+                  </Section>
                 )}
               </div>
             )}
 
             <div className="text-center pt-4">
-              <button onClick={() => setDrawn(null)} className="btn-ghost-gold">
+              <button onClick={() => setSlots(null)} className="btn-ghost-gold">
                 Új húzás
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
@@ -291,7 +263,7 @@ function HaromLap() {
         productSlug={paywallProduct}
         sourceRoute="/harom-lap"
         inputPayload={{
-          cards: drawn?.map((d) => d.card.name),
+          cards: slots?.map((s) => localCardFromSlot(s).name),
           question,
           category,
           memoryContext:
