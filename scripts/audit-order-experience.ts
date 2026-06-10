@@ -56,7 +56,12 @@ const checks: Check[] = [
   {
     name: "paid memory keeps source route",
     file: "src/lib/orderProcessing.server.ts",
-    includes: ["source_route, response_payload", "source_route: order.source_route"],
+    includes: [
+      "source_route, response_payload",
+      "source_route: order.source_route",
+      "ORDER_PROCESSING_RETRY_AFTER_MS",
+      "PROCESSING_RETRY_AFTER_MS",
+    ],
   },
   {
     name: "thank-you page exposes continuation CTA",

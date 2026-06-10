@@ -10,7 +10,9 @@ type ProcessOrderResult =
   | { ok: true; response?: PaidOrderReading; alreadyDone?: true; processing?: true }
   | { ok: false; error: string };
 
-const PROCESSING_RETRY_AFTER_MS = 15 * 60 * 1000;
+const PROCESSING_RETRY_AFTER_MS = Number(
+  process.env.ORDER_PROCESSING_RETRY_AFTER_MS ?? 3 * 60 * 1000,
+);
 
 export async function processPaidOrderBySession(sessionId: string): Promise<ProcessOrderResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
