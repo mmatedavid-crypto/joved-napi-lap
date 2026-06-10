@@ -7,11 +7,14 @@ import { StreamingText } from "@/components/StreamingText";
 import { ShareCardButton } from "@/components/ShareCardButton";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
-import { type TarotCard } from "@/data/cards";
+import { CARDS, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
-import { aiTarotReadingHU, roxyTarotDraw, type TarotReadingHU } from "@/lib/roxy.functions";
-import { normalizeRoxyDraw } from "@/lib/roxyNormalize";
-import { mapRoxyToLocal, toAIInput, type LocalDrawn } from "@/lib/roxyCardMap";
+import {
+  aiTarotDailyHU,
+  aiTarotDrawHU,
+  type TarotCardHU,
+  type TarotSlot,
+} from "@/lib/roxyTranslate.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
@@ -33,26 +36,28 @@ export const Route = createFileRoute("/mai-lap")({
 
 type Daily = { date: string; cardId: string; reversed?: boolean };
 
-function rememberDailyCard(card: TarotCard, reversed: boolean, reading: TarotReadingHU | null) {
+function localCardFromSlot(slot: TarotSlot): TarotCard {
+  const id = slot.roxy.localId;
+  const found = id ? CARDS.find((c) => c.id === id) : null;
+  return found ?? CARDS[0];
+}
+
+function rememberDailyCard(card: TarotCard, reversed: boolean, hu: TarotCardHU | null) {
   recordGuestReadingMemory({
     readingType: "tarot",
     topic: "mai lap",
     situation: reversed ? "fordított lap" : "álló lap",
     sourceRoute: "/mai-lap",
     title: `Mai lap · ${card.name}${reversed ? " fordítva" : ""}`,
-    summary:
-      [reading?.oneLine, reading?.cardMessage].filter(Boolean).join(" ") ||
-      `${card.name} napi tarot lap.`,
-    oneSentence: reading?.oneLine ?? undefined,
+    summary: [hu?.oneLine, hu?.meaning].filter(Boolean).join(" ") || `${card.name} napi tarot lap.`,
+    oneSentence: hu?.oneLine ?? undefined,
     anchors: [card.name, reversed ? "fordított lap" : "álló lap", ...card.keywords],
   });
 }
 
 function MaiLap() {
-  const [drawn, setDrawn] = useState<LocalDrawn | null>(null);
+  const [slot, setSlot] = useState<TarotSlot | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const [reading, setReading] = useState<TarotReadingHU | null>(null);
-  const [loadingReading, setLoadingReading] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -60,56 +65,49 @@ function MaiLap() {
     "napi_lap_ai",
   );
   const [alreadyDrawnToday, setAlreadyDrawnToday] = useState(false);
-  const [extraPaidCard, setExtraPaidCard] = useState<LocalDrawn | null>(null);
-  const aiReading = useServerFn(aiTarotReadingHU);
-  const drawRoxy = useServerFn(roxyTarotDraw);
-  const rememberDrawRef = useRef(false);
+  const [extraSlot, setExtraSlot] = useState<TarotSlot | null>(null);
+  const callDaily = useServerFn(aiTarotDailyHU);
+  const callDraw = useServerFn(aiTarotDrawHU);
   const rememberedDrawKeyRef = useRef<string | null>(null);
 
-  const card = drawn?.card ?? null;
-  const reversed = drawn?.reversed ?? false;
-
-  async function performDraw(seed: string): Promise<LocalDrawn | null> {
-    const r = await drawRoxy({ data: { count: 1, allowReversals: true, seed } });
-    if (!r.ok) return null;
-    const norm = normalizeRoxyDraw(r.data);
-    const mapped = mapRoxyToLocal(norm);
-    return mapped[0] ?? null;
-  }
+  const card = slot ? localCardFromSlot(slot) : null;
+  const reversed = slot?.roxy.reversed ?? false;
+  const hu = slot?.hu ?? null;
 
   useEffect(() => {
     const stored = loadLocal<Daily>("daily");
     if (stored && stored.date === todayKey()) {
-      // Determinisztikus seed alapján újrahúzzuk Roxytól ugyanazt a lapot
-      // (a Roxy cache + a daily seed garantálja, hogy ugyanaz jöjjön vissza).
       setDrawing(true);
-      performDraw(`daily:${todayKey()}`)
-        .then((d) => {
-          if (d) {
-            setDrawn(d);
+      callDaily({ data: { dateKey: todayKey() } })
+        .then((r) => {
+          if (r.ok && r.slot) {
+            setSlot(r.slot);
             setRevealed(true);
             setAlreadyDrawnToday(true);
           }
         })
         .finally(() => setDrawing(false));
     }
-  }, []);
+  }, [callDaily]);
 
   async function draw() {
     setDrawing(true);
     setDrawError(null);
-    rememberDrawRef.current = true;
-    setReading(null);
     try {
-      const d = await performDraw(`daily:${todayKey()}`);
-      if (!d) {
+      const r = await callDaily({ data: { dateKey: todayKey() } });
+      if (!r.ok || !r.slot) {
         setDrawError("A húzás most nem érkezett meg. Próbáld újra egy pillanat múlva.");
         return;
       }
-      setDrawn(d);
+      setSlot(r.slot);
       setRevealed(false);
       setAlreadyDrawnToday(true);
-      saveLocal<Daily>("daily", { date: todayKey(), cardId: d.card.id, reversed: d.reversed });
+      const lc = localCardFromSlot(r.slot);
+      saveLocal<Daily>("daily", {
+        date: todayKey(),
+        cardId: lc.id,
+        reversed: r.slot.roxy.reversed,
+      });
     } finally {
       setDrawing(false);
     }
@@ -118,11 +116,10 @@ function MaiLap() {
   async function drawExtra() {
     setDrawing(true);
     try {
-      // Az extra húzás NEM determinisztikus — random seed, allowReversals=true.
       const seed = `extra:${todayKey()}:${Math.floor(Math.random() * 1_000_000)}`;
-      const d = await performDraw(seed);
-      if (d) {
-        setExtraPaidCard(d);
+      const r = await callDraw({ data: { count: 1, allowReversals: true, seed } });
+      if (r.ok && r.slots[0]) {
+        setExtraSlot(r.slots[0]);
         setPaywallProduct("extra_huzas");
         setPaywallOpen(true);
       }
@@ -132,45 +129,13 @@ function MaiLap() {
   }
 
   useEffect(() => {
-    if (!drawn || !revealed) return;
-    const currentDrawn = drawn;
-    const currentCard = currentDrawn.card;
-    let cancelled = false;
-    setLoadingReading(true);
-    aiReading({
-      data: {
-        spread: "single",
-        cards: [toAIInput(currentDrawn)],
-        dateKey: todayKey(),
-      },
-    })
-      .then((r) => {
-        if (cancelled) return;
-        const nextReading = r.ok && r.reading ? r.reading : null;
-        if (nextReading) setReading(nextReading);
-        const memoryKey = `${todayKey()}:${currentCard.id}:${currentDrawn.reversed ? "reversed" : "upright"}`;
-        if (rememberDrawRef.current && rememberedDrawKeyRef.current !== memoryKey) {
-          rememberDailyCard(currentCard, currentDrawn.reversed, nextReading);
-          rememberedDrawKeyRef.current = memoryKey;
-          rememberDrawRef.current = false;
-        }
-        setLoadingReading(false);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          const memoryKey = `${todayKey()}:${currentCard.id}:${currentDrawn.reversed ? "reversed" : "upright"}`;
-          if (rememberDrawRef.current && rememberedDrawKeyRef.current !== memoryKey) {
-            rememberDailyCard(currentCard, currentDrawn.reversed, null);
-            rememberedDrawKeyRef.current = memoryKey;
-            rememberDrawRef.current = false;
-          }
-          setLoadingReading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [aiReading, drawn, revealed]);
+    if (!slot || !revealed) return;
+    const lc = localCardFromSlot(slot);
+    const memoryKey = `${todayKey()}:${lc.id}:${slot.roxy.reversed ? "reversed" : "upright"}`;
+    if (rememberedDrawKeyRef.current === memoryKey) return;
+    rememberDailyCard(lc, slot.roxy.reversed, slot.hu);
+    rememberedDrawKeyRef.current = memoryKey;
+  }, [slot, revealed]);
 
   return (
     <Layout>
