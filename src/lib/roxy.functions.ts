@@ -672,15 +672,10 @@ const TarotCardInput = z.object({
   id: z.string().min(1).max(64),
   name: z.string().min(1).max(80),
   keywords: z.array(z.string().min(1).max(40)).max(8).optional(),
-  general: z.string().max(600).optional(),
-  love: z.string().max(600).optional(),
-  decision: z.string().max(600).optional(),
-  warning: z.string().max(600).optional(),
-  daily: z.string().max(400).optional(),
   reversed: z.boolean().optional(),
-  // Optional Roxy-sourced English fields. When present, the AI uses these
-  // as source material to translate/stylize into Hungarian — much higher
-  // fidelity than guessing from keywords alone.
+  // Roxy-sourced English fields. The AI uses these as source material to
+  // translate/stylize into Hungarian. We INTENTIONALLY no longer accept any
+  // helyi magyar jelentés-szöveget — minden tartalmi forrás Roxy.
   meaningEn: z.string().max(2000).optional(),
   loveEn: z.string().max(2000).optional(),
   careerEn: z.string().max(2000).optional(),
