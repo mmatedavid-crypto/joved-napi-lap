@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { roxyIchingDailyCast, aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { normalizeRoxyIching } from "@/lib/roxyNormalize";
@@ -279,6 +280,7 @@ function Page() {
             <button className="btn-gold">Húzom a lapot</button>
           </form>
         )}
+        <GuestMemoryInsightPanel readingType="decision" topic={q || cat} situation={cat} />
         {cards && (
           <>
             <div

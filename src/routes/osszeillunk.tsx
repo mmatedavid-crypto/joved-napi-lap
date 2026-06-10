@@ -18,6 +18,7 @@ import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
 import { useAuth } from "@/hooks/useAuth";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/osszeillunk")({
@@ -294,6 +295,8 @@ function Page() {
         {loading && !reading && (
           <ReadingLoadingState kind="compatibility" title="Az összeillés készül" />
         )}
+
+        <GuestMemoryInsightPanel readingType="compatibility" topic={status} situation={status} />
 
         {profile && reading && (
           <div className="space-y-4">

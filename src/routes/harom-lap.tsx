@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
@@ -206,6 +207,12 @@ function HaromLap() {
             </button>
           </form>
         )}
+
+        <GuestMemoryInsightPanel
+          readingType="tarot"
+          topic={question || category}
+          situation={category}
+        />
 
         {cards && (
           <>

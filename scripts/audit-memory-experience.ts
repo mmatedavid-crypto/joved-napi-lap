@@ -91,9 +91,74 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "guest memory insight panel shows returning-user arc gently",
+    file: "src/components/GuestMemoryInsightPanel.tsx",
+    includes: [
+      "getGuestReadingContext",
+      "context.memories.length < 2",
+      "Ismétlődő mintád",
+      "insights.recurringQuestion",
+      "insights.changeSinceLast",
+      "distinctCompatibilityCount >= 3",
+      "Csak ebben a böngészőben tárolt",
+      "clearGuestPersonalization",
+      "Helyi minta törlése",
+    ],
+  },
+  {
     name: "layout mounts guest memory notice",
     file: "src/components/Layout.tsx",
     includes: ["GuestMemoryNotice", "<GuestMemoryNotice />"],
+  },
+  {
+    name: "key reading pages surface guest memory insight panel",
+    file: "src/routes/osszeillunk.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      'readingType="compatibility"',
+      "topic={status}",
+      "situation={status}",
+    ],
+  },
+  {
+    name: "tarot relationship pages surface guest memory insight panel",
+    file: "src/routes/randi-elott.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      'readingType="love"',
+      "topic={q || sit}",
+      "situation={sit}",
+    ],
+  },
+  {
+    name: "decision and three-card pages surface guest memory insight panel",
+    file: "src/routes/dontes-elott.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      'readingType="decision"',
+      "topic={q || cat}",
+      "situation={cat}",
+    ],
+  },
+  {
+    name: "three-card page surfaces guest memory insight panel",
+    file: "src/routes/harom-lap.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      'readingType="tarot"',
+      "topic={question || category}",
+      "situation={category}",
+    ],
+  },
+  {
+    name: "dream page surfaces guest memory insight panel",
+    file: "src/routes/alomfejtes.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      'readingType="dream"',
+      "topic={result?.title || text}",
+      "situation={emotion}",
+    ],
   },
   {
     name: "home daily compass uses and records returning-user context",

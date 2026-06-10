@@ -9,6 +9,7 @@ import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
@@ -191,6 +192,12 @@ function Page() {
         </form>
 
         {loading && !result && <ReadingLoadingState kind="dream" title="Az álomfejtés készül" />}
+
+        <GuestMemoryInsightPanel
+          readingType="dream"
+          topic={result?.title || text}
+          situation={emotion}
+        />
 
         {noSymbol && !result && (
           <div className="surface p-6 space-y-3">
