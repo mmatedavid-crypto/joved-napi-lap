@@ -678,6 +678,15 @@ const TarotCardInput = z.object({
   warning: z.string().max(600).optional(),
   daily: z.string().max(400).optional(),
   reversed: z.boolean().optional(),
+  // Optional Roxy-sourced English fields. When present, the AI uses these
+  // as source material to translate/stylize into Hungarian — much higher
+  // fidelity than guessing from keywords alone.
+  meaningEn: z.string().max(2000).optional(),
+  loveEn: z.string().max(2000).optional(),
+  careerEn: z.string().max(2000).optional(),
+  financesEn: z.string().max(2000).optional(),
+  healthEn: z.string().max(2000).optional(),
+  spiritualityEn: z.string().max(2000).optional(),
 });
 
 type TarotCardInputT = z.infer<typeof TarotCardInput>;
