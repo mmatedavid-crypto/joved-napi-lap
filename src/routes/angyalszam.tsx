@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 export const Route = createFileRoute("/angyalszam")({
   head: () => ({
@@ -76,6 +78,18 @@ function Page() {
       };
     }
     setM({ number: clean, meaning, root });
+    recordGuestReadingMemory({
+      readingType: "angel",
+      topic: clean,
+      situation: meaning.title,
+      sourceRoute: "/angyalszam",
+      title: `${clean} · ${meaning.title}`,
+      summary:
+        [meaning.oneLine, meaning.message].filter(Boolean).join(" ") ||
+        `${clean} angyalszám · gyökér: ${root}`,
+      oneSentence: meaning.oneLine,
+      anchors: [clean, `${root}`, meaning.title],
+    });
     setLoading(false);
     trackEvent("angel_number_completed", { number: clean, root });
   }
@@ -110,6 +124,12 @@ function Page() {
         {loading && !m && (
           <ReadingLoadingState kind="angel" title="Az angyalszám olvasata készül" />
         )}
+
+        <GuestMemoryInsightPanel
+          readingType="angel"
+          topic={m?.number}
+          situation={m?.meaning.title}
+        />
 
         {m && (
           <div className="space-y-4">

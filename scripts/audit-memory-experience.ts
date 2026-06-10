@@ -235,6 +235,20 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "angel number page records and surfaces guest memory",
+    file: "src/routes/angyalszam.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "recordGuestReadingMemory",
+      'readingType: "angel"',
+      'sourceRoute: "/angyalszam"',
+      'readingType="angel"',
+      "topic={m?.number}",
+      "situation={m?.meaning.title}",
+      "angel_number_completed",
+    ],
+  },
+  {
     name: "home daily compass uses and records returning-user context",
     file: "src/components/PersonalDailyBriefing.tsx",
     includes: [
