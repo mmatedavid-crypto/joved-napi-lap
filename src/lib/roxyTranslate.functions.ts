@@ -16,6 +16,8 @@ import {
 import {
   normalizeRoxyDraw,
   normalizeRoxyTarotDaily,
+  normalizeRoxySpread,
+  normalizeRoxyYesNo,
   type RoxyDrawnCard,
 } from "./roxyNormalize";
 
