@@ -174,6 +174,19 @@ export type RoxyDrawnCard = {
   number?: number;
   reversed: boolean;
   localId: string | null; // mapped to our card id when Major Arcana
+  // Rich English source fields straight from Roxy. We keep them so the AI
+  // magyarító doesn't have to "invent" Hungarian text — it just translates
+  // and stylizes from concrete source material. Roxy has no `hu` lang, so
+  // we always translate; but the input is now real, not a guess from keywords.
+  position?: number;
+  keywordsEn?: string[];
+  meaningEn?: string;
+  loveEn?: string;
+  careerEn?: string;
+  financesEn?: string;
+  healthEn?: string;
+  spiritualityEn?: string;
+  imageUrl?: string;
 };
 
 // Roxy Major Arcana ids → our local Hungarian ids.
@@ -201,6 +214,24 @@ const ROXY_MAJOR_ID_TO_LOCAL: Record<string, string> = {
   judgement: "itelet",
   judgment: "itelet",
   "the-world": "vilag",
+  // The Roxy docs are inconsistent: /tarot/cards examples use "fool",
+  // while /tarot/draw examples use "the-fool". Accept both prefixes.
+  fool: "bolond",
+  magician: "mago",
+  "high-priestess": "fopapno",
+  empress: "csaszarno",
+  emperor: "csaszar",
+  hierophant: "fopap",
+  lovers: "szeretok",
+  chariot: "diadalszeker",
+  hermit: "remete",
+  "hanged-man": "akasztott",
+  devil: "ordog",
+  tower: "torony",
+  star: "csillag",
+  moon: "hold",
+  sun: "nap",
+  world: "vilag",
 };
 
 // Roxy Minor Arcana suit names → our local suit slug.
