@@ -155,6 +155,20 @@ export function PaywallDialog({
               </ul>
             </div>
 
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                Teljesítési biztonság
+              </div>
+              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                {fulfillmentPromise(product.category).map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {inputSummary.length > 0 && (
               <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
                 <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
@@ -383,6 +397,20 @@ function qualityReviewPromise(product: ProductDef): string[] {
     ...base,
     "az azonnali olvasatnak rövidnek, de konkrétan a megadott helyzethez kötöttnek kell lennie",
   ];
+}
+
+function fulfillmentPromise(category: ProductDef["category"]): string[] {
+  const base = [
+    "ha technikai hiba miatt nem nyílik meg az olvasat, utánanézünk és pótoljuk a hozzáférést",
+    "ha a szöveg hibásan jelenik meg, javítjuk vagy újraküldjük a vásárlási email címed alapján",
+  ];
+  if (category === "delayed") {
+    return [
+      ...base,
+      "a részletes olvasatoknál a vállalt határidőt és az elkészült állapotot a rendelési linken követheted",
+    ];
+  }
+  return [...base, "az azonnali olvasatoknál pár perces feldolgozási késés még normális lehet"];
 }
 
 function summarizeInputPayload(
