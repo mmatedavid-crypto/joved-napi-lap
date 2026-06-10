@@ -162,6 +162,33 @@ function PricingPage() {
           category="instant"
         />
 
+        <section className="mt-10 rounded-md border border-gold/15 bg-black/10 p-5 md:p-7">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+            Mit kapsz kézhez?
+          </div>
+          <h2 className="mt-2 font-display text-3xl text-ivory">Azonnali vagy részletes?</h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <ReadingTypeCard
+              title="Azonnali olvasat"
+              price="590-790 Ft"
+              delivery="Pár percen belül"
+              bestFor="Ha egy konkrét érzésre, napi kérdésre vagy gyors belső irányra kérsz választ."
+              result="Rövid, személyes szöveg, amely a megadott témára reagál, de nem bontja ki hosszú riportként."
+            />
+            <ReadingTypeCard
+              title="Részletes írásos elemzés"
+              price="1 990-2 990 Ft"
+              delivery="Általában 24 órán belül"
+              bestFor="Ha ugyanaz a kapcsolat, döntés vagy élethelyzet napok óta visszatér, és több réteget szeretnél látni."
+              result="Több szakaszos, összefüggő elemzés, amelyben a kérdésed, adataid és a választott módszer együtt jelenik meg."
+            />
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-ivory/58">
+            Mindkét típus elérhető a biztonságos rendelési linken; bejelentkezve a profilban is
+            visszanézhető. Vendégként az emailt és a rendelési linket érdemes megtartanod.
+          </p>
+        </section>
+
         <PricingGroup
           title="Részletes írásos elemzések"
           lead="Mélyebb, több szakaszos olvasatok 24 órán belül. Akkor érdemes, ha a kérdés nem fér bele egy rövid válaszba."
@@ -214,6 +241,43 @@ function TrustPoint({ title, text }: { title: string; text: string }) {
       <div className="font-display text-xl text-ivory">{title}</div>
       <p className="mt-2 text-sm leading-relaxed text-ivory/62">{text}</p>
     </div>
+  );
+}
+
+function ReadingTypeCard({
+  title,
+  price,
+  delivery,
+  bestFor,
+  result,
+}: {
+  title: string;
+  price: string;
+  delivery: string;
+  bestFor: string;
+  result: string;
+}) {
+  return (
+    <article className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-[oklch(0.13_0.03_292/0.58)] p-4">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-display text-2xl leading-tight text-ivory">{title}</h3>
+        <span className="shrink-0 text-sm tabular-nums text-gold">{price}</span>
+      </div>
+      <dl className="mt-4 space-y-3 text-sm leading-relaxed">
+        <div>
+          <dt className="text-[10px] uppercase tracking-[0.22em] text-gold/70">Elkészülés</dt>
+          <dd className="mt-1 text-ivory/68">{delivery}</dd>
+        </div>
+        <div>
+          <dt className="text-[10px] uppercase tracking-[0.22em] text-gold/70">Akkor válaszd</dt>
+          <dd className="mt-1 text-ivory/68">{bestFor}</dd>
+        </div>
+        <div>
+          <dt className="text-[10px] uppercase tracking-[0.22em] text-gold/70">Kézhez kapod</dt>
+          <dd className="mt-1 text-ivory/68">{result}</dd>
+        </div>
+      </dl>
+    </article>
   );
 }
 
