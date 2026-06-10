@@ -225,6 +225,23 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "daily card page records explicit revealed draw safely",
+    file: "src/routes/mai-lap.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "recordGuestReadingMemory",
+      "rememberDailyCard",
+      "rememberDrawRef",
+      "rememberedDrawKeyRef",
+      'readingType: "tarot"',
+      'topic: "mai lap"',
+      'sourceRoute: "/mai-lap"',
+      'readingType="tarot"',
+      'topic="mai lap"',
+      "setRevealed(false)",
+    ],
+  },
+  {
     name: "dream page surfaces guest memory insight panel",
     file: "src/routes/alomfejtes.tsx",
     includes: [

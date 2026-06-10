@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
@@ -12,6 +12,8 @@ import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 export const Route = createFileRoute("/mai-lap")({
   head: () => ({
@@ -29,6 +31,22 @@ export const Route = createFileRoute("/mai-lap")({
 
 type Daily = { date: string; cardId: string; reversed?: boolean };
 
+function rememberDailyCard(card: TarotCard, reversed: boolean, reading: TarotReadingHU | null) {
+  recordGuestReadingMemory({
+    readingType: "tarot",
+    topic: "mai lap",
+    situation: reversed ? "fordított lap" : "álló lap",
+    sourceRoute: "/mai-lap",
+    title: `Mai lap · ${card.name}${reversed ? " fordítva" : ""}`,
+    summary:
+      [reading?.oneLine, reading?.cardMessage, card.daily, card.general]
+        .filter(Boolean)
+        .join(" ") || `${card.name} napi tarot lap.`,
+    oneSentence: reading?.oneLine ?? card.daily,
+    anchors: [card.name, reversed ? "fordított lap" : "álló lap", ...card.keywords],
+  });
+}
+
 function MaiLap() {
   const [card, setCard] = useState<TarotCard | null>(null);
   const [reversed, setReversed] = useState(false);
@@ -42,6 +60,8 @@ function MaiLap() {
   const [alreadyDrawnToday, setAlreadyDrawnToday] = useState(false);
   const [extraPaidCard, setExtraPaidCard] = useState<TarotCard | null>(null);
   const aiReading = useServerFn(aiTarotReadingHU);
+  const rememberDrawRef = useRef(false);
+  const rememberedDrawKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     const stored = loadLocal<Daily>("daily");
@@ -57,8 +77,10 @@ function MaiLap() {
   function draw() {
     const c = pickCards(1, dailySeed() + Math.floor(Math.random() * 1000))[0];
     const rev = Math.random() < 0.3; // ~30% chance, mint a klasszikus pakliban
+    rememberDrawRef.current = true;
     setCard(c);
     setReversed(rev);
+    setRevealed(false);
     setReading(null);
     setAlreadyDrawnToday(true);
     saveLocal<Daily>("daily", { date: todayKey(), cardId: c.id, reversed: rev });
@@ -90,11 +112,26 @@ function MaiLap() {
     })
       .then((r) => {
         if (cancelled) return;
-        if (r.ok && r.reading) setReading(r.reading);
+        const nextReading = r.ok && r.reading ? r.reading : null;
+        if (nextReading) setReading(nextReading);
+        const memoryKey = `${todayKey()}:${currentCard.id}:${reversed ? "reversed" : "upright"}`;
+        if (rememberDrawRef.current && rememberedDrawKeyRef.current !== memoryKey) {
+          rememberDailyCard(currentCard, reversed, nextReading);
+          rememberedDrawKeyRef.current = memoryKey;
+          rememberDrawRef.current = false;
+        }
         setLoadingReading(false);
       })
       .catch(() => {
-        if (!cancelled) setLoadingReading(false);
+        if (!cancelled) {
+          const memoryKey = `${todayKey()}:${currentCard.id}:${reversed ? "reversed" : "upright"}`;
+          if (rememberDrawRef.current && rememberedDrawKeyRef.current !== memoryKey) {
+            rememberDailyCard(currentCard, reversed, null);
+            rememberedDrawKeyRef.current = memoryKey;
+            rememberDrawRef.current = false;
+          }
+          setLoadingReading(false);
+        }
       });
     return () => {
       cancelled = true;
@@ -157,6 +194,11 @@ function MaiLap() {
                 {loadingReading && !reading && (
                   <ReadingLoadingState kind="tarot" title="A napi lapod készül" />
                 )}
+                <GuestMemoryInsightPanel
+                  readingType="tarot"
+                  topic="mai lap"
+                  situation={reversed ? "fordított lap" : "álló lap"}
+                />
                 <Section eyebrow="Mit üzen ma?">
                   <StreamingText
                     text={reading?.cardMessage ?? reading?.intro ?? card.general}
