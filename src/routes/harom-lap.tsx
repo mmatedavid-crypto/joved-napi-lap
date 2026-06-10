@@ -284,6 +284,11 @@ function HaromLap() {
               </button>
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
                 <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz?</div>
+                <p className="mx-auto mb-4 max-w-xl text-sm leading-relaxed text-ivory/58">
+                  A három lap mély elemzése a most húzott múlt-jelen-jövő ívet bontja ki 24 órán
+                  belül. Ha a kérdés nagyobb, több szereplős vagy régóta húzódik, a Kelta kereszt 10
+                  pozícióban nézi meg a rejtett mintákat is.
+                </p>
                 <button
                   className="btn-gold"
                   onClick={() => {
@@ -294,7 +299,9 @@ function HaromLap() {
                   {productCtaLabel("Három lap — mély elemzés", "harom_lap_mely")}
                 </button>
                 <div className="mt-4 text-sm text-ivory/65">
-                  Nagyobb kérdéshez 10 pozíciós kelta kereszt elemzést is kérhetsz.
+                  Kelta keresztet akkor válassz, ha nem csak választ, hanem teljesebb képet
+                  szeretnél: mi tart vissza, mi mozgat belül, mi látszik kívülről, és merre nyílhat
+                  út.
                 </div>
                 <button
                   className="btn-ghost-gold mt-2"

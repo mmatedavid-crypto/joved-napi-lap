@@ -29,6 +29,8 @@ for (const product of PRODUCTS) {
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
+const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
+const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
 for (const needle of [
   "Miben lesz személyesebb?",
   "Vásárlás menete",
@@ -103,6 +105,21 @@ if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
 
 if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
   failed.push("PaywallDialog must not promise profile access to every guest checkout");
+}
+
+for (const needle of [
+  "A három lap mély elemzése",
+  "24 órán",
+  "Kelta kereszt",
+  "10 pozícióban",
+  "rejtett mintákat",
+  "mi tart vissza",
+  "mi mozgat belül",
+  "merre nyílhat",
+]) {
+  if (!threeCardRouteText.includes(needle)) {
+    failed.push(`Three-card paid CTA missing: ${needle}`);
+  }
 }
 
 const analytics = readFileSync("src/lib/analytics.ts", "utf8");
