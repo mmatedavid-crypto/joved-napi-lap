@@ -18,6 +18,37 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile imports guest memory into account after login",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "getGuestReadingMemoriesForAccountImport",
+      "importGuestReadingMemories",
+      "const importGuestMemories = useServerFn(importGuestReadingMemories)",
+      "guestImportAttempted",
+      "const guestMemories = guestImportAttempted.current",
+      "await importGuestMemories({ data: { memories: guestMemories } })",
+      "clearGuestPersonalization()",
+      "setGuestImportCount(imported.imported)",
+      "Áthoztuk a belépés előtti helyi olvasati mintáidat a profilodba",
+      "nem indulnak újra idegenként",
+    ],
+  },
+  {
+    name: "server can import guest memories into authenticated account safely",
+    file: "src/lib/readingMemory.functions.ts",
+    includes: [
+      "const ImportGuestMemoryInput",
+      "export const importGuestReadingMemories",
+      ".middleware([requireSupabaseAuth])",
+      ".inputValidator(ImportGuestMemoryInput.parse)",
+      ".max(20)",
+      "user_id: context.userId",
+      "imported_from_guest_browser: true",
+      "guest_created_at: memory.createdAt ?? null",
+      "return { ok: true, imported: memories.length }",
+    ],
+  },
+  {
     name: "profile explains memory scope gently",
     file: "src/routes/profil.tsx",
     includes: [
@@ -79,6 +110,8 @@ const checks: Check[] = [
       "deleteCookie(COOKIE_TOTAL_KEY)",
       "deleteCookie(COMPATIBILITY_COUNT_KEY)",
       "deleteCookie(COMPATIBILITY_STATUS_KEY)",
+      "export function getGuestReadingMemoriesForAccountImport",
+      "return readAll().slice(0, 20)",
     ],
   },
   {

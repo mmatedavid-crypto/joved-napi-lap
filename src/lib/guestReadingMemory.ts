@@ -329,6 +329,10 @@ export function getGuestReadingContext(
   };
 }
 
+export function getGuestReadingMemoriesForAccountImport(): GuestReadingMemory[] {
+  return readAll().slice(0, 20);
+}
+
 export function clearGuestPersonalization() {
   if (typeof window !== "undefined") {
     try {

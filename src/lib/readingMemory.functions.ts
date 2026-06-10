@@ -30,6 +30,25 @@ const SaveMemoryInput = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
+const ImportGuestMemoryInput = z.object({
+  memories: z
+    .array(
+      z.object({
+        readingType: ReadingType,
+        topic: z.string().max(120).optional(),
+        question: z.string().max(500).optional(),
+        situation: z.string().max(160).optional(),
+        sourceRoute: z.string().max(120).optional(),
+        title: z.string().max(180).optional(),
+        summary: z.string().min(8).max(900),
+        oneSentence: z.string().max(500).optional(),
+        anchors: z.array(z.string().min(1).max(80)).max(12).optional(),
+        createdAt: z.string().max(40).optional(),
+      }),
+    )
+    .max(20),
+});
+
 const ContextInput = z.object({
   readingType: ReadingType.optional(),
   topic: z.string().max(120).optional(),
@@ -273,6 +292,34 @@ export const saveReadingMemory = createServerFn({ method: "POST" })
     });
     if (error) throw error;
     return { ok: true };
+  });
+
+export const importGuestReadingMemories = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(ImportGuestMemoryInput.parse)
+  .handler(async ({ context, data }) => {
+    const memories = data.memories.slice(0, 20);
+    if (!memories.length) return { ok: true, imported: 0 };
+    const { error } = await context.supabase.from("reading_memories").insert(
+      memories.map((memory) => ({
+        user_id: context.userId,
+        reading_type: memory.readingType,
+        topic: memory.topic ?? null,
+        question: memory.question ?? null,
+        situation: memory.situation ?? null,
+        source_route: memory.sourceRoute ?? null,
+        title: memory.title ?? null,
+        summary: memory.summary,
+        one_sentence: memory.oneSentence ?? null,
+        anchors: cleanAnchors(memory.anchors),
+        metadata: {
+          imported_from_guest_browser: true,
+          guest_created_at: memory.createdAt ?? null,
+        } as never,
+      })),
+    );
+    if (error) throw error;
+    return { ok: true, imported: memories.length };
   });
 
 export const getReadingContext = createServerFn({ method: "POST" })

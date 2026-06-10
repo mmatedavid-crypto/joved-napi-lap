@@ -5,13 +5,17 @@ import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
-import { clearGuestPersonalization } from "@/lib/guestReadingMemory";
+import {
+  clearGuestPersonalization,
+  getGuestReadingMemoriesForAccountImport,
+} from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
 import { getMyOrders, processMyOrder } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 import {
   clearMyReadingMemories,
   getMyReadingMemoryOverview,
+  importGuestReadingMemories,
   type ReadingMemory,
   type ReadingMemoryInsights,
 } from "@/lib/readingMemory.functions";
@@ -67,16 +71,19 @@ function Page() {
   const wakeOrder = useServerFn(processMyOrder);
   const loadMemory = useServerFn(getMyReadingMemoryOverview);
   const clearMemory = useServerFn(clearMyReadingMemories);
+  const importGuestMemories = useServerFn(importGuestReadingMemories);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [memories, setMemories] = useState<ReadingMemory[]>([]);
   const [themeSummary, setThemeSummary] = useState("");
   const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
+  const [guestImportCount, setGuestImportCount] = useState(0);
   const [memoryClearing, setMemoryClearing] = useState(false);
   const [memoryCleared, setMemoryCleared] = useState(false);
   const [retryingOrders, setRetryingOrders] = useState<Set<string>>(() => new Set());
   const awakenedOrders = useRef(new Set<string>());
+  const guestImportAttempted = useRef(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/bejelentkezes" });
@@ -106,18 +113,35 @@ function Page() {
     }
 
     loadOrders().catch(() => setOrdersLoading(false));
-    loadMemory({})
-      .then((r) => {
+    async function loadAndImportMemory() {
+      try {
+        const guestMemories = guestImportAttempted.current
+          ? []
+          : getGuestReadingMemoriesForAccountImport();
+        guestImportAttempted.current = true;
+        if (guestMemories.length) {
+          const imported = await importGuestMemories({ data: { memories: guestMemories } });
+          if (stop) return;
+          if (imported.imported > 0) {
+            clearGuestPersonalization();
+            setGuestImportCount(imported.imported);
+          }
+        }
+        const r = await loadMemory({});
+        if (stop) return;
         setMemories(r.memories ?? []);
         setThemeSummary(r.themeSummary ?? "");
         setInsights(r.insights ?? null);
-        setMemoriesLoading(false);
-      })
-      .catch(() => setMemoriesLoading(false));
+      } finally {
+        if (!stop) setMemoriesLoading(false);
+      }
+    }
+
+    loadAndImportMemory().catch(() => setMemoriesLoading(false));
     return () => {
       stop = true;
     };
-  }, [user, call, wakeOrder, loadMemory]);
+  }, [user, call, wakeOrder, loadMemory, importGuestMemories]);
 
   async function handleClearMemory() {
     if (
@@ -201,6 +225,12 @@ function Page() {
             <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm text-ivory/68">
               Töröltük az olvasati memóriát a fiókodból és a helyi böngészőmintát ebből a
               böngészőből.
+            </p>
+          )}
+          {guestImportCount > 0 && !memoryCleared && (
+            <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm text-ivory/68">
+              Áthoztuk a belépés előtti helyi olvasati mintáidat a profilodba. Így a következő
+              olvasatok nem indulnak újra idegenként.
             </p>
           )}
           {!memoriesLoading && memories.length > 0 && (
