@@ -85,7 +85,7 @@ export function YesNoWidget() {
             <div className="text-sm text-ivory/75">
               <span className="text-ivory/55">A lap: </span>
               <span className="text-ivory">
-                {reading.card.name}
+                {reading.card.cardName}
                 {reading.card.reversed ? " (fordított)" : ""}
               </span>
             </div>
