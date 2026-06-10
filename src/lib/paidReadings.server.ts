@@ -18,6 +18,9 @@ const DEEP_PAID_PRODUCTS = new Set([
   "szammisztika_eletut",
 ]);
 
+const INSTANT_PAID_AI_TIMEOUT_MS = Number(process.env.PAID_READING_TIMEOUT_MS ?? 45_000);
+const DEEP_PAID_AI_TIMEOUT_MS = Number(process.env.PAID_DEEP_READING_TIMEOUT_MS ?? 90_000);
+
 const FORBIDDEN_PAID_PATTERNS = [
   /\b(today|overall|relationship|communication|advice|the|and|you|your)\b/i,
   /összességében|fontos megjegyezni|mint AI|as an AI/i,
@@ -173,6 +176,10 @@ function resolvePremiumModels(productSlug: string): { openaiModel: string; lovab
   };
 }
 
+function paidReadingTimeoutMs(productSlug: string): number {
+  return isDeepPaidProduct(productSlug) ? DEEP_PAID_AI_TIMEOUT_MS : INSTANT_PAID_AI_TIMEOUT_MS;
+}
+
 export async function generatePaidOrderReading(opts: {
   productSlug: string;
   productName: string;
@@ -215,6 +222,7 @@ export async function generatePaidOrderReading(opts: {
       openaiModel,
       lovableModel,
       readingType: `paid:${opts.productSlug}`,
+      timeoutMs: paidReadingTimeoutMs(opts.productSlug),
     });
     if (ai.ok && ai.data) {
       if (isGoodPaidReading(ai.data, opts.productSlug, opts.inputPayload)) {

@@ -279,6 +279,14 @@ if (!paidServer.includes('"gpt-5.2"') || !aiServer.includes('"gpt-5.2"')) {
   policyFailures.push("paid reading model defaults must reference GPT-5.2");
 }
 if (
+  !paidServer.includes("PAID_READING_TIMEOUT_MS") ||
+  !paidServer.includes("PAID_DEEP_READING_TIMEOUT_MS") ||
+  !paidServer.includes("function paidReadingTimeoutMs") ||
+  !paidServer.includes("timeoutMs: paidReadingTimeoutMs(opts.productSlug)")
+) {
+  policyFailures.push("paid readings must use longer AI timeouts before falling back");
+}
+if (
   !paidServer.includes("paidReadingMinimumLength(productSlug)") ||
   !paidServer.includes("isDeepPaidProduct(productSlug) ? 1600 : 900") ||
   !paidServer.includes("paidReadingMinimumSections(productSlug)") ||
