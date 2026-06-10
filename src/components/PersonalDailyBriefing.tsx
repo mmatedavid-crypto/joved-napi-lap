@@ -9,13 +9,17 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { HUDateInput } from "./HUDateInput";
-import { SpreadDeck } from "./SpreadDeck";
-import { CardFace } from "./TarotCard";
+import { CardBack, CardFace } from "./TarotCard";
 import { StreamingText } from "./StreamingText";
 import { ShareCardButton } from "./ShareCardButton";
 import { ReadingLoadingState } from "./ReadingLoadingState";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { roxyPersonalDailyBriefing, type PersonalBriefingHU } from "@/lib/roxy.functions";
+import {
+  aiTarotDailyHU,
+  type TarotCardHU,
+  type TarotSlot,
+} from "@/lib/roxyTranslate.functions";
 import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
@@ -33,6 +37,8 @@ type StoredBriefing = PersonalBriefingHU & {
   personalYearNum: number;
   personalYearMeaning: string;
   drawnCardId: string;
+  drawnReversed?: boolean;
+  drawnHu?: TarotCardHU | null;
 };
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -52,18 +58,27 @@ function Tile({ eyebrow, children }: { eyebrow: string; children: React.ReactNod
   );
 }
 
+function localCardFromSlot(slot: TarotSlot): TarotCard {
+  const id = slot.roxy.localId;
+  const found = id ? CARDS.find((c) => c.id === id) : null;
+  return found ?? CARDS[0];
+}
+
 export function PersonalDailyBriefing() {
   const enrich = useServerFn(roxyPersonalDailyBriefing);
+  const callDaily = useServerFn(aiTarotDailyHU);
 
   const [profile, setProfile] = useState<Profile>({});
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
   const [loading, setLoading] = useState(false);
+  const [drawing, setDrawing] = useState(false);
+  const [drawError, setDrawError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [briefing, setBriefing] = useState<StoredBriefing | null>(null);
   const [phase, setPhase] = useState<"draw" | "card" | "result">("draw");
   const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
-  const [drawResetKey, setDrawResetKey] = useState(0);
+  const [drawnSlot, setDrawnSlot] = useState<TarotSlot | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   useEffect(() => {
@@ -86,10 +101,23 @@ export function PersonalDailyBriefing() {
     }
   }, []);
 
-  function onCardDrawn(card: TarotCard) {
-    setDrawnCard(card);
-    setPhase("card");
-    trackEvent("daily_card_revealed", { cardId: card.id, from: "home" });
+  async function drawDaily() {
+    setDrawing(true);
+    setDrawError(null);
+    try {
+      const r = await callDaily({ data: { dateKey: todayKey() } });
+      if (!r.ok || !r.slot) {
+        setDrawError("A húzás most nem érkezett meg. Próbáld újra egy pillanat múlva.");
+        return;
+      }
+      const lc = localCardFromSlot(r.slot);
+      setDrawnSlot(r.slot);
+      setDrawnCard(lc);
+      setPhase("card");
+      trackEvent("daily_card_revealed", { cardId: lc.id, from: "home" });
+    } finally {
+      setDrawing(false);
+    }
   }
 
   async function enrichWithProfile(e?: React.FormEvent) {
@@ -109,6 +137,7 @@ export function PersonalDailyBriefing() {
     const memoryContext =
       guestMemory.contextText || guestMemory.insightText || guestMemory.themeSummary || undefined;
 
+    const hu = drawnSlot?.hu ?? null;
     const res = await enrich({
       data: {
         birthDate: dob,
@@ -120,8 +149,8 @@ export function PersonalDailyBriefing() {
           id: drawnCard.id,
           name: drawnCard.name,
           keywords: drawnCard.keywords,
-          general: drawnCard.general,
-          daily: drawnCard.daily,
+          general: hu?.meaning || undefined,
+          daily: hu?.oneLine || undefined,
         },
       },
     });
@@ -149,6 +178,8 @@ export function PersonalDailyBriefing() {
       personalYearNum: py,
       personalYearMeaning: pyInfo.meaning,
       drawnCardId: drawnCard.id,
+      drawnReversed: drawnSlot?.roxy.reversed ?? false,
+      drawnHu: hu,
     };
 
     setBriefing(stored);
@@ -176,14 +207,17 @@ export function PersonalDailyBriefing() {
   function resetAll() {
     setBriefing(null);
     setDrawnCard(null);
+    setDrawnSlot(null);
     setError(null);
-    setDrawResetKey((k) => k + 1);
+    setDrawError(null);
     setPhase("draw");
   }
 
   const showDraw = phase === "draw";
   const showCardOnly = phase === "card" && !!drawnCard;
   const showResult = phase === "result" && !!briefing && !!drawnCard;
+  const reversed = drawnSlot?.roxy.reversed ?? briefing?.drawnReversed ?? false;
+  const cardHu = drawnSlot?.hu ?? briefing?.drawnHu ?? null;
 
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-6 pt-2 pb-8">
@@ -201,28 +235,36 @@ export function PersonalDailyBriefing() {
       </div>
 
       {showDraw && (
-        <SpreadDeck
-          count={1}
-          resetKey={drawResetKey}
-          onComplete={(cards) => onCardDrawn(cards[0])}
-        />
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-48">
+            <CardBack />
+          </div>
+          <button className="btn-gold" onClick={drawDaily} disabled={drawing}>
+            {drawing ? "Húzás..." : "Húzom a mai lapom"}
+          </button>
+          {drawError && <p className="text-sm text-ivory/60">{drawError}</p>}
+        </div>
       )}
 
       {showCardOnly && drawnCard && (
         <div className="space-y-5">
           <div className="grid md:grid-cols-[200px,1fr] gap-5 items-start surface p-5 md:p-6 max-w-3xl mx-auto">
             <div className="mx-auto w-full max-w-[200px]">
-              <CardFace card={drawnCard} />
+              <CardFace card={drawnCard} reversed={reversed} />
             </div>
             <div className="space-y-3">
               <Eyebrow>A mai lapod</Eyebrow>
               <div className="font-display text-ivory text-2xl">{drawnCard.name}</div>
-              <div className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed">
-                {drawnCard.general}
-              </div>
-              <div className="text-ivory/75 font-editorial text-[14.5px] italic">
-                {drawnCard.daily}
-              </div>
+              {cardHu?.meaning && (
+                <div className="font-editorial text-ivory/85 text-[15.5px] leading-relaxed">
+                  {cardHu.meaning}
+                </div>
+              )}
+              {cardHu?.oneLine && (
+                <div className="text-ivory/75 font-editorial text-[14.5px] italic">
+                  {cardHu.oneLine}
+                </div>
+              )}
               <div className="pt-2">
                 <button
                   className="btn-gold"
@@ -306,7 +348,7 @@ export function PersonalDailyBriefing() {
           {drawnCard && (
             <div className="grid md:grid-cols-[200px,1fr] gap-5 items-start surface p-5 md:p-6">
               <div className="mx-auto w-full max-w-[200px]">
-                <CardFace card={drawnCard} />
+                <CardFace card={drawnCard} reversed={reversed} />
               </div>
               <div className="space-y-2">
                 <Eyebrow>A mai lapod</Eyebrow>
