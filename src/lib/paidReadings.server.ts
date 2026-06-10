@@ -35,6 +35,7 @@ type PaidReadingQualityResult = {
   chars: number;
   sections: number;
   contextHits: number;
+  requiredContextHits: number;
 };
 
 function paidReadingMinimumLength(productSlug: string): number {
@@ -128,6 +129,12 @@ function countContextHits(body: string, anchors: string[]): number {
   return anchors.filter((anchor) => normalizedBody.includes(anchor)).length;
 }
 
+function paidReadingMinimumContextHits(productSlug: string, anchors: string[]): number {
+  if (anchors.length < 2) return 0;
+  if (!isDeepPaidProduct(productSlug)) return 1;
+  return Math.min(3, Math.max(2, Math.ceil(anchors.length * 0.18)));
+}
+
 function inspectPaidReadingQuality(
   reading: PaidReadingPayload,
   productSlug: string,
@@ -140,12 +147,23 @@ function inspectPaidReadingQuality(
   const minSections = paidReadingMinimumSections(productSlug);
   const anchors = inputContextAnchors(inputPayload);
   const contextHits = countContextHits(body, anchors);
+  const requiredContextHits = paidReadingMinimumContextHits(productSlug, anchors);
   if (body.length < minLength) issues.push(`too_short:${body.length}<${minLength}`);
   if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) issues.push("forbidden_text");
   if (sections < minSections) issues.push(`too_few_sections:${sections}<${minSections}`);
   if (!hasPaidSafetyFrame(reading.body)) issues.push("missing_safety_frame");
-  if (anchors.length >= 2 && contextHits === 0) issues.push("missing_user_context");
-  return { ok: issues.length === 0, issues, chars: body.length, sections, contextHits };
+  if (requiredContextHits > 0 && contextHits === 0) issues.push("missing_user_context");
+  else if (contextHits < requiredContextHits) {
+    issues.push(`weak_user_context:${contextHits}<${requiredContextHits}`);
+  }
+  return {
+    ok: issues.length === 0,
+    issues,
+    chars: body.length,
+    sections,
+    contextHits,
+    requiredContextHits,
+  };
 }
 
 function isGoodPaidReading(
@@ -198,6 +216,8 @@ export async function generatePaidOrderReading(opts: {
           ? "Mély, fizetős elemzést írsz: legyen nyugodt, pontos, személyes és több rétegű."
           : "Azonnali fizetős olvasatot írsz: legyen rövid, éles, személyes és késznek érződő.",
         "A kapott draft tartalmát emeld prémium szintre, de ne találj ki új tényt.",
+        "Ha van konkrét kérdés, helyzet, státusz vagy név, azt az első két szövegrészben nevezd meg természetesen, és a válasz ne kerülje meg ezt a konkrétumot.",
+        "Ne csak általános jelentést írj: minden fő állítás kapcsolódjon legalább egy megadott adathoz, laphoz, számhoz, jegyhez, álomképhez vagy kapcsolati státuszhoz.",
         "Ha az inputban memoryContext szerepel, finoman építsd be mint visszatérő témát vagy korábbi mintát. Ne mondd, hogy adatbázisból emlékszel; természetesen fogalmazz.",
         "Magyarul, tegezve, elegánsan, misztikusan, de józanul írj.",
         "Ne legyen chatbot-szerű vagy magazinos. Ne ígérj biztos jövőt, visszatérést, szerelmet, egészségi vagy pénzügyi eredményt.",
@@ -245,6 +265,7 @@ export async function generatePaidOrderReading(opts: {
         chars: quality.chars,
         sections: quality.sections,
         contextHits: quality.contextHits,
+        requiredContextHits: quality.requiredContextHits,
         issues: quality.issues,
       });
       return withLocalPremiumDraftMeta(draft, {

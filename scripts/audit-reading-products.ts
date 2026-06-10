@@ -293,14 +293,21 @@ if (
   !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug, opts.inputPayload)") ||
   !paidServer.includes("inputContextAnchors(inputPayload)") ||
   !paidServer.includes("countContextHits(body, anchors)") ||
+  !paidServer.includes("function paidReadingMinimumContextHits") ||
+  !paidServer.includes("requiredContextHits") ||
+  !paidServer.includes("weak_user_context") ||
+  !paidServer.includes("contextHits < requiredContextHits") ||
   !paidServer.includes("missing_user_context") ||
   !paidServer.includes("contextHits: quality.contextHits") ||
+  !paidServer.includes("requiredContextHits: quality.requiredContextHits") ||
   !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug, opts.inputPayload)") ||
   !paidServer.includes("[paid_reading_quality_rejected]") ||
   !paidServer.includes("issues: quality.issues") ||
   !paidServer.includes("hasPaidSafetyFrame") ||
   !paidServer.includes("missing_safety_frame") ||
-  !paidServer.includes("önismereti és szimbolikus keret")
+  !paidServer.includes("önismereti és szimbolikus keret") ||
+  !paidServer.includes("az első két szövegrészben nevezd meg") ||
+  !paidServer.includes("ne kerülje meg ezt a konkrétumot")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
 }
