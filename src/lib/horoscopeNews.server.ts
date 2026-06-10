@@ -10,10 +10,10 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v4";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v5";
 const DAY_SECONDS = 60 * 60 * 24;
-const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "google/gemini-2.5-flash";
-const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 90_000);
+const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "openai/gpt-5.2";
+const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 120_000);
 
 const TECHNICAL_FALLBACK_RE =
   /háttéradat|nem érhető el|általános magyar tartalmat|\bprovider\b|\bendpoint\b|\broxy\b|\bapi\b|\bfallback\b/i;
@@ -820,12 +820,13 @@ export async function getHoroscopeNewsArticle(opts: {
     schemaName: "HoroscopeNewsArticleHU",
     schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-news:${opts.period}`,
-    // A news-horoszkóp nem prémium mélyolvasat, hanem gyors, hű fordítás.
-    // Itt a stabil, rövid latency fontosabb, mint a legerősebb kreatív modell,
-    // mert timeout esetén a publikus SEO-oldal gyenge fallbackra esne.
-    providerPreference: "lovable_first",
+    // A news-horoszkóp nem prémium mélyolvasat, de publikus SEO-belépő.
+    // Inkább várunk többet a hű, természetes fordításra, mint hogy gyenge
+    // sablonszöveg kerüljön a Google és a látogató elé.
+    providerPreference: "openai_first",
     lovableModel: HOROSCOPE_NEWS_MODEL,
     openaiModel: process.env.OPENAI_HOROSCOPE_NEWS_MODEL ?? "gpt-5.2",
+    allowLovableFallback: true,
     timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
   });
   const sourceSignals = extractRoxyHoroscopeSignals(roxy.data);

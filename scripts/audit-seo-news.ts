@@ -123,7 +123,7 @@ const checks: Check[] = [
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
-      'const NEWS_TRANSLATION_VERSION = "news-horo-hu-v4"',
+      'const NEWS_TRANSLATION_VERSION = "news-horo-hu-v5"',
       "LOVABLE_HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_TIMEOUT_MS",
@@ -160,8 +160,9 @@ const checks: Check[] = [
       "Kapcsolatok",
       "Munka és ritmus",
       "FALLBACK_COLORS",
-      'providerPreference: "lovable_first"',
+      'providerPreference: "openai_first"',
       "lovableModel: HOROSCOPE_NEWS_MODEL",
+      "allowLovableFallback: true",
       "timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS",
     ],
     excludes: [
