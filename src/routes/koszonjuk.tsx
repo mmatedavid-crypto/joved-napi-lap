@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
+import { trackEvent } from "@/lib/analytics";
 import { SITE_LEGAL } from "@/lib/legal";
 import { getOrderBySession, processOrder } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
@@ -269,6 +270,7 @@ function Page() {
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
                       Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
+                    <PaidReadingFeedback order={order} />
                   </Section>
                 );
               })()}
@@ -374,6 +376,86 @@ function SupportContact({ className = "", orderId }: { className?: string; order
       {shortId ? `, és add meg ezt: ${shortId}.` : "."}
     </p>
   );
+}
+
+function PaidReadingFeedback({ order }: { order: OrderView }) {
+  const feedbackOptions = [
+    {
+      label: "Eltalált",
+      value: "accurate",
+      body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
+    },
+    {
+      label: "Részben talált",
+      value: "partial",
+      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.",
+    },
+    {
+      label: "Nem volt elég pontos",
+      value: "missed",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.",
+    },
+  ] as const;
+  const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
+
+  return (
+    <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/62">
+        Fontos, hogy ne csak elkészüljön az olvasat, hanem valóban használható legyen. Ha valami nem
+        talált, írj nekünk: rendelés alapján visszanézzük, és segítünk pontosítani.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {feedbackOptions.map((option) => {
+          const href = feedbackMailto({
+            order,
+            shortId,
+            feedback: option.label,
+            body: option.body,
+          });
+          return (
+            <a
+              key={option.value}
+              href={href}
+              onClick={() =>
+                trackEvent("paid_reading_feedback_clicked", {
+                  productSlug: order.product_slug,
+                  status: order.status,
+                  feedback: option.value,
+                })
+              }
+              className="rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-sm text-ivory/75 hover:border-gold hover:text-gold"
+            >
+              {option.label}
+            </a>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-xs leading-relaxed text-ivory/45">
+        A levélben csak a rendelés rövid azonosítója és a termék neve szerepel előre kitöltve, az
+        olvasat teljes szövegét nem tesszük bele automatikusan.
+      </p>
+    </div>
+  );
+}
+
+function feedbackMailto(opts: {
+  order: OrderView;
+  shortId: string;
+  feedback: string;
+  body: string;
+}): string {
+  const subject = `Jövőd.hu visszajelzés · ${opts.shortId}`;
+  const body = [
+    opts.body,
+    "",
+    `Visszajelzés: ${opts.feedback}`,
+    `Rendelés: ${opts.shortId}`,
+    `Termék: ${opts.order.product_name}`,
+    "",
+    "Röviden ezt szeretném hozzátenni:",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function orderPreparationLead(order: OrderView): string {

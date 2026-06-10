@@ -20,6 +20,7 @@ export type EventName =
   | "checkout_succeeded"
   | "checkout_failed"
   | "checkout_retry_clicked"
+  | "paid_reading_feedback_clicked"
   | "roxy_call_started"
   | "roxy_call_succeeded"
   | "roxy_call_failed"

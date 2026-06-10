@@ -251,6 +251,23 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "delivered thank-you page asks for quality feedback safely",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "PaidReadingFeedback",
+      "Minőségi visszajelzés",
+      "Eltalált",
+      "Részben talált",
+      "Nem volt elég pontos",
+      "paid_reading_feedback_clicked",
+      "feedbackMailto",
+      "Rendelés:",
+      "Termék:",
+      "olvasat teljes szövegét nem tesszük bele automatikusan",
+      "SITE_LEGAL.supportEmail",
+    ],
+  },
+  {
     name: "delivered email exposes recovery path",
     file: "src/lib/email-templates/order-delivered.tsx",
     includes: [
