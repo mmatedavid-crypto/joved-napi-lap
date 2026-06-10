@@ -138,7 +138,17 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const wantsExpress = data.express && product.category === "delayed";
       if (wantsExpress) lookupKeys.push(EXPRESS_PRICE_ID);
 
-      const prices = await stripe.prices.list({ lookup_keys: lookupKeys, limit: 5 });
+      let prices;
+      try {
+        prices = await stripe.prices.list({ lookup_keys: lookupKeys, limit: 5 });
+      } catch (e) {
+        console.error("stripe.prices.list threw:", e);
+        throw e;
+      }
+      if (!prices || !Array.isArray(prices.data)) {
+        console.error("stripe.prices.list returned unexpected shape:", JSON.stringify(prices));
+        throw new Error("A termék ára nem található");
+      }
       const mainPrice = prices.data.find((p) => p.lookup_key === product.priceId);
       if (!mainPrice) throw new Error("A termék ára nem található");
       const expressPrice = wantsExpress
