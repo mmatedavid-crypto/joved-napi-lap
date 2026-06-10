@@ -211,6 +211,13 @@ type ArticleAI = {
   moonPhase?: string;
 };
 
+type RoxyHoroscopeSignals = {
+  focusAreas: Array<"love" | "work" | "money" | "body" | "caution" | "opening">;
+  luckyColor?: string;
+  luckyNumber?: number;
+  moonPhase?: string;
+};
+
 const SIGN_FALLBACK_ARCHETYPE: Record<keyof typeof SIGN_SLUGS, string> = {
   aries:
     "A Kos lendülete most gyors választ keres, de a hét valódi ereje abban lehet, ha nem minden impulzusból lesz azonnal döntés.",
@@ -345,6 +352,63 @@ const FALLBACK_COLORS: Record<keyof typeof SIGN_SLUGS, string> = {
   pisces: "gyöngyház",
 };
 
+const SOURCE_COLOR_HU: Record<string, string> = {
+  black: "fekete",
+  blue: "kék",
+  brown: "barna",
+  gold: "arany",
+  golden: "arany",
+  green: "zöld",
+  grey: "szürke",
+  gray: "szürke",
+  orange: "narancs",
+  pink: "rózsaszín",
+  purple: "lila",
+  red: "vörös",
+  silver: "ezüst",
+  turquoise: "türkiz",
+  violet: "ibolya",
+  white: "fehér",
+  yellow: "sárga",
+  arany: "arany",
+  bordó: "bordó",
+  barna: "barna",
+  bíbor: "bíbor",
+  ezüst: "ezüst",
+  fehér: "fehér",
+  fekete: "fekete",
+  kék: "kék",
+  lila: "lila",
+  narancs: "narancs",
+  rózsaszín: "rózsaszín",
+  sárga: "sárga",
+  szürke: "szürke",
+  türkiz: "türkiz",
+  vörös: "vörös",
+  zöld: "zöld",
+};
+
+const SOURCE_MOON_HU: Record<string, string> = {
+  "new moon": "újhold",
+  "waxing crescent": "növő holdsarló",
+  "first quarter": "első negyed",
+  "waxing gibbous": "növő hold",
+  "full moon": "telihold",
+  "waning gibbous": "fogyó hold",
+  "last quarter": "utolsó negyed",
+  "third quarter": "utolsó negyed",
+  "waning crescent": "fogyó holdsarló",
+};
+
+const SOURCE_FOCUS_LABEL: Record<RoxyHoroscopeSignals["focusAreas"][number], string> = {
+  love: "kapcsolati tér",
+  work: "munka és napi ritmus",
+  money: "gyakorlati keretek",
+  body: "testi ritmus és pihenés",
+  caution: "óvatosabb tempó",
+  opening: "új lehetőség",
+};
+
 const PERIOD_THEME_VARIANTS: Record<
   HoroscopePeriodHU,
   Array<{ theme: string; tempo: string; question: string }>
@@ -462,6 +526,114 @@ function fallbackNumber(sign: keyof typeof SIGN_SLUGS, period: HoroscopePeriodHU
   return ((signIndex + periodOffset) % 9) + 1;
 }
 
+function collectSourceStrings(value: unknown, out: string[] = [], keyPath = ""): string[] {
+  if (out.length > 120) return out;
+  if (typeof value === "string") {
+    if (value.trim()) out.push(`${keyPath} ${value}`.trim());
+    return out;
+  }
+  if (typeof value === "number") {
+    if (/number|lucky|szám/i.test(keyPath)) out.push(`${keyPath} ${value}`);
+    return out;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) collectSourceStrings(item, out, keyPath);
+    return out;
+  }
+  if (!value || typeof value !== "object") return out;
+  for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+    collectSourceStrings(item, out, `${keyPath} ${key}`.trim());
+  }
+  return out;
+}
+
+function uniqueFocusAreas(
+  areas: RoxyHoroscopeSignals["focusAreas"],
+): RoxyHoroscopeSignals["focusAreas"] {
+  return Array.from(new Set(areas)).slice(0, 4) as RoxyHoroscopeSignals["focusAreas"];
+}
+
+function extractRoxyHoroscopeSignals(source: unknown): RoxyHoroscopeSignals | undefined {
+  const chunks = collectSourceStrings(source);
+  if (!chunks.length) return undefined;
+
+  const joined = chunks.join(" \n ").toLowerCase();
+  const focusAreas: RoxyHoroscopeSignals["focusAreas"] = [];
+  if (/\b(love|romance|relationship|partner|dating|heart|szerelem|kapcsolat)\b/i.test(joined)) {
+    focusAreas.push("love");
+  }
+  if (/\b(work|career|job|project|business|task|munka|karrier)\b/i.test(joined)) {
+    focusAreas.push("work");
+  }
+  if (/\b(money|finance|financial|budget|income|cash|pénz|anyag)\b/i.test(joined)) {
+    focusAreas.push("money");
+  }
+  if (/\b(health|body|rest|sleep|energy|wellness|test|pihen|energia)\b/i.test(joined)) {
+    focusAreas.push("body");
+  }
+  if (/\b(caution|warning|careful|avoid|challenge|delay|risk|óvat|figyel)\b/i.test(joined)) {
+    focusAreas.push("caution");
+  }
+  if (/\b(opportunity|new|beginning|growth|open|chance|lehetőség|nyit)\b/i.test(joined)) {
+    focusAreas.push("opening");
+  }
+
+  const luckyColor =
+    chunks
+      .map((chunk) => {
+        const lower = chunk.toLowerCase();
+        if (!/\b(color|colour|lucky_color|szín)\b/.test(lower)) return undefined;
+        const found = Object.entries(SOURCE_COLOR_HU).find(([sourceColor]) =>
+          lower.includes(sourceColor),
+        );
+        return found?.[1];
+      })
+      .find(Boolean) ?? undefined;
+
+  const luckyNumberRaw = chunks.find((chunk) => /\b(number|lucky_number|szám)\b/i.test(chunk));
+  const luckyNumberMatch = luckyNumberRaw?.match(/\b([1-9]|1[0-2]|22|33)\b/);
+
+  const moonPhase =
+    chunks
+      .map((chunk) => {
+        const lower = chunk.toLowerCase();
+        if (!/\b(moon|phase|hold)\b/.test(lower)) return undefined;
+        const found = Object.entries(SOURCE_MOON_HU).find(([sourcePhase]) =>
+          lower.includes(sourcePhase),
+        );
+        return found?.[1] ?? undefined;
+      })
+      .find(Boolean) ?? undefined;
+
+  const signals: RoxyHoroscopeSignals = {
+    focusAreas: uniqueFocusAreas(focusAreas),
+    luckyColor,
+    luckyNumber: luckyNumberMatch ? Number(luckyNumberMatch[1]) : undefined,
+    moonPhase,
+  };
+
+  return signals.focusAreas.length || signals.luckyColor || signals.luckyNumber || signals.moonPhase
+    ? signals
+    : undefined;
+}
+
+function sourceSignalSentence(signals?: RoxyHoroscopeSignals): string {
+  if (!signals?.focusAreas.length) return "";
+  const labels = signals.focusAreas.map((area) => SOURCE_FOCUS_LABEL[area]);
+  if (labels.length === 1) {
+    return `A friss forrás hangsúlya most főleg erre esik: ${labels[0]}.`;
+  }
+  return `A friss forrás hangsúlya most ezek körül sűrűsödik: ${labels.join(", ")}.`;
+}
+
+function sourceSectionNudge(
+  area: RoxyHoroscopeSignals["focusAreas"][number],
+  signals?: RoxyHoroscopeSignals,
+): string {
+  if (!signals?.focusAreas.includes(area)) return "";
+  return ` A forrás ezt a területet külön is kiemeli, ezért itt érdemes egy árnyalattal tudatosabban olvasnod a helyzetet.`;
+}
+
 function cleanHoroscopeNewsText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const softened = value
@@ -530,11 +702,14 @@ function localFallbackArticle(opts: {
   sourceCached: boolean;
   translationCached: boolean;
   fallbackUsed: boolean;
+  sourceSignals?: RoxyHoroscopeSignals;
 }): HoroscopeNewsArticle {
+  const { sourceSignals, ...articleMeta } = opts;
   const signName = SIGN_HU[opts.sign];
   const focus = periodFocus(opts.period);
   const archetype = SIGN_FALLBACK_ARCHETYPE[opts.sign];
   const signArticle = SIGN_WITH_ARTICLE[opts.sign];
+  const sourceSentence = sourceSignalSentence(sourceSignals);
   const periodFrame =
     opts.period === "havi" ? "Ez a hónap" : opts.period === "heti" ? "Ez a hét" : "Ez a nap";
   const variant = fallbackVariant({
@@ -543,30 +718,31 @@ function localFallbackArticle(opts: {
     dateKey: opts.dateKey,
   });
   return {
-    ...opts,
+    ...articleMeta,
     signName,
     title: `${PERIOD_LABEL[opts.period]} ${signName} jegyűeknek`,
-    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. Most ${variant.theme} kerülhet előtérbe: ${variant.tempo}. ${archetype}`,
+    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. Most ${variant.theme} kerülhet előtérbe: ${variant.tempo}. ${sourceSentence ? `${sourceSentence} ` : ""}${archetype}`,
     sections: [
       {
         heading: focus.firstHeading,
-        text: `${focus.leadPrefix} ${signArticle} alapmintája erősebben látszódhat, de most nem ugyanaz a hangsúly fontos, mint máskor. A téma inkább ${variant.theme}: ${archetype} A legfontosabb kérdés most az, hogy ${variant.question}.`,
+        text: `${focus.leadPrefix} ${signArticle} alapmintája erősebben látszódhat, de most nem ugyanaz a hangsúly fontos, mint máskor. A téma inkább ${variant.theme}: ${archetype}${sourceSectionNudge("opening", sourceSignals)} A legfontosabb kérdés most az, hogy ${variant.question}.`,
       },
       {
         heading: focus.loveHeading,
-        text: `${SIGN_RELATIONSHIP_FOCUS[opts.sign]} Ebben az időszakban különösen azt érdemes figyelned, hogy a másik jelenléte tágítja-e a belső teredet, vagy inkább régi reakciót hív elő belőled.`,
+        text: `${SIGN_RELATIONSHIP_FOCUS[opts.sign]}${sourceSectionNudge("love", sourceSignals)} Ebben az időszakban különösen azt érdemes figyelned, hogy a másik jelenléte tágítja-e a belső teredet, vagy inkább régi reakciót hív elő belőled.`,
       },
       {
         heading: focus.workHeading,
-        text: `${SIGN_WORK_FOCUS[opts.sign]} Ez a téma itt gyakorlati formában jelenhet meg: mi az, amit érdemes egyszerűsíteni, mielőtt újabb vállalást teszel rá.`,
+        text: `${SIGN_WORK_FOCUS[opts.sign]}${sourceSectionNudge("work", sourceSignals)}${sourceSectionNudge("money", sourceSignals)} Ez a téma itt gyakorlati formában jelenhet meg: mi az, amit érdemes egyszerűsíteni, mielőtt újabb vállalást teszel rá.`,
       },
       {
         heading: focus.attentionHeading,
-        text: `${SIGN_ATTENTION_FOCUS[opts.sign]} Ha csak egy dolgot viszel magaddal ebből az időszakból, kérdezd meg magadtól, hogy ${variant.question}.`,
+        text: `${SIGN_ATTENTION_FOCUS[opts.sign]}${sourceSectionNudge("body", sourceSignals)}${sourceSectionNudge("caution", sourceSignals)} Ha csak egy dolgot viszel magaddal ebből az időszakból, kérdezd meg magadtól, hogy ${variant.question}.`,
       },
     ],
-    luckyColor: FALLBACK_COLORS[opts.sign],
-    luckyNumber: fallbackNumber(opts.sign, opts.period),
+    luckyColor: sourceSignals?.luckyColor ?? FALLBACK_COLORS[opts.sign],
+    luckyNumber: sourceSignals?.luckyNumber ?? fallbackNumber(opts.sign, opts.period),
+    moonPhase: sourceSignals?.moonPhase,
   };
 }
 
@@ -652,6 +828,7 @@ export async function getHoroscopeNewsArticle(opts: {
     openaiModel: process.env.OPENAI_HOROSCOPE_NEWS_MODEL ?? "gpt-5.2",
     timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
   });
+  const sourceSignals = extractRoxyHoroscopeSignals(roxy.data);
 
   const article =
     translated.ok && translated.data
@@ -682,6 +859,7 @@ export async function getHoroscopeNewsArticle(opts: {
       sourceCached: roxy.cached,
       translationCached: false,
       fallbackUsed: true,
+      sourceSignals,
     });
   }
 
