@@ -41,18 +41,6 @@ function Index() {
         <h1 className="font-display text-[22px] leading-[1.05] md:text-4xl lg:text-5xl text-ivory">
           Húzz egy lapot, <span className="text-gold-gradient">mielőtt döntesz.</span>
         </h1>
-        <div className="mt-4 flex flex-col items-center justify-center gap-2 sm:flex-row">
-          <Link to="/mai-lap" className="btn-gold w-full sm:w-auto">
-            Ingyen húzok egy lapot
-          </Link>
-          <Link to="/arak" className="btn-ghost-gold w-full sm:w-auto">
-            Árak megtekintése
-          </Link>
-        </div>
-        <p className="mx-auto mt-3 max-w-xl text-xs leading-relaxed text-ivory/52">
-          Kezdhetsz fizetés nélkül. Ha betalál az olvasat hangja, a mélyebb személyes elemzések{" "}
-          {formatHuf(ENTRY_PRICE)}-tól indulnak.
-        </p>
       </section>
 
       <PersonalDailyBriefing />

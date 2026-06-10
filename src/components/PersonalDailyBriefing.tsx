@@ -21,6 +21,8 @@ import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { PaywallDialog } from "./PaywallDialog";
+import { productCtaLabel } from "@/lib/products";
 
 type Profile = { name?: string; dob?: string; sign?: string };
 
@@ -62,6 +64,7 @@ export function PersonalDailyBriefing() {
   const [phase, setPhase] = useState<"draw" | "card" | "result">("draw");
   const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
   const [drawResetKey, setDrawResetKey] = useState(0);
+  const [paywallOpen, setPaywallOpen] = useState(false);
 
   useEffect(() => {
     const p =
@@ -220,6 +223,17 @@ export function PersonalDailyBriefing() {
               <div className="text-ivory/75 font-editorial text-[14.5px] italic">
                 {drawnCard.daily}
               </div>
+              <div className="pt-2">
+                <button
+                  className="btn-gold"
+                  onClick={() => setPaywallOpen(true)}
+                >
+                  {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
+                </button>
+                <p className="mt-2 text-[11px] text-ivory/50">
+                  Mélyebb, személyre szabott üzenet erre a lapra.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -360,8 +374,32 @@ export function PersonalDailyBriefing() {
               Bővebb sorsszám →
             </Link>
           </div>
+          <div className="text-center pt-2">
+            <button
+              className="btn-gold"
+              onClick={() => setPaywallOpen(true)}
+            >
+              {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
+            </button>
+          </div>
         </div>
       )}
+      <PaywallDialog
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        productSlug="napi_lap_ai"
+        sourceRoute="/"
+        inputPayload={
+          drawnCard
+            ? {
+                cardId: drawnCard.id,
+                cardName: drawnCard.name,
+                question: "Mire figyeljek ma?",
+                category: "mai lap",
+              }
+            : undefined
+        }
+      />
     </section>
   );
 }
