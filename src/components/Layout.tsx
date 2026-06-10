@@ -165,6 +165,15 @@ export function Layout({ children }: { children?: ReactNode }) {
             <p className="font-editorial leading-relaxed text-ivory/60">
               {ENTERTAINMENT_DISCLAIMER}
             </p>
+            <p className="mt-4 text-xs leading-relaxed text-ivory/50">
+              Rendeléssel vagy hozzáféréssel kapcsolatban itt érsz el minket:{" "}
+              <a
+                className="text-gold hover:text-gold/80"
+                href={`mailto:${SITE_LEGAL.supportEmail}`}
+              >
+                {SITE_LEGAL.supportEmail}
+              </a>
+            </p>
             <ul className="mt-4 grid gap-2">
               <li>
                 <Link to="/impresszum" className="hover:text-gold">

@@ -40,6 +40,15 @@ const checks: Check[] = [
     includes: ['to="/profil"', "Profil", "Profil és előzmények", "hidden lg:flex", "lg:hidden"],
   },
   {
+    name: "global footer exposes support contact from legal config",
+    file: "src/components/Layout.tsx",
+    includes: [
+      "SITE_LEGAL.supportEmail",
+      "Rendeléssel vagy hozzáféréssel kapcsolatban",
+      "mailto:${SITE_LEGAL.supportEmail}",
+    ],
+  },
+  {
     name: "mobile bottom navigation gives direct profile access",
     file: "src/components/BottomNav.tsx",
     includes: ['to: "/profil"', 'label: "Profil"', "M5 21a7 7 0 0 1 14 0"],
