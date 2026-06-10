@@ -203,6 +203,76 @@ const ROXY_MAJOR_ID_TO_LOCAL: Record<string, string> = {
   "the-world": "vilag",
 };
 
+// Roxy Minor Arcana suit names → our local suit slug.
+const ROXY_SUIT_TO_LOCAL: Record<string, string> = {
+  cups: "kelyhek",
+  pentacles: "ermek",
+  coins: "ermek",
+  swords: "kardok",
+  wands: "botok",
+  rods: "botok",
+};
+
+// Roxy rank words (lowercased) → our local rank id.
+const ROXY_RANK_TO_LOCAL: Record<string, string> = {
+  ace: "asz",
+  two: "2",
+  three: "3",
+  four: "4",
+  five: "5",
+  six: "6",
+  seven: "7",
+  eight: "8",
+  nine: "9",
+  ten: "10",
+  page: "aprod",
+  knight: "lovag",
+  queen: "kiralyno",
+  king: "kiraly",
+};
+
+// Map a Roxy minor card id (e.g. "ace-of-cups", "two-of-wands", "knight-of-pentacles")
+// or its English name ("Ace of Cups") to our local id like "kelyhek-asz".
+function roxyMinorToLocal(
+  roxyId: string | undefined,
+  roxyName: string | undefined,
+  suit: string | undefined,
+  number: number | undefined,
+): string | null {
+  const localSuit =
+    (suit && ROXY_SUIT_TO_LOCAL[suit.toLowerCase()]) ||
+    null;
+
+  // Try parsing the slug-style id first: "<rank>-of-<suit>"
+  const idLow = (roxyId ?? "").toLowerCase().trim();
+  const idMatch = idLow.match(/^([a-z]+)-of-([a-z]+)$/);
+  if (idMatch) {
+    const rankWord = idMatch[1];
+    const suitWord = idMatch[2];
+    const ls = ROXY_SUIT_TO_LOCAL[suitWord];
+    const lr = ROXY_RANK_TO_LOCAL[rankWord];
+    if (ls && lr) return `${ls}-${lr}`;
+  }
+
+  // Try parsing the English name: "Ace of Cups", "Two of Wands"
+  const nameLow = (roxyName ?? "").toLowerCase().trim();
+  const nameMatch = nameLow.match(/^([a-z]+)\s+of\s+([a-z]+)$/);
+  if (nameMatch) {
+    const rankWord = nameMatch[1];
+    const suitWord = nameMatch[2];
+    const ls = ROXY_SUIT_TO_LOCAL[suitWord];
+    const lr = ROXY_RANK_TO_LOCAL[rankWord];
+    if (ls && lr) return `${ls}-${lr}`;
+  }
+
+  // Fall back: combine suit + number if both present.
+  if (localSuit && typeof number === "number" && number >= 1 && number <= 10) {
+    return `${localSuit}-${number === 1 ? "asz" : String(number)}`;
+  }
+
+  return null;
+}
+
 function normalizeOneDrawn(raw: unknown): RoxyDrawnCard | null {
   if (!raw || typeof raw !== "object") return null;
   const c = raw as Record<string, unknown>;
@@ -211,14 +281,21 @@ function normalizeOneDrawn(raw: unknown): RoxyDrawnCard | null {
   const arcanaRaw = typeof c.arcana === "string" ? c.arcana.toLowerCase() : "";
   const arcana: RoxyDrawnCard["arcana"] =
     arcanaRaw === "major" ? "major" : arcanaRaw === "minor" ? "minor" : "unknown";
+  const suit = typeof c.suit === "string" ? c.suit : undefined;
+  const number = typeof c.number === "number" ? c.number : undefined;
   return {
     roxyId,
     roxyName,
     arcana,
-    suit: typeof c.suit === "string" ? c.suit : undefined,
-    number: typeof c.number === "number" ? c.number : undefined,
+    suit,
+    number,
     reversed: c.reversed === true,
-    localId: arcana === "major" ? (ROXY_MAJOR_ID_TO_LOCAL[roxyId] ?? null) : null,
+    localId:
+      arcana === "major"
+        ? (ROXY_MAJOR_ID_TO_LOCAL[roxyId] ?? null)
+        : arcana === "minor"
+          ? roxyMinorToLocal(roxyId, roxyName, suit, number)
+          : (ROXY_MAJOR_ID_TO_LOCAL[roxyId] ?? roxyMinorToLocal(roxyId, roxyName, suit, number)),
   };
 }
 
