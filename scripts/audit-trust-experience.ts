@@ -23,6 +23,11 @@ const checks: Check[] = [
       "Először próbáld ki",
       "Fizetős olvasatok",
       "Biztonságos hozzáférés",
+      'to="/mai-lap"',
+      'to="/arak"',
+      "Ingyen húzok egy lapot",
+      "Árak megtekintése",
+      "Kezdhetsz fizetés nélkül",
       "rejtett díj nélkül",
       "A kártyaadatot Stripe kezeli",
       "profilban is",
@@ -134,6 +139,12 @@ const checks: Check[] = [
       "profilod rendelési előzményeit",
       "nem csak emailben",
     ],
+  },
+  {
+    name: "homepage tarot spread avoids horizontal viewport overflow",
+    file: "src/components/SpreadDeck.tsx",
+    includes: ["const spreadX = (t - 0.5) * 70"],
+    excludes: ["const spreadX = (t - 0.5) * 92"],
   },
 ];
 

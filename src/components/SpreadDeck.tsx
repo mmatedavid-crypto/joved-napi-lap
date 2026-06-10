@@ -232,7 +232,7 @@ export function SpreadDeck({ count, seed, slotLabels, onComplete, resetKey }: Pr
           const t = i / (total - 1); // 0..1
           const angle = -arc / 2 + t * arc;
           const lift = Math.sin(t * Math.PI) * 48;
-          const spreadX = (t - 0.5) * 92; // vw, horizontal spread across viewport
+          const spreadX = (t - 0.5) * 70; // vw, horizontal spread across viewport
           const isPicked = picked.includes(i);
           const isFaded = allPicked && !isPicked;
           return (
