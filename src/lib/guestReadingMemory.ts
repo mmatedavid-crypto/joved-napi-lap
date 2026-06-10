@@ -45,6 +45,7 @@ export type GuestReadingInsights = {
 };
 
 const KEY = "guest_reading_memory";
+const DISABLED_KEY = "guest_reading_personalization_disabled";
 const COOKIE_TOTAL_KEY = "guest_reading_memory_count";
 const COOKIE_LAST_TYPE_KEY = "guest_reading_memory_last_type";
 const COMPATIBILITY_KEY = "compatibility_checks";
@@ -83,6 +84,7 @@ function cleanAnchors(values: (string | undefined)[] | undefined): string[] {
 }
 
 function readAll(): GuestReadingMemory[] {
+  if (!isGuestPersonalizationEnabled()) return [];
   const rows = loadLocal<GuestReadingMemory[]>(KEY) ?? [];
   const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
   return rows
@@ -90,6 +92,10 @@ function readAll(): GuestReadingMemory[] {
     .filter((row) => new Date(row.createdAt).getTime() >= cutoff)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, MAX_ITEMS);
+}
+
+export function isGuestPersonalizationEnabled(): boolean {
+  return loadLocal<boolean>(DISABLED_KEY) !== true;
 }
 
 function countValues(values: string[]): [string, number][] {
@@ -262,6 +268,7 @@ export function recordGuestReadingMemory(input: {
   oneSentence?: string;
   anchors?: (string | undefined)[];
 }) {
+  if (!isGuestPersonalizationEnabled()) return;
   const summary = cleanText(input.summary, 700);
   if (!summary) return;
   const next: GuestReadingMemory = {
@@ -335,4 +342,9 @@ export function clearGuestPersonalization() {
   deleteCookie(COOKIE_LAST_TYPE_KEY);
   deleteCookie(COMPATIBILITY_COUNT_KEY);
   deleteCookie(COMPATIBILITY_STATUS_KEY);
+}
+
+export function setGuestPersonalizationEnabled(enabled: boolean) {
+  saveLocal(DISABLED_KEY, !enabled);
+  if (!enabled) clearGuestPersonalization();
 }

@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { clearGuestPersonalization } from "@/lib/guestReadingMemory";
+import {
+  clearGuestPersonalization,
+  isGuestPersonalizationEnabled,
+  setGuestPersonalizationEnabled,
+} from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
@@ -20,10 +24,21 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
 
 function PrivacyPage() {
   const [localCleared, setLocalCleared] = useState(false);
+  const [personalizationEnabled, setPersonalizationEnabledState] = useState(true);
+
+  useEffect(() => {
+    setPersonalizationEnabledState(isGuestPersonalizationEnabled());
+  }, []);
 
   function clearLocalPersonalization() {
     clearGuestPersonalization();
     setLocalCleared(true);
+  }
+
+  function setLocalPersonalization(enabled: boolean) {
+    setGuestPersonalizationEnabled(enabled);
+    setPersonalizationEnabledState(enabled);
+    setLocalCleared(!enabled);
   }
 
   return (
@@ -99,14 +114,42 @@ function PrivacyPage() {
         </p>
         <div className="mt-4 rounded-md border border-[oklch(0.78_0.10_80/0.16)] p-4">
           <p className="text-sm text-ivory/70">
-            A vendégként tárolt helyi olvasati mintát itt is törölheted ebből a böngészőből.
+            A vendégként tárolt helyi olvasati mintát itt is törölheted ebből a böngészőből, vagy
+            kikapcsolhatod a további helyi személyesítést.
           </p>
-          <button type="button" onClick={clearLocalPersonalization} className="btn-ghost-gold mt-3">
-            Helyi olvasati minta törlése
-          </button>
+          <p className="mt-2 text-xs text-ivory/50">
+            Jelenlegi állapot:{" "}
+            {personalizationEnabled
+              ? "a helyi személyesítés be van kapcsolva."
+              : "a helyi személyesítés ki van kapcsolva ebben a böngészőben."}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" onClick={clearLocalPersonalization} className="btn-ghost-gold">
+              Helyi olvasati minta törlése
+            </button>
+            {personalizationEnabled ? (
+              <button
+                type="button"
+                onClick={() => setLocalPersonalization(false)}
+                className="btn-ghost-gold"
+              >
+                Helyi személyesítés kikapcsolása
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setLocalPersonalization(true)}
+                className="btn-gold"
+              >
+                Helyi személyesítés visszakapcsolása
+              </button>
+            )}
+          </div>
           {localCleared && (
             <p className="mt-2 text-sm text-ivory/55">
-              Töröltük a helyi olvasati mintát ebből a böngészőből.
+              {personalizationEnabled
+                ? "Töröltük a helyi olvasati mintát ebből a böngészőből."
+                : "Töröltük a helyi olvasati mintát, és kikapcsoltuk az új vendégminták mentését ebben a böngészőben."}
             </p>
           )}
         </div>
