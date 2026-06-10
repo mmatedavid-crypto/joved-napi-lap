@@ -23,10 +23,17 @@ function parseLimit(value: string | null): number {
   return Math.max(1, Math.min(MAX_LIMIT, Math.floor(parsed)));
 }
 
+function parseOffset(value: string | null): number {
+  const parsed = Number(value ?? 0);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.floor(parsed));
+}
+
 function selectedTargets(url: URL) {
   const period = url.searchParams.get("period");
   const signSlug = url.searchParams.get("sign");
   const limit = parseLimit(url.searchParams.get("limit"));
+  const offset = parseOffset(url.searchParams.get("offset"));
   const allTargets = allHoroscopeArticlePaths();
   const periodTargets =
     period && HOROSCOPE_PERIODS.includes(period as HoroscopePeriodHU)
@@ -35,7 +42,14 @@ function selectedTargets(url: URL) {
   const signTargets = signSlug
     ? periodTargets.filter((target) => target.signSlug === signSlug)
     : periodTargets;
-  return signTargets.slice(0, limit);
+  const targets = signTargets.slice(offset, offset + limit);
+  return {
+    targets,
+    total: signTargets.length,
+    offset,
+    limit,
+    nextOffset: offset + targets.length < signTargets.length ? offset + targets.length : null,
+  };
 }
 
 async function handlePrewarm(request: Request) {
@@ -44,12 +58,12 @@ async function handlePrewarm(request: Request) {
   }
 
   const url = new URL(request.url);
-  const targets = selectedTargets(url);
+  const selection = selectedTargets(url);
   const { getHoroscopeNewsArticle } = await import("@/lib/horoscopeNews.server");
   const started = Date.now();
   const results = [];
 
-  for (const target of targets) {
+  for (const target of selection.targets) {
     const itemStarted = Date.now();
     try {
       const article = await getHoroscopeNewsArticle({
@@ -80,6 +94,10 @@ async function handlePrewarm(request: Request) {
   return Response.json(
     {
       ok: true,
+      totalTargets: selection.total,
+      offset: selection.offset,
+      limit: selection.limit,
+      nextOffset: selection.nextOffset,
       warmed: results.length,
       fallbackCount: results.filter((item) => item.fallbackUsed).length,
       latencyMs: Date.now() - started,
