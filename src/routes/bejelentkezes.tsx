@@ -84,6 +84,17 @@ function Page() {
         lead="Az előzményeid megmaradnak — ingyenesen."
       />
       <div className="mx-auto max-w-md px-4 pb-20 space-y-4">
+        <section className="surface p-5">
+          <div className="text-[10px] uppercase tracking-[0.24em] text-gold/75">
+            Miért érdemes belépni?
+          </div>
+          <ul className="mt-3 space-y-2 text-sm leading-relaxed text-ivory/68">
+            <li>Megtalálod a korábbi fizetős olvasataidat és rendelési állapotaidat.</li>
+            <li>A személyes memória finoman emlékszik a visszatérő témáidra.</li>
+            <li>A fiók létrehozása ingyenes, és nem indít új fizetést.</li>
+          </ul>
+        </section>
+
         <div className="surface p-6 space-y-3">
           <button onClick={() => oauth("google")} disabled={busy} className="w-full btn-gold">
             Folytatás Google-lel

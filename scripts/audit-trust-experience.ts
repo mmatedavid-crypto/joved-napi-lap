@@ -55,6 +55,20 @@ const checks: Check[] = [
     excludes: ['setErr(e instanceof Error ? e.message : "Hiba történt.")'],
   },
   {
+    name: "login page explains profile value without implying a new payment",
+    file: "src/routes/bejelentkezes.tsx",
+    includes: [
+      "Miért érdemes belépni?",
+      "korábbi fizetős olvasataidat",
+      "rendelési állapotaidat",
+      "személyes memória",
+      "visszatérő témáidra",
+      "ingyenes",
+      "nem indít új fizetést",
+    ],
+    excludes: ["kötelező", "bankkártya szükséges"],
+  },
+  {
     name: "thank-you page never displays raw order status errors",
     file: "src/routes/koszonjuk.tsx",
     includes: [
