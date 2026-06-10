@@ -13,6 +13,7 @@ import {
 } from "@/lib/crystal.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/kristaly")({
@@ -140,6 +141,8 @@ function Page() {
             {loading ? "Egy pillanat…" : "Megnézem"}
           </button>
         </div>
+
+        {loading && !r && <ReadingLoadingState kind="crystal" title="A kristályolvasat készül" />}
 
         {r && (
           <div className="space-y-4">

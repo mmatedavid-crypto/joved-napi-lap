@@ -443,7 +443,32 @@ function premiumNumerology(input: Record<string, unknown>): PaidReadingPayload {
   const birthDate = text(input.dob) || text(input.birthDate) || "1992-04-17";
   const fullName = text(input.name) || text(input.fullName) || undefined;
   const profile = calculateNumerologyProfile({ birthDate, fullName });
-  return renderReading(composeNumerologyReading(profile));
+  const reading = composeNumerologyReading(profile);
+  reading.title = `${reading.title} · életút elemzés`;
+  reading.sections.push(
+    {
+      heading: "A fizetős elemzés mélyebb rétege",
+      text: `Itt nem csak azt nézzük, mi a sorsszámod, hanem azt is, hogyan találkozik a születési ritmusod az idei személyes éveddel. A ${profile.lifePathNumber}-es alapmintád és a ${profile.personalYearNumber}-es személyes éved együtt azt kérdezi, hol kell most kevesebb szerepből és több saját ritmusból döntened.`,
+    },
+    profile.fullName
+      ? {
+          heading: "A név rétegei",
+          text: `A teljes név miatt a belső vágyad, a külső képed és a kifejeződésed is látszik. A ${profile.soulUrgeNumber ?? "belső"}-es belső vágy nem mindig ugyanazt akarja, mint amit a külvilág először észrevesz rajtad. Ettől lehet az életutad egyszerre vonzó és fárasztó: nem csak haladni szeretnél, hanem úgy megjelenni, hogy közben ne veszítsd el a belső irányodat.`,
+        }
+      : {
+          heading: "A név rétegei",
+          text: "Teljes születési név nélkül a névelemzés mélysége korlátozott. A születési dátum így is erős alapot ad, de ha később megadod a teljes neved, pontosabban látszik a belső vágy, a külső kép és a kifejeződés különbsége.",
+        },
+    {
+      heading: "Következő 30 nap",
+      text: `A ${profile.personalMonthNumber}-es személyes hónap most közelebb hozza az idei témát. A következő hetekben ne nagy életdöntést akarj mindenáron kierőltetni; inkább azt figyeld, hol ismétlődik ugyanaz a reakció. Ami háromszor is ugyanoda húz vissza, ott nem véletlenül kér figyelmet a minta.`,
+    },
+    {
+      heading: "Gyakorlati fókusz",
+      text: "Válassz egyetlen területet: kapcsolat, munka vagy önbizalom. Írd le, ott milyen szerepet játszol túl gyakran. A számmisztikai olvasat akkor válik használhatóvá, ha nem címkeként viseled a számokat, hanem felismered, melyik döntésed mögött dolgoznak.",
+    },
+  );
+  return renderReading(reading);
 }
 
 export function composePaidOrderReading(

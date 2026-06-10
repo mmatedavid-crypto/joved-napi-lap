@@ -29,6 +29,7 @@ import { crystalMeaning, FALLBACK_BIRTHSTONE } from "@/lib/crystal.hu";
 import { todayKey, loadLocal, saveLocal } from "@/lib/storage";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/mai-iranytu")({
@@ -254,6 +255,8 @@ function Page() {
             {loading ? "Egy pillanat…" : "Mai iránytű"}
           </button>
         </form>
+
+        {loading && !c && <ReadingLoadingState kind="daily" title="A mai iránytű készül" />}
 
         {c && (
           <div className="space-y-4">

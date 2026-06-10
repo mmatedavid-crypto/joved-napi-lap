@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { pickCards, type TarotCard } from "@/data/cards";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
@@ -238,9 +239,11 @@ function Page() {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {loadingReading && !reading && (
-                <div className="md:col-span-2 text-ivory/55 text-sm font-editorial italic">
-                  Egy pillanat — személyes olvasatot készítek…
-                </div>
+                <ReadingLoadingState
+                  kind="tarot"
+                  title="A kapcsolati olvasat készül"
+                  className="md:col-span-2"
+                />
               )}
               {q.trim() && (
                 <Section eyebrow="A kérdésedre" title={`„${q.trim()}”`}>

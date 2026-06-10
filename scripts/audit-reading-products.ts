@@ -228,6 +228,15 @@ const contextChecks = [
     required: ["visszatér", "rövid", "tartós"],
   },
   {
+    name: "context:paid_numerology_deeper_than_free",
+    body: composePaidOrderReading(
+      "szammisztika_eletut",
+      "Számmisztika — életút elemzés",
+      demoPayloads.szammisztika_eletut,
+    ).body,
+    required: ["A fizetős elemzés mélyebb rétege", "A név rétegei", "Következő 30 nap"],
+  },
+  {
     name: "context:free_ex_return",
     body: textFromReading(
       composeCompatibilityReading(

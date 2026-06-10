@@ -13,6 +13,7 @@ import { SpreadDeck } from "./SpreadDeck";
 import { CardFace } from "./TarotCard";
 import { StreamingText } from "./StreamingText";
 import { ShareCardButton } from "./ShareCardButton";
+import { ReadingLoadingState } from "./ReadingLoadingState";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { roxyPersonalDailyBriefing, type PersonalBriefingHU } from "@/lib/roxy.functions";
 import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
@@ -262,6 +263,9 @@ export function PersonalDailyBriefing() {
                 Új lap húzása
               </button>
             </div>
+            {loading && !briefing && (
+              <ReadingLoadingState kind="daily" title="A napi képleted készül" />
+            )}
             {error && (
               <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3">
                 {error}

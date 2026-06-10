@@ -7,6 +7,7 @@ import { aiAngelHU, type AngelHU } from "@/lib/roxyTranslate.functions";
 import { angelMeaning, reduceAngel } from "@/lib/angel.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/angyalszam")({
@@ -105,6 +106,10 @@ function Page() {
             {loading ? "Egy pillanat…" : "Megnézem"}
           </button>
         </form>
+
+        {loading && !m && (
+          <ReadingLoadingState kind="angel" title="Az angyalszám olvasata készül" />
+        )}
 
         {m && (
           <div className="space-y-4">

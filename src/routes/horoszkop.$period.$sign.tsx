@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { Section } from "@/components/Section";
 import {
   HOROSCOPE_PERIODS,
@@ -116,17 +117,8 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
   component: HoroscopeArticlePage,
 });
 
-const HOROSCOPE_PENDING_STEPS = [
-  "Friss háttéradatot kérünk le, nem előre megírt sablont mutatunk.",
-  "A csillagjegy időszakmintáját rendezzük olvasható magyar szöveggé.",
-  "A szerelem, munka és belső fókusz részeit külön igazítjuk.",
-  "A nyers forrást átnézzük, hogy ne maradjon benne gépies vagy idegen hang.",
-  "Az olvasatot rövidre, de használhatóra csiszoljuk.",
-] as const;
-
 function HoroscopeArticlePending() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const [stepIndex, setStepIndex] = useState(0);
   const match = pathname.match(/^\/horoszkop\/([^/]+)\/([^/]+)/);
   const period = match?.[1] as HoroscopePeriodHU | undefined;
   const signSlug = match?.[2];
@@ -134,14 +126,6 @@ function HoroscopeArticlePending() {
     period && HOROSCOPE_PERIODS.includes(period) ? PERIOD_LABEL[period] : "Horoszkóp";
   const sign = signSlug ? SIGN_BY_SLUG[signSlug] : undefined;
   const signName = sign ? SIGN_HU[sign] : "a jegyed";
-
-  useEffect(() => {
-    const id = window.setInterval(
-      () => setStepIndex((current) => (current + 1) % HOROSCOPE_PENDING_STEPS.length),
-      2200,
-    );
-    return () => window.clearInterval(id);
-  }, []);
 
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-10 pb-20">
@@ -159,9 +143,11 @@ function HoroscopeArticlePending() {
           Nálunk nem egy előre megírt horoszkóp-szöveg kerül eléd. A mostani időszakhoz tartozó
           háttéradatot vesszük alapul, és abból készítünk természetes magyar olvasatot.
         </p>
-        <div className="mt-6 rounded-md border border-gold/15 bg-[oklch(0.13_0.03_292/0.72)] px-4 py-3 text-sm text-ivory/68">
-          {HOROSCOPE_PENDING_STEPS[stepIndex]}
-        </div>
+        <ReadingLoadingState
+          kind="horoscope"
+          title="A horoszkóp fordítása készül"
+          className="mt-6"
+        />
       </div>
     </article>
   );

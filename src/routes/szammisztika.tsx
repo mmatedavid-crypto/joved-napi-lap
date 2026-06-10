@@ -14,6 +14,7 @@ import {
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/szammisztika")({
@@ -127,6 +128,10 @@ function Page() {
             {loading ? "Egy pillanat…" : "Megnézem a sorsszámom"}
           </button>
         </form>
+
+        {loading && !result && (
+          <ReadingLoadingState kind="numerology" title="A számmisztikai olvasat készül" />
+        )}
 
         {result && (
           <div className="space-y-4">

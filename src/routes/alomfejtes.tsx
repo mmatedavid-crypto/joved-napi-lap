@@ -8,6 +8,7 @@ import { dreamTextToSlug } from "@/lib/roxyNormalize";
 import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
@@ -188,6 +189,8 @@ function Page() {
             {loading ? "Egy pillanat…" : "Megfejtem"}
           </button>
         </form>
+
+        {loading && !result && <ReadingLoadingState kind="dream" title="Az álomfejtés készül" />}
 
         {noSymbol && !result && (
           <div className="surface p-6 space-y-3">

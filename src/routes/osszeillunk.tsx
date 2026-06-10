@@ -17,6 +17,7 @@ import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestRea
 import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
 import { useAuth } from "@/hooks/useAuth";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 
 export const Route = createFileRoute("/osszeillunk")({
@@ -289,6 +290,10 @@ function Page() {
             {loading ? "Egy pillanat…" : "Megnézem az összeillést"}
           </button>
         </form>
+
+        {loading && !reading && (
+          <ReadingLoadingState kind="compatibility" title="Az összeillés készül" />
+        )}
 
         {profile && reading && (
           <div className="space-y-4">

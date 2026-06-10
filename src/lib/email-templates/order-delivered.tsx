@@ -27,6 +27,8 @@ interface Props {
 }
 
 const SITE_URL = "https://jovod.hu";
+const DOWNLOADABLE_READING_PROMISE =
+  "A megnyíló oldalon az olvasatot ki is másolhatod, vagy letöltheted magadnak szöveges fájlként.";
 
 const OrderDeliveredEmail = ({
   productName = "Olvasatod",
@@ -87,10 +89,7 @@ const OrderDeliveredEmail = ({
                 olvasat megnyitása
               </Link>
             </Text>
-            <Text style={paragraph}>
-              A megnyíló oldalon az olvasatot ki is másolhatod, vagy letöltheted magadnak szöveges
-              fájlként.
-            </Text>
+            <Text style={paragraph}>{DOWNLOADABLE_READING_PROMISE}</Text>
             <Text style={paragraph}>
               {isGuest ? (
                 <>

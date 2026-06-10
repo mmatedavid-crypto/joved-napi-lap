@@ -6,6 +6,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { StreamingText } from "@/components/StreamingText";
 import { ShareCardButton } from "@/components/ShareCardButton";
 import { CardBack, CardFace } from "@/components/TarotCard";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { CARDS, dailySeed, pickCards, type TarotCard } from "@/data/cards";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
 import { aiTarotReadingHU, type TarotReadingHU } from "@/lib/roxy.functions";
@@ -154,9 +155,7 @@ function MaiLap() {
                   </div>
                 </div>
                 {loadingReading && !reading && (
-                  <div className="text-ivory/55 text-sm font-editorial italic">
-                    Egy pillanat — személyes olvasatot készítek…
-                  </div>
+                  <ReadingLoadingState kind="tarot" title="A napi lapod készül" />
                 )}
                 <Section eyebrow="Mit üzen ma?">
                   <StreamingText
