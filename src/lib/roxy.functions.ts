@@ -96,20 +96,21 @@ export const roxyTarotDraw = createServerFn({ method: "POST" })
         count: data.count,
         seed: data.seed,
         allowReversals: data.allowReversals,
-        allowDuplicates: false,
       },
       cacheKey: `tarot:draw:${data.count}:${data.seed ?? "nosd"}:${data.allowReversals ? 1 : 0}`,
       ttlSeconds: data.seed ? 60 * 60 * 24 * 7 : null,
     }),
   );
 
-// "Mai lap" = seeded single draw deterministic per date.
+// "Mai lap" — Roxy /tarot/daily dedicated endpoint. Response shape is
+// { date, seed, card, dailyMessage } — we keep the dailyMessage so the
+// UI / AI translator can use it as source text.
 export const roxyTarotDaily = createServerFn({ method: "POST" })
   .inputValidator(z.object({ dateKey: z.string().min(8).max(20) }).parse)
   .handler(async ({ data }) =>
     runRoxy({
-      endpoint: "/tarot/draw",
-      body: { count: 1, seed: `daily:${data.dateKey}`, allowDuplicates: false },
+      endpoint: "/tarot/daily",
+      body: { seed: `daily:${data.dateKey}`, date: data.dateKey },
       cacheKey: `tarot:daily:${data.dateKey}`,
       ttlSeconds: 60 * 60 * 24,
     }),
@@ -146,6 +147,41 @@ export const roxyTarotLove = createServerFn({ method: "POST" })
       endpoint: "/tarot/spreads/love",
       body: { seed: data.seed, question: data.question },
       cacheKey: `tarot:love:${data.seed ?? "nosd"}:${data.question ?? ""}`,
+      ttlSeconds: data.seed ? 60 * 60 * 24 * 7 : null,
+    }),
+  );
+
+// POST /tarot/spreads/career  body: { question?, seed? } (7 positions)
+export const roxyTarotCareer = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      seed: SeedSchema.optional(),
+      question: z.string().min(1).max(280).optional(),
+    }).parse,
+  )
+  .handler(async ({ data }) =>
+    runRoxy({
+      endpoint: "/tarot/spreads/career",
+      body: { seed: data.seed, question: data.question },
+      cacheKey: `tarot:career:${data.seed ?? "nosd"}:${data.question ?? ""}`,
+      ttlSeconds: data.seed ? 60 * 60 * 24 * 7 : null,
+    }),
+  );
+
+// POST /tarot/yes-no  body: { question?, seed? }
+// Response: { question, answer, strength, card, interpretation }
+export const roxyTarotYesNo = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      seed: SeedSchema.optional(),
+      question: z.string().min(1).max(280).optional(),
+    }).parse,
+  )
+  .handler(async ({ data }) =>
+    runRoxy({
+      endpoint: "/tarot/yes-no",
+      body: { seed: data.seed, question: data.question },
+      cacheKey: `tarot:yesno:${data.seed ?? "nosd"}:${(data.question ?? "").toLowerCase().trim().slice(0, 120)}`,
       ttlSeconds: data.seed ? 60 * 60 * 24 * 7 : null,
     }),
   );
@@ -642,6 +678,15 @@ const TarotCardInput = z.object({
   warning: z.string().max(600).optional(),
   daily: z.string().max(400).optional(),
   reversed: z.boolean().optional(),
+  // Optional Roxy-sourced English fields. When present, the AI uses these
+  // as source material to translate/stylize into Hungarian — much higher
+  // fidelity than guessing from keywords alone.
+  meaningEn: z.string().max(2000).optional(),
+  loveEn: z.string().max(2000).optional(),
+  careerEn: z.string().max(2000).optional(),
+  financesEn: z.string().max(2000).optional(),
+  healthEn: z.string().max(2000).optional(),
+  spiritualityEn: z.string().max(2000).optional(),
 });
 
 type TarotCardInputT = z.infer<typeof TarotCardInput>;
@@ -795,6 +840,20 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           nev: c.name,
           kulcsszavak: c.keywords ?? [],
           forditott: c.reversed === true,
+          // Roxy angol forrás — ha jelen van, az AI ezt fordítsa/stilizálja,
+          // ne találjon ki új jelentést. Csak a területre releváns mezőket
+          // adjuk át, hogy a prompt rövid maradjon.
+          roxyAngolForras:
+            c.meaningEn || c.loveEn || c.careerEn || c.financesEn || c.healthEn || c.spiritualityEn
+              ? {
+                  altalanos: c.meaningEn ?? null,
+                  szerelem: c.loveEn ?? null,
+                  karrier: c.careerEn ?? null,
+                  penz: c.financesEn ?? null,
+                  egeszseg: c.healthEn ?? null,
+                  spiritualis: c.spiritualityEn ?? null,
+                }
+              : null,
         })),
         utmutato: isDailySingle
           ? "Mai lap: a lap kulcsszavaiból és nevéből indulj ki, a mai nap belső hangulatára alkalmazd. A lap neve nem kell a szövegbe. Ne írj sablonos 'Ma lassíts' / 'Ma egy dolgot csinálj lassabban' típusú zárómondatot — minden lap mást üzen, a oneSentence legyen konkrét és a lap karakteréhez kötött."
@@ -803,6 +862,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           "Ha van konkrét kérdés vagy kategória, válaszolj rá érdemben. Ex / visszatérő történetnél érintsd, hogy visszatérés esetén mi mutat rövid fellángolást és mi mutat tartósabb szándékot, de ne mondd biztosra, hogy visszajön vagy marad. Randi/ismerkedés esetén a találkozó vagy ismerkedés tanítására és tempójára reflektálj.",
         forditottSzabaly:
           "Ha forditott=true, a lap blokkolt vagy túltolt oldalát olvasd. Nem kell kimondani, hogy fordított.",
+        roxyForrasSzabaly:
+          "Ha egy lapnál van 'roxyAngolForras', azt MINT FORDÍTANDÓ FORRÁST kezeld: a vonatkozó magyar mondatot ennek tartalmából képezd (kategória → karrier/szerelem/penz/egeszseg/spiritualis mező, ha van; ha nincs, az altalanos mező). Ne hagyd ki, és ne találj ki belőle új tényt. Ha nincs roxyAngolForras, a lap kulcsszavaiból és magyar mezőiből dolgozz.",
       };
 
       const requiredSections = sectionMap.map((s) => s.heading);

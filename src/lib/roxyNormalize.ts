@@ -174,6 +174,19 @@ export type RoxyDrawnCard = {
   number?: number;
   reversed: boolean;
   localId: string | null; // mapped to our card id when Major Arcana
+  // Rich English source fields straight from Roxy. We keep them so the AI
+  // magyarító doesn't have to "invent" Hungarian text — it just translates
+  // and stylizes from concrete source material. Roxy has no `hu` lang, so
+  // we always translate; but the input is now real, not a guess from keywords.
+  position?: number;
+  keywordsEn?: string[];
+  meaningEn?: string;
+  loveEn?: string;
+  careerEn?: string;
+  financesEn?: string;
+  healthEn?: string;
+  spiritualityEn?: string;
+  imageUrl?: string;
 };
 
 // Roxy Major Arcana ids → our local Hungarian ids.
@@ -201,6 +214,24 @@ const ROXY_MAJOR_ID_TO_LOCAL: Record<string, string> = {
   judgement: "itelet",
   judgment: "itelet",
   "the-world": "vilag",
+  // The Roxy docs are inconsistent: /tarot/cards examples use "fool",
+  // while /tarot/draw examples use "the-fool". Accept both prefixes.
+  fool: "bolond",
+  magician: "mago",
+  "high-priestess": "fopapno",
+  empress: "csaszarno",
+  emperor: "csaszar",
+  hierophant: "fopap",
+  lovers: "szeretok",
+  chariot: "diadalszeker",
+  hermit: "remete",
+  "hanged-man": "akasztott",
+  devil: "ordog",
+  tower: "torony",
+  star: "csillag",
+  moon: "hold",
+  sun: "nap",
+  world: "vilag",
 };
 
 // Roxy Minor Arcana suit names → our local suit slug.
@@ -283,6 +314,10 @@ function normalizeOneDrawn(raw: unknown): RoxyDrawnCard | null {
     arcanaRaw === "major" ? "major" : arcanaRaw === "minor" ? "minor" : "unknown";
   const suit = typeof c.suit === "string" ? c.suit : undefined;
   const number = typeof c.number === "number" ? c.number : undefined;
+  const str = (v: unknown): string | undefined =>
+    typeof v === "string" && v.trim() ? v : undefined;
+  const arr = (v: unknown): string[] | undefined =>
+    Array.isArray(v) && v.every((x) => typeof x === "string") ? (v as string[]) : undefined;
   return {
     roxyId,
     roxyName,
@@ -296,6 +331,15 @@ function normalizeOneDrawn(raw: unknown): RoxyDrawnCard | null {
         : arcana === "minor"
           ? roxyMinorToLocal(roxyId, roxyName, suit, number)
           : (ROXY_MAJOR_ID_TO_LOCAL[roxyId] ?? roxyMinorToLocal(roxyId, roxyName, suit, number)),
+    position: typeof c.position === "number" ? c.position : undefined,
+    keywordsEn: arr(c.keywords),
+    meaningEn: str(c.meaning),
+    loveEn: str(c.love),
+    careerEn: str(c.career),
+    financesEn: str(c.finances),
+    healthEn: str(c.health),
+    spiritualityEn: str(c.spirituality),
+    imageUrl: str(c.imageUrl),
   };
 }
 
@@ -311,7 +355,88 @@ export function normalizeRoxyDraw(raw: unknown): RoxyDrawnCard[] {
       .map(normalizeOneDrawn)
       .filter((x): x is RoxyDrawnCard => x !== null);
   }
+  // /tarot/daily → { date, seed, card, dailyMessage }
+  // /tarot/yes-no → { question, answer, strength, card, interpretation }
+  if (r.card && typeof r.card === "object") {
+    const one = normalizeOneDrawn(r.card);
+    return one ? [one] : [];
+  }
   return [];
+}
+
+// /tarot/daily → { date, seed, card, dailyMessage }. We keep dailyMessage
+// separate so callers can pipe it into the magyarító AI as source text.
+export type RoxyTarotDailyPayload = {
+  card: RoxyDrawnCard | null;
+  dailyMessageEn?: string;
+  date?: string;
+  seed?: string;
+};
+
+export function normalizeRoxyTarotDaily(raw: unknown): RoxyTarotDailyPayload {
+  if (!raw || typeof raw !== "object") return { card: null };
+  const r = raw as Record<string, unknown>;
+  return {
+    card: r.card && typeof r.card === "object" ? normalizeOneDrawn(r.card) : null,
+    dailyMessageEn: typeof r.dailyMessage === "string" ? r.dailyMessage : undefined,
+    date: typeof r.date === "string" ? r.date : undefined,
+    seed: typeof r.seed === "string" ? r.seed : undefined,
+  };
+}
+
+// /tarot/yes-no → { question, answer, strength, card, interpretation }
+export type RoxyYesNoPayload = {
+  answer: string | null; // "yes" | "no" | "maybe" (raw english, mapped in UI)
+  strength: string | null;
+  card: RoxyDrawnCard | null;
+  interpretationEn: string | null;
+};
+
+export function normalizeRoxyYesNo(raw: unknown): RoxyYesNoPayload {
+  if (!raw || typeof raw !== "object")
+    return { answer: null, strength: null, card: null, interpretationEn: null };
+  const r = raw as Record<string, unknown>;
+  return {
+    answer: typeof r.answer === "string" ? r.answer : null,
+    strength: typeof r.strength === "string" ? r.strength : null,
+    card: r.card && typeof r.card === "object" ? normalizeOneDrawn(r.card) : null,
+    interpretationEn: typeof r.interpretation === "string" ? r.interpretation : null,
+  };
+}
+
+// /tarot/spreads/* → { spread, question, seed, positions:[{position,name,interpretation,card}], summary }
+export type RoxySpreadPosition = {
+  position: number;
+  name: string;
+  interpretationEn: string;
+  card: RoxyDrawnCard | null;
+};
+export type RoxySpreadPayload = {
+  spread: string | null;
+  summaryEn: string | null;
+  positions: RoxySpreadPosition[];
+};
+
+export function normalizeRoxySpread(raw: unknown): RoxySpreadPayload {
+  if (!raw || typeof raw !== "object")
+    return { spread: null, summaryEn: null, positions: [] };
+  const r = raw as Record<string, unknown>;
+  const positions = Array.isArray(r.positions)
+    ? r.positions
+        .map((p) => (p && typeof p === "object" ? (p as Record<string, unknown>) : null))
+        .filter((p): p is Record<string, unknown> => p !== null)
+        .map((p) => ({
+          position: typeof p.position === "number" ? p.position : 0,
+          name: typeof p.name === "string" ? p.name : "",
+          interpretationEn: typeof p.interpretation === "string" ? p.interpretation : "",
+          card: p.card && typeof p.card === "object" ? normalizeOneDrawn(p.card) : null,
+        }))
+    : [];
+  return {
+    spread: typeof r.spread === "string" ? r.spread : null,
+    summaryEn: typeof r.summary === "string" ? r.summary : null,
+    positions,
+  };
 }
 
 // Hungarian suit names for Minor Arcana fallback display.
