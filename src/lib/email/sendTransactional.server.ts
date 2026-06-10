@@ -77,14 +77,17 @@ export async function enqueueTransactionalEmail(
   const subject =
     typeof template.subject === "function" ? template.subject(templateData) : template.subject;
 
-  const messageId = crypto.randomUUID();
-  const idempotencyKey = input.idempotencyKey ?? messageId;
+  const idempotencyKey = input.idempotencyKey ?? crypto.randomUUID();
+  const messageId = idempotencyKey;
 
   await supabaseAdmin.from("email_send_log").insert({
     message_id: messageId,
     template_name: input.templateName,
     recipient_email: recipient,
     status: "pending",
+    metadata: {
+      idempotency_key: idempotencyKey,
+    } as never,
   });
 
   const { error: enqErr } = await supabaseAdmin.rpc("enqueue_email", {
@@ -112,6 +115,9 @@ export async function enqueueTransactionalEmail(
       recipient_email: recipient,
       status: "failed",
       error_message: `enqueue: ${enqErr.message}`,
+      metadata: {
+        idempotency_key: idempotencyKey,
+      } as never,
     });
     return { ok: false, error: enqErr.message };
   }

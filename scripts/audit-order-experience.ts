@@ -276,6 +276,17 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "internal transactional email uses stable message ids for idempotent order emails",
+    file: "src/lib/email/sendTransactional.server.ts",
+    includes: [
+      "const idempotencyKey = input.idempotencyKey ?? crypto.randomUUID()",
+      "const messageId = idempotencyKey",
+      "metadata: {",
+      "idempotency_key: idempotencyKey",
+      "message_id: messageId",
+    ],
+  },
+  {
     name: "order delivered email is essential transactional",
     file: "src/lib/email-templates/registry.ts",
     includes: ["essentialTransactional?: boolean", "essentialTransactional: true"],
