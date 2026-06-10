@@ -129,10 +129,11 @@ function HoroscopeArticlePending() {
   const periodRange = period ? periodDateLabel(period) : "a mostani időszak";
   const loadingSteps = [
     `${signName} ${periodLabel.toLowerCase()} forrását kérjük le erre az időszakra.`,
-    `A ${periodRange} forrásszövegét rendezzük magyar cikké.`,
-    "A holdfázist, színt és számot külön megtartjuk, ha a forrás adja.",
-    "A forrásszöveget hűen fordítjuk, nem rövidítjük le sablonos üzenetté.",
-    "Külön figyeljük a hangulat, kapcsolatok, munka és fókusz részeit.",
+    `A ${periodRange} képlet- és jegyhangulatát rendezzük olvasható magyar cikké.`,
+    "Ha a forrás holdfázist, színt vagy számot ad, ezeket külön megőrizzük.",
+    "A szerelem, munka, figyelmeztetés és belső fókusz részeit külön választjuk.",
+    "Nem előre megírt horoszkópot adunk: a friss forrást fordítjuk magyarra.",
+    "A szöveget hűen magyarítjuk, nem vágjuk le rövid sablonüzenetté.",
     "Ha a friss forrás lassan érkezik, korábbi jó minőségű mentést keresünk.",
   ] as const;
 
@@ -150,7 +151,8 @@ function HoroscopeArticlePending() {
         </h1>
         <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
           Nálunk nem egy előre megírt horoszkóp-szöveg kerül eléd. A mostani időszakhoz tartozó
-          jegyforrást vesszük alapul, és abból készítünk természetes, hű magyar olvasatot.
+          jegyforrást, holdfázist és kiemelt témákat vesszük alapul, ha a forrás ezeket adja, és
+          ebből készítünk természetes, hű magyar olvasatot.
         </p>
         <ReadingLoadingState
           kind="horoscope"

@@ -13,7 +13,7 @@ import {
 const NEWS_TRANSLATION_VERSION = "news-horo-hu-v4";
 const DAY_SECONDS = 60 * 60 * 24;
 const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "google/gemini-2.5-flash";
-const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 50_000);
+const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 90_000);
 
 const TECHNICAL_FALLBACK_RE =
   /háttéradat|nem érhető el|általános magyar tartalmat|\bprovider\b|\bendpoint\b|\broxy\b|\bapi\b|\bfallback\b/i;
