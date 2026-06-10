@@ -3,6 +3,29 @@ import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { EXPRESS_PRICE_HUF, PRODUCTS, formatHuf, type ProductCategory } from "@/lib/products";
 
+const PRICING_FAQ = [
+  {
+    question: "Kell fiókot létrehoznom a vásárláshoz?",
+    answer:
+      "Nem kötelező. Vendégként a biztonságos rendelési linken és emailben éred el az olvasatot; bejelentkezve később a profilodban is visszanézheted.",
+  },
+  {
+    question: "Mi a különbség az azonnali és a részletes olvasatok között?",
+    answer:
+      "Az azonnali olvasatok rövidebb, személyes válaszok néhány percen belül. A részletes olvasatok több szakaszos írásos elemzések, általában 24 órán belül.",
+  },
+  {
+    question: "Mi történik, ha technikai hiba miatt nem nyílik meg az olvasat?",
+    answer:
+      "A rendelési link és a vásárlási email alapján utánanézünk, pótoljuk a hozzáférést, vagy hibás megjelenés esetén javítjuk és újraküldjük az olvasatot.",
+  },
+  {
+    question: "Ezek jóslatok?",
+    answer:
+      "Nem. A Jövőd.hu szimbolikus, önismereti digitális tartalmat ad. Nem orvosi, jogi, pénzügyi vagy krízistanácsadás, és nem ígér biztos jövőt.",
+  },
+] as const;
+
 export const Route = createFileRoute("/arak")({
   head: () => ({
     meta: [
@@ -14,6 +37,23 @@ export const Route = createFileRoute("/arak")({
       },
     ],
     links: [{ rel: "canonical", href: "/arak" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: PRICING_FAQ.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }),
+      },
+    ],
   }),
   component: PricingPage,
 });
@@ -72,6 +112,26 @@ function PricingPage() {
               A részletes olvasatokhoz express gyorsítás is kérhető {formatHuf(EXPRESS_PRICE_HUF)}
               -ért. Ha nem sürgős, a normál határidő kedvezőbb.
             </p>
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-4">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+              Gyakori kérdések
+            </div>
+            <h2 className="mt-2 font-display text-3xl text-ivory">Vásárlás előtt jó tudni</h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {PRICING_FAQ.map((item) => (
+              <article
+                key={item.question}
+                className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4"
+              >
+                <h3 className="font-display text-xl text-ivory">{item.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ivory/64">{item.answer}</p>
+              </article>
+            ))}
           </div>
         </section>
       </div>

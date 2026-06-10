@@ -130,6 +130,16 @@ for (const needle of [
   "Menthető olvasat",
   "Megnézem",
   "EXPRESS_PRICE_HUF",
+  "const PRICING_FAQ",
+  '"@type": "FAQPage"',
+  "Gyakori kérdések",
+  "Vásárlás előtt jó tudni",
+  "Kell fiókot létrehoznom",
+  "Nem kötelező",
+  "technikai hiba miatt nem nyílik meg",
+  "pótoljuk a hozzáférést",
+  "Ezek jóslatok?",
+  "nem ígér biztos jövőt",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
 }
