@@ -18,6 +18,8 @@ const checks: Check[] = [
     name: "homepage explains free entry, paid price floor, and safe access",
     file: "src/routes/index.tsx",
     includes: [
+      'const SITE_URL = "https://jovod.hu"',
+      'links: [{ rel: "canonical", href: SITE_URL }]',
       "ENTRY_PRICE",
       "formatHuf(ENTRY_PRICE)",
       "Először próbáld ki",
@@ -33,6 +35,12 @@ const checks: Check[] = [
       "profilban is",
     ],
     excludes: ["biztosan", "garantáltan", "mindenképpen"],
+  },
+  {
+    name: "root head does not force homepage canonical onto every route",
+    file: "src/routes/__root.tsx",
+    includes: ["BRAND_OG_IMAGE_URL", 'rel: "manifest"', "Organization", "WebSite"],
+    excludes: ['{ rel: "canonical", href: SITE_URL }'],
   },
   {
     name: "profile access is visible in main and mobile navigation",

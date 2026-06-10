@@ -9,6 +9,7 @@ const RitualTable = lazy(() =>
 );
 
 const ENTRY_PRICE = Math.min(...PRODUCTS.map((product) => product.priceHuf));
+const SITE_URL = "https://jovod.hu";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/")({
         content: "Napi lap, számmisztika, összeillés és döntés előtti útmutatás.",
       },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: Index,
 });
