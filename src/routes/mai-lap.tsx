@@ -191,7 +191,7 @@ function MaiLap() {
                     ))}
                   </div>
                 </div>
-                {loadingReading && !reading && (
+                {drawing && !hu && (
                   <ReadingLoadingState kind="tarot" title="A napi lapod készül" />
                 )}
                 <GuestMemoryInsightPanel
@@ -199,27 +199,22 @@ function MaiLap() {
                   topic="mai lap"
                   situation={reversed ? "fordított lap" : "álló lap"}
                 />
-                {reading && (
+                {hu && (
                   <>
-                    {(reading.cardMessage || reading.intro) && (
+                    {hu.meaning && (
                       <Section eyebrow="Mit üzen ma?">
-                        <StreamingText text={reading.cardMessage ?? reading.intro ?? ""} />
+                        <StreamingText text={hu.meaning} />
                       </Section>
                     )}
-                    {reading.warn && (
-                      <Section eyebrow="Mire figyelj?">
-                        <StreamingText text={reading.warn} />
-                      </Section>
-                    )}
-                    {reading.oneLine && (
+                    {hu.oneLine && (
                       <Section eyebrow="Egy mondat, amit vigyél magaddal">
-                        <StreamingText as="em" text={reading.oneLine} />
+                        <StreamingText as="em" text={hu.oneLine} />
                       </Section>
                     )}
                     <div className="pt-2">
                       <ShareCardButton
                         card={card}
-                        oneLine={reading.oneLine ?? ""}
+                        oneLine={hu.oneLine ?? ""}
                         eyebrow="A mai lapod"
                       />
                     </div>
@@ -272,11 +267,11 @@ function MaiLap() {
             ? {
                 cardId:
                   paywallProduct === "extra_huzas"
-                    ? (extraPaidCard?.card.id ?? card.id)
+                    ? (extraSlot ? localCardFromSlot(extraSlot).id : card.id)
                     : card.id,
                 cardName:
                   paywallProduct === "extra_huzas"
-                    ? (extraPaidCard?.card.name ?? card.name)
+                    ? (extraSlot ? localCardFromSlot(extraSlot).name : card.name)
                     : card.name,
                 question:
                   paywallProduct === "extra_huzas"
