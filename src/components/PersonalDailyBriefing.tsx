@@ -79,7 +79,6 @@ export function PersonalDailyBriefing() {
   const [phase, setPhase] = useState<"draw" | "card" | "result">("draw");
   const [drawnCard, setDrawnCard] = useState<TarotCard | null>(null);
   const [drawnSlot, setDrawnSlot] = useState<TarotSlot | null>(null);
-  const [revealed, setRevealed] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   useEffect(() => {
@@ -98,7 +97,6 @@ export function PersonalDailyBriefing() {
       setBriefing(cached);
       const c = CARDS.find((x) => x.id === cached.drawnCardId) ?? null;
       if (c) setDrawnCard(c);
-      setRevealed(true);
       setPhase("result");
     }
   }, []);
@@ -115,7 +113,6 @@ export function PersonalDailyBriefing() {
       const lc = localCardFromSlot(r.slot);
       setDrawnSlot(r.slot);
       setDrawnCard(lc);
-      setRevealed(true);
       setPhase("card");
       trackEvent("daily_card_revealed", { cardId: lc.id, from: "home" });
     } finally {
@@ -211,7 +208,6 @@ export function PersonalDailyBriefing() {
     setBriefing(null);
     setDrawnCard(null);
     setDrawnSlot(null);
-    setRevealed(false);
     setError(null);
     setDrawError(null);
     setPhase("draw");
