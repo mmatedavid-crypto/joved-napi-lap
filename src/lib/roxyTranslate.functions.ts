@@ -16,6 +16,8 @@ import {
 import {
   normalizeRoxyDraw,
   normalizeRoxyTarotDaily,
+  normalizeRoxySpread,
+  normalizeRoxyYesNo,
   type RoxyDrawnCard,
 } from "./roxyNormalize";
 
@@ -726,5 +728,332 @@ export const aiTarotDrawHU = createServerFn({ method: "POST" })
           message: "A magyarítás most nem sikerült.",
         };
       return { ok: true, cached: r.cached, slots };
+    },
+  );
+
+// ─── Hold-fázis ───────────────────────────────────────────────────────────
+// Roxy GET /astrology/moon-phase/current → angol forrás (phase, illumination,
+// signName/sunSign, energy, advice, stb.) → 1-2 mondatos magyar összefoglaló.
+// Cache: 6 óra (a fázis percről percre alig változik, de szín/hold-jegy igen).
+
+export type MoonPhaseHU = {
+  phaseName: string;     // pl. "Növő hold", "Telihold"
+  illumination?: string; // pl. "73%-os megvilágítás"
+  sign?: string;         // pl. "Bika"
+  oneLine: string;       // egy mondat a mai hold-hangulatról
+  meaning?: string;      // 1-2 mondat
+};
+
+const MOON_PHASE_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    phaseName: { type: "string" },
+    illumination: { type: "string" },
+    sign: { type: "string" },
+    oneLine: { type: "string" },
+    meaning: { type: "string" },
+  },
+  required: ["phaseName", "oneLine"],
+};
+
+function guardMoonPhaseHU(value: unknown): MoonPhaseHU | null {
+  const guarded = guardAITextObject<MoonPhaseHU>(value, ["phaseName", "oneLine"], {
+    oneLine: { oneLine: true },
+  });
+  if (!guarded) return null;
+  return {
+    ...guarded,
+    phaseName: controlledMoonPhaseHU(guarded.phaseName) ?? guarded.phaseName,
+  };
+}
+
+export const aiMoonPhaseHU = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ dateKey: z.string().min(8).max(20) }).parse)
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: MoonPhaseHU | null;
+      message?: string;
+    }> => {
+      const cacheKey = aiCacheKey("moonphase", data.dateKey);
+      const cached = guardMoonPhaseHU(await readCache(cacheKey));
+      if (cached) return { ok: true, cached: true, reading: cached };
+
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: "/astrology/moon-phase/current",
+        method: "GET",
+        cacheKey: `astro:moon:${data.dateKey}`,
+        ttlSeconds: 60 * 60 * 6,
+      });
+      if (!r.ok || !r.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem érem el a holdfázist.",
+        };
+
+      const t = await translateWithAI<MoonPhaseHU>({
+        source: r.data,
+        domainHint:
+          "Aktuális holdfázis. A 'phaseName' a magyar fázisnév (újhold, növő holdsarló, első negyed, növő hold, telihold, fogyó hold, utolsó negyed, fogyó holdsarló). A 'sign' a hold-jegy magyar neve. Az 'oneLine' egyetlen mondat a mai hangulatról, max 18 szó, ne kezdődjön 'Ma' szóval.",
+        schemaName: "MoonPhaseHU",
+        schema: MOON_PHASE_SCHEMA,
+      });
+      const reading = guardMoonPhaseHU(t.data);
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: t.error };
+
+      await writeCache(cacheKey, "/ai/moon-phase", reading, 60 * 60 * 6);
+      return { ok: true, cached: false, reading };
+    },
+  );
+
+// ─── Tarot Yes/No ─────────────────────────────────────────────────────────
+// Roxy POST /tarot/yes-no → { answer, strength, card, interpretation }.
+// Magyar kimenet: igen/nem/talán, erősség, magyar interpretáció.
+
+export type TarotYesNoHU = {
+  answer: "igen" | "nem" | "talán";
+  strength?: "gyenge" | "mérsékelt" | "erős";
+  card: TarotCardHU;
+  interpretation: string; // 2-3 mondat a kérdésre, a lap alapján
+};
+
+const YESNO_INTERP_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    answer: { type: "string", enum: ["igen", "nem", "talán"] },
+    strength: { type: "string", enum: ["gyenge", "mérsékelt", "erős"] },
+    interpretation: { type: "string" },
+  },
+  required: ["answer", "interpretation"],
+};
+
+function mapYesNoAnswer(raw: string | null): "igen" | "nem" | "talán" | null {
+  if (!raw) return null;
+  const v = raw.toLowerCase().trim();
+  if (v === "yes" || v === "igen") return "igen";
+  if (v === "no" || v === "nem") return "nem";
+  if (v === "maybe" || v === "talán" || v === "talan") return "talán";
+  return null;
+}
+function mapStrength(raw: string | null): "gyenge" | "mérsékelt" | "erős" | undefined {
+  if (!raw) return undefined;
+  const v = raw.toLowerCase().trim();
+  if (v === "weak" || v === "gyenge") return "gyenge";
+  if (v === "moderate" || v === "medium" || v === "mérsékelt") return "mérsékelt";
+  if (v === "strong" || v === "erős" || v === "eros") return "erős";
+  return undefined;
+}
+
+export const aiTarotYesNoHU = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      question: z.string().min(1).max(280),
+      seed: z.string().min(1).max(80).optional(),
+    }).parse,
+  )
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: TarotYesNoHU | null;
+      message?: string;
+    }> => {
+      const { callRoxy } = await import("./roxy.server");
+      const r = await callRoxy<unknown>({
+        endpoint: "/tarot/yes-no",
+        body: { question: data.question, seed: data.seed },
+        cacheKey: `tarot:yesno:${data.seed ?? "nosd"}:${data.question.toLowerCase().trim().slice(0, 120)}`,
+        ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
+      });
+      if (!r.ok || !r.data)
+        return { ok: false, cached: false, reading: null, message: "Most nem érkezett válasz." };
+
+      const payload = normalizeRoxyYesNo(r.data);
+      const answerHu = mapYesNoAnswer(payload.answer);
+      if (!payload.card || !answerHu)
+        return { ok: false, cached: false, reading: null, message: "Üres válasz a forrásból." };
+
+      const huCard = await translateOneTarotCard(payload.card);
+      if (!huCard)
+        return { ok: false, cached: false, reading: null, message: "A magyarítás most nem sikerült." };
+
+      // Interpretációt is fordítjuk (vagy generáljuk a lap-meaning-ből, ha hiányzik).
+      const t = await translateWithAI<{
+        answer: "igen" | "nem" | "talán";
+        strength?: "gyenge" | "mérsékelt" | "erős";
+        interpretation: string;
+      }>({
+        source: {
+          question: data.question,
+          answer: answerHu,
+          strength: mapStrength(payload.strength) ?? null,
+          card: payload.card.roxyName,
+          reversed: payload.card.reversed,
+          interpretation: payload.interpretationEn ?? huCard.meaning,
+        },
+        domainHint:
+          "Tarot yes/no kérdésre adott rövid válasz. Az 'answer' magyarul kötelező (igen/nem/talán), a 'strength' csak ha a forrás adja. Az 'interpretation' 2-3 mondat, a kérdést konkrétan tükrözve, a forrás interpretáción alapulva — semmit ne találj ki, ne ígérj biztos jövőt.",
+        schemaName: "TarotYesNoHU",
+        schema: YESNO_INTERP_SCHEMA,
+      });
+      if (!t.ok || !t.data)
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: t.error ?? "Magyarítási hiba.",
+        };
+
+      return {
+        ok: true,
+        cached: r.cached,
+        reading: {
+          answer: t.data.answer,
+          strength: t.data.strength ?? mapStrength(payload.strength),
+          card: huCard,
+          interpretation: t.data.interpretation,
+        },
+      };
+    },
+  );
+
+// ─── Tarot spread (three-card / love / career / celtic-cross) ─────────────
+// Roxy POST /tarot/spreads/{kind} → { spread, question, seed, positions, summary }
+// Position: { position, name, interpretation, card }
+// Magyar kimenet: a Roxy által adott „name" (pozíciónév) magyarra fordítva,
+// kártya hu adata, pozíció-interpretáció fordítva, plusz egy közös oneLine.
+
+export type TarotSpreadKind = "three-card" | "love" | "career" | "celtic-cross";
+
+export type TarotSpreadPositionHU = {
+  position: number;
+  name: string;            // magyar pozíciónév (pl. "Múlt", "A szíved")
+  card: TarotCardHU;
+  interpretation: string;  // 2-3 mondat erre a pozícióra a forrásból
+};
+
+export type TarotSpreadHU = {
+  kind: TarotSpreadKind;
+  positions: TarotSpreadPositionHU[];
+  oneLine?: string; // egy mondat a teljes terítés összefoglalója
+};
+
+const SPREAD_META_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    positionNames: { type: "array", items: { type: "string" } },
+    interpretations: { type: "array", items: { type: "string" } },
+    oneLine: { type: "string" },
+  },
+  required: ["positionNames", "interpretations"],
+};
+
+function spreadEndpoint(kind: TarotSpreadKind): string {
+  if (kind === "three-card") return "/tarot/spreads/three-card";
+  if (kind === "love") return "/tarot/spreads/love";
+  if (kind === "career") return "/tarot/spreads/career";
+  return "/tarot/spreads/celtic-cross";
+}
+
+export const aiTarotSpreadHU = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      kind: z.enum(["three-card", "love", "career", "celtic-cross"]),
+      question: z.string().min(1).max(280).optional(),
+      seed: z.string().min(1).max(80).optional(),
+    }).parse,
+  )
+  .handler(
+    async ({
+      data,
+    }): Promise<{
+      ok: boolean;
+      cached: boolean;
+      reading: TarotSpreadHU | null;
+      message?: string;
+    }> => {
+      const { callRoxy } = await import("./roxy.server");
+      const endpoint = spreadEndpoint(data.kind);
+      const r = await callRoxy<unknown>({
+        endpoint,
+        body: { question: data.question, seed: data.seed },
+        cacheKey: `tarot:spread:${data.kind}:${data.seed ?? "nosd"}:${(data.question ?? "").toLowerCase().trim().slice(0, 120)}`,
+        ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
+      });
+      if (!r.ok || !r.data)
+        return { ok: false, cached: false, reading: null, message: "Most nem érkezett meg a terítés." };
+
+      const spread = normalizeRoxySpread(r.data);
+      if (spread.positions.length === 0)
+        return { ok: false, cached: false, reading: null, message: "Üres válasz a forrásból." };
+
+      // 1) Per-kártya fordítás (cache-elt) párhuzamosan.
+      const huCards = await Promise.all(
+        spread.positions.map((p) => (p.card ? translateOneTarotCard(p.card) : Promise.resolve(null))),
+      );
+
+      // 2) Pozíciónevek + pozíció-interpretációk egyetlen AI-hívásban (ugyanazon a források).
+      const meta = await translateWithAI<{
+        positionNames: string[];
+        interpretations: string[];
+        oneLine?: string;
+      }>({
+        source: {
+          kind: data.kind,
+          question: data.question ?? null,
+          positions: spread.positions.map((p) => ({
+            position: p.position,
+            name: p.name,
+            interpretation: p.interpretationEn,
+            card: p.card?.roxyName ?? null,
+            reversed: p.card?.reversed ?? false,
+          })),
+          summary: spread.summaryEn ?? null,
+        },
+        domainHint:
+          "Tarot terítés pozíciónevei és pozíció-interpretációi. A 'positionNames' tartalmazza a pozíciók magyar nevét UGYANABBAN a sorrendben (pl. 'Múlt', 'Jelen', 'Jövő'; vagy 'A szíved', 'A partnered', stb.). Az 'interpretations' a forrás 'interpretation' mezőit fordítja magyarra, 2-3 mondatban, semmit ne találj ki. Az 'oneLine' egyetlen mondat összefoglaló a 'summary' mezőből, max 18 szó.",
+        schemaName: "TarotSpreadMetaHU",
+        schema: SPREAD_META_SCHEMA,
+      });
+      if (!meta.ok || !meta.data)
+        return { ok: false, cached: false, reading: null, message: meta.error ?? "Magyarítási hiba." };
+
+      const positions: TarotSpreadPositionHU[] = spread.positions
+        .map((p, i) => {
+          const huCard = huCards[i];
+          if (!huCard) return null;
+          return {
+            position: p.position,
+            name: meta.data!.positionNames[i] ?? p.name,
+            card: huCard,
+            interpretation: meta.data!.interpretations[i] ?? huCard.meaning,
+          } as TarotSpreadPositionHU;
+        })
+        .filter((x): x is TarotSpreadPositionHU => x !== null);
+
+      if (positions.length === 0)
+        return { ok: false, cached: false, reading: null, message: "A magyarítás most nem sikerült." };
+
+      return {
+        ok: true,
+        cached: r.cached,
+        reading: {
+          kind: data.kind,
+          positions,
+          oneLine: meta.data.oneLine,
+        },
+      };
     },
   );
