@@ -206,6 +206,7 @@ function Page() {
                   {insights.gentleNudge}
                 </p>
               )}
+              <MemoryNextSteps memories={memories} insights={insights} />
               <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
                 {memories.slice(0, 6).map((memory) => (
                   <li key={memory.id} className="py-3">
@@ -427,6 +428,102 @@ function ProfileSupportContact({
       {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
     </p>
   );
+}
+
+function MemoryNextSteps({
+  memories,
+  insights,
+}: {
+  memories: ReadingMemory[];
+  insights: ReadingMemoryInsights | null;
+}) {
+  const items = memoryNextStepItems(memories, insights);
+  return (
+    <div className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4">
+      <div className="text-[11px] uppercase tracking-[0.18em] text-gold/70">
+        Következő jó kérdés
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/62">
+        Ha továbbviszed ezt az ívet, nem kell újra nulláról indulnod. Válassz egy irányt, ami most
+        természetesen kapcsolódik a visszatérő mintáidhoz.
+      </p>
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        {items.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="rounded-md border border-gold/15 px-3 py-3 text-sm text-ivory/68 transition-colors hover:border-gold/45 hover:text-gold"
+          >
+            <span className="block text-gold/85">{item.label}</span>
+            <span className="mt-1 block text-xs leading-relaxed text-ivory/48">{item.reason}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function memoryNextStepItems(
+  memories: ReadingMemory[],
+  insights: ReadingMemoryInsights | null,
+): Array<{ label: string; reason: string; to: string }> {
+  const text = [
+    insights?.weeklySummary,
+    insights?.monthlySummary,
+    insights?.recurringQuestion,
+    insights?.changeSinceLast,
+    ...memories
+      .slice(0, 6)
+      .flatMap((memory) => [
+        memory.reading_type,
+        memory.topic,
+        memory.situation,
+        memory.title,
+        ...(memory.anchors ?? []),
+      ]),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("hu-HU");
+
+  const suggestions: Array<{ label: string; reason: string; to: string }> = [];
+  const push = (item: { label: string; reason: string; to: string }) => {
+    if (!suggestions.some((existing) => existing.to === item.to)) suggestions.push(item);
+  };
+
+  if (/kapcsolat|összeill|compatibility|love|randi|ex|visszatér/.test(text)) {
+    push({
+      label: "Kapcsolati dinamika",
+      reason: "ha ugyanaz a kötődés vagy visszatérő történet kér figyelmet",
+      to: "/osszeillunk",
+    });
+  }
+  if (/dönt|dont|decision|irány|munka|választás/.test(text)) {
+    push({
+      label: "Döntés előtt",
+      reason: "ha nem új jóslat kell, hanem tisztább belső szempont",
+      to: "/dontes-elott",
+    });
+  }
+  if (/álom|alom|dream/.test(text)) {
+    push({
+      label: "Álomfejtés",
+      reason: "ha képekben és visszatérő érzésekben jelenik meg a téma",
+      to: "/alomfejtes",
+    });
+  }
+  push({
+    label: "Három lap",
+    reason: "ha a múlt, jelen és lehetséges irány együtt érdekel",
+    to: "/harom-lap",
+  });
+  push({
+    label: "Mai iránytű",
+    reason: "ha csak egy rövid, használható napi fókuszt szeretnél",
+    to: "/mai-iranytu",
+  });
+
+  return suggestions.slice(0, 3);
 }
 
 function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {

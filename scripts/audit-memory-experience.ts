@@ -34,6 +34,24 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile turns memory insights into gentle next actions",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "MemoryNextSteps",
+      "memoryNextStepItems",
+      "Következő jó kérdés",
+      "nem kell újra nulláról indulnod",
+      "Kapcsolati dinamika",
+      'to: "/osszeillunk"',
+      "Döntés előtt",
+      'to: "/dontes-elott"',
+      "Három lap",
+      'to: "/harom-lap"',
+      "Mai iránytű",
+      'to: "/mai-iranytu"',
+    ],
+  },
+  {
     name: "privacy page exposes guest memory clearing",
     file: "src/routes/adatkezelesi-tajekoztato.tsx",
     includes: [
