@@ -25,6 +25,7 @@ export const Route = createFileRoute("/profil")({
     meta: [
       { title: "Profil | Jövőd.hu" },
       { name: "description", content: "Mentett húzásaid, vásárlásaid és sorsszámod." },
+      { name: "robots", content: "noindex,nofollow" },
     ],
     links: [{ rel: "canonical", href: "/profil" }],
   }),

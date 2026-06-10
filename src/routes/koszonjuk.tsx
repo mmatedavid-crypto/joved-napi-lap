@@ -44,7 +44,7 @@ export const Route = createFileRoute("/koszonjuk")({
     session_id: typeof s.session_id === "string" ? s.session_id : undefined,
   }),
   head: () => ({
-    meta: [{ title: "Köszönjük! | Jövőd.hu" }],
+    meta: [{ title: "Köszönjük! | Jövőd.hu" }, { name: "robots", content: "noindex,nofollow" }],
     links: [{ rel: "canonical", href: "/koszonjuk" }],
   }),
   component: Page,

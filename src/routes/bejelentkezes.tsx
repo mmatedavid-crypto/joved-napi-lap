@@ -15,6 +15,7 @@ export const Route = createFileRoute("/bejelentkezes")({
         name: "description",
         content: "Jelentkezz be Google vagy Apple fiókkal — az előzményeid megmaradnak.",
       },
+      { name: "robots", content: "noindex,follow" },
     ],
     links: [{ rel: "canonical", href: "/bejelentkezes" }],
   }),

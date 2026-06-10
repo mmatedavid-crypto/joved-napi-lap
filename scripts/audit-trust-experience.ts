@@ -40,6 +40,21 @@ const checks: Check[] = [
     includes: ['to="/profil"', "Profil", "Profil és előzmények", "hidden lg:flex", "lg:hidden"],
   },
   {
+    name: "private and transactional pages are kept out of search index",
+    file: "src/routes/profil.tsx",
+    includes: ['{ name: "robots", content: "noindex,nofollow" }'],
+  },
+  {
+    name: "thank-you page with order access is kept out of search index",
+    file: "src/routes/koszonjuk.tsx",
+    includes: ['{ name: "robots", content: "noindex,nofollow" }'],
+  },
+  {
+    name: "login page does not dilute public search appearance",
+    file: "src/routes/bejelentkezes.tsx",
+    includes: ['{ name: "robots", content: "noindex,follow" }'],
+  },
+  {
     name: "global footer exposes support contact from legal config",
     file: "src/components/Layout.tsx",
     includes: [
