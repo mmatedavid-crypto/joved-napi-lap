@@ -249,6 +249,22 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "crystal page records only explicit guest interest",
+    file: "src/routes/kristaly.tsx",
+    includes: [
+      "GuestMemoryInsightPanel",
+      "recordGuestReadingMemory",
+      'readingType: "crystal"',
+      'sourceRoute: "/kristaly"',
+      "rememberCrystalReading",
+      "load({ remember = false }",
+      "load({ remember: true })",
+      'readingType="crystal"',
+      "topic={r?.name}",
+      "situation={crystalTopic(mode, month, sign)}",
+    ],
+  },
+  {
     name: "home daily compass uses and records returning-user context",
     file: "src/components/PersonalDailyBriefing.tsx",
     includes: [

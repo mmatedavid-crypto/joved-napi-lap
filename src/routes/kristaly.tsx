@@ -15,6 +15,8 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
 export const Route = createFileRoute("/kristaly")({
   head: () => ({
@@ -38,6 +40,25 @@ export const Route = createFileRoute("/kristaly")({
 
 type Mode = "month" | "zodiac";
 
+function crystalTopic(mode: Mode, month: number, sign: string): string {
+  return mode === "month" ? MONTH_HU[month - 1] : SIGN_HU[sign as keyof typeof SIGN_HU];
+}
+
+function rememberCrystalReading(reading: CrystalHU, topic: string) {
+  recordGuestReadingMemory({
+    readingType: "crystal",
+    topic: reading.name,
+    situation: topic,
+    sourceRoute: "/kristaly",
+    title: `${reading.name} · ${topic}`,
+    summary:
+      [reading.oneLine, reading.quality, reading.symbol].filter(Boolean).join(" ") ||
+      `${reading.name} kristály · ${topic}`,
+    oneSentence: reading.oneLine,
+    anchors: [reading.name, topic, reading.quality, reading.symbol],
+  });
+}
+
 function Page() {
   const callAi = useServerFn(aiCrystalHU);
   const [mode, setMode] = useState<Mode>("month");
@@ -51,8 +72,9 @@ function Page() {
     trackEvent("crystal_opened");
   }, []);
 
-  async function load() {
+  async function load({ remember = false }: { remember?: boolean } = {}) {
     setLoading(true);
+    const topic = crystalTopic(mode, month, sign);
     try {
       const res = await callAi({
         data: mode === "month" ? { mode: "month", month } : { mode: "zodiac", sign: sign as never },
@@ -61,6 +83,7 @@ function Page() {
         if (res.cached) trackEvent("roxy_cache_hit", { domain: "crystal" });
         else trackEvent("roxy_cache_miss", { domain: "crystal" });
         setR(res.reading);
+        if (remember) rememberCrystalReading(res.reading, topic);
         setLoading(false);
         return;
       } else {
@@ -75,13 +98,15 @@ function Page() {
     if (!crystalName && mode === "zodiac") crystalName = FALLBACK_ZODIAC_CRYSTAL[sign];
     if (!crystalName) crystalName = "Hegyikristály";
     const cm = crystalMeaning(crystalName);
-    setR({
+    const fallbackReading = {
       name: cm.name,
       symbol: cm.m.symbol,
       quality: cm.m.quality,
       when: cm.m.when,
       oneLine: cm.m.oneLine,
-    });
+    };
+    setR(fallbackReading);
+    if (remember) rememberCrystalReading(fallbackReading, topic);
     setLoading(false);
   }
 
@@ -137,12 +162,18 @@ function Page() {
               ))}
             </div>
           )}
-          <button className="btn-gold" onClick={load} disabled={loading}>
+          <button className="btn-gold" onClick={() => load({ remember: true })} disabled={loading}>
             {loading ? "Egy pillanat…" : "Megnézem"}
           </button>
         </div>
 
         {loading && !r && <ReadingLoadingState kind="crystal" title="A kristályolvasat készül" />}
+
+        <GuestMemoryInsightPanel
+          readingType="crystal"
+          topic={r?.name}
+          situation={crystalTopic(mode, month, sign)}
+        />
 
         {r && (
           <div className="space-y-4">
