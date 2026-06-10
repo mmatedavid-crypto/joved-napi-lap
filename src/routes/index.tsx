@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { Layout } from "@/components/Layout";
 import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
 import { MoonPhaseStrip } from "@/components/MoonPhaseStrip";
+import { YesNoWidget } from "@/components/YesNoWidget";
 import { PRODUCTS, formatHuf } from "@/lib/products";
 
 const RitualTable = lazy(() =>
@@ -47,6 +48,8 @@ function Index() {
       <MoonPhaseStrip />
 
       <PersonalDailyBriefing />
+
+      <YesNoWidget />
 
       <section className="mx-auto max-w-none px-0 md:px-3 pb-12">
         <Suspense
