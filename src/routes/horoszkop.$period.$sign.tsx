@@ -146,7 +146,14 @@ function HoroscopeArticlePending() {
           <span className="h-2.5 w-2.5 rounded-full bg-gold shadow-[0_0_24px_oklch(0.78_0.10_80/0.8)]" />
         </div>
         <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)]">
-          {periodLabel} · {signName} · {period ? periodDateLabel(period) : ""}
+          <Link to="/horoszkop" className="hover:text-gold transition-colors">
+            Horoszkóp
+          </Link>
+          <span className="mx-1.5">·</span>
+          {periodLabel}
+          <span className="mx-1.5">·</span>
+          {signName}
+          {period ? <><span className="mx-1.5">·</span>{periodDateLabel(period)}</> : null}
         </div>
         <h1 className="font-display text-3xl md:text-4xl text-ivory mt-4">
           Készül a friss horoszkópod
@@ -211,7 +218,15 @@ function HoroscopeArticlePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 md:px-6 pt-4 pb-20">
       <div className="text-[10px] tracking-[0.35em] uppercase text-[oklch(0.78_0.10_80/0.8)] text-center">
-        {PERIOD_LABEL[article.period]} · {article.signName} · {periodDateLabel(article.period)}
+        <Link to="/horoszkop" className="hover:text-gold transition-colors">
+          Horoszkóp
+        </Link>
+        <span className="mx-1.5">·</span>
+        {PERIOD_LABEL[article.period]}
+        <span className="mx-1.5">·</span>
+        {article.signName}
+        <span className="mx-1.5">·</span>
+        {periodDateLabel(article.period)}
       </div>
       <h1 className="font-display text-4xl md:text-5xl text-ivory leading-[1.1] text-center mt-3">
         {horoscopeSeoTitle(article.period, article.signName)}
