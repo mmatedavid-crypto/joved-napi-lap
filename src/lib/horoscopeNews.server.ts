@@ -721,7 +721,7 @@ function localFallbackArticle(opts: {
     ...articleMeta,
     signName,
     title: `${PERIOD_LABEL[opts.period]} ${signName} jegyűeknek`,
-    lead: `${periodFrame} ${signArticle} számára akkor lehet igazán használható, ha nem kész jóslatként, hanem belső iránytűként olvasod. Most ${variant.theme} kerülhet előtérbe: ${variant.tempo}. ${sourceSentence ? `${sourceSentence} ` : ""}${archetype}`,
+    lead: `Most ${variant.theme} kerülhet előtérbe: ${variant.tempo}. ${sourceSentence ? `${sourceSentence} ` : ""}${archetype}`,
     sections: [
       {
         heading: focus.firstHeading,
