@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
-import { EXPRESS_PRICE_HUF, PRODUCTS, formatHuf, type ProductCategory } from "@/lib/products";
+import { PRODUCTS, formatHuf, type ProductCategory } from "@/lib/products";
 
 const PRICING_FAQ = [
   {
@@ -35,9 +35,9 @@ const CHOICE_GUIDE = [
   },
   {
     title: "Kapcsolat vagy ex jár a fejemben",
-    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a Párkapcsolat elemzés ad több teret, nem csak százalékot.",
+    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a Szerelmi tarot ad több teret, nem csak százalékot.",
     productSlug: "parkapcsolat_elemzes",
-    cta: "Kapcsolati elemzés",
+    cta: "Szerelmi tarot",
   },
   {
     title: "Döntés előtt állok",
@@ -46,10 +46,10 @@ const CHOICE_GUIDE = [
     cta: "Döntési elemzés",
   },
   {
-    title: "Mélyebb képet szeretnék",
-    text: "Ha a helyzet több szálból áll, a Három lap vagy a Kelta kereszt ad összefüggőbb, írásos riportot.",
-    productSlug: "harom_lap_mely",
-    cta: "Mély tarot",
+    title: "30 napos előrejelzést kérek",
+    text: "Ha tudni akarod, mire figyelj a következő 30 napban, a személyes 30 napos térkép a saját születési képletedre épül.",
+    productSlug: "personal_30_day",
+    cta: "30 napos térkép",
   },
 ] as const;
 
@@ -94,7 +94,7 @@ function PricingPage() {
       <PageHeader
         eyebrow="Árak"
         title="Olvasatok átlátható áron"
-        lead="Kezdhetsz egy rövid, azonnali olvasattal, vagy kérhetsz részletesebb írásos elemzést, ha a helyzet több figyelmet érdemel."
+        lead="A horoszkóp, az angyalszám, a bioritmus és a kristályok ingyenesek. A személyes olvasatok 590 Ft-tól indulnak."
       />
 
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20">
@@ -170,17 +170,17 @@ function PricingPage() {
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <ReadingTypeCard
               title="Azonnali olvasat"
-              price="590-790 Ft"
+              price="590-990 Ft"
               delivery="Pár percen belül"
               bestFor="Ha egy konkrét érzésre, napi kérdésre vagy gyors belső irányra kérsz választ."
               result="Rövid, személyes szöveg, amely a megadott témára reagál, de nem bontja ki hosszú riportként."
             />
             <ReadingTypeCard
-              title="Részletes írásos elemzés"
-              price="1 990-2 990 Ft"
-              delivery="Általában 24 órán belül"
-              bestFor="Ha ugyanaz a kapcsolat, döntés vagy élethelyzet napok óta visszatér, és több réteget szeretnél látni."
-              result="Több szakaszos, összefüggő elemzés, amelyben a kérdésed, adataid és a választott módszer együtt jelenik meg."
+              title="Részletes asztrológiai riport"
+              price="1 490-1 990 Ft"
+              delivery="Néhány percen belül emailben és a köszönő oldalon"
+              bestFor="Ha a saját születési képletedből kérsz 30 napos előrejelzést vagy teljes védikus elemzést."
+              result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
             />
           </div>
           <p className="mt-4 text-sm leading-relaxed text-ivory/58">
@@ -190,8 +190,8 @@ function PricingPage() {
         </section>
 
         <PricingGroup
-          title="Részletes írásos elemzések"
-          lead="Mélyebb, több szakaszos olvasatok 24 órán belül. Akkor érdemes, ha a kérdés nem fér bele egy rövid válaszba."
+          title="Asztrológiai riportok"
+          lead="Személyes születési képletre épülő, többoldalas elemzések. A 30 napos előrejelzés a tranzitokat a saját képletedre vetíti."
           products={delayed}
           category="delayed"
         />
@@ -200,13 +200,13 @@ function PricingPage() {
           <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">Hogyan válassz?</div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
-              Ha csak azt szeretnéd érezni, hogy a Jövőd.hu hangja működik-e neked, válassz egy
-              azonnali olvasatot. Ha ugyanaz a kérdés napok óta visszatér, a részletesebb elemzés ad
-              több teret.
+              Ha csak azt szeretnéd érezni, hogy a Jövőd.hu hangja működik-e neked, próbáld ki a
+              napi lap ingyenes húzását vagy az ingyenes horoszkópot. A személyes olvasatok 590 Ft-tól
+              indulnak.
             </p>
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
-              A részletes olvasatokhoz express gyorsítás is kérhető {formatHuf(EXPRESS_PRICE_HUF)}
-              -ért. Ha nem sürgős, a normál határidő kedvezőbb.
+              Az asztrológiai riportok (30 napos térkép, védikus elemzés) a saját születési
+              adataidból készülnek; a fizetés után néhány percen belül kézhez kapod őket.
             </p>
           </div>
         </section>
