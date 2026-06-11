@@ -50,8 +50,7 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
     const memoryContext = order.user_id
       ? await loadPaidMemoryContext(order.user_id, order.product_slug, order.input_payload)
       : "";
-    const { generatePaidOrderReading } = await import("@/lib/paidReadings.server");
-    const reading = await generatePaidOrderReading({
+    const reading = await runReadingForOrder({
       productSlug: order.product_slug,
       productName: order.product_name,
       inputPayload: withMemoryContext(order.input_payload, memoryContext),
@@ -107,6 +106,33 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
       .eq("id", order.id);
     return { ok: false, error: message };
   }
+}
+
+async function runReadingForOrder(args: {
+  productSlug: string;
+  productName: string;
+  inputPayload: unknown;
+}): Promise<PaidOrderReading> {
+  if (args.productSlug === "personal_30_day") {
+    const { generatePersonal30DayReport } = await import(
+      "@/lib/products/personal30day.server"
+    );
+    const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
+    return generatePersonal30DayReport({
+      birthDate: String(payload.birthDate ?? ""),
+      birthTime: (payload.birthTime as string | undefined) ?? null,
+      birthPlace: String(payload.birthPlace ?? ""),
+      area: String(payload.area ?? "altalanos"),
+      question: (payload.question as string | undefined) ?? null,
+      name: (payload.name as string | undefined) ?? null,
+    });
+  }
+  const { generatePaidOrderReading } = await import("@/lib/paidReadings.server");
+  return generatePaidOrderReading({
+    productSlug: args.productSlug,
+    productName: args.productName,
+    inputPayload: args.inputPayload,
+  });
 }
 
 async function claimOrderForProcessing(order: {
