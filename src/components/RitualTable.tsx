@@ -27,7 +27,7 @@ import {
 type Mode = "randi" | "dontes" | "szam" | "osszeillunk";
 
 const TABS: { id: Mode; label: string; short: string }[] = [
-  { id: "randi", label: "Randi előtt", short: "Randi" },
+  { id: "randi", label: "Szerelmi tarot", short: "Tarot" },
   { id: "dontes", label: "Döntés előtt", short: "Döntés" },
   { id: "szam", label: "Sorsszám", short: "Sorsszám" },
   { id: "osszeillunk", label: "Összeillünk?", short: "Összeillés" },
@@ -113,7 +113,7 @@ function RandiInline() {
           trackEvent("dating_reading_started", { situation: sit });
         }}
       >
-        <Eyebrow>Randi előtt</Eyebrow>
+        <Eyebrow>Szerelmi tarot</Eyebrow>
         <h2 className="font-display text-2xl text-ivory">Egy lap a kapcsolatról</h2>
         <div>
           <label className="block text-sm text-ivory/80 mb-2">A helyzet</label>
@@ -147,7 +147,7 @@ function RandiInline() {
   return (
     <CardResult
       card={card}
-      eyebrow={`Randi előtt · ${sit}`}
+      eyebrow={`Szerelmi tarot · ${sit}`}
       sections={[
         { title: "Mit mutat ez a helyzet?", text: datingInlineAnswer(sit, card) },
         { title: "Mire figyelj?", text: datingInlineWarning(sit, card) },

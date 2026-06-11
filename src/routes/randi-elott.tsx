@@ -17,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
     meta: [
-      { title: "Randi előtt — szerelmi tarot húzás | Jövőd.hu" },
+      { title: "Szerelmi tarot — kapcsolati húzás | Jövőd.hu" },
       {
         name: "description",
         content:
@@ -80,7 +80,7 @@ function Page() {
   useEffect(() => {
     if (!slots) return;
     const cardNames = slots.map((s) => localCardFromSlot(s).name);
-    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Randi előtt";
+    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Szerelmi tarot";
     const summary = slots.map((s) => s.hu.love ?? s.hu.meaning).join(" ");
     recordGuestReadingMemory({
       readingType: "love",
@@ -88,7 +88,7 @@ function Page() {
       question: q || undefined,
       situation: sit,
       sourceRoute: "/randi-elott",
-      title: "Randi előtt",
+      title: "Szerelmi tarot",
       summary,
       oneSentence: oneLine,
       anchors: [sit, ...cardNames],
@@ -101,7 +101,7 @@ function Page() {
           question: q || undefined,
           situation: sit,
           sourceRoute: "/randi-elott",
-          title: "Randi előtt",
+          title: "Szerelmi tarot",
           summary,
           oneSentence: oneLine,
           anchors: [sit, ...cardNames],
@@ -113,7 +113,7 @@ function Page() {
   return (
     <Layout>
       <PageHeader
-        eyebrow="Randi előtt"
+        eyebrow="Szerelmi tarot"
         title="Egy lap a kapcsolatról"
         lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
       />
