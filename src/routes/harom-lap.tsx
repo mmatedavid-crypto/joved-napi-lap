@@ -124,7 +124,7 @@ function HaromLap() {
         lead="Három lap, egy ív. Nem külön-külön, hanem együtt mond valamit."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20 space-y-8">
-        {!slots && (
+        {!slots && !drawing && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
