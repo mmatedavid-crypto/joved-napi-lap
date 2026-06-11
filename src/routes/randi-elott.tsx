@@ -216,6 +216,14 @@ function Page() {
         <GuestMemoryInsightPanel readingType="love" topic={q || sit} situation={sit} />
         {slots && (
           <>
+            <div className="surface p-5 text-center">
+              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-2">
+                A te helyzeted
+              </div>
+              <p className="font-editorial text-ivory/80 italic">
+                {sitReflection(sit, type, hisName)}
+              </p>
+            </div>
             <div
               className={`grid gap-4 ${slots.length === 1 ? "max-w-[260px] mx-auto" : "grid-cols-3 max-w-2xl mx-auto"}`}
             >
