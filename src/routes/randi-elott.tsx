@@ -324,3 +324,35 @@ function F({ id, label, children }: { id: string; label: string; children: React
     </div>
   );
 }
+
+function sitReflection(sit: string, type: 1 | 3, hisName: string): string {
+  const him = hisName.trim() || "ő";
+  switch (sit) {
+    case "randi előtt":
+      return type === 3
+        ? `A lapok arra a találkozásra hangolódnak, ami előtted áll — mit hozol te, mi feszül köztetek, és mit hoz ${him}.`
+        : `A lapok a közelgő randira hangolódnak — arra, amivel érdemes belépned a térbe.`;
+    case "randi után":
+      return type === 3
+        ? `A találkozás már megtörtént — most a lapok megmutatják, mit vittél bele te, mi maradt köztetek, és mi mozdult ${him} oldalán.`
+        : `A találkozás már megtörtént — a lap arra felel, mi a legfontosabb üzenete annak, ami történt.`;
+    case "most ismerkedünk":
+      return type === 3
+        ? `Egy frissen induló szál — a lapok megmutatják a te alaphangod, a köztetek lévő rezgést, és ${him} valódi szándékát.`
+        : `Egy frissen induló szál — a lap a most legfontosabb felismerést hozza el.`;
+    case "nem ír vissza":
+      return type === 3
+        ? `A csend érzékeny terep. A lapok megmutatják, mit érzel te, mi feszül a kapcsolatban, és valójában mi zajlik ${him} oldalán.`
+        : `A csend érzékeny terep — a lap arra felel, mit érdemes most látnod a hallgatás mögött.`;
+    case "ex / visszatérő történet":
+      return type === 3
+        ? `Egy régi szál tér vissza. A lapok megmutatják, hol állsz most te, mi köt még össze, és mi mozgatja ${him} visszatérését.`
+        : `Egy régi szál tér vissza — a lap arra felel, mit érdemes most meglátnod ebben az ismétlődésben.`;
+    case "nem tudom, mit akar":
+      return type === 3
+        ? `A bizonytalanság közepén állsz. A lapok megmutatják a te tisztább helyed, a köztetek lévő valódi dinamikát, és ${him} belső irányát.`
+        : `A bizonytalanság közepén állsz — a lap arra felel, mit érdemes most tisztábban látnod.`;
+    default:
+      return `A lapok a megadott helyzetre hangolódnak — figyelj arra, ami először megérint.`;
+  }
+}
