@@ -17,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/randi-elott")({
   head: () => ({
     meta: [
-      { title: "Randi előtt — szerelmi tarot húzás | Jövőd.hu" },
+      { title: "Szerelmi tarot — kapcsolati húzás | Jövőd.hu" },
       {
         name: "description",
         content:
