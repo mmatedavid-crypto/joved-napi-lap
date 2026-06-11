@@ -27,7 +27,7 @@ import {
 type Mode = "randi" | "dontes" | "szam" | "osszeillunk";
 
 const TABS: { id: Mode; label: string; short: string }[] = [
-  { id: "randi", label: "Randi előtt", short: "Randi" },
+  { id: "randi", label: "Szerelmi tarot", short: "Tarot" },
   { id: "dontes", label: "Döntés előtt", short: "Döntés" },
   { id: "szam", label: "Sorsszám", short: "Sorsszám" },
   { id: "osszeillunk", label: "Összeillünk?", short: "Összeillés" },
