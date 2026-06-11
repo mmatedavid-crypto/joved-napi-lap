@@ -3,8 +3,8 @@ export const SITE_LEGAL = {
   siteUrl: "https://jovod.hu",
   supportEmail: "hello@jovod.hu",
   operator: {
-    name: "Precíziós Agrokémia Zártkörűen Működő Részvénytársaság",
-    shortName: "Precíziós Agrokémia Zrt.",
+    name: "PREAG Zártkörűen Működő Részvénytársaság",
+    shortName: "PREAG Zrt.",
     registeredOffice: "2636 Tésa, Ady Endre utca 11.",
     taxNumber: "26558534-2-13",
     companyRegistrationNumber: "13-10-042640",
