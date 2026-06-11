@@ -80,7 +80,7 @@ function Page() {
   useEffect(() => {
     if (!slots) return;
     const cardNames = slots.map((s) => localCardFromSlot(s).name);
-    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Randi előtt";
+    const oneLine = slots[slots.length - 1]?.hu.oneLine ?? slots[0]?.hu.oneLine ?? "Szerelmi tarot";
     const summary = slots.map((s) => s.hu.love ?? s.hu.meaning).join(" ");
     recordGuestReadingMemory({
       readingType: "love",
