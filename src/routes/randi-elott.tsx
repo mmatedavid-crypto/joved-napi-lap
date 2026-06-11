@@ -113,7 +113,7 @@ function Page() {
   return (
     <Layout>
       <PageHeader
-        eyebrow="Randi előtt"
+        eyebrow="Szerelmi tarot"
         title="Egy lap a kapcsolatról"
         lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
       />
