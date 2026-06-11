@@ -172,7 +172,7 @@ function Page() {
         lead="Egy csendes pillanat, mielőtt cselekszel."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
-        {!slots && !hex && (
+        {!slots && !hex && !drawing && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
