@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
+import { Route as Szemelyes30NaposHoroszkopRouteImport } from './routes/szemelyes-30-napos-horoszkop'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as SorsszamKalkulatorRouteImport } from './routes/sorsszam-kalkulator'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -66,6 +67,12 @@ const SzuletesiKepletRoute = SzuletesiKepletRouteImport.update({
   path: '/szuletesi-keplet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Szemelyes30NaposHoroszkopRoute =
+  Szemelyes30NaposHoroszkopRouteImport.update({
+    id: '/szemelyes-30-napos-horoszkop',
+    path: '/szemelyes-30-napos-horoszkop',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SzammisztikaRoute = SzammisztikaRouteImport.update({
   id: '/szammisztika',
   path: '/szammisztika',
@@ -291,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -334,6 +342,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -378,6 +387,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
+  '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -423,6 +433,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
@@ -466,6 +477,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
@@ -509,6 +521,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sorsszam-kalkulator'
     | '/szammisztika'
+    | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
@@ -553,6 +566,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SorsszamKalkulatorRoute: typeof SorsszamKalkulatorRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
+  Szemelyes30NaposHoroszkopRoute: typeof Szemelyes30NaposHoroszkopRoute
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -589,6 +603,13 @@ declare module '@tanstack/react-router' {
       path: '/szuletesi-keplet'
       fullPath: '/szuletesi-keplet'
       preLoaderRoute: typeof SzuletesiKepletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/szemelyes-30-napos-horoszkop': {
+      id: '/szemelyes-30-napos-horoszkop'
+      path: '/szemelyes-30-napos-horoszkop'
+      fullPath: '/szemelyes-30-napos-horoszkop'
+      preLoaderRoute: typeof Szemelyes30NaposHoroszkopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/szammisztika': {
@@ -900,6 +921,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SorsszamKalkulatorRoute: SorsszamKalkulatorRoute,
   SzammisztikaRoute: SzammisztikaRoute,
+  Szemelyes30NaposHoroszkopRoute: Szemelyes30NaposHoroszkopRoute,
   SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotNapiLapRoute: TarotNapiLapRoute,
   UnsubscribeRoute: UnsubscribeRoute,
@@ -917,3 +939,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
