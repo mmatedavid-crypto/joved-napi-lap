@@ -147,7 +147,7 @@ function RandiInline() {
   return (
     <CardResult
       card={card}
-      eyebrow={`Randi előtt · ${sit}`}
+      eyebrow={`Szerelmi tarot · ${sit}`}
       sections={[
         { title: "Mit mutat ez a helyzet?", text: datingInlineAnswer(sit, card) },
         { title: "Mire figyelj?", text: datingInlineWarning(sit, card) },
