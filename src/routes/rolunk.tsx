@@ -38,8 +38,8 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Hogyan készül egy olvasat?">
           <p>
-            A háttértudás több rétegből áll: helyi magyar szimbolikus tartalomból, számításokból,
-            RoxyAPI-forrásból és szerveroldali nyelvi értelmezésből. A végső szövegnek mindig
+            A háttértudás több rétegből áll: évezredes szimbólumtradíciókból, népi megfigyelésekből,
+            számításokból és szerveroldali nyelvi értelmezésből. A végső szövegnek mindig
             magyarul, Jövőd.hu hangon kell megszólalnia.
           </p>
           <p>
