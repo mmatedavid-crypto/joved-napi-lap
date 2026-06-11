@@ -101,7 +101,7 @@ function Page() {
           question: q || undefined,
           situation: sit,
           sourceRoute: "/randi-elott",
-          title: "Randi előtt",
+          title: "Szerelmi tarot",
           summary,
           oneSentence: oneLine,
           anchors: [sit, ...cardNames],
