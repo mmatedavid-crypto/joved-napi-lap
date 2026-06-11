@@ -10,7 +10,7 @@ import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
 const NAV = [
   { to: "/mai-lap", label: "Mai lap" },
   { to: "/harom-lap", label: "3 lapos húzás" },
-  { to: "/randi-elott", label: "Randi előtt" },
+  { to: "/randi-elott", label: "Szerelmi tarot" },
   { to: "/dontes-elott", label: "Döntés előtt" },
   { to: "/horoszkop", label: "Horoszkóp" },
   { to: "/arak", label: "Árak" },
