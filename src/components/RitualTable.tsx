@@ -113,7 +113,7 @@ function RandiInline() {
           trackEvent("dating_reading_started", { situation: sit });
         }}
       >
-        <Eyebrow>Randi előtt</Eyebrow>
+        <Eyebrow>Szerelmi tarot</Eyebrow>
         <h2 className="font-display text-2xl text-ivory">Egy lap a kapcsolatról</h2>
         <div>
           <label className="block text-sm text-ivory/80 mb-2">A helyzet</label>
