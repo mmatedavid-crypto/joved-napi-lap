@@ -127,6 +127,20 @@ async function runReadingForOrder(args: {
       name: (payload.name as string | undefined) ?? null,
     });
   }
+  if (args.productSlug === "vedic_full") {
+    const { generateVedicFullReport } = await import(
+      "@/lib/products/vedicFull.server"
+    );
+    const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
+    return generateVedicFullReport({
+      birthDate: String(payload.birthDate ?? ""),
+      birthTime: (payload.birthTime as string | undefined) ?? null,
+      birthPlace: String(payload.birthPlace ?? ""),
+      area: String(payload.area ?? "altalanos"),
+      question: (payload.question as string | undefined) ?? null,
+      name: (payload.name as string | undefined) ?? null,
+    });
+  }
   const { generatePaidOrderReading } = await import("@/lib/paidReadings.server");
   return generatePaidOrderReading({
     productSlug: args.productSlug,

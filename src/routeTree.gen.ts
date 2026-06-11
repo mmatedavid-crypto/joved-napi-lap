@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VedikusAsztrologiaRouteImport } from './routes/vedikus-asztrologia'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
@@ -52,6 +53,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 import { Route as ApiPublicHooksWarmHoroscopesRouteImport } from './routes/api/public/hooks/warm-horoscopes'
 import { Route as ApiInternalHoroscopeNewsPrewarmRouteImport } from './routes/api/internal/horoscope-news/prewarm'
 
+const VedikusAsztrologiaRoute = VedikusAsztrologiaRouteImport.update({
+  id: '/vedikus-asztrologia',
+  path: '/vedikus-asztrologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
   id: '/unsubscribe',
   path: '/unsubscribe',
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -346,6 +353,7 @@ export interface FileRoutesByTo {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -391,6 +399,7 @@ export interface FileRoutesById {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -437,6 +446,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
+    | '/vedikus-asztrologia'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -481,6 +491,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
+    | '/vedikus-asztrologia'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -525,6 +536,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot-napi-lap'
     | '/unsubscribe'
+    | '/vedikus-asztrologia'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -570,6 +582,7 @@ export interface RootRouteChildren {
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
+  VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
   DevMemoryRoute: typeof DevMemoryRoute
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -584,6 +597,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vedikus-asztrologia': {
+      id: '/vedikus-asztrologia'
+      path: '/vedikus-asztrologia'
+      fullPath: '/vedikus-asztrologia'
+      preLoaderRoute: typeof VedikusAsztrologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/unsubscribe': {
       id: '/unsubscribe'
       path: '/unsubscribe'
@@ -925,6 +945,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotNapiLapRoute: TarotNapiLapRoute,
   UnsubscribeRoute: UnsubscribeRoute,
+  VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
   DevMemoryRoute: DevMemoryRoute,
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
@@ -939,13 +960,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
