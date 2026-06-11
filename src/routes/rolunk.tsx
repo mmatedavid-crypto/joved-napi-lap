@@ -66,11 +66,11 @@ export const Route = createFileRoute("/rolunk")({
           </p>
         </Section>
 
-        <Section eyebrow="Mit vállalunk?">
+        <Section eyebrow="Mit adunk?">
           <p>
-            Vállaljuk, hogy a fizetős olvasat nem nyers API-válasz, nem gépies fordítás, és nem
-            tartalmazhat biztos jövőígéretet. Ha technikai hiba miatt nem férsz hozzá az
-            olvasatodhoz, a rendelési link vagy a vásárlási email alapján utánanézünk.
+            Fizetős olvasataink nem sablonos válaszok. Évtizedes szimbólumismeret és hagyományos
+            értelmezés alapján fogalmazunk, a te kérdésedhez és helyzetedhez igazítva.
+            Az eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
           </p>
           <p>
             Nem vállalunk orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadást. A Jövőd.hu-n
