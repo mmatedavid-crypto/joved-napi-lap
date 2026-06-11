@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
+import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
@@ -118,7 +119,7 @@ function Page() {
         lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
-        {!slots && (
+        {!slots && !drawing && (
           <form onSubmit={draw} className="surface p-6 space-y-5">
             <div className="grid md:grid-cols-2 gap-4">
               <F id="date-my-name" label="Te (név, opcionális)">
@@ -185,6 +186,32 @@ function Page() {
             </button>
             {drawError && <p className="text-sm text-ivory/60">{drawError}</p>}
           </form>
+        )}
+        {drawing && (
+          <div className="max-w-2xl mx-auto space-y-6">
+            <ReadingLoadingState
+              kind="tarot"
+              title="A pakli most keveredik"
+              steps={[
+                "Vegyél egy mély levegőt, és engedd el a gondolataidat.",
+                "Képzeld el, hogy körülvesz egy lágy, aranyszínű fény.",
+                "Most nem a fejeddel, hanem a szíveddel érzel — hagyd, hogy az vezessen.",
+                "Gondolj arra, amire választ keresel. Nem kell szavakat találni, elég az érzés.",
+                "A lapok már úton vannak feléd… figyeld a belső rezgést.",
+                "A pakli most eldönti, melyik kép tartozik a mai pillanathoz.",
+              ]}
+            />
+            <div className="text-center">
+              <div className="inline-block relative w-16 h-16">
+                <span className="absolute inset-0 rounded-full border border-gold/20 animate-ping" />
+                <span className="absolute inset-2 rounded-full border border-gold/40 animate-ping" style={{ animationDelay: "300ms" }} />
+                <span className="absolute inset-4 rounded-full bg-gold/10 animate-pulse" />
+              </div>
+              <p className="mt-4 text-xs tracking-[0.25em] uppercase text-ivory/40">
+                Keverés · Kérdezés · Kiválasztás
+              </p>
+            </div>
+          </div>
         )}
         <GuestMemoryInsightPanel readingType="love" topic={q || sit} situation={sit} />
         {slots && (
