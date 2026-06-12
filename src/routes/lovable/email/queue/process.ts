@@ -10,18 +10,18 @@ const DEFAULT_AUTH_TTL_MINUTES = 15
 const DEFAULT_TRANSACTIONAL_TTL_MINUTES = 60
 
 type EmailPayload = {
-  run_id?: string
-  to?: string
-  from?: string
-  sender_domain?: string
-  subject?: string
-  html?: string
+  run_id: string
+  to: string
+  from: string
+  sender_domain: string
+  subject: string
+  html: string
   text?: string
-  purpose?: string
-  label?: string
-  idempotency_key?: string
+  purpose: string
+  label: string
+  idempotency_key: string
   unsubscribe_token?: string
-  message_id?: string
+  message_id: string
   queued_at?: string
 }
 
