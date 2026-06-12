@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { aiAngelHU, type AngelHU } from "@/lib/roxyTranslate.functions";
-import { angelMeaning, reduceAngel } from "@/lib/angel.hu";
+import { ANGEL_NUMBER_PAGES, angelMeaning, reduceAngel } from "@/lib/angel.hu";
 import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
@@ -162,6 +162,25 @@ function Page() {
             </div>
           </div>
         )}
+
+        <section className="surface p-5">
+          <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-3">
+            Népszerű angyalszámok
+          </div>
+          <ul className="grid grid-cols-3 sm:grid-cols-4 gap-2 text-sm">
+            {ANGEL_NUMBER_PAGES.map((p) => (
+              <li key={p.szam}>
+                <Link
+                  to="/angyalszam/$szam"
+                  params={{ szam: p.szam }}
+                  className="block rounded-md border border-[oklch(0.78_0.10_80/0.18)] px-3 py-2 text-center tabular-nums text-ivory/80 hover:text-gold hover:border-gold/50 transition-colors"
+                >
+                  {p.szam}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
       <PaywallDialog
         open={paywall}
