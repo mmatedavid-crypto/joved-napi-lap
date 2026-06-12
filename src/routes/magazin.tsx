@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { MAGAZIN_POSTS, MAGAZIN_CATEGORIES } from "@/data/magazin.hu";
+import { getPublishedMagazinPosts, MAGAZIN_CATEGORIES } from "@/data/magazin.hu";
 
 export const Route = createFileRoute("/magazin")({
   head: () => ({
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/magazin")({
 });
 
 function Page() {
-  const posts = [...MAGAZIN_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const posts = getPublishedMagazinPosts().sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "Blog",

@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { MAGAZIN_POSTS } from "@/data/magazin.hu";
+import { getPublishedMagazinPosts } from "@/data/magazin.hu";
 import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/magazin/$slug")({
   loader: ({ params }) => {
-    const post = MAGAZIN_POSTS.find((p) => p.slug === params.slug);
+    const post = getPublishedMagazinPosts().find((p) => p.slug === params.slug);
     if (!post) throw notFound();
     return { post };
   },
@@ -100,6 +100,10 @@ function Page() {
         <hr className="my-10 border-gold/15" />
 
         <div className="text-sm text-ivory/60">
+          <Link to="/" className="text-gold underline">
+            Főoldal
+          </Link>
+          <span className="mx-2">·</span>
           Vissza a{" "}
           <Link to="/magazin" className="text-gold underline">
             magazin főoldalra
