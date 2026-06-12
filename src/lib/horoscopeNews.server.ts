@@ -878,10 +878,18 @@ export async function getHoroscopeNewsArticle(opts: {
     timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
   });
   const sourceSignals = extractRoxyHoroscopeSignals(roxy.data);
+  const overview = sourceOverview(roxy.data);
+  const faithfulLead = overview
+    ? await translateOverviewFaithfully({
+        overview,
+        period: opts.period,
+        signName: SIGN_HU[sign],
+      })
+    : undefined;
 
   const article =
-    translated.ok && translated.data
-      ? normalizeArticle(translated.data, {
+    translated.ok && translated.data && faithfulLead
+      ? normalizeArticle({ ...translated.data, lead: faithfulLead }, {
           period: opts.period,
           sign,
           signSlug: opts.signSlug,
@@ -900,7 +908,7 @@ export async function getHoroscopeNewsArticle(opts: {
       dateKey,
     });
     if (stale) return stale;
-    return localFallbackArticle({
+    const fallback = localFallbackArticle({
       period: opts.period,
       sign,
       signSlug: opts.signSlug,
@@ -910,6 +918,7 @@ export async function getHoroscopeNewsArticle(opts: {
       fallbackUsed: true,
       sourceSignals,
     });
+    return faithfulLead ? { ...fallback, lead: faithfulLead } : fallback;
   }
 
   await writeCache(
