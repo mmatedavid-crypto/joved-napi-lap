@@ -41,6 +41,7 @@ type OrderForPaymentRecheck = PublicOrderFields &
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
+const HUF_MINOR_UNIT_MULTIPLIER = 100;
 const ORDER_SELECT_BASE =
   "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
@@ -140,7 +141,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           price_data: {
             currency: "huf",
             product_data: { name: product.name },
-            unit_amount: product.priceHuf,
+            unit_amount: product.priceHuf * HUF_MINOR_UNIT_MULTIPLIER,
           },
           quantity: 1,
         },
@@ -150,7 +151,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
                 price_data: {
                   currency: "huf",
                   product_data: { name: "Express gyorsítás — 6 órán belül" },
-                  unit_amount: EXPRESS_PRICE_HUF,
+                  unit_amount: EXPRESS_PRICE_HUF * HUF_MINOR_UNIT_MULTIPLIER,
                 },
                 quantity: 1,
               },
