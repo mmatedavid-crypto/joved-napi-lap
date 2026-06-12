@@ -34,6 +34,7 @@ import { Route as JikingRouteImport } from './routes/jiking'
 import { Route as ImpresszumRouteImport } from './routes/impresszum'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
+import { Route as EvesHoroszkopRouteImport } from './routes/eves-horoszkop'
 import { Route as ElallasiTajekoztatoRouteImport } from './routes/elallasi-tajekoztato'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
@@ -186,6 +187,11 @@ const HoroszkopRoute = HoroszkopRouteImport.update({
 const HaromLapRoute = HaromLapRouteImport.update({
   id: '/harom-lap',
   path: '/harom-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvesHoroszkopRoute = EvesHoroszkopRouteImport.update({
+  id: '/eves-horoszkop',
+  path: '/eves-horoszkop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElallasiTajekoztatoRoute = ElallasiTajekoztatoRouteImport.update({
@@ -342,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -396,6 +403,7 @@ export interface FileRoutesByTo {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -451,6 +459,7 @@ export interface FileRoutesById {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -507,6 +516,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -561,6 +571,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -615,6 +626,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -670,6 +682,7 @@ export interface RootRouteChildren {
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   ElallasiTajekoztatoRoute: typeof ElallasiTajekoztatoRoute
+  EvesHoroszkopRoute: typeof EvesHoroszkopRoute
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRouteWithChildren
   ImpresszumRoute: typeof ImpresszumRoute
@@ -883,6 +896,13 @@ declare module '@tanstack/react-router' {
       path: '/harom-lap'
       fullPath: '/harom-lap'
       preLoaderRoute: typeof HaromLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eves-horoszkop': {
+      id: '/eves-horoszkop'
+      path: '/eves-horoszkop'
+      fullPath: '/eves-horoszkop'
+      preLoaderRoute: typeof EvesHoroszkopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elallasi-tajekoztato': {
@@ -1146,6 +1166,7 @@ const rootRouteChildren: RootRouteChildren = {
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   ElallasiTajekoztatoRoute: ElallasiTajekoztatoRoute,
+  EvesHoroszkopRoute: EvesHoroszkopRoute,
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRouteWithChildren,
   ImpresszumRoute: ImpresszumRoute,
