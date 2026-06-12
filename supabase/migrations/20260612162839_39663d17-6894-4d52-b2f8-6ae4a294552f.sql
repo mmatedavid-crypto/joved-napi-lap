@@ -1,0 +1,1 @@
+GRANT ALL ON public.api_cache TO service_role; CREATE POLICY "Only backend services can manage API cache" ON public.api_cache FOR ALL TO service_role USING (true) WITH CHECK (true);

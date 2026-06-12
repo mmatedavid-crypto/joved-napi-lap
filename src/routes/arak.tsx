@@ -12,7 +12,7 @@ const PRICING_FAQ = [
   {
     question: "Mi a különbség az azonnali és a részletes olvasatok között?",
     answer:
-      "Az azonnali olvasatok rövidebb, személyes válaszok néhány percen belül. A részletes olvasatok több szakaszos írásos elemzések, általában 24 órán belül.",
+      "Az azonnali olvasatok rövidebb, személyes válaszok. A részletes olvasatok több részből álló írásos elemzések, a terméknél feltüntetett elkészülési idővel.",
   },
   {
     question: "Mi történik, ha technikai hiba miatt nem nyílik meg az olvasat?",
@@ -60,7 +60,7 @@ export const Route = createFileRoute("/arak")({
       {
         name: "description",
         content:
-          "Jövőd.hu árak: azonnali személyes olvasatok 590 Ft-tól, részletes írásos elemzések 24 órán belül.",
+          "Jövőd.hu árak: azonnali személyes olvasatok 590 Ft-tól, részletes asztrológiai elemzések átlátható elkészülési idővel.",
       },
     ],
     links: [{ rel: "canonical", href: "/arak" }],
@@ -94,7 +94,7 @@ function PricingPage() {
       <PageHeader
         eyebrow="Árak"
         title="Olvasatok átlátható áron"
-        lead="A horoszkóp, az angyalszám, a bioritmus és a kristályok ingyenesek. A személyes olvasatok 590 Ft-tól indulnak."
+        lead="A horoszkóp, az angyalszám, az álomfejtés és a kristályajánló ingyenesen is kipróbálható. A személyes olvasatok 590 Ft-tól indulnak."
       />
 
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20">
@@ -177,9 +177,9 @@ function PricingPage() {
             />
             <ReadingTypeCard
               title="Részletes asztrológiai riport"
-              price="1 490-1 990 Ft"
-              delivery="Néhány percen belül emailben és a köszönő oldalon"
-              bestFor="Ha a saját születési képletedből kérsz 30 napos előrejelzést vagy teljes védikus elemzést."
+               price="1 490–4 990 Ft"
+               delivery="A terméknél jelzett időn belül"
+               bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
               result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
             />
           </div>
@@ -205,8 +205,8 @@ function PricingPage() {
               Ft-tól indulnak.
             </p>
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
-              Az asztrológiai riportok (30 napos térkép, védikus elemzés) a saját születési
-              adataidból készülnek; a fizetés után néhány percen belül kézhez kapod őket.
+               Az asztrológiai riportok a saját születési adataidból készülnek; a várható
+               elkészülési időt minden terméknél külön feltüntetjük.
             </p>
           </div>
         </section>

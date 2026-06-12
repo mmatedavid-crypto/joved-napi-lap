@@ -134,7 +134,60 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
     keywords: ["i ching", "ji king", "hexagram", "változások könyve"],
     body: `Az I Ching (Ji King) ősi kínai bölcsesség-könyv, kb. 3000 éves. 64 hexagramból áll — minden hexagram 6 vonalból (yin/yang) épül fel, és egy adott élethelyzetet, mozgásmintát ír le.\n\nA klasszikus módszer 3 érme dobása, hatszor. A dobás eredménye adja a vonalakat alulról felfelé. Az így kirajzolódó hexagram egy szimbolikus "időképet" mutat: hol állsz most, mi mozdulóban van.\n\nA kérdés feltevésének módja számít. Ne eldöntendő kérdést kérdezz ("megkapom-e?"), hanem helyzetkérdést ("mi mozdul most ebben?"). Az I Ching nem jósol — leír.\n\nA jó válasz akkor érkezik, amikor le tudod ülni mellé a saját kérdésedet, és a hexagram szövegét lassan, magaddal együtt olvasod.`,
   },
+  {
+    slug: "tarot-kerdesfelteves",
+    title: "Hogyan tegyél fel jó kérdést a tarot-kártyának?",
+    excerpt:
+      "Nyitott, pontos és önismereti kérdések, amelyekkel a tarot nem dönt helyetted, mégis használhatóbb választ ad.",
+    category: "tarot",
+    categoryLabel: "Tarot",
+    publishedAt: "2026-06-15",
+    readMinutes: 6,
+    keywords: ["tarot kérdés", "tarot kártya", "önismeret", "kártyahúzás"],
+    body: `A tarot-válasz minőségét nagyban meghatározza a kérdés. A „visszajön-e?” vagy „sikerülni fog-e?” típusú kérdések egyetlen külső eseményre szűkítik a figyelmet. A lapok ennél többet tudnak mutatni: a helyzetben működő mintát, a saját mozgásteredet és azt, amit most még nem látsz tisztán.\n\nPróbáld így: „Mit érdemes megértenem ebből a kapcsolatból?”, „Mi segíthet tisztábban döntenem?”, vagy „Milyen belső akadályt nem veszek észre?” Ezek nyitott kérdések, ezért nem veszik el tőled a döntést.\n\nEgy húzáshoz egy kérdés elég. Ha ugyanazt rövid időn belül újra és újra megkérdezed, könnyen már nem a lapot, hanem a kívánt választ keresed. Ilyenkor érdemes megállni, leírni az első olvasatot, és egy napig figyelni, mi mozdul benned.\n\nA jó tarot-kérdés nem a biztos jövőt akarja kikényszeríteni. Segít pontosabban megfogalmazni, hol vagy most, és mi lehet a következő tudatos lépésed.`,
+  },
+  {
+    slug: "szemelyes-ev-szam",
+    title: "Személyes év száma: milyen ciklusban jársz most?",
+    excerpt:
+      "A személyes év kiszámítása és az 1-től 9-ig tartó számmisztikai ciklus józan, gyakorlati értelmezése.",
+    category: "numerologia",
+    categoryLabel: "Számmisztika",
+    publishedAt: "2026-06-22",
+    readMinutes: 6,
+    keywords: ["személyes év", "számmisztika", "éves szám", "kilencéves ciklus"],
+    body: `A személyes év azt jelzi, hol jársz egy kilencéves számmisztikai ciklusban. Nem jósol konkrét eseményeket, inkább azt mutatja meg, milyen témák kerülhetnek könnyebben előtérbe az adott évben.\n\nA számításhoz add össze a születési hónapod és napod számjegyeit az aktuális év számjegyeivel. Például július 14. és 2026 esetén: 0+7+1+4+2+0+2+6 = 22. A 22 mesterszámként is értelmezhető, vagy tovább bontható 4-re.\n\nAz 1-es év a kezdeményezés, a 2-es a türelem és együttműködés, a 3-as a kifejezés, a 4-es az alapozás, az 5-ös a változás, a 6-os a felelősség és kapcsolatok, a 7-es a befelé figyelés, a 8-as az eredmény és anyagi rend, a 9-es pedig a lezárás időszaka.\n\nA személyes év akkor hasznos, ha nem utasításként olvasod. Inkább olyan, mint egy évszak: megmutatja az időjárást, de azt továbbra is te döntöd el, hogyan öltözöl fel hozzá.`,
+  },
+  {
+    slug: "asztrologiai-tranzitok-alapjai",
+    title: "Asztrológiai tranzitok: mit jelent, amikor egy bolygó hat a képletedre?",
+    excerpt:
+      "A tranzitok alapjai közérthetően: mi mozog az égen, mi marad a születési képletben, és mit érdemes ebből komolyan venni.",
+    category: "asztrologia",
+    categoryLabel: "Asztrológia",
+    publishedAt: "2026-06-29",
+    readMinutes: 7,
+    keywords: ["asztrológiai tranzit", "születési képlet", "bolygók", "asztrológia"],
+    body: `A születési képlet az égbolt pillanatfelvétele a születésed idején. A bolygók azonban tovább mozognak. Amikor a jelenlegi helyzetük kapcsolatba kerül a születési képleted valamely pontjával, tranzitról beszélünk.\n\nA gyors bolygók rövidebb hangulatokat és napi mozgásokat jeleznek. A lassabbak — például a Jupiter vagy a Szaturnusz — hosszabb időszakokat rajzolhatnak körbe. Ez nem azt jelenti, hogy egy bolygó eseményt kényszerít rád. Inkább egy témát emel ki, amellyel az adott időszakban többet foglalkozhatsz.\n\nUgyanaz a tranzit két embernél mást jelenthet, mert más házakat, bolygókat és életterületeket érint. Ezért a csillagjegyhez írt általános mondat nem helyettesíti a személyes képletet.\n\nA tranzitok jó használata nem a félelemkeltés. Arra valók, hogy jobban lásd az időzítést: mikor érdemes türelmesebbnek lenni, mikor könnyebb építkezni, és melyik visszatérő mintád kér éppen több figyelmet.`,
+  },
+  {
+    slug: "napi-rituale-ot-percben",
+    title: "Ötperces napi rituálé: hogyan teremts csendet magadnak?",
+    excerpt:
+      "Egy egyszerű reggeli vagy esti önismereti gyakorlat, amelyhez nem kell különleges eszköz vagy hosszú felkészülés.",
+    category: "ritualek",
+    categoryLabel: "Rituálék",
+    publishedAt: "2026-07-06",
+    readMinutes: 5,
+    keywords: ["napi rituálé", "önismeret", "naplózás", "figyelem"],
+    body: `A rituálé nem attól működik, hogy különleges. Attól válik fontossá, hogy rendszeresen ugyanahhoz a figyelmi ponthoz vezet vissza. Öt perc is elég, ha valóban jelen vagy benne.\n\nElőször tedd félre a telefont, és vegyél három lassú levegőt. Ne próbáld megváltoztatni a hangulatodat. Csak nevezd meg egy szóval: feszült, kíváncsi, fáradt, nyugodt vagy bizonytalan.\n\nEzután írj le két mondatot. Az első: „Ma ezt viszem magammal.” A második: „Ma ezt nem kell megoldanom.” Ha szeretnél, húzhatsz egy tarot-lapot vagy választhatsz egy napi számot, de az eszköz csak a figyelmet indítsa el.\n\nVégül válassz egyetlen apró cselekvést a napra. Ne életet megváltoztató fogadalmat, hanem olyat, amit valóban meg tudsz tenni. A rövid rituálé célja nem a tökéletes nap, hanem hogy ne sodródással kezdődjön.`,
+  },
 ];
+
+export function getPublishedMagazinPosts(now = new Date()): MagazinPost[] {
+  const today = now.toISOString().slice(0, 10);
+  return MAGAZIN_POSTS.filter((post) => post.publishedAt <= today);
+}
 
 export const MAGAZIN_CATEGORIES = [
   { slug: "tarot", label: "Tarot" },
