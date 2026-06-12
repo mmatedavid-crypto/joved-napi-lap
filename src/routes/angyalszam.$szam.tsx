@@ -132,7 +132,6 @@ function AngelNumberPageComponent() {
               </li>
             ))}
           </ul>
-        </ul>
         </div>
       </div>
     </Layout>
