@@ -16,7 +16,7 @@ type EmailPayload = {
   sender_domain: string
   subject: string
   html: string
-  text?: string
+  text: string
   purpose: string
   label: string
   idempotency_key: string
