@@ -20,7 +20,7 @@ type EmailPayload = {
   purpose: string
   label: string
   idempotency_key: string
-  unsubscribe_token?: string
+  unsubscribe_token: string
   message_id: string
   queued_at?: string
 }
