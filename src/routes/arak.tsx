@@ -88,6 +88,8 @@ export const Route = createFileRoute("/arak")({
 function PricingPage() {
   const instant = PRODUCTS.filter((product) => product.category === "instant");
   const delayed = PRODUCTS.filter((product) => product.category === "delayed");
+  const instantPriceRange = productRange(instant);
+  const delayedPriceRange = productRange(delayed);
 
   return (
     <Layout>
@@ -170,14 +172,14 @@ function PricingPage() {
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <ReadingTypeCard
               title="Azonnali olvasat"
-              price="590-990 Ft"
+              price={instantPriceRange}
               delivery="Pár percen belül"
               bestFor="Ha egy konkrét érzésre, napi kérdésre vagy gyors belső irányra kérsz választ."
               result="Rövid, személyes szöveg, amely a megadott témára reagál, de nem bontja ki hosszú riportként."
             />
             <ReadingTypeCard
               title="Részletes asztrológiai riport"
-               price="1 490–4 990 Ft"
+               price={delayedPriceRange}
                delivery="A terméknél jelzett időn belül"
                bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
               result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
@@ -233,6 +235,14 @@ function PricingPage() {
       </div>
     </Layout>
   );
+}
+
+function productRange(products: typeof PRODUCTS): string {
+  const prices = products.map((product) => product.priceHuf);
+  if (prices.length === 0) return "";
+  const minimum = Math.min(...prices);
+  const maximum = Math.max(...prices);
+  return minimum === maximum ? formatHuf(minimum) : `${formatHuf(minimum)}–${formatHuf(maximum)}`;
 }
 
 function TrustPoint({ title, text }: { title: string; text: string }) {
