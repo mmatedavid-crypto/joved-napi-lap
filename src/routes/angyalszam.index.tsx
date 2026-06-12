@@ -12,7 +12,7 @@ import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 
-export const Route = createFileRoute("/angyalszam")({
+export const Route = createFileRoute("/angyalszam/")({
   head: () => ({
     meta: [
       { title: "Angyalszám jelentése — 111, 222, 777, 1111 | Jövőd.hu" },

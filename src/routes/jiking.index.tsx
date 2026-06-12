@@ -9,7 +9,7 @@ const TITLE = "I Ching / Ji King — mind a 64 hexagram magyarul";
 const DESCRIPTION =
   "I Ching enciklopédia: 64 hexagram magyar névvel, témával, útmutatással és figyelmeztetéssel. Ősi kínai bölcsesség mai döntésekhez.";
 
-export const Route = createFileRoute("/jiking")({
+export const Route = createFileRoute("/jiking/")({
   head: () => ({
     meta: [
       { title: `${TITLE} | Jövőd.hu` },

@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/Section";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { getPublishedMagazinPosts, MAGAZIN_CATEGORIES } from "@/data/magazin.hu";
 
-export const Route = createFileRoute("/magazin")({
+export const Route = createFileRoute("/magazin/")({
   head: () => ({
     meta: [
       { title: "Magazin — tarot, asztrológia, számmisztika cikkek | Jövőd.hu" },
