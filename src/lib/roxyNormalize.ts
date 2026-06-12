@@ -270,9 +270,7 @@ function roxyMinorToLocal(
   suit: string | undefined,
   number: number | undefined,
 ): string | null {
-  const localSuit =
-    (suit && ROXY_SUIT_TO_LOCAL[suit.toLowerCase()]) ||
-    null;
+  const localSuit = (suit && ROXY_SUIT_TO_LOCAL[suit.toLowerCase()]) || null;
 
   // Try parsing the slug-style id first: "<rank>-of-<suit>"
   const idLow = (roxyId ?? "").toLowerCase().trim();
@@ -418,8 +416,7 @@ export type RoxySpreadPayload = {
 };
 
 export function normalizeRoxySpread(raw: unknown): RoxySpreadPayload {
-  if (!raw || typeof raw !== "object")
-    return { spread: null, summaryEn: null, positions: [] };
+  if (!raw || typeof raw !== "object") return { spread: null, summaryEn: null, positions: [] };
   const r = raw as Record<string, unknown>;
   const positions = Array.isArray(r.positions)
     ? r.positions

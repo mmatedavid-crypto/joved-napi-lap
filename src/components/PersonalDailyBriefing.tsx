@@ -15,11 +15,7 @@ import { ShareCardButton } from "./ShareCardButton";
 import { ReadingLoadingState } from "./ReadingLoadingState";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { roxyPersonalDailyBriefing, type PersonalBriefingHU } from "@/lib/roxy.functions";
-import {
-  aiTarotDailyHU,
-  type TarotCardHU,
-  type TarotSlot,
-} from "@/lib/roxyTranslate.functions";
+import { aiTarotDailyHU, type TarotCardHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { SIGN_HU, zodiacFromDob } from "@/lib/roxyNormalize";
 import { lifePath, lifePathInfo, personalYear } from "@/lib/numerology";
 import { loadLocal, saveLocal, todayKey } from "@/lib/storage";
@@ -266,10 +262,7 @@ export function PersonalDailyBriefing() {
                 </div>
               )}
               <div className="pt-2">
-                <button
-                  className="btn-gold"
-                  onClick={() => setPaywallOpen(true)}
-                >
+                <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
                   {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
                 </button>
                 <p className="mt-2 text-[11px] text-ivory/50">
@@ -417,10 +410,7 @@ export function PersonalDailyBriefing() {
             </Link>
           </div>
           <div className="text-center pt-2">
-            <button
-              className="btn-gold"
-              onClick={() => setPaywallOpen(true)}
-            >
+            <button className="btn-gold" onClick={() => setPaywallOpen(true)}>
               {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
             </button>
           </div>

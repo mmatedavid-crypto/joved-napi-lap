@@ -165,8 +165,8 @@ function Page() {
             <li>• Mire figyelj és záró üzenet</li>
           </ul>
           <p className="text-xs text-ivory/55">
-            A riport a saját születési adataidból és a következő 30 nap tranzitjaiból készül.
-            Nem általános horoszkóp, és nem AI-jóslat: a forrás asztrológiai adatokat fordítjuk
+            A riport a saját születési adataidból és a következő 30 nap tranzitjaiból készül. Nem
+            általános horoszkóp, és nem AI-jóslat: a forrás asztrológiai adatokat fordítjuk
             magyarra.
           </p>
         </section>

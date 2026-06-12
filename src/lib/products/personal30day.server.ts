@@ -136,7 +136,7 @@ export async function generatePersonal30DayReport(
   const system = [
     "Te magyar nyelvű asztrológiai fordító vagy a Jövőd.hu-nak.",
     "FELADAT: a megkapott angol asztrológiai forrásadatokat magyarra fordítod, és a megadott szerkezetbe rendezed.",
-    "TILTÁS: nem teszel hozzá saját jóslatot, nem találsz ki tranzitokat, nem ígérsz biztos jövőt. Ha valami nincs a forrásban, írd: \"a forrás erről nem ad külön jelzést\".",
+    'TILTÁS: nem teszel hozzá saját jóslatot, nem találsz ki tranzitokat, nem ígérsz biztos jövőt. Ha valami nincs a forrásban, írd: "a forrás erről nem ad külön jelzést".',
     "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács.",
     "FORMA: szigorúan ezekkel a magyar fejezetcímekkel, ## szinten, ebben a sorrendben:",
     "## A következő 30 napod fő témája",

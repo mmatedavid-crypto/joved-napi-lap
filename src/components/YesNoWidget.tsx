@@ -48,9 +48,7 @@ export function YesNoWidget() {
         <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.75)]">
           Igen / Nem kérdés
         </div>
-        <h2 className="font-display text-xl md:text-2xl text-ivory mt-1">
-          Egy kérdés — egy lap.
-        </h2>
+        <h2 className="font-display text-xl md:text-2xl text-ivory mt-1">Egy kérdés — egy lap.</h2>
         <p className="font-editorial text-sm text-ivory/65 mt-1">
           Kérdezz egyértelműen, eldöntendő formában. A lap nem ígér biztos jövőt — irányt mutat.
         </p>

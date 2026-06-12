@@ -114,9 +114,7 @@ async function runReadingForOrder(args: {
   inputPayload: unknown;
 }): Promise<PaidOrderReading> {
   if (args.productSlug === "personal_30_day") {
-    const { generatePersonal30DayReport } = await import(
-      "@/lib/products/personal30day.server"
-    );
+    const { generatePersonal30DayReport } = await import("@/lib/products/personal30day.server");
     const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
     return generatePersonal30DayReport({
       birthDate: String(payload.birthDate ?? ""),
@@ -128,9 +126,7 @@ async function runReadingForOrder(args: {
     });
   }
   if (args.productSlug === "vedic_full") {
-    const { generateVedicFullReport } = await import(
-      "@/lib/products/vedicFull.server"
-    );
+    const { generateVedicFullReport } = await import("@/lib/products/vedicFull.server");
     const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
     return generateVedicFullReport({
       birthDate: String(payload.birthDate ?? ""),

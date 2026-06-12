@@ -11,10 +11,10 @@ export const Route = createFileRoute("/sorsszam/$n")({
   },
   head: ({ params }) => {
     const m = LIFE_PATH_MEANINGS_HU[params.n];
-    const title = m
-      ? `${m.title} | Jövőd.hu`
-      : `Sorsszám ${params.n} jelentése | Jövőd.hu`;
-    const description = m?.lead?.slice(0, 158) ?? `Sorsszám ${params.n} jelentése magyarul: önismereti életút elemzés.`;
+    const title = m ? `${m.title} | Jövőd.hu` : `Sorsszám ${params.n} jelentése | Jövőd.hu`;
+    const description =
+      m?.lead?.slice(0, 158) ??
+      `Sorsszám ${params.n} jelentése magyarul: önismereti életút elemzés.`;
     return {
       meta: [
         { title },
@@ -43,7 +43,9 @@ export const Route = createFileRoute("/sorsszam/$n")({
     <Layout>
       <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={error.message} />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 text-center">
-        <button onClick={reset} className="btn-gold">Újra</button>
+        <button onClick={reset} className="btn-gold">
+          Újra
+        </button>
       </div>
     </Layout>
   ),

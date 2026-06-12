@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { HOROSCOPE_PERIODS, allHoroscopeArticlePaths, type HoroscopePeriodHU } from "@/lib/horoscopeNews";
+import {
+  HOROSCOPE_PERIODS,
+  allHoroscopeArticlePaths,
+  type HoroscopePeriodHU,
+} from "@/lib/horoscopeNews";
 
 // Nyilvános cache-warmup végpont a pg_cron számára. Nem ad ki PII-t, csak
 // előmelegíti a horoszkóp olvasatokat a sitemap-news linkek mögött, hogy a
@@ -32,7 +36,13 @@ async function handle(request: Request) {
 
   const { getHoroscopeNewsArticle } = await import("@/lib/horoscopeNews.server");
   const started = Date.now();
-  const results: Array<{ period: string; sign: string; ok: boolean; fallbackUsed?: boolean; latencyMs: number }> = [];
+  const results: Array<{
+    period: string;
+    sign: string;
+    ok: boolean;
+    fallbackUsed?: boolean;
+    latencyMs: number;
+  }> = [];
   for (let i = 0; i < targets.length; i += concurrency) {
     const batch = targets.slice(i, i + concurrency);
     const batchResults = await Promise.all(
@@ -51,7 +61,12 @@ async function handle(request: Request) {
             latencyMs: Date.now() - t0,
           };
         } catch {
-          return { period: target.period, sign: target.signSlug, ok: false, latencyMs: Date.now() - t0 };
+          return {
+            period: target.period,
+            sign: target.signSlug,
+            ok: false,
+            latencyMs: Date.now() - t0,
+          };
         }
       }),
     );
