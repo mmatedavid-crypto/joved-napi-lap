@@ -1,0 +1,1 @@
+SELECT cron.unschedule(jobid) FROM cron.job WHERE jobname IN ('warm-horoscopes-daily', 'warm-horoscopes-weekly', 'warm-horoscopes-monthly');
