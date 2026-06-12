@@ -41,6 +41,7 @@ import { Route as AlomfejtesJelentesRouteImport } from './routes/alomfejtes-jele
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezelesi-tajekoztato'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SorsszamNRouteImport } from './routes/sorsszam.$n'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 import { Route as DevMemoryRouteImport } from './routes/dev.memory'
@@ -214,6 +215,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SorsszamNRoute = SorsszamNRouteImport.update({
+  id: '/sorsszam/$n',
+  path: '/sorsszam/$n',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
@@ -312,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/sorsszam/$n': typeof SorsszamNRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -357,6 +364,7 @@ export interface FileRoutesByTo {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/sorsszam/$n': typeof SorsszamNRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -403,6 +411,7 @@ export interface FileRoutesById {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/sorsszam/$n': typeof SorsszamNRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -450,6 +459,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/sorsszam/$n'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -495,6 +505,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/sorsszam/$n'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -540,6 +551,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/sorsszam/$n'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -586,6 +598,7 @@ export interface RootRouteChildren {
   DevMemoryRoute: typeof DevMemoryRoute
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
+  SorsszamNRoute: typeof SorsszamNRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiInternalHoroscopeNewsPrewarmRoute: typeof ApiInternalHoroscopeNewsPrewarmRoute
   ApiPublicHooksWarmHoroscopesRoute: typeof ApiPublicHooksWarmHoroscopesRoute
@@ -821,6 +834,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sorsszam/$n': {
+      id: '/sorsszam/$n'
+      path: '/sorsszam/$n'
+      fullPath: '/sorsszam/$n'
+      preLoaderRoute: typeof SorsszamNRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/email/unsubscribe': {
       id: '/email/unsubscribe'
       path: '/email/unsubscribe'
@@ -949,6 +969,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevMemoryRoute: DevMemoryRoute,
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
+  SorsszamNRoute: SorsszamNRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiInternalHoroscopeNewsPrewarmRoute: ApiInternalHoroscopeNewsPrewarmRoute,
   ApiPublicHooksWarmHoroscopesRoute: ApiPublicHooksWarmHoroscopesRoute,
@@ -960,13 +981,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
