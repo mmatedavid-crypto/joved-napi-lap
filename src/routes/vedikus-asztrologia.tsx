@@ -75,7 +75,8 @@ function Page() {
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
             />
             <p className="text-xs text-ivory/50 mt-2 font-editorial">
-              Ha nem tudod, hagyd üresen — Hold-rashi és nakshatra akkor is számolható, csak a Lagna (aszcendens) lesz pontatlan.
+              Ha nem tudod, hagyd üresen — Hold-rashi és nakshatra akkor is számolható, csak a Lagna
+              (aszcendens) lesz pontatlan.
             </p>
           </div>
 
@@ -166,7 +167,8 @@ function Page() {
             <li>• A választott életterületed mélyebben + karmikus mintázat</li>
           </ul>
           <p className="text-xs text-ivory/55">
-            A jegyek és nakshatra számítása sziderikus (Lahiri ayanamsa). A riport a saját adataidból készül — nem általános szöveg.
+            A jegyek és nakshatra számítása sziderikus (Lahiri ayanamsa). A riport a saját
+            adataidból készül — nem általános szöveg.
           </p>
         </section>
       </div>

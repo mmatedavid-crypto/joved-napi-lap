@@ -153,7 +153,12 @@ function HoroscopeArticlePending() {
           {periodLabel}
           <span className="mx-1.5">·</span>
           {signName}
-          {period ? <><span className="mx-1.5">·</span>{periodDateLabel(period)}</> : null}
+          {period ? (
+            <>
+              <span className="mx-1.5">·</span>
+              {periodDateLabel(period)}
+            </>
+          ) : null}
         </div>
         <h1 className="font-display text-3xl md:text-4xl text-ivory mt-4">
           Készül a friss horoszkópod

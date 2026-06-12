@@ -589,11 +589,9 @@ const TAROT_CARD_SCHEMA: Record<string, unknown> = {
 };
 
 function guardTarotCardHU(value: unknown, reversed: boolean): TarotCardHU | null {
-  const guarded = guardAITextObject<Omit<TarotCardHU, "reversed">>(
-    value,
-    ["cardName", "meaning"],
-    { oneLine: { oneLine: true } },
-  );
+  const guarded = guardAITextObject<Omit<TarotCardHU, "reversed">>(value, ["cardName", "meaning"], {
+    oneLine: { oneLine: true },
+  });
   if (!guarded) return null;
   return { ...guarded, reversed };
 }
@@ -737,11 +735,11 @@ export const aiTarotDrawHU = createServerFn({ method: "POST" })
 // Cache: 6 óra (a fázis percről percre alig változik, de szín/hold-jegy igen).
 
 export type MoonPhaseHU = {
-  phaseName: string;     // pl. "Növő hold", "Telihold"
+  phaseName: string; // pl. "Növő hold", "Telihold"
   illumination?: string; // pl. "73%-os megvilágítás"
-  sign?: string;         // pl. "Bika"
-  oneLine: string;       // egy mondat a mai hold-hangulatról
-  meaning?: string;      // 1-2 mondat
+  sign?: string; // pl. "Bika"
+  oneLine: string; // egy mondat a mai hold-hangulatról
+  meaning?: string; // 1-2 mondat
 };
 
 const MOON_PHASE_SCHEMA: Record<string, unknown> = {
@@ -806,8 +804,7 @@ export const aiMoonPhaseHU = createServerFn({ method: "POST" })
         schema: MOON_PHASE_SCHEMA,
       });
       const reading = guardMoonPhaseHU(t.data);
-      if (!t.ok || !reading)
-        return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
 
       await writeCache(cacheKey, "/ai/moon-phase", reading, 60 * 60 * 6);
       return { ok: true, cached: false, reading };
@@ -886,7 +883,12 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
 
       const huCard = await translateOneTarotCard(payload.card);
       if (!huCard)
-        return { ok: false, cached: false, reading: null, message: "A magyarítás most nem sikerült." };
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "A magyarítás most nem sikerült.",
+        };
 
       // Interpretációt is fordítjuk (vagy generáljuk a lap-meaning-ből, ha hiányzik).
       const t = await translateWithAI<{
@@ -938,9 +940,9 @@ export type TarotSpreadKind = "three-card" | "love" | "career" | "celtic-cross";
 
 export type TarotSpreadPositionHU = {
   position: number;
-  name: string;            // magyar pozíciónév (pl. "Múlt", "A szíved")
+  name: string; // magyar pozíciónév (pl. "Múlt", "A szíved")
   card: TarotCardHU;
-  interpretation: string;  // 2-3 mondat erre a pozícióra a forrásból
+  interpretation: string; // 2-3 mondat erre a pozícióra a forrásból
 };
 
 export type TarotSpreadHU = {
@@ -993,7 +995,12 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
         ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
       });
       if (!r.ok || !r.data)
-        return { ok: false, cached: false, reading: null, message: "Most nem érkezett meg a terítés." };
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "Most nem érkezett meg a terítés.",
+        };
 
       const spread = normalizeRoxySpread(r.data);
       if (spread.positions.length === 0)
@@ -1001,7 +1008,9 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
 
       // 1) Per-kártya fordítás (cache-elt) párhuzamosan.
       const huCards = await Promise.all(
-        spread.positions.map((p) => (p.card ? translateOneTarotCard(p.card) : Promise.resolve(null))),
+        spread.positions.map((p) =>
+          p.card ? translateOneTarotCard(p.card) : Promise.resolve(null),
+        ),
       );
 
       // 2) Pozíciónevek + pozíció-interpretációk egyetlen AI-hívásban (ugyanazon a források).
@@ -1028,7 +1037,12 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
         schema: SPREAD_META_SCHEMA,
       });
       if (!meta.ok || !meta.data)
-        return { ok: false, cached: false, reading: null, message: meta.error ?? "Magyarítási hiba." };
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: meta.error ?? "Magyarítási hiba.",
+        };
 
       const positions: TarotSpreadPositionHU[] = spread.positions
         .map((p, i) => {
@@ -1044,7 +1058,12 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
         .filter((x): x is TarotSpreadPositionHU => x !== null);
 
       if (positions.length === 0)
-        return { ok: false, cached: false, reading: null, message: "A magyarítás most nem sikerült." };
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "A magyarítás most nem sikerült.",
+        };
 
       return {
         ok: true,
@@ -1066,11 +1085,11 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
 // (azonos születési adat → azonos képlet).
 
 export type NatalPlanetHU = {
-  key: string;       // "sun" | "moon" | "ascendant" | "mercury" | ...
-  nameHu: string;    // "Nap" / "Hold" / "Aszcendens" / "Merkúr" ...
-  signHu: string;    // "Bika"
-  house?: number;    // 1..12
-  oneLine?: string;  // 1 mondat erre a bolygóra
+  key: string; // "sun" | "moon" | "ascendant" | "mercury" | ...
+  nameHu: string; // "Nap" / "Hold" / "Aszcendens" / "Merkúr" ...
+  signHu: string; // "Bika"
+  house?: number; // 1..12
+  oneLine?: string; // 1 mondat erre a bolygóra
 };
 
 export type NatalChartHU = {
@@ -1078,7 +1097,7 @@ export type NatalChartHU = {
   moon: NatalPlanetHU;
   ascendant?: NatalPlanetHU;
   others: NatalPlanetHU[]; // Merkúr, Vénusz, Mars, Jupiter, Szaturnusz, ...
-  summary: string;         // 3-4 mondatos magyar áttekintés
+  summary: string; // 3-4 mondatos magyar áttekintés
   oneLine: string;
 };
 

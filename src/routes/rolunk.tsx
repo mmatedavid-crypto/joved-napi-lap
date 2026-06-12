@@ -39,8 +39,8 @@ export const Route = createFileRoute("/rolunk")({
         <Section eyebrow="Hogyan készül egy olvasat?">
           <p>
             A háttértudás több rétegből áll: évezredes szimbólumtradíciókból, népi megfigyelésekből,
-            számításokból és szerveroldali nyelvi értelmezésből. A végső szövegnek mindig
-            magyarul, Jövőd.hu hangon kell megszólalnia.
+            számításokból és szerveroldali nyelvi értelmezésből. A végső szövegnek mindig magyarul,
+            Jövőd.hu hangon kell megszólalnia.
           </p>
           <p>
             A cél nem az, hogy nyers idegen nyelvű háttérszöveget mutassunk, hanem hogy a kapott
@@ -69,8 +69,8 @@ export const Route = createFileRoute("/rolunk")({
         <Section eyebrow="Mit adunk?">
           <p>
             Fizetős olvasataink nem sablonos válaszok. Évtizedes szimbólumismeret és hagyományos
-            értelmezés alapján fogalmazunk, a te kérdésedhez és helyzetedhez igazítva.
-            Az eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
+            értelmezés alapján fogalmazunk, a te kérdésedhez és helyzetedhez igazítva. Az eredmény
+            nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
           </p>
           <p>
             Nem vállalunk orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadást. A Jövőd.hu-n

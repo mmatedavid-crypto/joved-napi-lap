@@ -246,7 +246,8 @@ export const CARDS: TarotCard[] = [
     id: "kelyhek-asz",
     name: "Kelyhek Ásza",
     keywords: ["új érzés", "megnyílás", "szív tisztasága"],
-    general: "Egy friss érzelmi forrás fakad fel benned — nem feltétlen kívülről, sokszor magából a megnyílásból.",
+    general:
+      "Egy friss érzelmi forrás fakad fel benned — nem feltétlen kívülről, sokszor magából a megnyílásból.",
     love: "Egy lágy, tiszta kezdet. Az érzés akkor maradhat élő, ha nem akarod azonnal eldobozolni.",
     decision: "A szív felé hajló választás most többet ad, mint a fej csavarjainak újrahúzása.",
     warning: "Ne öntsd ki a csészét, mielőtt megérezted, mit kínál.",
@@ -266,7 +267,8 @@ export const CARDS: TarotCard[] = [
     id: "kelyhek-3",
     name: "Kelyhek Hármasa",
     keywords: ["ünneplés", "barátság", "közös öröm"],
-    general: "Egy közösség, baráti kör vagy közös siker melegét érzed — érdemes megállni és ünnepelni.",
+    general:
+      "Egy közösség, baráti kör vagy közös siker melegét érzed — érdemes megállni és ünnepelni.",
     love: "A kapcsolat él, lélegzik; vidd ki a négy fal közül, mutasd meg másoknak is.",
     decision: "Ami másokkal együtt lesz erős, az most a jó út.",
     warning: "A felszínes ünneplés elfedheti, hogy valami fontos megbeszélés még hátravan.",
@@ -296,7 +298,8 @@ export const CARDS: TarotCard[] = [
     id: "kelyhek-6",
     name: "Kelyhek Hatosa",
     keywords: ["múlt", "nosztalgia", "ártatlanság"],
-    general: "Valami a múltból visszatér — nem véletlenül, hanem mert van benne még el nem mondott üzenet.",
+    general:
+      "Valami a múltból visszatér — nem véletlenül, hanem mert van benne még el nem mondott üzenet.",
     love: "Egy régi kapcsolat, ismerős érzés vagy gyerekkori dinamika lép be a képbe.",
     decision: "Tanulj abból, ami volt — de ne abban élj.",
     warning: "A nosztalgia gyönyörű hazudozó; ne hagyd, hogy átírja a valóságot.",
@@ -366,7 +369,8 @@ export const CARDS: TarotCard[] = [
     id: "kelyhek-kiralyno",
     name: "Kelyhek Királynője",
     keywords: ["empátia", "érzelmi mélység", "intuíció"],
-    general: "A tudás most az érzéseken keresztül érkezik — bízz abban, amit a finom rezdülések mondanak.",
+    general:
+      "A tudás most az érzéseken keresztül érkezik — bízz abban, amit a finom rezdülések mondanak.",
     love: "A jelenlét, a meghallgatás többet ad most, mint a tanács.",
     decision: "Az a választás jó, ami senkit nem áldoz fel, beleértve magadat is.",
     warning: "Ne süllyedj el a másik érzelmeiben — nem a te feladatod hordani.",
@@ -406,10 +410,12 @@ export const CARDS: TarotCard[] = [
     id: "ermek-3",
     name: "Érmék Hármasa",
     keywords: ["csapatmunka", "mesterség", "együttműködés"],
-    general: "Egy közös munka épülése — minden résztvevőre szükség van, a saját szerepedet érdemes komolyan venni.",
+    general:
+      "Egy közös munka épülése — minden résztvevőre szükség van, a saját szerepedet érdemes komolyan venni.",
     love: "A kapcsolat most közös projektben, közös építkezésben mélyül.",
     decision: "Kérj segítséget, mielőtt eldöntenéd — most nem egyedül a tiéd a feladat.",
-    warning: "Ne vidd a hátadon mások részét; az építkezés akkor stabil, ha mindenki teszi a magáét.",
+    warning:
+      "Ne vidd a hátadon mások részét; az építkezés akkor stabil, ha mindenki teszi a magáét.",
     daily: "Ma kérj valakitől visszajelzést egy folyamatban lévő munkádra.",
   },
   {
@@ -436,7 +442,8 @@ export const CARDS: TarotCard[] = [
     id: "ermek-6",
     name: "Érmék Hatosa",
     keywords: ["adás", "kapás", "áramlás"],
-    general: "Az adás és kapás dinamikája áll a középpontban — vizsgáld meg, melyik oldalon vagy gyakrabban.",
+    general:
+      "Az adás és kapás dinamikája áll a középpontban — vizsgáld meg, melyik oldalon vagy gyakrabban.",
     love: "A kapcsolat akkor él, ha mindkét irányba szabadon áramlik a figyelem.",
     decision: "Az a jó választás, amiben mindkét fél kapja, amire szüksége van.",
     warning: "Ne hatalmi pozícióból adj — az teher, nem ajándék.",
@@ -576,7 +583,8 @@ export const CARDS: TarotCard[] = [
     id: "kardok-6",
     name: "Kardok Hatosa",
     keywords: ["átkelés", "továbblépés", "csendes haladás"],
-    general: "Egy nehéz időszakból csendes haladás felé fordulsz — még nem partot értél, de már mész.",
+    general:
+      "Egy nehéz időszakból csendes haladás felé fordulsz — még nem partot értél, de már mész.",
     love: "Egy kapcsolat új szakaszba ér, vagy egy nehéz fejezetet hagytok hátra.",
     decision: "Az a döntés jó, ami nem nagy, hanem nyugodt.",
     warning: "Ne fordulj vissza a parton, csak mert ismerős volt.",
@@ -586,7 +594,8 @@ export const CARDS: TarotCard[] = [
     id: "kardok-7",
     name: "Kardok Hetese",
     keywords: ["taktika", "kerülő út", "őszinteség kérdése"],
-    general: "Egy taktikus megoldás kínálkozik — érdemes nézni, hol a határ a stratégia és a kerülés között.",
+    general:
+      "Egy taktikus megoldás kínálkozik — érdemes nézni, hol a határ a stratégia és a kerülés között.",
     love: "Ha valamit nem mondasz ki, kérdezd meg magadtól, miért tartod vissza.",
     decision: "A rövidre vágó megoldás most lehet jó — vagy ha lekapcsolod az értékrended.",
     warning: "Az önbecsapás a legdrágább kerülő.",
@@ -600,7 +609,7 @@ export const CARDS: TarotCard[] = [
     love: "Egy minta vagy szerep nyom a kapcsolatban; nézz rá, ki tartja igazából.",
     decision: "Először a hiedelmedet vizsgáld meg, csak utána döntsd el, mit teszel.",
     warning: "Nem mindig a helyzet csapda — néha a hozzáállás.",
-    daily: "Ma kérdezd meg magadtól: \"Tényleg muszáj ezt így csinálnom?\"",
+    daily: 'Ma kérdezd meg magadtól: "Tényleg muszáj ezt így csinálnom?"',
   },
   {
     id: "kardok-9",
@@ -620,13 +629,14 @@ export const CARDS: TarotCard[] = [
     love: "Egy fejezet véget ér — nem feltétlen a kapcsolat, de egy minta biztos.",
     decision: "Ne kapaszkodj abba, ami már elengedett téged.",
     warning: "Ne dramatizáld a véget, ne is hagyd ki belőle a gyászt.",
-    daily: "Ma mondj ki egy mondatot: \"Ez itt befejeződött.\"",
+    daily: 'Ma mondj ki egy mondatot: "Ez itt befejeződött."',
   },
   {
     id: "kardok-aprod",
     name: "Kardok Apródja",
     keywords: ["kíváncsiság", "éber elme", "hírvivő"],
-    general: "Friss információ, hír vagy szellemi szikra érkezik — figyelj, és ne ítélj túl gyorsan.",
+    general:
+      "Friss információ, hír vagy szellemi szikra érkezik — figyelj, és ne ítélj túl gyorsan.",
     love: "Egy érdeklődő, kíváncsi közeledés vagy beszélgetés alakul.",
     decision: "Tájékozódj, mielőtt elköteleződnél.",
     warning: "Ne fecsegj most olyasmiről, ami még nem a tiéd.",
@@ -710,7 +720,7 @@ export const CARDS: TarotCard[] = [
     love: "Egy szóváltás vagy nézeteltérés most nem feltétlen baj — csak energiát kérő pont.",
     decision: "Először tegyél rendet a fejedben, csak aztán döntsd el, kivel vitatkozz.",
     warning: "A versengés ne legyen önérték — gyakran erőforrás-pazarlás.",
-    daily: "Ma egy konfliktusban kérdezd meg: \"mit szeretnék elérni valójában?\"",
+    daily: 'Ma egy konfliktusban kérdezd meg: "mit szeretnék elérni valójában?"',
   },
   {
     id: "botok-6",
@@ -730,7 +740,7 @@ export const CARDS: TarotCard[] = [
     love: "Egy határt érdemes meghúzni a kapcsolatban — szelíden, de határozottan.",
     decision: "Tartsd a saját döntésedet, ne hagyd, hogy mások meginogtassák.",
     warning: "Ne minden kérdést élj meg támadásnak.",
-    daily: "Ma mondj egy szelíd \"nem\"-et, anélkül, hogy megmagyaráznád.",
+    daily: 'Ma mondj egy szelíd "nem"-et, anélkül, hogy megmagyaráznád.',
   },
   {
     id: "botok-8",
@@ -802,7 +812,6 @@ export const CARDS: TarotCard[] = [
     warning: "A vízió ne hagyja figyelmen kívül a részleteket és az embereket.",
     daily: "Ma fogalmazd meg egy mondatban a következő éved víziódat.",
   },
-
 ];
 
 export function pickCards(n: number, seed?: number): TarotCard[] {

@@ -161,7 +161,8 @@ function pickPlanetLongitude(natal: unknown, planet: string): number | null {
     const obj = planets as Record<string, unknown>;
     const hit = obj[planet] ?? obj[planet.toLowerCase()];
     if (hit && typeof hit === "object") {
-      const lon = (hit as Record<string, unknown>).longitude ?? (hit as Record<string, unknown>).lon;
+      const lon =
+        (hit as Record<string, unknown>).longitude ?? (hit as Record<string, unknown>).lon;
       if (typeof lon === "number") return lon;
     }
     if (typeof hit === "number") return hit;
@@ -246,8 +247,7 @@ export async function generateVedicFullReport(
   const vedicSummary = {
     rashi_napjegy: sunSid != null ? signFromLongitude(sunSid) : null,
     rashi_holdjegy: moonSid != null ? signFromLongitude(moonSid) : null,
-    lagna_aszcendens:
-      ascSid != null && !approximate ? signFromLongitude(ascSid) : null,
+    lagna_aszcendens: ascSid != null && !approximate ? signFromLongitude(ascSid) : null,
     nakshatra: moonSid != null ? nakshatraFromMoon(moonSid) : null,
     ayanamsa: lahiriAyanamsa(birthYear).toFixed(3) + "° (Lahiri)",
   };
@@ -267,7 +267,7 @@ export async function generateVedicFullReport(
   const system = [
     "Te magyar nyelvű VÉDIKUS asztrológiai fordító vagy a Jövőd.hu-nak.",
     "FELADAT: a megkapott (1) Roxy tropikus natal-chart angol JSON-ját és (2) az általunk deterministikusan kiszámolt sziderikus (védikus) Nap, Hold, aszcendens, nakshatra értékeket fordítod magyarra, és a megadott védikus szerkezetbe rendezed.",
-    "TILTÁS: nem találsz ki dasha-időszakokat, yoga-kombinációkat, konkrét dátumokat, ha nincsenek a forrásban. Ha valami nincs a forrásban, írd: \"a forrás erről nem ad külön jelzést\".",
+    'TILTÁS: nem találsz ki dasha-időszakokat, yoga-kombinációkat, konkrét dátumokat, ha nincsenek a forrásban. Ha valami nincs a forrásban, írd: "a forrás erről nem ad külön jelzést".',
     "NE keverj nyugati és védikus értelmezést. A forrás Roxy adat NYUGATI (tropikus); azt csak háttér-bolygó-helyzetként használd, nem mint nyugati horoszkóp jegy.",
     "A jegyeket mindig a kapott sziderikus rashi mezőkből vedd. Ha a sziderikus mező null (nincs forrás vagy közelítés), írd ki, hogy a számítás nem áll rendelkezésre, ne találj ki jegyet.",
     "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács. Karma = visszatérő minta, nem büntetés.",

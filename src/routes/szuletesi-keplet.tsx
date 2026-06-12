@@ -202,7 +202,9 @@ function Page() {
                 </div>
               )}
               {!chosen && q.trim().length >= 2 && cities.length === 0 && !searching && (
-                <p className="text-xs text-ivory/50 mt-2">Nincs találat. Próbálj másik írásmódot.</p>
+                <p className="text-xs text-ivory/50 mt-2">
+                  Nincs találat. Próbálj másik írásmódot.
+                </p>
               )}
               {searching && <p className="text-xs text-ivory/50 mt-2">Keresés…</p>}
             </div>
@@ -217,8 +219,18 @@ function Page() {
         {chart && (
           <div className="space-y-5">
             <div className="grid md:grid-cols-3 gap-3">
-              <PlanetCard title="Nap" sign={chart.sun.signHu} house={chart.sun.house} line={chart.sun.oneLine} />
-              <PlanetCard title="Hold" sign={chart.moon.signHu} house={chart.moon.house} line={chart.moon.oneLine} />
+              <PlanetCard
+                title="Nap"
+                sign={chart.sun.signHu}
+                house={chart.sun.house}
+                line={chart.sun.oneLine}
+              />
+              <PlanetCard
+                title="Hold"
+                sign={chart.moon.signHu}
+                house={chart.moon.house}
+                line={chart.moon.oneLine}
+              />
               {chart.ascendant && (
                 <PlanetCard
                   title="Aszcendens"
@@ -229,9 +241,7 @@ function Page() {
               )}
             </div>
 
-            <Section eyebrow="A képleted röviden">
-              {chart.summary}
-            </Section>
+            <Section eyebrow="A képleted röviden">{chart.summary}</Section>
 
             {chart.oneLine && (
               <Section eyebrow="Egy mondatban">
@@ -288,7 +298,9 @@ function PlanetCard({
       </div>
       <div className="font-display text-xl text-ivory mt-1">
         {sign}
-        {typeof house === "number" ? <span className="text-ivory/55 text-base"> · {house}. ház</span> : null}
+        {typeof house === "number" ? (
+          <span className="text-ivory/55 text-base"> · {house}. ház</span>
+        ) : null}
       </div>
       {line && <p className="font-editorial text-sm text-ivory/75 mt-2 leading-relaxed">{line}</p>}
     </div>

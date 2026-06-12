@@ -141,158 +141,158 @@ export function PaywallDialog({
                 <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3 space-y-4">
-            {focusPreview.length > 0 && (
-              <div className="rounded-md border border-gold/20 bg-[oklch(0.78_0.10_80/0.07)] p-4">
-                <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                  Ebből indulunk ki
+                {focusPreview.length > 0 && (
+                  <div className="rounded-md border border-gold/20 bg-[oklch(0.78_0.10_80/0.07)] p-4">
+                    <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                      Ebből indulunk ki
+                    </div>
+                    <ul className="mt-3 space-y-2 text-sm leading-relaxed text-ivory/70">
+                      {focusPreview.map((item) => (
+                        <li key={item} className="flex gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/75" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
+                      Ez nem teljes olvasat-előzetes, hanem annak ellenőrzése, hogy a fizetett
+                      szöveg nem általános sablonból indul.
+                    </p>
+                  </div>
+                )}
+
+                <div className="rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/15 p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Mit kapsz?</div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/72">
+                    {product.includes.map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.12)] bg-black/15 px-3 py-2 text-xs leading-relaxed text-ivory/58">
+                    <span className="font-medium text-ivory/75">Forma:</span> {formatPromise}
+                  </div>
+                  <p className="mt-3 border-t border-[oklch(0.78_0.10_80/0.14)] pt-3 text-xs leading-relaxed text-ivory/55">
+                    {product.qualityPromise}
+                  </p>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm leading-relaxed text-ivory/70">
-                  {focusPreview.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/75" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
-                  Ez nem teljes olvasat-előzetes, hanem annak ellenőrzése, hogy a fizetett szöveg
-                  nem általános sablonból indul.
-                </p>
-              </div>
-            )}
 
-            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/15 p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Mit kapsz?</div>
-              <ul className="mt-3 space-y-2 text-sm text-ivory/72">
-                {product.includes.map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.12)] bg-black/15 px-3 py-2 text-xs leading-relaxed text-ivory/58">
-                <span className="font-medium text-ivory/75">Forma:</span> {formatPromise}
-              </div>
-              <p className="mt-3 border-t border-[oklch(0.78_0.10_80/0.14)] pt-3 text-xs leading-relaxed text-ivory/55">
-                {product.qualityPromise}
-              </p>
-            </div>
-
-            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                Ez akkor jó választás, ha
-              </div>
-              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
-                {choiceFitPromise(product).map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                Miben lesz személyesebb?
-              </div>
-              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
-                {product.depthPromise.map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-md border border-gold/15 bg-[oklch(0.78_0.10_80/0.055)] p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                Minőségi ellenőrzés
-              </div>
-              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
-                {qualityReviewPromise(product).map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                Teljesítési biztonság
-              </div>
-              <ul className="mt-3 space-y-2 text-sm text-ivory/68">
-                {fulfillmentPromise(product.category).map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {inputSummary.length > 0 && (
-              <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
-                <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
-                  Amit figyelembe veszünk
+                <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                    Ez akkor jó választás, ha
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                    {choiceFitPromise(product).map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-ivory/68">
-                  {inputSummary.map((item) => (
-                    <li
-                      key={`${item.label}:${item.value}`}
-                      className="grid gap-1 sm:grid-cols-[7rem_1fr]"
-                    >
-                      <span className="text-ivory/45">{item.label}</span>
-                      <span>{item.value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
-            <div className="space-y-3 rounded-md border border-gold/15 bg-gold/[0.06] p-4 text-xs leading-relaxed text-ivory/62">
-              <div>
-                <div className="mb-2 font-medium text-ivory/82">Vásárlás menete</div>
-                <ol className="space-y-1.5">
-                  {checkoutSteps(product.category, deliveryLabel, isLoggedIn).map((step) => (
-                    <li key={step} className="flex gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
-                      <span>{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <div>
-                <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
-                <p>{accessSummary}</p>
-              </div>
-              <div>
-                <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
-                <p>A kártyaadatot nem tároljuk; a fizetést Stripe dolgozza fel.</p>
-              </div>
-              {!canStartPayment && (
-                <div className="rounded-md border border-gold/20 bg-black/20 px-3 py-2 text-ivory/68">
-                  A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később, vagy írj
-                  nekünk, és segítünk a rendelésben.
+                <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                    Miben lesz személyesebb?
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                    {product.depthPromise.map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              )}
-              <div>
-                <div className="mb-1 font-medium text-ivory/82">Segítség</div>
-                <p>
-                  Technikai hiba esetén pótoljuk a teljesítést vagy utánanézünk:{" "}
-                  <a
-                    className="text-gold hover:text-gold/80"
-                    href={`mailto:${SITE_LEGAL.supportEmail}`}
-                  >
-                    {SITE_LEGAL.supportEmail}
-                  </a>
-                </p>
-              </div>
-            </div>
+
+                <div className="rounded-md border border-gold/15 bg-[oklch(0.78_0.10_80/0.055)] p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                    Minőségi ellenőrzés
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                    {qualityReviewPromise(product).map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                    Teljesítési biztonság
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                    {fulfillmentPromise(product.category).map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-gold/70" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {inputSummary.length > 0 && (
+                  <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
+                    <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
+                      Amit figyelembe veszünk
+                    </div>
+                    <ul className="mt-3 space-y-2 text-sm text-ivory/68">
+                      {inputSummary.map((item) => (
+                        <li
+                          key={`${item.label}:${item.value}`}
+                          className="grid gap-1 sm:grid-cols-[7rem_1fr]"
+                        >
+                          <span className="text-ivory/45">{item.label}</span>
+                          <span>{item.value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="space-y-3 rounded-md border border-gold/15 bg-gold/[0.06] p-4 text-xs leading-relaxed text-ivory/62">
+                  <div>
+                    <div className="mb-2 font-medium text-ivory/82">Vásárlás menete</div>
+                    <ol className="space-y-1.5">
+                      {checkoutSteps(product.category, deliveryLabel, isLoggedIn).map((step) => (
+                        <li key={step} className="flex gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                  <div>
+                    <div className="mb-1 font-medium text-ivory/82">Kézbesítés</div>
+                    <p>{accessSummary}</p>
+                  </div>
+                  <div>
+                    <div className="mb-1 font-medium text-ivory/82">Biztonság</div>
+                    <p>A kártyaadatot nem tároljuk; a fizetést Stripe dolgozza fel.</p>
+                  </div>
+                  {!canStartPayment && (
+                    <div className="rounded-md border border-gold/20 bg-black/20 px-3 py-2 text-ivory/68">
+                      A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később, vagy írj
+                      nekünk, és segítünk a rendelésben.
+                    </div>
+                  )}
+                  <div>
+                    <div className="mb-1 font-medium text-ivory/82">Segítség</div>
+                    <p>
+                      Technikai hiba esetén pótoljuk a teljesítést vagy utánanézünk:{" "}
+                      <a
+                        className="text-gold hover:text-gold/80"
+                        href={`mailto:${SITE_LEGAL.supportEmail}`}
+                      >
+                        {SITE_LEGAL.supportEmail}
+                      </a>
+                    </p>
+                  </div>
+                </div>
               </CollapsibleContent>
             </Collapsible>
 

@@ -30,7 +30,9 @@ const SAMPLES: { n: number; date: { year: number; month: number; day: number } }
 
 function reduce(n: number, keepMaster = true): number {
   while (n > 9 && !(keepMaster && (n === 11 || n === 22 || n === 33))) {
-    n = String(n).split("").reduce((s, d) => s + Number(d), 0);
+    n = String(n)
+      .split("")
+      .reduce((s, d) => s + Number(d), 0);
   }
   return n;
 }
@@ -101,7 +103,11 @@ ${JSON.stringify(raw).slice(0, 4000)}`;
   const json = (await res.json()) as { choices: { message: { content: string } }[] };
   let content = json.choices[0].message.content.trim();
   // strip markdown fences if any
-  content = content.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/```$/i, "").trim();
+  content = content
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/```$/i, "")
+    .trim();
   try {
     return JSON.parse(content);
   } catch (e) {

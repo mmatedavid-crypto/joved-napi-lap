@@ -204,7 +204,10 @@ function Page() {
             <div className="text-center">
               <div className="inline-block relative w-16 h-16">
                 <span className="absolute inset-0 rounded-full border border-gold/20 animate-ping" />
-                <span className="absolute inset-2 rounded-full border border-gold/40 animate-ping" style={{ animationDelay: "300ms" }} />
+                <span
+                  className="absolute inset-2 rounded-full border border-gold/40 animate-ping"
+                  style={{ animationDelay: "300ms" }}
+                />
                 <span className="absolute inset-4 rounded-full bg-gold/10 animate-pulse" />
               </div>
               <p className="mt-4 text-xs tracking-[0.25em] uppercase text-ivory/40">

@@ -191,9 +191,7 @@ function MaiLap() {
                     ))}
                   </div>
                 </div>
-                {drawing && !hu && (
-                  <ReadingLoadingState kind="tarot" title="A napi lapod készül" />
-                )}
+                {drawing && !hu && <ReadingLoadingState kind="tarot" title="A napi lapod készül" />}
                 <GuestMemoryInsightPanel
                   readingType="tarot"
                   topic="mai lap"
@@ -267,11 +265,15 @@ function MaiLap() {
             ? {
                 cardId:
                   paywallProduct === "extra_huzas"
-                    ? (extraSlot ? localCardFromSlot(extraSlot).id : card.id)
+                    ? extraSlot
+                      ? localCardFromSlot(extraSlot).id
+                      : card.id
                     : card.id,
                 cardName:
                   paywallProduct === "extra_huzas"
-                    ? (extraSlot ? localCardFromSlot(extraSlot).name : card.name)
+                    ? extraSlot
+                      ? localCardFromSlot(extraSlot).name
+                      : card.name
                     : card.name,
                 question:
                   paywallProduct === "extra_huzas"
