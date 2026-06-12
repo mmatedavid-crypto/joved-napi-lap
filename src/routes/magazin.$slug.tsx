@@ -90,7 +90,7 @@ function Page() {
         <p className="mt-6 text-lg text-ivory/80 leading-relaxed">{post.excerpt}</p>
 
         <div className="mt-8 space-y-5 text-ivory/80 leading-relaxed font-editorial">
-          {post.body.split("\n\n").map((para, i) => (
+          {post.body.split("\n\n").map((para: string, i: number) => (
             <p key={i} className="whitespace-pre-line">
               {para}
             </p>
