@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VedikusAsztrologiaRouteImport } from './routes/vedikus-asztrologia'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
+import { Route as TarotRouteImport } from './routes/tarot'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
 import { Route as Szemelyes30NaposHoroszkopRouteImport } from './routes/szemelyes-30-napos-horoszkop'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
@@ -67,6 +68,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
   id: '/tarot-napi-lap',
   path: '/tarot-napi-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarotRoute = TarotRouteImport.update({
+  id: '/tarot',
+  path: '/tarot',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SzuletesiKepletRoute = SzuletesiKepletRouteImport.update({
@@ -312,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
+  '/tarot': typeof TarotRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -358,6 +365,7 @@ export interface FileRoutesByTo {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
+  '/tarot': typeof TarotRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
+  '/tarot': typeof TarotRoute
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -453,6 +462,7 @@ export interface FileRouteTypes {
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
+    | '/tarot'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
@@ -499,6 +509,7 @@ export interface FileRouteTypes {
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
+    | '/tarot'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
@@ -545,6 +556,7 @@ export interface FileRouteTypes {
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
     | '/szuletesi-keplet'
+    | '/tarot'
     | '/tarot-napi-lap'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
@@ -592,6 +604,7 @@ export interface RootRouteChildren {
   SzammisztikaRoute: typeof SzammisztikaRoute
   Szemelyes30NaposHoroszkopRoute: typeof Szemelyes30NaposHoroszkopRoute
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
+  TarotRoute: typeof TarotRoute
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
@@ -629,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/tarot-napi-lap'
       fullPath: '/tarot-napi-lap'
       preLoaderRoute: typeof TarotNapiLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tarot': {
+      id: '/tarot'
+      path: '/tarot'
+      fullPath: '/tarot'
+      preLoaderRoute: typeof TarotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/szuletesi-keplet': {
@@ -963,6 +983,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzammisztikaRoute: SzammisztikaRoute,
   Szemelyes30NaposHoroszkopRoute: Szemelyes30NaposHoroszkopRoute,
   SzuletesiKepletRoute: SzuletesiKepletRoute,
+  TarotRoute: TarotRoute,
   TarotNapiLapRoute: TarotNapiLapRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
