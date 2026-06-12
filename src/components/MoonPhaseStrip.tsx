@@ -20,10 +20,7 @@ function phaseGlyph(name: string | undefined): string {
   return "🌙";
 }
 
-/**
- * Diszkrét csík a főoldalon: hold-fázis + jegy + egy mondat.
- * Roxy /astrology/moon-phase/current → magyar fordító réteg, 6h cache.
- */
+/** A főoldal napi holdnaptára: holdfázis, jegy és rövid útmutatás. */
 export function MoonPhaseStrip({ variant = "full" }: { variant?: "full" | "header" } = {}) {
   const [reading, setReading] = useState<MoonPhaseHU | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -65,22 +62,22 @@ export function MoonPhaseStrip({ variant = "full" }: { variant?: "full" | "heade
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-3 md:px-6 mt-2">
-      <div className="surface flex items-center gap-3 px-4 py-2.5 text-sm">
-        <span aria-hidden className="text-xl leading-none">
+    <section aria-label="Mai holdnaptár" className="mx-auto mt-5 max-w-5xl px-4 md:px-6">
+      <div className="surface flex items-start gap-4 px-5 py-4 md:items-center md:px-6">
+        <span aria-hidden className="text-3xl leading-none md:text-4xl">
           {phaseGlyph(reading.phaseName)}
         </span>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.75)]">
-            Mai hold
+            Mai holdnaptár
             {reading.sign ? <> · {reading.sign}</> : null}
             {reading.illumination ? <> · {reading.illumination}</> : null}
           </div>
-          <div className="text-ivory/82 font-editorial truncate">
+          <p className="mt-1 font-editorial text-sm leading-relaxed text-ivory/82 md:text-base">
             <span className="text-ivory">{reading.phaseName}.</span> {reading.oneLine}
-          </div>
+          </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

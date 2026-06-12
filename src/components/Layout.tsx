@@ -4,7 +4,6 @@ import { Logo } from "./Logo";
 import { BottomNav } from "./BottomNav";
 import { GuestMemoryNotice } from "./GuestMemoryNotice";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
-import { MoonPhaseStrip } from "./MoonPhaseStrip";
 import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
 
 const NAV = [
@@ -54,9 +53,6 @@ export function Layout({ children }: { children?: ReactNode }) {
               <span className="text-ivory/80">.hu</span>
             </span>
           </Link>
-          <div className="flex-1 flex justify-center px-3 min-w-0">
-            <MoonPhaseStrip variant="header" />
-          </div>
           <nav className="hidden lg:flex items-center gap-7 text-sm text-ivory/80">
             {NAV.map((n) => (
               <Link
