@@ -158,16 +158,15 @@ function Page() {
         <section className="rounded-md border border-gold/15 bg-black/10 p-5 md:p-7 space-y-3 text-sm leading-relaxed text-ivory/72">
           <h2 className="font-display text-2xl text-ivory">Mit kapsz?</h2>
           <ul className="space-y-2">
-            <li>• Az éved fő motívuma</li>
-            <li>• Születési képleted rövid összefoglalója</li>
-            <li>• 12 hónap havi bontásban — minden hónap kulcstémája</li>
-            <li>• Kiemelt időablakok az évedben</li>
-            <li>• Szerelem / munka / pénz-döntés bontás</li>
-            <li>• Mire figyelj és záró üzenet</li>
+            <li>• A jelenleg ható tranzitok áttekintése</li>
+            <li>• Bolygó-bolygó kapcsolatok (3-5 fő tranzit) magyarul</li>
+            <li>• Feszültségi pontok és kapu-pontok 90 napra</li>
+            <li>• Hatás a választott életterületre</li>
+            <li>• Mire figyelj és mit időzíts</li>
           </ul>
           <p className="text-xs text-ivory/55">
-            A riport a saját születési adataidból és a következő 12 hónap tranzitjaiból készül. Nem
-            újságos éves jegyhoroszkóp.
+            A riport a saját születési képletedre vetített aktuális bolygótranzitokra épül, 90 napos
+            kitekintéssel. Nem általános napi horoszkóp.
           </p>
         </section>
       </div>
