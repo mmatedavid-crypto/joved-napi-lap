@@ -918,7 +918,9 @@ export async function getHoroscopeNewsArticle(opts: {
       fallbackUsed: true,
       sourceSignals,
     });
-    return faithfulLead ? { ...fallback, lead: faithfulLead } : fallback;
+    // A Roxy-forrás elérhető volt: ilyenkor soha ne mutassunk helyi,
+    // csillagjegy-alapú sablont a forrás overview fordításaként.
+    return { ...fallback, lead: faithfulLead ?? "" };
   }
 
   await writeCache(

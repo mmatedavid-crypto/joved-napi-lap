@@ -235,9 +235,11 @@ function HoroscopeArticlePage() {
       <h1 className="font-display text-4xl md:text-5xl text-ivory leading-[1.1] text-center mt-3">
         {horoscopeSeoTitle(article.period, article.signName)}
       </h1>
-      <p className="font-editorial text-ivory/75 text-xl leading-relaxed text-center mt-5">
-        {article.lead}
-      </p>
+      {article.lead ? (
+        <p className="font-editorial text-ivory/75 text-xl leading-relaxed text-center mt-5">
+          {article.lead}
+        </p>
+      ) : null}
 
       <div className="flex flex-wrap justify-center gap-2 text-xs text-ivory/55 mt-6">
         {article.moonPhase && <span>Hold: {article.moonPhase}</span>}

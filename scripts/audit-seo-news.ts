@@ -123,7 +123,7 @@ const checks: Check[] = [
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
-      'const NEWS_TRANSLATION_VERSION = "news-horo-hu-v5"',
+      'const NEWS_TRANSLATION_VERSION = "news-horo-hu-v7-source-locked"',
       "LOVABLE_HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_TIMEOUT_MS",
@@ -153,6 +153,9 @@ const checks: Check[] = [
       "sourceSignalSentence",
       "sourceSectionNudge",
       "const sourceSignals = extractRoxyHoroscopeSignals(roxy.data)",
+      "function sourceOverview",
+      "async function translateOverviewFaithfully",
+      'return { ...fallback, lead: faithfulLead ?? "" }',
       "sourceSignals,",
       "periodFocus",
       "Heti hangulat",
