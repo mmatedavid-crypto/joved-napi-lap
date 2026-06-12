@@ -176,6 +176,11 @@ export function Layout({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link to="/magazin" className="hover:text-gold">
+                  Magazin
+                </Link>
+              </li>
+              <li>
                 <Link to="/rolunk" className="hover:text-gold">
                   Rólunk
                 </Link>
