@@ -1,140 +1,109 @@
+## SEO-mega csomag — terv
 
-## Cél
+A korábbi listából minden zöld (1–11) + a kiegészítések. Hreflang **nem** kell (magyar only).
 
-A teljes termékkínálat újrarendezése a megbeszélt logika szerint, egy körben.
+### Új ingyenes SEO landing-ek (Roxy + statikus tartalom)
 
-## Új termékstruktúra
+1. **Tarot kártya enciklopédia** — 78 oldal
+   - Route: `/tarot/$slug`
+   - Forrás: Roxy `/tarot/card/{id}` + magyar fordítás cache (Supabase `tarot_card_meanings` tábla)
+   - Bake script: `scripts/bake-tarot.ts` — 78 kártya magyarítva
+   - Per-card: jelentés (egyenes/fordított), szerelem, munka, egészség, tanács, kapcsolódó kártyák
+   - Hub oldal: `/tarot` — 78 kártya grid (Nagy Arkánum + 4 szín)
+   - JSON-LD: Article + BreadcrumbList
 
-### Ingyenes termékek (SEO + Google News)
+2. **Kínai zodiákus** — 12 állat + év szerinti almatrix
+   - `/kinai-horoszkop` (hub)
+   - `/kinai-horoszkop/$animal` (12 oldal: patkány…disznó)
+   - `/kinai-horoszkop/$animal/$year` (opcionális, csak 1924–2032 születésű évek → SEO long-tail)
+   - Tartalom: jellemzők, szerelem, munka, kompatibilitás, szerencsés szín/szám, idei év előrejelzése
+   - JSON-LD: Article + BreadcrumbList
 
-1. **Napi lap** (1 lap) — meglévő, marad ingyenes alaplapnak
-2. **Horoszkóp** — napi / heti / havi mindhárom periódus mind a 12 jegyre, teljesen ingyenes
-3. **Angyalszámok** — új SEO landing oldalak: 111, 222, 333, 444, 555, 666, 777, 888, 999, 000, 11:11, 12:12, 22:22, 13:13 (+ a meglévő `/angyalszam` kalkulátor és `/angyalszam-jelentese` is ingyenes marad)
-4. **Bioritmus** — új ingyenes termék Roxy `/biorhythm` endpointból (fizikai / érzelmi / szellemi görbe)
-5. **Kristályok** — meglévő `/kristaly` marad teljesen ingyenes
+3. **I Ching / Ji King hexagramok** — 64 oldal
+   - `/jiking` (hub) + `/jiking/$n` (1–64)
+   - Statikus tartalom magyarul (lib/iching.hu.ts már létezik — bővítjük)
 
-### Fizetős termékek
+4. **Napi szerencseszámok widget** — `/szerencseszamok`
+   - Friss naponta, jegy szerint 6 szám + lottó-tipp
 
-| Termék | Ár | Route |
-|---|---|---|
-| Napi lap kibővített olvasat | 590 Ft | meglévő `/mai-lap` paywall |
-| 3 lapos kelta kereszt jelentés | 990 Ft | meglévő `/harom-lap` (lapok ingyen kihúzva, jelentés zárolt) |
-| Szerelmi tarot jelentés | 990 Ft | meglévő `/osszeillunk` (lapok ingyen, jelentés zárolt) |
-| Döntés előtt jelentés | 990 Ft | meglévő `/dontes-elott` (lapok ingyen, jelentés zárolt) |
-| **A következő 30 napod térképe** | **1490 Ft** | **új `/szemelyes-30-napos-horoszkop`** |
-| **Védikus asztrológia teljes elemzés** | **1990 Ft** | **új `/vedikus-asztrologia`** |
+5. **Tarot napi húzás bővítés** — már megvan, de FAQ schema + belső linkek a kártya-oldalakra
 
-## Részletek termékenként
+### Új fizetős termékek
 
-### 1. Pricing restructure — meglévő tarot termékek
+6. **Éves személyes horoszkóp** — `personal_yearly` — 4990 Ft
+   - 12 hónap × ~500 szó, Roxy `/yearly-horoscope` + AI bővítés
+   - Termék landing: `/eves-horoszkop`
+   - Bake szerver-funkció + cache (mint `personal30day`)
 
-A 3 lap / szerelmi / döntés flow átalakítása:
-- A lapok húzása és képi megjelenítése ingyenes marad
-- A **lapok jelentése** (kombinációs olvasat) kerül paywall mögé 990 Ft-ért
-- A pozíciók nevei (múlt / jelen / jövő stb.) ingyen láthatók
-- Paywall CTA a jelentés helyén jelenik meg
+7. **Tranzitok jelentés** — `transits_personal` — 3990 Ft
+   - Mostani bolygóállás × natál képlet, 6 hónap előretekintés
 
-A `products.ts` árazási táblát igazítjuk, a paywall trigger pontját a meglévő olvasat-flow-ban tartjuk.
+### Numerológia bővítés (a meglévő `/sorsszam` mellé)
 
-### 2. Angyalszám SEO landing oldalak
+8. **Új ingyenes numerológiai oldalak**:
+   - `/sorsszam/$n` — már megvan (1–9, 11, 22, 33)
+   - `/lelek-szam/$n` (1–9, 11, 22, 33) — Soul urge number, magánhangzókból
+   - `/szemelyiseg-szam/$n` (1–9, 11, 22, 33) — Personality, mássalhangzókból
+   - `/kifejezes-szam/$n` (1–9, 11, 22, 33) — Expression number
+   - `/eves-szam/$n` (1–9) — Personal year number
+   - Új numerológia hub: `/numerologia` (kalkulátorok + magyarázatok index)
 
-Új dinamikus route: `/angyalszam/$pattern` (pattern = "111", "222", "11-11" stb. URL-safe formátumban). Minden mintára:
-- saját H1 (pl. „111 angyalszám jelentése")
-- saját meta title + description + OG
-- 600–900 szavas tartalom (jelentés, szerelem, munka, spirituális üzenet, gyakori előfordulás)
-- belső linkek a többi angyalszámra és a számmisztika kalkulátorhoz
-- bekerül a sitemap.xml + sitemap-news.xml-be
+### SEO infrastruktúra
 
-Statikus minták listája `src/lib/angel.hu.ts`-be (már létezik, kibővítjük).
+9. **Breadcrumb komponens** — `<Breadcrumb />` minden tartalmi oldalra
+   - Vizuálisan: Home › Szekció › Aloldal
+   - JSON-LD `BreadcrumbList` minden landingen
+   - Beépítés: SeoLandingPage + minden új route
 
-### 3. Bioritmus ingyenes termék
+10. **Sitemap bővítés** — `src/routes/sitemap[.]xml.tsx`
+    - +78 tarot kártya
+    - +12 kínai állat (+ év almatrix opcionális)
+    - +64 jiking
+    - +numerológia új altípusok (4 új × ~12 = ~48 oldal)
+    - Új termék oldalak
 
-Új route: `/bioritmus`. Form: születési dátum. Backend server fn hívja Roxy `/biorhythm` endpointot, a választ EN→HU fordítjuk (csak fordítás, nincs hozzáadott interpretáció), és megjelenítjük a 3 görbét (fizikai / érzelmi / szellemi) a következő 30 napra.
+11. **News sitemap bővítés** — `sitemap-news.xml`
+    - Horoszkóp mellett: kínai napi (12), tarot napi húzás, mai iránytű, holdfázis hírek
+    - Csak az utóbbi 48 órán belül frissült cikkek (Google News policy)
 
-SEO meta + sitemap-be.
+12. **Web Vitals audit**
+    - `scripts/audit-web-vitals.mjs` — lighthouse CI a top 20 oldalra
+    - Eredmények `audit/web-vitals.json`, integrálva a `product-quality.yml` workflow-ba
+    - Konkrét fixek a TOP problémákra (image lazy loading, font preload, JS chunk split)
 
-### 4. Védikus asztrológia (1990 Ft)
+13. **Tartalom marketing (blog)**
+    - Új route: `/magazin` (hub) + `/magazin/$slug` (cikk)
+    - Supabase `blog_posts` tábla (title, slug, excerpt, body_md, cover, published_at, tags)
+    - 10 seed cikk magyarul (pl. "Hogyan olvass tarotot kezdőként", "Mire jó a sorsszám", "Holdfázisok és rituálék", "Kínai új év 2026")
+    - Schema.org Article + author + datePublished
 
-Új route: `/vedikus-asztrologia`. Form: születési dátum / idő / hely. Fizetés után webhookból:
-- Roxy `/location/search` → város koordináták
-- Roxy `/vedic/*` endpointok (nakshatra, dasha, rashi, házak, yogák — az API-doksi alapján amit visszaad)
-- Magyar fordítás (csak fordítás)
-- Többoldalas grafikus jelentés generálás, mentés `orders.result_payload`-ba
+### Műszaki részletek
 
-### 5. A következő 30 napod térképe (1490 Ft) — részletes spec
+- **Hreflang**: nem teszünk, mert csak magyar van.
+- **Roxy fordítás cache**: meglévő `roxyTranslate.functions.ts` + Supabase tábla, új tartalomtípusok hozzáadása.
+- **Új Supabase migrációk**: `tarot_card_meanings`, `blog_posts`, `chinese_zodiac_cache`.
+- **Bake scriptek**: `scripts/bake-tarot.ts`, `scripts/bake-chinese.ts`, `scripts/bake-iching.ts` (egyszer futnak, eredmény a DB-ben).
+- **Routes naming**: dot-separated TanStack konvenció, breadcrumb-helper a `src/lib/breadcrumbs.ts`-ben.
+- **Menü integráció**: új hub-okat (`/tarot`, `/kinai-horoszkop`, `/numerologia`, `/jiking`, `/magazin`) felvesszük a footerbe és a mobil hamburger menübe; bottom nav változatlan (5 ikon marad).
 
-**Route**: `/szemelyes-30-napos-horoszkop`
+### Sorrend (commit-grupok)
 
-**Form mezők**:
-- Születési dátum (kötelező)
-- Születési idő — opcionális (üresen 12:00 fallback + „közelítő elemzés" jelölés)
-- Születési hely / város (kötelező)
-- Életterület — radio: Szerelem / Munka / Pénz-döntés / Általános
-- Rövid kérdés (max 240 karakter, opcionális)
-- Email (kötelező)
+1. **Infra**: Breadcrumb komponens + helper, sitemap helper bővítés, JSON-LD utility
+2. **Tarot enciklopédia**: tábla + bake + route + hub
+3. **Kínai zodiákus**: tartalom + 12 route + hub
+4. **I Ching**: 64 route + hub
+5. **Numerológia bővítés**: 4 új altípus × oldalak
+6. **Éves horoszkóp + tranzitok** (fizetős)
+7. **Sitemap + news sitemap bővítés**
+8. **Blog (`/magazin`) infra + 10 seed cikk**
+9. **Web Vitals audit script + workflow integráció**
+10. **Linkelés, meta finomítás, FAQ schema bővítés**
 
-**Fizetés után webhookból**:
-1. `GET /location/search?q={city}` → `cities[0]` latitude / longitude / timezone
-2. `POST /astrology/natal-chart` (név, dátum, idő vagy 12:00 fallback, koordináták, timezone)
-3. `POST /forecast/timeline` (startDate = ma, endDate = ma+30, születési adatok)
-4. AI Gateway-vel EN→HU fordítás a megadott szigorú prompttal — csak fordítás, semmi hozzáadás
-5. Magyar report összeállítás fix címkékkel:
-   - A következő 30 napod fő témája
-   - Születési képleted röviden
-   - Legfontosabb időablakok
-   - Szerelem / kapcsolatok
-   - Munka / pénz / döntések
-   - Mire figyelj
-   - Záró üzenet
-6. Mentés DB-be: user input + Roxy location + natal + forecast nyers JSON + magyar report + payment_id + createdAt
-7. Köszönő oldalon megjelenik (rendelés ID alapján)
+### Becsült skála
 
-Jogi lábjegyzet a riport alján: „A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás."
+- ~78 + 12 + 64 + 48 + 10 + 2 = **~214 új SEO indexelhető oldal**
+- 2 új fizetős termék
+- 3 új Supabase migráció
+- 1 új audit pipeline
 
-## Technikai részletek
-
-### Új fájlok
-- `src/routes/szemelyes-30-napos-horoszkop.tsx` (form + paywall trigger)
-- `src/routes/vedikus-asztrologia.tsx`
-- `src/routes/bioritmus.tsx`
-- `src/routes/angyalszam.$pattern.tsx` (SEO dinamikus)
-- `src/lib/products/personal30day.server.ts` (Roxy flow)
-- `src/lib/products/vedic.server.ts`
-- `src/lib/products/biorhythm.server.ts`
-- `src/lib/roxyTranslate.ts` — szigorú EN→HU fordító (már létezik translate.functions, kibővítjük strict módú varianssal)
-
-### DB
-A meglévő `orders` táblába mentünk minden fizetős rendelést `product_slug` + `input_payload` + `result_payload` mezőkbe (már megvannak). Új migrációra nincs szükség.
-
-### Roxy szigorú fordítás
-Az AI-t **kizárólag** EN→HU fordításra használjuk a megadott prompttal. Külön „strict translate" függvény, ami nem fut át a meglévő prémium-író promptokon. A meglévő `paidReadings.server.ts` szabadon író util-t a 30-napos és védikus terméknél NEM hívjuk.
-
-### Webhook & koszonjuk oldal
-A meglévő `/api/public/payments/webhook` route már kezeli a fizetett rendeléseket — bővítjük az új `product_slug`-okra (`personal_30_day`, `vedic_full`) hogy a megfelelő Roxy flow-t hívja, ne az ingyenes prémium-író fallbacket.
-
-### Sitemap & SEO
-`sitemap.xml` és `sitemap-news.xml` bővítése az új ingyenes oldalakkal (angyalszám landingek, bioritmus). A fizetős oldalak `noindex`.
-
-### Payments
-Új price-okat hozok létre a sandbox payments-ben (`personal_30_day_price` = 1490 Ft, `vedic_full_price` = 1990 Ft). A többi meglévő price-t változatlanul hagyom.
-
-## Sorrend a végrehajtásban
-
-Egy körben, de belül logikus blokkokban:
-1. `products.ts` + új price-ok + paywall logika átállítása (tarot termékek 990 Ft, napi 590 Ft)
-2. Horoszkóp paywall eltávolítása (teljesen ingyenes)
-3. Kristály paywall eltávolítása (ha van)
-4. Angyalszám dinamikus SEO route + sitemap
-5. Bioritmus új route + Roxy biorhythm flow
-6. 30 napos horoszkóp új route + Roxy flow + webhook bekötés
-7. Védikus asztrológia új route + Roxy flow + webhook bekötés
-8. Árlista oldal (`/arak`) frissítése az új struktúrára
-
-## Mit nem fogok érinteni
-
-- A meglévő ingyenes napi lap (`/mai-lap`) húzás flow
-- A meglévő `paidReadings.server.ts` (a régi 990 Ft-os tarot termékek továbbra is használhatják)
-- Email / order delivery infrastruktúra
-- Auth, profile, user roles
-
-Ha jóváhagyod, megyek és csinálom egyben.
+Ha a terv jó, megyek és **az 1–4 commit-csoportot** (infra + tarot + kínai + jiking) végigtolom egy menetben, mert ez a legnagyobb SEO ütőkártya. A többi (numerológia bővítés, fizetős termékek, blog, web vitals) jönne utána. Szólj, ha valamit kivennél vagy a sorrendet máshogy kéred.
