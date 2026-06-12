@@ -45,6 +45,7 @@ import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezele
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TarotSlugRouteImport } from './routes/tarot.$slug'
 import { Route as SorsszamNRouteImport } from './routes/sorsszam.$n'
+import { Route as KinaiHoroszkopAnimalRouteImport } from './routes/kinai-horoszkop.$animal'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 import { Route as DevMemoryRouteImport } from './routes/dev.memory'
@@ -238,6 +239,11 @@ const SorsszamNRoute = SorsszamNRouteImport.update({
   path: '/sorsszam/$n',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KinaiHoroszkopAnimalRoute = KinaiHoroszkopAnimalRouteImport.update({
+  id: '/$animal',
+  path: '/$animal',
+  getParentRoute: () => KinaiHoroszkopRoute,
+} as any)
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
   path: '/email/unsubscribe',
@@ -315,7 +321,7 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -364,7 +371,7 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -387,6 +394,7 @@ export interface FileRoutesByTo {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -414,7 +422,7 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -437,6 +445,7 @@ export interface FileRoutesById {
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
+  '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
@@ -488,6 +497,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/kinai-horoszkop/$animal'
     | '/sorsszam/$n'
     | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
@@ -537,6 +547,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/kinai-horoszkop/$animal'
     | '/sorsszam/$n'
     | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
@@ -586,6 +597,7 @@ export interface FileRouteTypes {
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
+    | '/kinai-horoszkop/$animal'
     | '/sorsszam/$n'
     | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
@@ -613,7 +625,7 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRouteWithChildren
   ImpresszumRoute: typeof ImpresszumRoute
-  KinaiHoroszkopRoute: typeof KinaiHoroszkopRoute
+  KinaiHoroszkopRoute: typeof KinaiHoroszkopRouteWithChildren
   KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
   MaiIranytuRoute: typeof MaiIranytuRoute
@@ -900,6 +912,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SorsszamNRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kinai-horoszkop/$animal': {
+      id: '/kinai-horoszkop/$animal'
+      path: '/$animal'
+      fullPath: '/kinai-horoszkop/$animal'
+      preLoaderRoute: typeof KinaiHoroszkopAnimalRouteImport
+      parentRoute: typeof KinaiHoroszkopRoute
+    }
     '/email/unsubscribe': {
       id: '/email/unsubscribe'
       path: '/email/unsubscribe'
@@ -992,6 +1011,18 @@ const HoroszkopRouteWithChildren = HoroszkopRoute._addFileChildren(
   HoroszkopRouteChildren,
 )
 
+interface KinaiHoroszkopRouteChildren {
+  KinaiHoroszkopAnimalRoute: typeof KinaiHoroszkopAnimalRoute
+}
+
+const KinaiHoroszkopRouteChildren: KinaiHoroszkopRouteChildren = {
+  KinaiHoroszkopAnimalRoute: KinaiHoroszkopAnimalRoute,
+}
+
+const KinaiHoroszkopRouteWithChildren = KinaiHoroszkopRoute._addFileChildren(
+  KinaiHoroszkopRouteChildren,
+)
+
 interface TarotRouteChildren {
   TarotSlugRoute: typeof TarotSlugRoute
 }
@@ -1017,7 +1048,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRouteWithChildren,
   ImpresszumRoute: ImpresszumRoute,
-  KinaiHoroszkopRoute: KinaiHoroszkopRoute,
+  KinaiHoroszkopRoute: KinaiHoroszkopRouteWithChildren,
   KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
   MaiIranytuRoute: MaiIranytuRoute,
