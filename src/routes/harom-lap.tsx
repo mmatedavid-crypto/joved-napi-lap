@@ -252,9 +252,9 @@ function HaromLap() {
               <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
                 <div className="text-sm text-ivory/70 mb-2">Részletes, írott elemzést kérsz?</div>
                 <p className="mx-auto mb-4 max-w-xl text-sm leading-relaxed text-ivory/58">
-                  A három lap mély elemzése a most húzott múlt-jelen-jövő ívet bontja ki 24 órán
-                  belül. Ha a kérdés nagyobb, több szereplős vagy régóta húzódik, a Kelta kereszt 10
-                  pozícióban nézi meg a rejtett mintákat is.
+                  A három lap mély elemzése a most húzott múlt-jelen-jövő ívet bontja ki, általában
+                  néhány percen belül. Ha a kérdés nagyobb, több szereplős vagy régóta húzódik, a
+                  Kelta kereszt 10 pozícióban nézi meg a rejtett mintákat is.
                 </p>
                 <button
                   className="btn-gold"

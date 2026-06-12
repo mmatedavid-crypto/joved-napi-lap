@@ -296,7 +296,7 @@ function PricingGroup({
     <section className="mt-10">
       <div className="mb-4">
         <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
-          {category === "instant" ? "Fizetés után azonnal" : "24 órán belül"}
+          {category === "instant" ? "Fizetés után néhány percen belül" : "A jelzett elkészülési idővel"}
         </div>
         <h2 className="mt-2 font-display text-3xl text-ivory">{title}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">{lead}</p>

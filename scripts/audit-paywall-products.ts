@@ -201,7 +201,7 @@ if (!sitemap.includes('"/arak"')) {
 
 for (const needle of [
   "A három lap mély elemzése",
-  "24 órán",
+  "néhány percen belül",
   "Kelta kereszt",
   "10 pozícióban",
   "rejtett mintákat",
