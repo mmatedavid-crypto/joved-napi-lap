@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import { Layout } from "@/components/Layout";
+import { MoonPhaseStrip } from "@/components/MoonPhaseStrip";
 import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
 import { YesNoWidget } from "@/components/YesNoWidget";
 import { PRODUCTS, formatHuf } from "@/lib/products";
@@ -43,6 +44,8 @@ function Index() {
           Húzz egy lapot, <span className="text-gold-gradient">mielőtt döntesz.</span>
         </h1>
       </section>
+
+      <MoonPhaseStrip />
 
       <PersonalDailyBriefing />
 
