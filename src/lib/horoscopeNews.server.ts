@@ -10,7 +10,7 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v5";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v6-faithful";
 const DAY_SECONDS = 60 * 60 * 24;
 const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "openai/gpt-5.2";
 const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 120_000);
@@ -804,6 +804,8 @@ export async function getHoroscopeNewsArticle(opts: {
       "Te magyar szerkesztőségi fordító vagy a Jövőd.hu-n.",
       "A RoxyAPI horoszkóp-forrását hűen, természetes magyar szerkesztőségi nyelvre fordítod.",
       "Ne rövidíts, ne vágj, ne értelmezz át, ne adj hozzá új állítást.",
+      "A lead kizárólag a forrás overview mezőjének teljes, mondatról mondatra hű magyar fordítása legyen.",
+      "Tilos a leadet csillagjegy-archetípussal, általános tanáccsal vagy saját értelmezéssel helyettesíteni.",
       "Őrizd meg a forrás szerkezetét: amit a forrás külön témaként ad, legyen külön szekció.",
       "A finance/health témákat is csak horoszkóp-rovatként fordítsd; ne adj valós orvosi vagy pénzügyi tanácsot.",
       "Ne használj angol szót, endpointnevet, mezőnevet vagy AI-meta mondatot.",
