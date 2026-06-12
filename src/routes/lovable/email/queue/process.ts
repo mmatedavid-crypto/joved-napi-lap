@@ -1,12 +1,36 @@
 import { sendLovableEmail } from '@lovable.dev/email-js'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { createFileRoute } from '@tanstack/react-router'
+import type { Database, Json } from '@/integrations/supabase/types'
 
 const MAX_RETRIES = 5
 const DEFAULT_BATCH_SIZE = 10
 const DEFAULT_SEND_DELAY_MS = 200
 const DEFAULT_AUTH_TTL_MINUTES = 15
 const DEFAULT_TRANSACTIONAL_TTL_MINUTES = 60
+
+type EmailPayload = {
+  run_id: string
+  to: string
+  from: string
+  sender_domain: string
+  subject: string
+  html: string
+  text: string
+  purpose: string
+  label: string
+  idempotency_key: string
+  unsubscribe_token: string
+  message_id: string
+  queued_at?: string
+}
+
+type QueueMessage = {
+  msg_id: number
+  read_ct: number
+  enqueued_at?: string
+  message: EmailPayload
+}
 
 // Check if an error is a rate-limit (429) response.
 // Uses EmailAPIError.status when available (email-js >=0.x with structured errors),
@@ -36,9 +60,9 @@ function getRetryAfterSeconds(error: unknown): number {
 }
 
 async function moveToDlq(
-  supabase: SupabaseClient<any, any>,
+  supabase: SupabaseClient<Database>,
   queue: string,
-  msg: { msg_id: number; message: Record<string, unknown> },
+  msg: QueueMessage,
   reason: string
 ): Promise<void> {
   const payload = msg.message
@@ -53,7 +77,7 @@ async function moveToDlq(
     source_queue: queue,
     dlq_name: `${queue}_dlq`,
     message_id: msg.msg_id,
-    payload,
+    payload: payload as Json,
   })
   if (error) {
     console.error('Failed to move message to DLQ', { queue, msg_id: msg.msg_id, reason, error })
@@ -88,7 +112,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
           return Response.json({ error: 'Forbidden' }, { status: 403 })
         }
 
-        const supabase: SupabaseClient<any, any> = createClient(supabaseUrl, supabaseServiceKey)
+        const supabase: SupabaseClient<Database> = createClient(supabaseUrl, supabaseServiceKey)
 
         // 1. Check rate-limit cooldown and read queue config
         const { data: state } = await supabase
@@ -123,12 +147,13 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
           }
 
           if (!messages?.length) continue
+          const queueMessages = messages as unknown as QueueMessage[]
 
           // Retry budget is based on real send failures, not pgmq read_ct.
           const messageIds = Array.from(
             new Set(
-              messages
-                .map((msg: any) =>
+              queueMessages
+                .map((msg) =>
                   msg?.message?.message_id && typeof msg.message.message_id === 'string'
                     ? msg.message.message_id
                     : null
@@ -161,8 +186,8 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
             }
           }
 
-          for (let i = 0; i < messages.length; i++) {
-            const msg = messages[i]
+          for (let i = 0; i < queueMessages.length; i++) {
+            const msg = queueMessages[i]
             const payload = msg.message
             const failedAttempts =
               payload?.message_id && typeof payload.message_id === 'string'
@@ -313,7 +338,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
             }
 
             // Small delay between sends to smooth bursts
-            if (i < messages.length - 1) {
+            if (i < queueMessages.length - 1) {
               await new Promise((r) => setTimeout(r, sendDelayMs))
             }
           }
