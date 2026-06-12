@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VedikusAsztrologiaRouteImport } from './routes/vedikus-asztrologia'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as TranzitokRouteImport } from './routes/tranzitok'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as TarotRouteImport } from './routes/tarot'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
@@ -71,6 +72,11 @@ const VedikusAsztrologiaRoute = VedikusAsztrologiaRouteImport.update({
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
   id: '/unsubscribe',
   path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TranzitokRoute = TranzitokRouteImport.update({
+  id: '/tranzitok',
+  path: '/tranzitok',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
@@ -372,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -427,6 +434,7 @@ export interface FileRoutesByTo {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -483,6 +491,7 @@ export interface FileRoutesById {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -540,6 +549,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -595,6 +605,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -650,6 +661,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -706,6 +718,7 @@ export interface RootRouteChildren {
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotRoute: typeof TarotRouteWithChildren
   TarotNapiLapRoute: typeof TarotNapiLapRoute
+  TranzitokRoute: typeof TranzitokRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
   DevMemoryRoute: typeof DevMemoryRoute
@@ -735,6 +748,13 @@ declare module '@tanstack/react-router' {
       path: '/unsubscribe'
       fullPath: '/unsubscribe'
       preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tranzitok': {
+      id: '/tranzitok'
+      path: '/tranzitok'
+      fullPath: '/tranzitok'
+      preLoaderRoute: typeof TranzitokRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tarot-napi-lap': {
@@ -1190,6 +1210,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotRoute: TarotRouteWithChildren,
   TarotNapiLapRoute: TarotNapiLapRoute,
+  TranzitokRoute: TranzitokRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
   DevMemoryRoute: DevMemoryRoute,
@@ -1207,3 +1228,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
