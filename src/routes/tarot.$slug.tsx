@@ -82,7 +82,7 @@ function TarotCardPage() {
       <PageHeader
         eyebrow="Tarot kártya jelentése"
         title={`${card.name} jelentése`}
-        lead={card.keywords.map((k) => `· ${k}`).join(" ")}
+        lead={card.keywords.map((k: string) => `· ${k}`).join(" ")}
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
         <Section eyebrow="Általános jelentés" title={card.name}>

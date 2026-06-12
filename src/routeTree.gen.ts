@@ -42,6 +42,7 @@ import { Route as AlomfejtesJelentesRouteImport } from './routes/alomfejtes-jele
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezelesi-tajekoztato'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TarotSlugRouteImport } from './routes/tarot.$slug'
 import { Route as SorsszamNRouteImport } from './routes/sorsszam.$n'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
@@ -221,6 +222,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TarotSlugRoute = TarotSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TarotRoute,
+} as any)
 const SorsszamNRoute = SorsszamNRouteImport.update({
   id: '/sorsszam/$n',
   path: '/sorsszam/$n',
@@ -318,7 +324,7 @@ export interface FileRoutesByFullPath {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRoute
+  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -326,6 +332,7 @@ export interface FileRoutesByFullPath {
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
+  '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -365,7 +372,7 @@ export interface FileRoutesByTo {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRoute
+  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -373,6 +380,7 @@ export interface FileRoutesByTo {
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
+  '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -413,7 +421,7 @@ export interface FileRoutesById {
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRoute
+  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
@@ -421,6 +429,7 @@ export interface FileRoutesById {
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
+  '/tarot/$slug': typeof TarotSlugRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -470,6 +479,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/sorsszam/$n'
+    | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/sorsszam/$n'
+    | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -564,6 +575,7 @@ export interface FileRouteTypes {
     | '/dev/roxy'
     | '/email/unsubscribe'
     | '/sorsszam/$n'
+    | '/tarot/$slug'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -604,7 +616,7 @@ export interface RootRouteChildren {
   SzammisztikaRoute: typeof SzammisztikaRoute
   Szemelyes30NaposHoroszkopRoute: typeof Szemelyes30NaposHoroszkopRoute
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
-  TarotRoute: typeof TarotRoute
+  TarotRoute: typeof TarotRouteWithChildren
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
@@ -854,6 +866,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tarot/$slug': {
+      id: '/tarot/$slug'
+      path: '/$slug'
+      fullPath: '/tarot/$slug'
+      preLoaderRoute: typeof TarotSlugRouteImport
+      parentRoute: typeof TarotRoute
+    }
     '/sorsszam/$n': {
       id: '/sorsszam/$n'
       path: '/sorsszam/$n'
@@ -953,6 +972,16 @@ const HoroszkopRouteWithChildren = HoroszkopRoute._addFileChildren(
   HoroszkopRouteChildren,
 )
 
+interface TarotRouteChildren {
+  TarotSlugRoute: typeof TarotSlugRoute
+}
+
+const TarotRouteChildren: TarotRouteChildren = {
+  TarotSlugRoute: TarotSlugRoute,
+}
+
+const TarotRouteWithChildren = TarotRoute._addFileChildren(TarotRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdatkezelesiTajekoztatoRoute: AdatkezelesiTajekoztatoRoute,
@@ -983,7 +1012,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzammisztikaRoute: SzammisztikaRoute,
   Szemelyes30NaposHoroszkopRoute: Szemelyes30NaposHoroszkopRoute,
   SzuletesiKepletRoute: SzuletesiKepletRoute,
-  TarotRoute: TarotRoute,
+  TarotRoute: TarotRouteWithChildren,
   TarotNapiLapRoute: TarotNapiLapRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
