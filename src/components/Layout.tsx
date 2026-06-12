@@ -161,6 +161,16 @@ export function Layout({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link to="/kinai-horoszkop" className="hover:text-gold">
+                  Kínai horoszkóp
+                </Link>
+              </li>
+              <li>
+                <Link to="/jiking" className="hover:text-gold">
+                  I Ching hexagramok
+                </Link>
+              </li>
+              <li>
                 <Link to="/rolunk" className="hover:text-gold">
                   Rólunk
                 </Link>
