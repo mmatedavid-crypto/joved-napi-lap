@@ -10,7 +10,7 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v6-faithful";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v7-source-locked";
 const DAY_SECONDS = 60 * 60 * 24;
 const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "openai/gpt-5.2";
 const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 120_000);
@@ -210,6 +210,19 @@ type ArticleAI = {
   luckyNumber?: number;
   moonPhase?: string;
 };
+
+type LeadTranslationAI = {
+  translation: string;
+};
+
+const LEAD_TRANSLATION_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    translation: { type: "string" },
+  },
+  required: ["translation"],
+} as const;
 
 type RoxyHoroscopeSignals = {
   focusAreas: Array<"love" | "work" | "money" | "body" | "caution" | "opening">;
