@@ -91,7 +91,16 @@ ${JSON.stringify(raw).slice(0, 4000)}`;
   });
   if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
   const json = (await res.json()) as { choices: { message: { content: string } }[] };
-  return JSON.parse(json.choices[0].message.content);
+  let content = json.choices[0].message.content.trim();
+  // strip markdown fences if any
+  content = content.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/```$/i, "").trim();
+  try {
+    return JSON.parse(content);
+  } catch (e) {
+    console.error("Failed to parse AI output (first 500 chars):", content.slice(0, 500));
+    console.error("Last 200 chars:", content.slice(-200));
+    throw e;
+  }
 }
 
 async function main() {
