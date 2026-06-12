@@ -128,3 +128,113 @@ export function angelMeaning(num: string, rootFromRoxy?: number): AngelMeaning {
   const root = rootFromRoxy && ANGEL_HU[rootFromRoxy] ? rootFromRoxy : reduceAngel(num);
   return ANGEL_HU[root] ?? ANGEL_HU[1];
 }
+
+// SEO-aloldalak a leggyakrabban keresett angyalszámokhoz (/angyalszam/111 stb.).
+export type AngelNumberPage = {
+  szam: string;
+  intro: string;
+  pattern: string;
+};
+
+export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
+  {
+    szam: "000",
+    intro:
+      "A 000 a tiszta potenciál száma: a kör, amelynek nincs eleje és vége. Ha sokszor látod, az életed egy olyan pontján állsz, ahol bármi újraindítható — a lap üres, és te írhatsz rá.",
+    pattern: "A megháromszorozott nulla a végtelen lehetőséget és az isteni teljességet jelképezi. Gyakran nagy újrakezdés előtt bukkan fel.",
+  },
+  {
+    szam: "111",
+    intro:
+      "A 111 az egyik legismertebb angyalszám: a kapunyitás és a gyors megvalósulás jele. Amit most gondolsz, az szokatlanul gyorsan formálódik valósággá — ezért érdemes tudatosan figyelni, mire irányítod a figyelmed.",
+    pattern: "A megháromszorozott 1-es az új kezdet energiáját erősíti fel. Sokan akkor látják, amikor egy régóta érlelődő váltás végre beindul.",
+  },
+  {
+    szam: "222",
+    intro:
+      "A 222 az egyensúly, a türelem és a partnerség száma. Ha újra és újra felbukkan, az üzenete egyszerű: jó úton vagy, csak ne kapkodj — a dolgok a háttérben már rendeződnek.",
+    pattern: "A megháromszorozott 2-es az együttműködést és a bizalmat hangsúlyozza. Gyakran kapcsolati kérdések idején jelenik meg.",
+  },
+  {
+    szam: "333",
+    intro:
+      "A 333 a kifejeződés és a kreatív erő száma. Azt jelzi, hogy a hangodra most szükség van: amit kimondasz, megírsz vagy megalkotsz, az másoknak is utat mutat.",
+    pattern: "A megháromszorozott 3-as a kommunikáció és az önkifejezés energiáját sokszorozza. Sok hagyomány a felemelkedett mesterek jelenlétéhez köti.",
+  },
+  {
+    szam: "444",
+    intro:
+      "A 444 a védelem és a stabil alapok száma. Ha gyakran látod, az üzenete megnyugtató: nem vagy egyedül, a munkád biztos alapokra épül — folytasd, amit elkezdtél.",
+    pattern: "A megháromszorozott 4-es a rendet, a kitartást és a támogató jelenlétet erősíti. Sokan nehéz időszakban találkoznak vele.",
+  },
+  {
+    szam: "555",
+    intro:
+      "Az 555 a nagy változás száma. Ha mindenhol ezt látod, készülj: valami lezárul, és valami egészen új kezdődik — az ellenállás most többe kerül, mint az elengedés.",
+    pattern: "A megháromszorozott 5-ös a fordulat és a szabadság energiáját hozza. Gyakran költözés, váltás, új életszakasz előtt jelenik meg.",
+  },
+  {
+    szam: "666",
+    intro:
+      "A 666 nem baljós szám: az egyensúly helyreállítására hív. Azt jelzi, hogy a figyelmed túlságosan az anyagi gondok felé billent — ideje visszatalálni a belső középpontodhoz.",
+    pattern: "A megháromszorozott 6-os az otthon, a gondoskodás és az anyagi-lelki egyensúly témáit emeli ki.",
+  },
+  {
+    szam: "777",
+    intro:
+      "A 777 a spirituális mélyülés és a jó irány száma. Ha sokszor látod, az üzenete: pontosan ott vagy, ahol lenned kell — a belső munkád most kezd beérni.",
+    pattern: "A megháromszorozott 7-es a befelé figyelést és a szerencsés egybeeséseket erősíti. Sokan tanulás vagy önismereti időszakban látják.",
+  },
+  {
+    szam: "888",
+    intro:
+      "A 888 a bőség és az áramlás száma. Gyakori felbukkanása azt jelzi, hogy a befektetett munkád gyümölcse érik: anyagi vagy érzelmi visszatérülés közeledik.",
+    pattern: "A megháromszorozott 8-as az erő, az eredmény és a kiegyenlítődés energiáját hordozza — ami jár, az megérkezik.",
+  },
+  {
+    szam: "999",
+    intro:
+      "A 999 a lezárás száma. Egy nagy ciklus ér véget az életedben — és a szám arra biztat, hogy méltósággal engedd el, ami már nem rólad szól, mert csak így nyílhat tér az újnak.",
+    pattern: "A megháromszorozott 9-es a befejezést és a tanulságok összegzését erősíti. Gyakran búcsúk és nagy döntések idején tűnik fel.",
+  },
+  {
+    szam: "1010",
+    intro:
+      "Az 1010 az új szintre lépés száma. Az 1-es kezdete és a 0 végtelen lehetősége váltakozik benne: az életed most spirálszerűen ugyanoda ér vissza — de már magasabb szinten.",
+    pattern: "Az 1-0 ismétlődése a fejlődési fokozatokat jelzi: minden kör egy érettebb újrakezdés.",
+  },
+  {
+    szam: "1111",
+    intro:
+      "Az 1111 az ébredés kapuja — a legtöbbet keresett angyalszám. Ha az órán, számlán, rendszámon újra és újra ezt látod, az üzenete: a gondolataid most rendkívül teremtő erejűek, válaszd meg őket tudatosan.",
+    pattern: "A négyszeres 1-es a manifesztáció legerősebb jele. Sokan életük nagy fordulópontjai előtt találkoznak vele sorozatosan.",
+  },
+  {
+    szam: "1212",
+    intro:
+      "Az 1212 a harmonikus növekedés száma. Az 1-es kezdeményezése és a 2-es együttműködése váltja egymást benne: lépj, de ne egyedül — most a közös építkezés visz előre.",
+    pattern: "Az 1-2 ritmusa az egyéni akarat és a társas egyensúly összehangolását jelzi.",
+  },
+  {
+    szam: "1221",
+    intro:
+      "Az 1221 tükörszám: ugyanaz az energia néz vissza rád mindkét irányból. Üzenete a bizalom — amit kifelé adsz, az tükröződik vissza, ezért most a saját hozzáállásod a kulcs.",
+    pattern: "A tükörszerkezet az ok-okozat finom játékára hívja fel a figyelmet: a változás belül kezdődik.",
+  },
+  {
+    szam: "1234",
+    intro:
+      "Az 1234 a lépcsőzetes haladás száma. Nem ugrást kér, hanem következetes, egymásra épülő lépéseket — és azt üzeni: pontosan jó sorrendben csinálod, amit csinálsz.",
+    pattern: "Az emelkedő számsor a természetes fejlődést jelzi: minden lépés a következőt készíti elő.",
+  },
+  {
+    szam: "2222",
+    intro:
+      "A 2222 a mély béke és a hosszú távú építkezés száma. Ha sokszor látod, az üzenete: a türelmed nem tétlenség — amit most csendben gondozol, az tartós lesz.",
+    pattern: "A négyszeres 2-es (és a 22-es mesterszám kétszerese) a nagy ívű, közösen épített tervek energiáját hordozza.",
+  },
+];
+
+export function findAngelNumberPage(szam: string): AngelNumberPage | undefined {
+  return ANGEL_NUMBER_PAGES.find((p) => p.szam === szam);
+}
