@@ -252,7 +252,7 @@ const checks: Check[] = [
   },
   {
     name: "angel number page records and surfaces guest memory",
-    file: "src/routes/angyalszam.tsx",
+    file: "src/routes/angyalszam.index.tsx",
     includes: [
       "GuestMemoryInsightPanel",
       "recordGuestReadingMemory",
