@@ -17,6 +17,7 @@ const ROUTES = [
   "/horoszkop",
   "/szammisztika",
   "/numerologia",
+  "/szerencseszamok",
   "/magazin",
   "/tarot",
   "/kinai-horoszkop",

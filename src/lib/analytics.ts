@@ -35,6 +35,7 @@ export type EventName =
   | "dream_completed"
   | "angel_number_started"
   | "angel_number_completed"
+  | "lucky_numbers_generated"
   | "crystal_opened"
   | "horoscope_opened"
   | "astrology_advanced_enabled"

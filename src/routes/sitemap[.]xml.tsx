@@ -41,6 +41,7 @@ const STATIC_PATHS = [
   "/alomfejtes-jelentes",
   "/kristaly",
   "/sorsszam-kalkulator",
+  "/szerencseszamok",
   "/tarot-napi-lap",
   "/szemelyes-30-napos-horoszkop",
   "/vedikus-asztrologia",

@@ -176,6 +176,11 @@ export function Layout({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link to="/szerencseszamok" className="hover:text-gold">
+                  Napi szerencseszámok
+                </Link>
+              </li>
+              <li>
                 <Link to="/magazin" className="hover:text-gold">
                   Magazin
                 </Link>
