@@ -112,8 +112,9 @@ function Index() {
             { to: "/kristaly", label: "Kristály" },
             { to: "/sorsszam-kalkulator", label: "Sorsszám" },
             { to: "/tarot-napi-lap", label: "Napi tarot" },
-            { to: "/dontes-elott", label: "I-Ching" },
+            { to: "/jiking", label: "I Ching" },
             { to: "/szuletesi-keplet", label: "Születési képlet" },
+            { to: "/szerencseszamok", label: "Szerencseszámok" },
           ].map((c) => (
             <Link
               key={c.to}
@@ -123,6 +124,46 @@ function Index() {
               <span className="font-display text-ivory text-lg">{c.label}</span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-16 md:px-6">
+        <div className="mb-6 text-center">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold/70">
+            Fedezd fel az oldalt
+          </div>
+          <h2 className="mt-2 font-display text-3xl text-ivory">Minden útmutató egy helyen</h2>
+          <p className="mx-auto mt-2 max-w-2xl font-editorial text-lg text-ivory/70">
+            Böngéssz a kártyák, számok, csillagjegyek és hosszabb olvasmányok között, vagy válassz
+            személyes elemzést.
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { to: "/tarot", label: "Tarot kártyák", text: "Mind a 78 lap részletes jelentése." },
+            { to: "/numerologia", label: "Számmisztika", text: "Sorsszám, lélekszám és személyes év." },
+            { to: "/kinai-horoszkop", label: "Kínai horoszkóp", text: "A 12 állatövi jegy útmutatója." },
+            { to: "/jiking", label: "I Ching", text: "A változások könyvének 64 hexagramja." },
+            { to: "/magazin", label: "Magazin", text: "Tarot, asztrológia és önismeret magyarul." },
+            { to: "/arak", label: "Személyes olvasatok", text: "Árak, tartalom és elkészülési idők." },
+          ].map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="surface block p-5 transition-colors hover:border-gold/50"
+            >
+              <h3 className="font-display text-xl text-ivory">{item.label}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ivory/65">{item.text}</p>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-gold">
+          <Link to="/alomfejtes" className="hover:underline">Álomfejtés</Link>
+          <Link to="/angyalszam" className="hover:underline">Angyalszám</Link>
+          <Link to="/szemelyes-30-napos-horoszkop" className="hover:underline">30 napos előrejelzés</Link>
+          <Link to="/eves-horoszkop" className="hover:underline">Éves horoszkóp</Link>
+          <Link to="/tranzitok" className="hover:underline">Tranzitelemzés</Link>
+          <Link to="/vedikus-asztrologia" className="hover:underline">Védikus elemzés</Link>
         </div>
       </section>
 
