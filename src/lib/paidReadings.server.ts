@@ -26,6 +26,7 @@ const FORBIDDEN_PAID_PATTERNS = [
   /összességében|fontos megjegyezni|mint AI|as an AI/i,
   /biztosan|garantáltan|mindenképpen|ez fog történni/i,
   /gyógyít|meggyógyít|diagnózis|befektetési|jogi tanács/i,
+  /^#{1,6}\s|\*\*|```/m,
   /😊|🙂|✨|❤️|🔮/,
 ];
 
@@ -211,22 +212,14 @@ export async function generatePaidOrderReading(opts: {
     const deep = isDeepPaidProduct(opts.productSlug);
     const ai = await aiJSON<PaidReadingPayload>({
       system: [
-        "Te a Jövőd.hu prémium magyar olvasatírója vagy.",
+        "Írj természetes, választékos magyar olvasatot a megadott adatokból és a helyi draft tényeiből.",
+        "Beszélj közvetlenül az olvasóhoz. Ne magyarázd a feladatot, ne dicsérd a saját szövegedet, és ne ismételd vissza szó szerint a kérdését.",
+        "Minden bekezdés mondjon valami újat és konkrétat. Kerüld a ködös spirituális közhelyeket, a túl sok ellentétpárt, a gondolatjeles felsorolásokat és a hatásvadász egyszavas kijelentéseket.",
+        "A lapot, számot vagy jegyet önismereti tükörként értelmezd. Ne állíts biztos jövőt, egészségi, jogi vagy pénzügyi eredményt.",
         deep
-          ? "Mély, fizetős elemzést írsz: legyen nyugodt, pontos, személyes és több rétegű."
-          : "Azonnali fizetős olvasatot írsz: legyen rövid, éles, személyes és késznek érződő.",
-        "A kapott draft tartalmát emeld prémium szintre, de ne találj ki új tényt.",
-        "Ha van konkrét kérdés, helyzet, státusz vagy név, azt az első két szövegrészben nevezd meg természetesen, és a válasz ne kerülje meg ezt a konkrétumot.",
-        "Ne csak általános jelentést írj: minden fő állítás kapcsolódjon legalább egy megadott adathoz, laphoz, számhoz, jegyhez, álomképhez vagy kapcsolati státuszhoz.",
-        "Ha az inputban memoryContext szerepel, finoman építsd be mint visszatérő témát vagy korábbi mintát. Ne mondd, hogy adatbázisból emlékszel; természetesen fogalmazz.",
-        "Magyarul, tegezve, elegánsan, misztikusan, de józanul írj.",
-        "Ne legyen chatbot-szerű vagy magazinos. Ne ígérj biztos jövőt, visszatérést, szerelmet, egészségi vagy pénzügyi eredményt.",
-        deep
-          ? "A body legyen jól tagolt, címsorokkal, 1800-3200 karakter között."
-          : "A body legyen jól tagolt, címsorokkal, 900-1800 karakter között.",
-        "Ne használj Markdown-jeleket: ne írj ## címsort, **félkövér** jelölést, csillagokat vagy kódblokkot. A címsor külön sor legyen, alatta közvetlenül a szöveg.",
-        "Ne ismételd vissza gépiesen a kérdést, és kerüld a homályos töltelékmondatokat. Az olvasat minden része adjon új, érthető és a megadott laphoz vagy helyzethez kötött szempontot.",
-        "A body végén legyen egy rövid, természetes Megjegyzés arról, hogy az olvasat önismereti és szimbolikus keret, nem orvosi, jogi vagy pénzügyi tanács.",
+          ? "Írj 5-7 rövid, jól elkülönülő részt, összesen 1800-3000 karakterben."
+          : "Írj 4-5 rövid, jól elkülönülő részt, összesen 900-1500 karakterben.",
+        "A címsorok egyszerű szövegsorok legyenek. Ne használj Markdown-jeleket vagy emojit. Az utolsó rész legyen egy valóban elvégezhető mai lépés, utána egy rövid önismereti jogi megjegyzés.",
         "Csak JSON-t adj vissza: { title, body }.",
       ].join("\n"),
       user: [
