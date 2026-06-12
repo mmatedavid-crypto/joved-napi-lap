@@ -293,6 +293,46 @@ export const PRODUCTS: ProductDef[] = [
     standardHours: 2,
     sourceRoute: "/vedikus-asztrologia",
   },
+  {
+    slug: "personal_yearly",
+    priceId: "personal_yearly_price",
+    name: "Személyes éves horoszkóp",
+    short: "Teljes éves előrejelzés a saját születési képletedből, hónapról hónapra.",
+    includes: [
+      "12 hónap kulcstémái a saját képletedre szabva",
+      "kiemelt időablakok: szerelem, munka, döntések",
+      "éves fő motívum és a 9 éves életciklusod helyzete",
+    ],
+    depthPromise: [
+      "a következő 12 hónap tranzitjait a saját natalcharthoz illeszti",
+      "havi bontás, nem általános éves jegyhoroszkóp",
+    ],
+    qualityPromise: "Több oldalas, személyre szabott éves riport — nem újságos jegyhoroszkóp.",
+    priceHuf: 4990,
+    category: "delayed",
+    standardHours: 2,
+    sourceRoute: "/eves-horoszkop",
+  },
+  {
+    slug: "transits_personal",
+    priceId: "transits_personal_price",
+    name: "Tranzitok — személyes elemzés",
+    short: "A jelenleg ható bolygótranzitok jelentése a saját képletedre.",
+    includes: [
+      "a most aktív tranzitok személyes értelmezése",
+      "feszültségi és lehetőségi pontok 90 napra",
+      "konkrét napokra figyelmeztetés és kapu-pontok",
+    ],
+    depthPromise: [
+      "a Szaturnusz/Jupiter/Mars-tranzitokat a saját bolygóid és házaid felől olvassa",
+      "nem általános napi horoszkóp, hanem a te képletedre szóló időzítés",
+    ],
+    qualityPromise: "Komoly asztrológiai tranzit-elemzés magyarul, józan hanggal.",
+    priceHuf: 3990,
+    category: "delayed",
+    standardHours: 2,
+    sourceRoute: "/tranzitok",
+  },
 ];
 
 export const PRODUCTS_BY_SLUG: Record<string, ProductDef> = Object.fromEntries(
