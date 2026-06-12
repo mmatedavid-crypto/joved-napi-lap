@@ -5,6 +5,7 @@ import { CARDS } from "@/data/cards";
 import { CHINESE_ANIMALS } from "@/data/chineseZodiac.hu";
 import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
 import { NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
+import { MAGAZIN_POSTS } from "@/data/magazin.hu";
 
 function xmlEscape(value: string): string {
   return value
@@ -46,6 +47,7 @@ const STATIC_PATHS = [
   "/tarot",
   "/kinai-horoszkop",
   "/jiking",
+  "/magazin",
   "/rolunk",
   "/impresszum",
   "/aszf",
@@ -85,6 +87,11 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/numerologia/${t.slug}`,
             changefreq: "monthly",
             priority: "0.7",
+          })),
+          ...MAGAZIN_POSTS.map((p) => ({
+            path: `/magazin/${p.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.6",
           })),
           ...allHoroscopeArticlePaths().map(({ path, period }) => ({
             path,

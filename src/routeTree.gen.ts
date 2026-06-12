@@ -28,6 +28,7 @@ import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
 import { Route as NumerologiaRouteImport } from './routes/numerologia'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
+import { Route as MagazinRouteImport } from './routes/magazin'
 import { Route as KristalyRouteImport } from './routes/kristaly'
 import { Route as KoszonjukRouteImport } from './routes/koszonjuk'
 import { Route as KinaiHoroszkopRouteImport } from './routes/kinai-horoszkop'
@@ -50,6 +51,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TarotSlugRouteImport } from './routes/tarot.$slug'
 import { Route as SorsszamNRouteImport } from './routes/sorsszam.$n'
 import { Route as NumerologiaTypeRouteImport } from './routes/numerologia.$type'
+import { Route as MagazinSlugRouteImport } from './routes/magazin.$slug'
 import { Route as KinaiHoroszkopAnimalRouteImport } from './routes/kinai-horoszkop.$animal'
 import { Route as JikingSlugRouteImport } from './routes/jiking.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
@@ -158,6 +160,11 @@ const MaiLapRoute = MaiLapRouteImport.update({
 const MaiIranytuRoute = MaiIranytuRouteImport.update({
   id: '/mai-iranytu',
   path: '/mai-iranytu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MagazinRoute = MagazinRouteImport.update({
+  id: '/magazin',
+  path: '/magazin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KristalyRoute = KristalyRouteImport.update({
@@ -270,6 +277,11 @@ const NumerologiaTypeRoute = NumerologiaTypeRouteImport.update({
   path: '/$type',
   getParentRoute: () => NumerologiaRoute,
 } as any)
+const MagazinSlugRoute = MagazinSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MagazinRoute,
+} as any)
 const KinaiHoroszkopAnimalRoute = KinaiHoroszkopAnimalRouteImport.update({
   id: '/$animal',
   path: '/$animal',
@@ -362,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
+  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/numerologia': typeof NumerologiaRouteWithChildren
@@ -386,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
+  '/magazin/$slug': typeof MagazinSlugRoute
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
@@ -418,6 +432,7 @@ export interface FileRoutesByTo {
   '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
+  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/numerologia': typeof NumerologiaRouteWithChildren
@@ -442,6 +457,7 @@ export interface FileRoutesByTo {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
+  '/magazin/$slug': typeof MagazinSlugRoute
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
@@ -475,6 +491,7 @@ export interface FileRoutesById {
   '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
+  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
   '/numerologia': typeof NumerologiaRouteWithChildren
@@ -499,6 +516,7 @@ export interface FileRoutesById {
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
+  '/magazin/$slug': typeof MagazinSlugRoute
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
@@ -533,6 +551,7 @@ export interface FileRouteTypes {
     | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
+    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
     | '/numerologia'
@@ -557,6 +576,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
+    | '/magazin/$slug'
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
@@ -589,6 +609,7 @@ export interface FileRouteTypes {
     | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
+    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
     | '/numerologia'
@@ -613,6 +634,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
+    | '/magazin/$slug'
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
@@ -645,6 +667,7 @@ export interface FileRouteTypes {
     | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
+    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
     | '/numerologia'
@@ -669,6 +692,7 @@ export interface FileRouteTypes {
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
+    | '/magazin/$slug'
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
@@ -702,6 +726,7 @@ export interface RootRouteChildren {
   KinaiHoroszkopRoute: typeof KinaiHoroszkopRouteWithChildren
   KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
+  MagazinRoute: typeof MagazinRouteWithChildren
   MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
   NumerologiaRoute: typeof NumerologiaRouteWithChildren
@@ -869,6 +894,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaiIranytuRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/magazin': {
+      id: '/magazin'
+      path: '/magazin'
+      fullPath: '/magazin'
+      preLoaderRoute: typeof MagazinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kristaly': {
       id: '/kristaly'
       path: '/kristaly'
@@ -1023,6 +1055,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NumerologiaTypeRouteImport
       parentRoute: typeof NumerologiaRoute
     }
+    '/magazin/$slug': {
+      id: '/magazin/$slug'
+      path: '/$slug'
+      fullPath: '/magazin/$slug'
+      preLoaderRoute: typeof MagazinSlugRouteImport
+      parentRoute: typeof MagazinRoute
+    }
     '/kinai-horoszkop/$animal': {
       id: '/kinai-horoszkop/$animal'
       path: '/$animal'
@@ -1152,6 +1191,17 @@ const KinaiHoroszkopRouteWithChildren = KinaiHoroszkopRoute._addFileChildren(
   KinaiHoroszkopRouteChildren,
 )
 
+interface MagazinRouteChildren {
+  MagazinSlugRoute: typeof MagazinSlugRoute
+}
+
+const MagazinRouteChildren: MagazinRouteChildren = {
+  MagazinSlugRoute: MagazinSlugRoute,
+}
+
+const MagazinRouteWithChildren =
+  MagazinRoute._addFileChildren(MagazinRouteChildren)
+
 interface NumerologiaRouteChildren {
   NumerologiaTypeRoute: typeof NumerologiaTypeRoute
 }
@@ -1194,6 +1244,7 @@ const rootRouteChildren: RootRouteChildren = {
   KinaiHoroszkopRoute: KinaiHoroszkopRouteWithChildren,
   KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
+  MagazinRoute: MagazinRouteWithChildren,
   MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
   NumerologiaRoute: NumerologiaRouteWithChildren,
