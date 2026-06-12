@@ -87,6 +87,7 @@ ${JSON.stringify(raw).slice(0, 4000)}`;
       model: "google/gemini-2.5-flash",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
+      max_tokens: 2000,
     }),
   });
   if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
