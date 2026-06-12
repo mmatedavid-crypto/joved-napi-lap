@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { allHoroscopeArticlePaths } from "@/lib/horoscopeNews";
+import { LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
 
 function xmlEscape(value: string): string {
   return value
@@ -52,6 +53,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         const today = new Date().toISOString().slice(0, 10);
         const paths = [
           ...STATIC_PATHS.map((path) => ({ path, changefreq: "weekly", priority: "0.7" })),
+          ...LIFE_PATH_NUMBERS.map((n) => ({
+            path: `/sorsszam/${n}`,
+            changefreq: "monthly",
+            priority: "0.6",
+          })),
           ...allHoroscopeArticlePaths().map(({ path, period }) => ({
             path,
             changefreq: period === "napi" ? "daily" : period === "heti" ? "weekly" : "monthly",
