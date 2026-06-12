@@ -23,7 +23,7 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Lekérdezzük a Nap, a Hold és a bolygók aktuális állását.",
     "Megnézzük, milyen tranzitok érintik most a jegyedet.",
     "Összevetjük a holdfázist és a jegyuralkodókat a mai konstellációval.",
-    "A nyers asztrológiai adatokat olvasható magyar üzenetté rendezzük.",
+    "Az asztrológiai képletből személyes, olvasható üzenetet formálunk.",
     "A szerelem, munka és belső fókusz részeit külön igazítjuk.",
     "Ha érkezik szerencseszám vagy szín, azt is hozzátesszük.",
   ],

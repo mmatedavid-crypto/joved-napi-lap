@@ -279,7 +279,7 @@ export function PersonalDailyBriefing() {
             <Eyebrow>Személyre szabás (opcionális)</Eyebrow>
             <p className="font-editorial text-ivory/70 text-sm">
               Add meg a születési dátumod, és ezt a lapot a horoszkópoddal, belső ritmusoddal és a
-              mai kristályoddal együtt fűzöm össze.
+              mai kristályoddal együtt fűzzük össze.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               <div>

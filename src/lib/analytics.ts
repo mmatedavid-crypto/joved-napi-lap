@@ -1,5 +1,4 @@
-// Lightweight client-side event hook. No third-party analytics yet.
-// Centralised so we can later wire Plausible / PostHog / GA without touching call sites.
+// Lightweight client-side events sent to the privacy-focused analytics already loaded by the site.
 
 export type EventName =
   | "daily_card_started"
@@ -46,9 +45,17 @@ export type EventName =
 export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
   try {
-    // For now: structured console log. Replace with real provider later.
-
-    console.log("[jovod:event]", name, payload ?? {});
+    const plausibleWindow = window as Window & {
+      plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+    };
+    const props = Object.fromEntries(
+      Object.entries(payload ?? {}).flatMap(([key, value]) =>
+        typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+          ? [[key, value]]
+          : [],
+      ),
+    );
+    plausibleWindow.plausible?.(name, { props });
   } catch {
     /* no-op */
   }

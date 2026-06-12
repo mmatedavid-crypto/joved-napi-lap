@@ -482,7 +482,7 @@ function choiceFitPromise(product: ProductDef): string[] {
 
 function qualityReviewPromise(product: ProductDef): string[] {
   const base = [
-    "nem jelenítünk meg nyers idegen nyelvű háttérszöveget",
+    "minden olvasat természetes, közérthető magyar nyelven készül",
     "a válasz nem tartalmazhat biztos jövőígéretet vagy ijesztgető állítást",
   ];
   if (product.category === "delayed") {

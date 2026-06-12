@@ -130,13 +130,13 @@ function HoroscopeArticlePending() {
   const signName = sign ? SIGN_HU[sign] : "a jegyed";
   const periodRange = period ? periodDateLabel(period) : "a mostani időszak";
   const loadingSteps = [
-    `${signName} ${periodLabel.toLowerCase()} forrását kérjük le erre az időszakra.`,
-    `A ${periodRange} képlet- és jegyhangulatát rendezzük olvasható magyar cikké.`,
-    "Ha a forrás holdfázist, színt vagy számot ad, ezeket külön megőrizzük.",
+    `${signName} ${periodLabel.toLowerCase()} időszakának fő témáit tekintjük át.`,
+    `A ${periodRange} képlet- és jegyhangulatát rendezzük egységes olvasattá.`,
+    "A holdfázist, a kiemelt színt és a szerencseszámot is figyelembe vesszük.",
     "A szerelem, munka, figyelmeztetés és belső fókusz részeit külön választjuk.",
-    "Nem előre megírt horoszkópot adunk: a friss forrást fordítjuk magyarra.",
-    "A szöveget hűen magyarítjuk, nem vágjuk le rövid sablonüzenetté.",
-    "Ha a friss forrás lassan érkezik, korábbi jó minőségű mentést keresünk.",
+    "Nem rövid sablonüzenetet adunk: minden fontos életterület külön figyelmet kap.",
+    "A végső szöveget természetes, közérthető magyar nyelven fogalmazzuk meg.",
+    "Ha a friss olvasat lassabban készül, az utolsó ellenőrzött változatot mutatjuk.",
   ] as const;
 
   return (
@@ -164,28 +164,27 @@ function HoroscopeArticlePending() {
           Készül a friss horoszkópod
         </h1>
         <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
-          Nálunk nem egy előre megírt horoszkóp-szöveg kerül eléd. A mostani időszakhoz tartozó
-          jegyforrást, holdfázist és kiemelt témákat vesszük alapul, ha a forrás ezeket adja, és
-          ebből készítünk természetes, hű magyar olvasatot.
+          Nálunk nem egy rövid, általános sablonszöveg kerül eléd. A mostani időszak jegyhangulatát,
+          holdfázisát és kiemelt témáit rendezzük részletes, természetes magyar olvasattá.
         </p>
         <ReadingLoadingState
           kind="horoscope"
-          title="A horoszkóp fordítása készül"
+          title="A horoszkópod készül"
           className="mt-6"
           steps={loadingSteps}
         />
         <div className="mt-5 grid gap-2 text-left text-sm text-ivory/58 sm:grid-cols-3">
           <div className="rounded-md border border-gold/10 px-3 py-2">
-            <span className="block text-gold/75">1. Forrás</span>
-            <span>Időszak és jegy szerinti horoszkópforrás.</span>
+            <span className="block text-gold/75">1. Időszak</span>
+            <span>A jegyed mostani fő témái.</span>
           </div>
           <div className="rounded-md border border-gold/10 px-3 py-2">
-            <span className="block text-gold/75">2. Magyarítás</span>
-            <span>Hű fordítás, nyers angol szöveg nélkül.</span>
+            <span className="block text-gold/75">2. Értelmezés</span>
+            <span>Szerelem, munka és belső fókusz.</span>
           </div>
           <div className="rounded-md border border-gold/10 px-3 py-2">
             <span className="block text-gold/75">3. Ellenőrzés</span>
-            <span>Csak vállalható cikk kerül indexelhető oldalra.</span>
+            <span>Természetes, átnézett magyar szöveg.</span>
           </div>
         </div>
       </div>

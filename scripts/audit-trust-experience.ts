@@ -73,9 +73,9 @@ const checks: Check[] = [
     includes: [
       "Egy csendes magyar rituálé",
       "magyar nyelvű digitális önismereti és szórakoztató platform",
-      "számításokból és szerveroldali nyelvi értelmezésből",
-      "nem az, hogy nyers idegen nyelvű háttérszöveget mutassunk",
-      "röviden, természetesen és a megadott helyzetedhez igazítva",
+      "a tarot, az asztrológia és a számmisztika hagyományaira",
+      "természetes magyar nyelven",
+      "használható önismereti kapaszkodót",
       "A fizetést Stripe dolgozza fel",
       "bankkártyaadatot nem tárolunk",
       "biztonságos rendelési linken és emailben",
