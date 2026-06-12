@@ -156,13 +156,22 @@ function parseReadingBlocks(value: string | undefined): { heading?: string; text
     .map((part) => {
       const [first, ...rest] = part
         .split(/\n+/)
-        .map((line) => line.trim())
+        .map((line) => cleanReadingMarkdown(line))
         .filter(Boolean);
       if (first && rest.length) {
         return { heading: first, text: rest.join("\n") };
       }
       return { text: first ?? part };
     });
+}
+
+function cleanReadingMarkdown(value: string): string {
+  return value
+    .trim()
+    .replace(/^#{1,6}\s+/, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/^[-*]\s+/, "• ");
 }
 
 const main = { backgroundColor: "#ffffff", fontFamily: "Georgia, serif" };
