@@ -38,13 +38,13 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Hogyan készül egy olvasat?">
           <p>
-            A háttértudás több rétegből áll: évezredes szimbólumtradíciókból, népi megfigyelésekből,
-            számításokból és szerveroldali nyelvi értelmezésből. A végső szövegnek mindig magyarul,
-            Jövőd.hu hangon kell megszólalnia.
+            Olvasataink a tarot, az asztrológia és a számmisztika hagyományaira, valamint a megadott
+            adataidra és kérdésedre épülnek. Minden szöveg közérthető, természetes magyar nyelven,
+            a Jövőd.hu visszafogott hangján szólal meg.
           </p>
           <p>
-            A cél nem az, hogy nyers idegen nyelvű háttérszöveget mutassunk, hanem hogy a kapott
-            jelentést röviden, természetesen és a megadott helyzetedhez igazítva fogalmazzuk meg.
+            Nem kész válaszokat vagy biztos jóslatokat adunk. A szimbólumok jelentését a helyzetedhez
+            igazítjuk, hogy új nézőpontot és használható önismereti kapaszkodót kapj.
           </p>
         </Section>
 

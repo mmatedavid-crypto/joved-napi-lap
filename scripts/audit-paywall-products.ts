@@ -85,7 +85,7 @@ for (const needle of [
   "Minőségi ellenőrzés",
   "qualityReviewPromise(product).map",
   "function qualityReviewPromise(product: ProductDef)",
-  "nem jelenítünk meg nyers idegen nyelvű háttérszöveget",
+  "minden olvasat természetes, közérthető magyar nyelven készül",
   "nem tartalmazhat biztos jövőígéretet",
   "több, egymásra épülő szakaszban",
   "konkrétan a megadott helyzethez kötöttnek",

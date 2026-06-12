@@ -166,8 +166,8 @@ function Page() {
           </ul>
           <p className="text-xs text-ivory/55">
             A riport a saját születési adataidból és a következő 30 nap tranzitjaiból készül. Nem
-            általános horoszkóp, és nem AI-jóslat: a forrás asztrológiai adatokat fordítjuk
-            magyarra.
+            általános horoszkóp: a személyes képleted és az előtted álló időszak találkozását
+            értelmezi közérthetően.
           </p>
         </section>
       </div>
