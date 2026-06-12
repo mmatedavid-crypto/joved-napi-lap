@@ -124,7 +124,7 @@ export function Layout({ children }: { children?: ReactNode }) {
       <main className="flex-1">{children ?? <Outlet />}</main>
 
       <footer className="mt-24 border-t border-[oklch(0.78_0.10_80/0.1)] bg-[oklch(0.10_0.03_290/0.7)]">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 py-10 grid gap-8 md:grid-cols-2 lg:grid-cols-5 text-sm text-ivory/70">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-10 grid gap-8 md:grid-cols-2 lg:grid-cols-6 text-sm text-ivory/70">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-3">
               <Logo className="h-7 w-auto" />
@@ -168,14 +168,22 @@ export function Layout({ children }: { children?: ReactNode }) {
             </ul>
           </div>
           <div>
-            <div className="text-ivory/90 mb-3 text-xs uppercase tracking-widest">Tudásbázis & fiók</div>
+            <div className="text-ivory/90 mb-3 text-xs uppercase tracking-widest">Tudástár</div>
             <ul className="space-y-2">
               <li><Link to="/tarot" className="hover:text-gold">Tarot kártya jelentések</Link></li>
               <li><Link to="/numerologia" className="hover:text-gold">Számmisztika útmutató</Link></li>
               <li><Link to="/jiking" className="hover:text-gold">I Ching hexagramok</Link></li>
               <li><Link to="/magazin" className="hover:text-gold">Magazin</Link></li>
+            </ul>
+          </div>
+          <div>
+            <div className="text-ivory/90 mb-3 text-xs uppercase tracking-widest">Fiók és vásárlás</div>
+            <ul className="space-y-2">
               <li><Link to="/arak" className="hover:text-gold">Árak</Link></li>
               <li><Link to="/profil" className="hover:text-gold">Profil és előzmények</Link></li>
+            </ul>
+            <div className="text-ivory/90 mt-5 mb-2 text-xs uppercase tracking-widest">A Jövőd.hu</div>
+            <ul className="space-y-2">
               <li><Link to="/rolunk" className="hover:text-gold">Rólunk</Link></li>
             </ul>
             <div className="text-ivory/90 mt-5 mb-2 text-xs uppercase tracking-widest">Jogi tudnivalók</div>
