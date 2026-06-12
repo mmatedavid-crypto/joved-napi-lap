@@ -1,9 +1,54 @@
-import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { aiMoonPhaseHU, type MoonPhaseHU } from "@/lib/roxyTranslate.functions";
+const SYNODIC_MONTH_DAYS = 29.53058867;
+const KNOWN_NEW_MOON_UTC = Date.UTC(2000, 0, 6, 18, 14);
 
-function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
+type LocalMoonPhase = {
+  phaseName: string;
+  oneLine: string;
+  illumination: string;
+};
+
+const PHASES: Array<Pick<LocalMoonPhase, "phaseName" | "oneLine">> = [
+  {
+    phaseName: "Újhold",
+    oneLine: "A kezdetek csendes ideje: fogalmazd meg, minek szeretnél teret adni.",
+  },
+  {
+    phaseName: "Növő holdsarló",
+    oneLine: "A szándék most apró, következetes lépésekkel tud megerősödni.",
+  },
+  {
+    phaseName: "Első negyed",
+    oneLine: "A döntések ideje: válaszd ki azt az egy lépést, amely valóban előrevisz.",
+  },
+  {
+    phaseName: "Növő hold",
+    oneLine: "Finomítsd, amit elkezdtél, és adj figyelmet annak, ami már formálódik.",
+  },
+  {
+    phaseName: "Telihold",
+    oneLine: "A felismerések ideje: nézd meg, mi érett be, és mit engedhetsz el.",
+  },
+  {
+    phaseName: "Fogyó hold",
+    oneLine: "Lassíts, rendezd a tapasztalataidat, és hagyd el, ami már nem szolgál.",
+  },
+  {
+    phaseName: "Utolsó negyed",
+    oneLine: "A lezárás most tisztább teret készíthet a következő ciklusnak.",
+  },
+  {
+    phaseName: "Fogyó holdsarló",
+    oneLine: "Pihenj és figyelj befelé; nem kell minden kérdésre ma választ találnod.",
+  },
+];
+
+function currentMoonPhase(now = new Date()): LocalMoonPhase {
+  const daysSinceKnownNewMoon = (now.getTime() - KNOWN_NEW_MOON_UTC) / 86_400_000;
+  const age = ((daysSinceKnownNewMoon % SYNODIC_MONTH_DAYS) + SYNODIC_MONTH_DAYS) % SYNODIC_MONTH_DAYS;
+  const phasePosition = age / SYNODIC_MONTH_DAYS;
+  const phaseIndex = Math.floor(phasePosition * 8 + 0.5) % 8;
+  const illumination = Math.round((1 - Math.cos(phasePosition * Math.PI * 2)) * 50);
+  return { ...PHASES[phaseIndex], illumination: `${illumination}% megvilágítottság` };
 }
 
 function phaseGlyph(name: string | undefined): string {
@@ -20,46 +65,9 @@ function phaseGlyph(name: string | undefined): string {
   return "🌙";
 }
 
-/** A főoldal napi holdnaptára: holdfázis, jegy és rövid útmutatás. */
-export function MoonPhaseStrip({ variant = "full" }: { variant?: "full" | "header" } = {}) {
-  const [reading, setReading] = useState<MoonPhaseHU | null>(null);
-  const [loaded, setLoaded] = useState(false);
-  const call = useServerFn(aiMoonPhaseHU);
-
-  useEffect(() => {
-    let cancelled = false;
-    call({ data: { dateKey: todayKey() } })
-      .then((r) => {
-        if (cancelled) return;
-        if (r.ok && r.reading) setReading(r.reading);
-      })
-      .finally(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [call]);
-
-  if (!loaded || !reading) return null;
-
-  if (variant === "header") {
-    return (
-      <div
-        className="flex items-center gap-2 rounded-full border border-[oklch(0.78_0.10_80/0.18)] bg-[oklch(0.12_0.02_290/0.4)] px-3 py-1 text-xs text-ivory/80"
-        title={`${reading.phaseName}${reading.sign ? " · " + reading.sign : ""}${reading.illumination ? " · " + reading.illumination : ""}`}
-        aria-label={`Mai hold: ${reading.phaseName}${reading.sign ? ", " + reading.sign : ""}`}
-      >
-        <span aria-hidden className="text-base leading-none">
-          {phaseGlyph(reading.phaseName)}
-        </span>
-        <span className="hidden sm:inline truncate max-w-[14rem] font-editorial">
-          {reading.phaseName}
-          {reading.sign ? <span className="text-ivory/55"> · {reading.sign}</span> : null}
-        </span>
-      </div>
-    );
-  }
+/** A főoldal napi holdnaptára, külső lekérés nélkül számolva. */
+export function MoonPhaseStrip() {
+  const reading = currentMoonPhase();
 
   return (
     <section aria-label="Mai holdnaptár" className="mx-auto mt-5 max-w-5xl px-4 md:px-6">
@@ -70,8 +78,7 @@ export function MoonPhaseStrip({ variant = "full" }: { variant?: "full" | "heade
         <div className="flex-1 min-w-0">
           <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.75)]">
             Mai holdnaptár
-            {reading.sign ? <> · {reading.sign}</> : null}
-            {reading.illumination ? <> · {reading.illumination}</> : null}
+            <> · {reading.illumination}</>
           </div>
           <p className="mt-1 font-editorial text-sm leading-relaxed text-ivory/82 md:text-base">
             <span className="text-ivory">{reading.phaseName}.</span> {reading.oneLine}
