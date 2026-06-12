@@ -35,13 +35,20 @@ function reduce(n: number, keepMaster = true): number {
   return n;
 }
 
-// Auto-find a date whose life-path reduces to target n (if hard-coded sample is wrong).
+// Roxy uses per-component reduction: reduce(year) + reduce(month) + reduce(day),
+// keeping master numbers (11, 22, 33) at each step and in the final sum.
+function roxyLifePath(y: number, m: number, d: number): number {
+  const ry = reduce(y);
+  const rm = reduce(m);
+  const rd = reduce(d);
+  return reduce(ry + rm + rd);
+}
+
 function findDate(target: number): { year: number; month: number; day: number } {
-  for (let y = 1980; y <= 2000; y++)
+  for (let y = 1970; y <= 2005; y++)
     for (let m = 1; m <= 12; m++)
       for (let d = 1; d <= 28; d++) {
-        const sum = (`${y}${m}${d}`).split("").reduce((s, c) => s + Number(c), 0);
-        if (reduce(sum) === target) return { year: y, month: m, day: d };
+        if (roxyLifePath(y, m, d) === target) return { year: y, month: m, day: d };
       }
   throw new Error(`no date for ${target}`);
 }
