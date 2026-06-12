@@ -9,7 +9,7 @@ const TITLE = "Kínai horoszkóp — 12 állatöv jelentése magyarul";
 const DESCRIPTION =
   "Kínai zodiákus magyarul: patkány, bivaly, tigris, nyúl, sárkány, kígyó, ló, kecske, majom, kakas, kutya, disznó. Jellem, szerelem, karrier, kompatibilitás és születési évek.";
 
-export const Route = createFileRoute("/kinai-horoszkop")({
+export const Route = createFileRoute("/kinai-horoszkop/")({
   head: () => ({
     meta: [
       { title: `${TITLE} | Jövőd.hu` },

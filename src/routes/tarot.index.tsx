@@ -9,7 +9,7 @@ const TITLE = "Tarot kártya jelentések magyarul — mind a 78 lap";
 const DESCRIPTION =
   "Tarot kártya enciklopédia magyarul: Nagy Arkánum és kis Arkánum, jelentés szerelemben, döntésben, mindennapokban. Ingyenes, részletes leírás minden laphoz.";
 
-export const Route = createFileRoute("/tarot")({
+export const Route = createFileRoute("/tarot/")({
   head: () => ({
     meta: [
       { title: `${TITLE} | Jövőd.hu` },
