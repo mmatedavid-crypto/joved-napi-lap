@@ -24,6 +24,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
+import { Route as NumerologiaRouteImport } from './routes/numerologia'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
 import { Route as KristalyRouteImport } from './routes/kristaly'
@@ -134,6 +135,11 @@ const ProfilRoute = ProfilRouteImport.update({
 const OsszeillunkRoute = OsszeillunkRouteImport.update({
   id: '/osszeillunk',
   path: '/osszeillunk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NumerologiaRoute = NumerologiaRouteImport.update({
+  id: '/numerologia',
+  path: '/numerologia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MaiLapRoute = MaiLapRouteImport.update({
@@ -339,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
+  '/numerologia': typeof NumerologiaRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
+  '/numerologia': typeof NumerologiaRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -444,6 +452,7 @@ export interface FileRoutesById {
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
+  '/numerologia': typeof NumerologiaRoute
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -498,6 +507,7 @@ export interface FileRouteTypes {
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
+    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -550,6 +560,7 @@ export interface FileRouteTypes {
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
+    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -602,6 +613,7 @@ export interface FileRouteTypes {
     | '/kristaly'
     | '/mai-iranytu'
     | '/mai-lap'
+    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -655,6 +667,7 @@ export interface RootRouteChildren {
   KristalyRoute: typeof KristalyRoute
   MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
+  NumerologiaRoute: typeof NumerologiaRoute
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
   RandiElottRoute: typeof RandiElottRoute
@@ -788,6 +801,13 @@ declare module '@tanstack/react-router' {
       path: '/osszeillunk'
       fullPath: '/osszeillunk'
       preLoaderRoute: typeof OsszeillunkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/numerologia': {
+      id: '/numerologia'
+      path: '/numerologia'
+      fullPath: '/numerologia'
+      preLoaderRoute: typeof NumerologiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mai-lap': {
@@ -1104,6 +1124,7 @@ const rootRouteChildren: RootRouteChildren = {
   KristalyRoute: KristalyRoute,
   MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
+  NumerologiaRoute: NumerologiaRoute,
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
   RandiElottRoute: RandiElottRoute,
@@ -1134,3 +1155,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
