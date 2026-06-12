@@ -10,7 +10,7 @@ const TITLE = "Számmisztika magyarul — sorsszám, lélekszám, kifejezésszá
 const DESCRIPTION =
   "Teljes magyar számmisztika útmutató: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év jelentése. Számítási módszerek és értelmezések.";
 
-export const Route = createFileRoute("/numerologia")({
+export const Route = createFileRoute("/numerologia/")({
   head: () => ({
     meta: [
       { title: `${TITLE} | Jövőd.hu` },

@@ -13,7 +13,6 @@ import { Route as VedikusAsztrologiaRouteImport } from './routes/vedikus-asztrol
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TranzitokRouteImport } from './routes/tranzitok'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
-import { Route as TarotRouteImport } from './routes/tarot'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
 import { Route as SzerencseszamokRouteImport } from './routes/szerencseszamok'
 import { Route as Szemelyes30NaposHoroszkopRouteImport } from './routes/szemelyes-30-napos-horoszkop'
@@ -26,14 +25,10 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RandiElottRouteImport } from './routes/randi-elott'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as OsszeillunkRouteImport } from './routes/osszeillunk'
-import { Route as NumerologiaRouteImport } from './routes/numerologia'
 import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
-import { Route as MagazinRouteImport } from './routes/magazin'
 import { Route as KristalyRouteImport } from './routes/kristaly'
 import { Route as KoszonjukRouteImport } from './routes/koszonjuk'
-import { Route as KinaiHoroszkopRouteImport } from './routes/kinai-horoszkop'
-import { Route as JikingRouteImport } from './routes/jiking'
 import { Route as ImpresszumRouteImport } from './routes/impresszum'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
@@ -44,11 +39,16 @@ import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
 import { Route as AszfRouteImport } from './routes/aszf'
 import { Route as ArakRouteImport } from './routes/arak'
 import { Route as AngyalszamJelenteseRouteImport } from './routes/angyalszam-jelentese'
-import { Route as AngyalszamRouteImport } from './routes/angyalszam'
 import { Route as AlomfejtesJelentesRouteImport } from './routes/alomfejtes-jelentes'
 import { Route as AlomfejtesRouteImport } from './routes/alomfejtes'
 import { Route as AdatkezelesiTajekoztatoRouteImport } from './routes/adatkezelesi-tajekoztato'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TarotIndexRouteImport } from './routes/tarot.index'
+import { Route as NumerologiaIndexRouteImport } from './routes/numerologia.index'
+import { Route as MagazinIndexRouteImport } from './routes/magazin.index'
+import { Route as KinaiHoroszkopIndexRouteImport } from './routes/kinai-horoszkop.index'
+import { Route as JikingIndexRouteImport } from './routes/jiking.index'
+import { Route as AngyalszamIndexRouteImport } from './routes/angyalszam.index'
 import { Route as TarotSlugRouteImport } from './routes/tarot.$slug'
 import { Route as SorsszamNRouteImport } from './routes/sorsszam.$n'
 import { Route as NumerologiaTypeRouteImport } from './routes/numerologia.$type'
@@ -58,6 +58,7 @@ import { Route as JikingSlugRouteImport } from './routes/jiking.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 import { Route as DevMemoryRouteImport } from './routes/dev.memory'
+import { Route as AngyalszamSzamRouteImport } from './routes/angyalszam.$szam'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as HoroszkopPeriodSignRouteImport } from './routes/horoszkop.$period.$sign'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -85,11 +86,6 @@ const TranzitokRoute = TranzitokRouteImport.update({
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
   id: '/tarot-napi-lap',
   path: '/tarot-napi-lap',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TarotRoute = TarotRouteImport.update({
-  id: '/tarot',
-  path: '/tarot',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SzuletesiKepletRoute = SzuletesiKepletRouteImport.update({
@@ -153,11 +149,6 @@ const OsszeillunkRoute = OsszeillunkRouteImport.update({
   path: '/osszeillunk',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NumerologiaRoute = NumerologiaRouteImport.update({
-  id: '/numerologia',
-  path: '/numerologia',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MaiLapRoute = MaiLapRouteImport.update({
   id: '/mai-lap',
   path: '/mai-lap',
@@ -168,11 +159,6 @@ const MaiIranytuRoute = MaiIranytuRouteImport.update({
   path: '/mai-iranytu',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MagazinRoute = MagazinRouteImport.update({
-  id: '/magazin',
-  path: '/magazin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const KristalyRoute = KristalyRouteImport.update({
   id: '/kristaly',
   path: '/kristaly',
@@ -181,16 +167,6 @@ const KristalyRoute = KristalyRouteImport.update({
 const KoszonjukRoute = KoszonjukRouteImport.update({
   id: '/koszonjuk',
   path: '/koszonjuk',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KinaiHoroszkopRoute = KinaiHoroszkopRouteImport.update({
-  id: '/kinai-horoszkop',
-  path: '/kinai-horoszkop',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JikingRoute = JikingRouteImport.update({
-  id: '/jiking',
-  path: '/jiking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImpresszumRoute = ImpresszumRouteImport.update({
@@ -243,11 +219,6 @@ const AngyalszamJelenteseRoute = AngyalszamJelenteseRouteImport.update({
   path: '/angyalszam-jelentese',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AngyalszamRoute = AngyalszamRouteImport.update({
-  id: '/angyalszam',
-  path: '/angyalszam',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AlomfejtesJelentesRoute = AlomfejtesJelentesRouteImport.update({
   id: '/alomfejtes-jelentes',
   path: '/alomfejtes-jelentes',
@@ -268,10 +239,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TarotIndexRoute = TarotIndexRouteImport.update({
+  id: '/tarot/',
+  path: '/tarot/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NumerologiaIndexRoute = NumerologiaIndexRouteImport.update({
+  id: '/numerologia/',
+  path: '/numerologia/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MagazinIndexRoute = MagazinIndexRouteImport.update({
+  id: '/magazin/',
+  path: '/magazin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KinaiHoroszkopIndexRoute = KinaiHoroszkopIndexRouteImport.update({
+  id: '/kinai-horoszkop/',
+  path: '/kinai-horoszkop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JikingIndexRoute = JikingIndexRouteImport.update({
+  id: '/jiking/',
+  path: '/jiking/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AngyalszamIndexRoute = AngyalszamIndexRouteImport.update({
+  id: '/angyalszam/',
+  path: '/angyalszam/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TarotSlugRoute = TarotSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => TarotRoute,
+  id: '/tarot/$slug',
+  path: '/tarot/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SorsszamNRoute = SorsszamNRouteImport.update({
   id: '/sorsszam/$n',
@@ -279,24 +280,24 @@ const SorsszamNRoute = SorsszamNRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const NumerologiaTypeRoute = NumerologiaTypeRouteImport.update({
-  id: '/$type',
-  path: '/$type',
-  getParentRoute: () => NumerologiaRoute,
+  id: '/numerologia/$type',
+  path: '/numerologia/$type',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MagazinSlugRoute = MagazinSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => MagazinRoute,
+  id: '/magazin/$slug',
+  path: '/magazin/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const KinaiHoroszkopAnimalRoute = KinaiHoroszkopAnimalRouteImport.update({
-  id: '/$animal',
-  path: '/$animal',
-  getParentRoute: () => KinaiHoroszkopRoute,
+  id: '/kinai-horoszkop/$animal',
+  path: '/kinai-horoszkop/$animal',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const JikingSlugRoute = JikingSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => JikingRoute,
+  id: '/jiking/$slug',
+  path: '/jiking/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   id: '/email/unsubscribe',
@@ -311,6 +312,11 @@ const DevRoxyRoute = DevRoxyRouteImport.update({
 const DevMemoryRoute = DevMemoryRouteImport.update({
   id: '/dev/memory',
   path: '/dev/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AngyalszamSzamRoute = AngyalszamSzamRouteImport.update({
+  id: '/angyalszam/$szam',
+  path: '/angyalszam/$szam',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
@@ -365,7 +371,6 @@ export interface FileRoutesByFullPath {
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
-  '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
@@ -376,14 +381,10 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/jiking': typeof JikingRouteWithChildren
-  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
-  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
-  '/numerologia': typeof NumerologiaRouteWithChildren
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -396,11 +397,11 @@ export interface FileRoutesByFullPath {
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -410,6 +411,12 @@ export interface FileRoutesByFullPath {
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
+  '/angyalszam/': typeof AngyalszamIndexRoute
+  '/jiking/': typeof JikingIndexRoute
+  '/kinai-horoszkop/': typeof KinaiHoroszkopIndexRoute
+  '/magazin/': typeof MagazinIndexRoute
+  '/numerologia/': typeof NumerologiaIndexRoute
+  '/tarot/': typeof TarotIndexRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -424,7 +431,6 @@ export interface FileRoutesByTo {
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
-  '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
@@ -435,14 +441,10 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/jiking': typeof JikingRouteWithChildren
-  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
-  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
-  '/numerologia': typeof NumerologiaRouteWithChildren
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -455,11 +457,11 @@ export interface FileRoutesByTo {
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -469,6 +471,12 @@ export interface FileRoutesByTo {
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
+  '/angyalszam': typeof AngyalszamIndexRoute
+  '/jiking': typeof JikingIndexRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopIndexRoute
+  '/magazin': typeof MagazinIndexRoute
+  '/numerologia': typeof NumerologiaIndexRoute
+  '/tarot': typeof TarotIndexRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -484,7 +492,6 @@ export interface FileRoutesById {
   '/adatkezelesi-tajekoztato': typeof AdatkezelesiTajekoztatoRoute
   '/alomfejtes': typeof AlomfejtesRoute
   '/alomfejtes-jelentes': typeof AlomfejtesJelentesRoute
-  '/angyalszam': typeof AngyalszamRoute
   '/angyalszam-jelentese': typeof AngyalszamJelenteseRoute
   '/arak': typeof ArakRoute
   '/aszf': typeof AszfRoute
@@ -495,14 +502,10 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
-  '/jiking': typeof JikingRouteWithChildren
-  '/kinai-horoszkop': typeof KinaiHoroszkopRouteWithChildren
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
-  '/magazin': typeof MagazinRouteWithChildren
   '/mai-iranytu': typeof MaiIranytuRoute
   '/mai-lap': typeof MaiLapRoute
-  '/numerologia': typeof NumerologiaRouteWithChildren
   '/osszeillunk': typeof OsszeillunkRoute
   '/profil': typeof ProfilRoute
   '/randi-elott': typeof RandiElottRoute
@@ -515,11 +518,11 @@ export interface FileRoutesById {
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
   '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
-  '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -529,6 +532,12 @@ export interface FileRoutesById {
   '/numerologia/$type': typeof NumerologiaTypeRoute
   '/sorsszam/$n': typeof SorsszamNRoute
   '/tarot/$slug': typeof TarotSlugRoute
+  '/angyalszam/': typeof AngyalszamIndexRoute
+  '/jiking/': typeof JikingIndexRoute
+  '/kinai-horoszkop/': typeof KinaiHoroszkopIndexRoute
+  '/magazin/': typeof MagazinIndexRoute
+  '/numerologia/': typeof NumerologiaIndexRoute
+  '/tarot/': typeof TarotIndexRoute
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
@@ -545,7 +554,6 @@ export interface FileRouteTypes {
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
     | '/alomfejtes-jelentes'
-    | '/angyalszam'
     | '/angyalszam-jelentese'
     | '/arak'
     | '/aszf'
@@ -556,14 +564,10 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
-    | '/jiking'
-    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
-    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
-    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -576,11 +580,11 @@ export interface FileRouteTypes {
     | '/szemelyes-30-napos-horoszkop'
     | '/szerencseszamok'
     | '/szuletesi-keplet'
-    | '/tarot'
     | '/tarot-napi-lap'
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -590,6 +594,12 @@ export interface FileRouteTypes {
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
+    | '/angyalszam/'
+    | '/jiking/'
+    | '/kinai-horoszkop/'
+    | '/magazin/'
+    | '/numerologia/'
+    | '/tarot/'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -604,7 +614,6 @@ export interface FileRouteTypes {
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
     | '/alomfejtes-jelentes'
-    | '/angyalszam'
     | '/angyalszam-jelentese'
     | '/arak'
     | '/aszf'
@@ -615,14 +624,10 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
-    | '/jiking'
-    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
-    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
-    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -635,11 +640,11 @@ export interface FileRouteTypes {
     | '/szemelyes-30-napos-horoszkop'
     | '/szerencseszamok'
     | '/szuletesi-keplet'
-    | '/tarot'
     | '/tarot-napi-lap'
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -649,6 +654,12 @@ export interface FileRouteTypes {
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
+    | '/angyalszam'
+    | '/jiking'
+    | '/kinai-horoszkop'
+    | '/magazin'
+    | '/numerologia'
+    | '/tarot'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -663,7 +674,6 @@ export interface FileRouteTypes {
     | '/adatkezelesi-tajekoztato'
     | '/alomfejtes'
     | '/alomfejtes-jelentes'
-    | '/angyalszam'
     | '/angyalszam-jelentese'
     | '/arak'
     | '/aszf'
@@ -674,14 +684,10 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
-    | '/jiking'
-    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
-    | '/magazin'
     | '/mai-iranytu'
     | '/mai-lap'
-    | '/numerologia'
     | '/osszeillunk'
     | '/profil'
     | '/randi-elott'
@@ -694,11 +700,11 @@ export interface FileRouteTypes {
     | '/szemelyes-30-napos-horoszkop'
     | '/szerencseszamok'
     | '/szuletesi-keplet'
-    | '/tarot'
     | '/tarot-napi-lap'
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -708,6 +714,12 @@ export interface FileRouteTypes {
     | '/numerologia/$type'
     | '/sorsszam/$n'
     | '/tarot/$slug'
+    | '/angyalszam/'
+    | '/jiking/'
+    | '/kinai-horoszkop/'
+    | '/magazin/'
+    | '/numerologia/'
+    | '/tarot/'
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
@@ -723,7 +735,6 @@ export interface RootRouteChildren {
   AdatkezelesiTajekoztatoRoute: typeof AdatkezelesiTajekoztatoRoute
   AlomfejtesRoute: typeof AlomfejtesRoute
   AlomfejtesJelentesRoute: typeof AlomfejtesJelentesRoute
-  AngyalszamRoute: typeof AngyalszamRoute
   AngyalszamJelenteseRoute: typeof AngyalszamJelenteseRoute
   ArakRoute: typeof ArakRoute
   AszfRoute: typeof AszfRoute
@@ -734,14 +745,10 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRouteWithChildren
   ImpresszumRoute: typeof ImpresszumRoute
-  JikingRoute: typeof JikingRouteWithChildren
-  KinaiHoroszkopRoute: typeof KinaiHoroszkopRouteWithChildren
   KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
-  MagazinRoute: typeof MagazinRouteWithChildren
   MaiIranytuRoute: typeof MaiIranytuRoute
   MaiLapRoute: typeof MaiLapRoute
-  NumerologiaRoute: typeof NumerologiaRouteWithChildren
   OsszeillunkRoute: typeof OsszeillunkRoute
   ProfilRoute: typeof ProfilRoute
   RandiElottRoute: typeof RandiElottRoute
@@ -754,15 +761,26 @@ export interface RootRouteChildren {
   Szemelyes30NaposHoroszkopRoute: typeof Szemelyes30NaposHoroszkopRoute
   SzerencseszamokRoute: typeof SzerencseszamokRoute
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
-  TarotRoute: typeof TarotRouteWithChildren
   TarotNapiLapRoute: typeof TarotNapiLapRoute
   TranzitokRoute: typeof TranzitokRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
+  AngyalszamSzamRoute: typeof AngyalszamSzamRoute
   DevMemoryRoute: typeof DevMemoryRoute
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
+  JikingSlugRoute: typeof JikingSlugRoute
+  KinaiHoroszkopAnimalRoute: typeof KinaiHoroszkopAnimalRoute
+  MagazinSlugRoute: typeof MagazinSlugRoute
+  NumerologiaTypeRoute: typeof NumerologiaTypeRoute
   SorsszamNRoute: typeof SorsszamNRoute
+  TarotSlugRoute: typeof TarotSlugRoute
+  AngyalszamIndexRoute: typeof AngyalszamIndexRoute
+  JikingIndexRoute: typeof JikingIndexRoute
+  KinaiHoroszkopIndexRoute: typeof KinaiHoroszkopIndexRoute
+  MagazinIndexRoute: typeof MagazinIndexRoute
+  NumerologiaIndexRoute: typeof NumerologiaIndexRoute
+  TarotIndexRoute: typeof TarotIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiInternalHoroscopeNewsPrewarmRoute: typeof ApiInternalHoroscopeNewsPrewarmRoute
   ApiPublicHooksWarmHoroscopesRoute: typeof ApiPublicHooksWarmHoroscopesRoute
@@ -800,13 +818,6 @@ declare module '@tanstack/react-router' {
       path: '/tarot-napi-lap'
       fullPath: '/tarot-napi-lap'
       preLoaderRoute: typeof TarotNapiLapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tarot': {
-      id: '/tarot'
-      path: '/tarot'
-      fullPath: '/tarot'
-      preLoaderRoute: typeof TarotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/szuletesi-keplet': {
@@ -893,13 +904,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OsszeillunkRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/numerologia': {
-      id: '/numerologia'
-      path: '/numerologia'
-      fullPath: '/numerologia'
-      preLoaderRoute: typeof NumerologiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/mai-lap': {
       id: '/mai-lap'
       path: '/mai-lap'
@@ -914,13 +918,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaiIranytuRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/magazin': {
-      id: '/magazin'
-      path: '/magazin'
-      fullPath: '/magazin'
-      preLoaderRoute: typeof MagazinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/kristaly': {
       id: '/kristaly'
       path: '/kristaly'
@@ -933,20 +930,6 @@ declare module '@tanstack/react-router' {
       path: '/koszonjuk'
       fullPath: '/koszonjuk'
       preLoaderRoute: typeof KoszonjukRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kinai-horoszkop': {
-      id: '/kinai-horoszkop'
-      path: '/kinai-horoszkop'
-      fullPath: '/kinai-horoszkop'
-      preLoaderRoute: typeof KinaiHoroszkopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/jiking': {
-      id: '/jiking'
-      path: '/jiking'
-      fullPath: '/jiking'
-      preLoaderRoute: typeof JikingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/impresszum': {
@@ -1019,13 +1002,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AngyalszamJelenteseRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/angyalszam': {
-      id: '/angyalszam'
-      path: '/angyalszam'
-      fullPath: '/angyalszam'
-      preLoaderRoute: typeof AngyalszamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/alomfejtes-jelentes': {
       id: '/alomfejtes-jelentes'
       path: '/alomfejtes-jelentes'
@@ -1054,12 +1030,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tarot/': {
+      id: '/tarot/'
+      path: '/tarot'
+      fullPath: '/tarot/'
+      preLoaderRoute: typeof TarotIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/numerologia/': {
+      id: '/numerologia/'
+      path: '/numerologia'
+      fullPath: '/numerologia/'
+      preLoaderRoute: typeof NumerologiaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/magazin/': {
+      id: '/magazin/'
+      path: '/magazin'
+      fullPath: '/magazin/'
+      preLoaderRoute: typeof MagazinIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kinai-horoszkop/': {
+      id: '/kinai-horoszkop/'
+      path: '/kinai-horoszkop'
+      fullPath: '/kinai-horoszkop/'
+      preLoaderRoute: typeof KinaiHoroszkopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jiking/': {
+      id: '/jiking/'
+      path: '/jiking'
+      fullPath: '/jiking/'
+      preLoaderRoute: typeof JikingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/angyalszam/': {
+      id: '/angyalszam/'
+      path: '/angyalszam'
+      fullPath: '/angyalszam/'
+      preLoaderRoute: typeof AngyalszamIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tarot/$slug': {
       id: '/tarot/$slug'
-      path: '/$slug'
+      path: '/tarot/$slug'
       fullPath: '/tarot/$slug'
       preLoaderRoute: typeof TarotSlugRouteImport
-      parentRoute: typeof TarotRoute
+      parentRoute: typeof rootRouteImport
     }
     '/sorsszam/$n': {
       id: '/sorsszam/$n'
@@ -1070,31 +1088,31 @@ declare module '@tanstack/react-router' {
     }
     '/numerologia/$type': {
       id: '/numerologia/$type'
-      path: '/$type'
+      path: '/numerologia/$type'
       fullPath: '/numerologia/$type'
       preLoaderRoute: typeof NumerologiaTypeRouteImport
-      parentRoute: typeof NumerologiaRoute
+      parentRoute: typeof rootRouteImport
     }
     '/magazin/$slug': {
       id: '/magazin/$slug'
-      path: '/$slug'
+      path: '/magazin/$slug'
       fullPath: '/magazin/$slug'
       preLoaderRoute: typeof MagazinSlugRouteImport
-      parentRoute: typeof MagazinRoute
+      parentRoute: typeof rootRouteImport
     }
     '/kinai-horoszkop/$animal': {
       id: '/kinai-horoszkop/$animal'
-      path: '/$animal'
+      path: '/kinai-horoszkop/$animal'
       fullPath: '/kinai-horoszkop/$animal'
       preLoaderRoute: typeof KinaiHoroszkopAnimalRouteImport
-      parentRoute: typeof KinaiHoroszkopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/jiking/$slug': {
       id: '/jiking/$slug'
-      path: '/$slug'
+      path: '/jiking/$slug'
       fullPath: '/jiking/$slug'
       preLoaderRoute: typeof JikingSlugRouteImport
-      parentRoute: typeof JikingRoute
+      parentRoute: typeof rootRouteImport
     }
     '/email/unsubscribe': {
       id: '/email/unsubscribe'
@@ -1115,6 +1133,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/memory'
       fullPath: '/dev/memory'
       preLoaderRoute: typeof DevMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/angyalszam/$szam': {
+      id: '/angyalszam/$szam'
+      path: '/angyalszam/$szam'
+      fullPath: '/angyalszam/$szam'
+      preLoaderRoute: typeof AngyalszamSzamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/suppression': {
@@ -1188,68 +1213,11 @@ const HoroszkopRouteWithChildren = HoroszkopRoute._addFileChildren(
   HoroszkopRouteChildren,
 )
 
-interface JikingRouteChildren {
-  JikingSlugRoute: typeof JikingSlugRoute
-}
-
-const JikingRouteChildren: JikingRouteChildren = {
-  JikingSlugRoute: JikingSlugRoute,
-}
-
-const JikingRouteWithChildren =
-  JikingRoute._addFileChildren(JikingRouteChildren)
-
-interface KinaiHoroszkopRouteChildren {
-  KinaiHoroszkopAnimalRoute: typeof KinaiHoroszkopAnimalRoute
-}
-
-const KinaiHoroszkopRouteChildren: KinaiHoroszkopRouteChildren = {
-  KinaiHoroszkopAnimalRoute: KinaiHoroszkopAnimalRoute,
-}
-
-const KinaiHoroszkopRouteWithChildren = KinaiHoroszkopRoute._addFileChildren(
-  KinaiHoroszkopRouteChildren,
-)
-
-interface MagazinRouteChildren {
-  MagazinSlugRoute: typeof MagazinSlugRoute
-}
-
-const MagazinRouteChildren: MagazinRouteChildren = {
-  MagazinSlugRoute: MagazinSlugRoute,
-}
-
-const MagazinRouteWithChildren =
-  MagazinRoute._addFileChildren(MagazinRouteChildren)
-
-interface NumerologiaRouteChildren {
-  NumerologiaTypeRoute: typeof NumerologiaTypeRoute
-}
-
-const NumerologiaRouteChildren: NumerologiaRouteChildren = {
-  NumerologiaTypeRoute: NumerologiaTypeRoute,
-}
-
-const NumerologiaRouteWithChildren = NumerologiaRoute._addFileChildren(
-  NumerologiaRouteChildren,
-)
-
-interface TarotRouteChildren {
-  TarotSlugRoute: typeof TarotSlugRoute
-}
-
-const TarotRouteChildren: TarotRouteChildren = {
-  TarotSlugRoute: TarotSlugRoute,
-}
-
-const TarotRouteWithChildren = TarotRoute._addFileChildren(TarotRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdatkezelesiTajekoztatoRoute: AdatkezelesiTajekoztatoRoute,
   AlomfejtesRoute: AlomfejtesRoute,
   AlomfejtesJelentesRoute: AlomfejtesJelentesRoute,
-  AngyalszamRoute: AngyalszamRoute,
   AngyalszamJelenteseRoute: AngyalszamJelenteseRoute,
   ArakRoute: ArakRoute,
   AszfRoute: AszfRoute,
@@ -1260,14 +1228,10 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRouteWithChildren,
   ImpresszumRoute: ImpresszumRoute,
-  JikingRoute: JikingRouteWithChildren,
-  KinaiHoroszkopRoute: KinaiHoroszkopRouteWithChildren,
   KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
-  MagazinRoute: MagazinRouteWithChildren,
   MaiIranytuRoute: MaiIranytuRoute,
   MaiLapRoute: MaiLapRoute,
-  NumerologiaRoute: NumerologiaRouteWithChildren,
   OsszeillunkRoute: OsszeillunkRoute,
   ProfilRoute: ProfilRoute,
   RandiElottRoute: RandiElottRoute,
@@ -1280,15 +1244,26 @@ const rootRouteChildren: RootRouteChildren = {
   Szemelyes30NaposHoroszkopRoute: Szemelyes30NaposHoroszkopRoute,
   SzerencseszamokRoute: SzerencseszamokRoute,
   SzuletesiKepletRoute: SzuletesiKepletRoute,
-  TarotRoute: TarotRouteWithChildren,
   TarotNapiLapRoute: TarotNapiLapRoute,
   TranzitokRoute: TranzitokRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
+  AngyalszamSzamRoute: AngyalszamSzamRoute,
   DevMemoryRoute: DevMemoryRoute,
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
+  JikingSlugRoute: JikingSlugRoute,
+  KinaiHoroszkopAnimalRoute: KinaiHoroszkopAnimalRoute,
+  MagazinSlugRoute: MagazinSlugRoute,
+  NumerologiaTypeRoute: NumerologiaTypeRoute,
   SorsszamNRoute: SorsszamNRoute,
+  TarotSlugRoute: TarotSlugRoute,
+  AngyalszamIndexRoute: AngyalszamIndexRoute,
+  JikingIndexRoute: JikingIndexRoute,
+  KinaiHoroszkopIndexRoute: KinaiHoroszkopIndexRoute,
+  MagazinIndexRoute: MagazinIndexRoute,
+  NumerologiaIndexRoute: NumerologiaIndexRoute,
+  TarotIndexRoute: TarotIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiInternalHoroscopeNewsPrewarmRoute: ApiInternalHoroscopeNewsPrewarmRoute,
   ApiPublicHooksWarmHoroscopesRoute: ApiPublicHooksWarmHoroscopesRoute,
