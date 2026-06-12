@@ -6,6 +6,7 @@ import { CHINESE_ANIMALS } from "@/data/chineseZodiac.hu";
 import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
 import { NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
 import { getPublishedMagazinPosts } from "@/data/magazin.hu";
+import { ANGEL_NUMBER_PAGES } from "@/lib/angel.hu";
 
 function xmlEscape(value: string): string {
   return value
@@ -74,6 +75,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           })),
           ...CARDS.map((card) => ({
             path: `/tarot/${card.id}`,
+            changefreq: "monthly",
+            priority: "0.7",
+          })),
+          ...ANGEL_NUMBER_PAGES.map((p) => ({
+            path: `/angyalszam/${p.szam}`,
             changefreq: "monthly",
             priority: "0.7",
           })),

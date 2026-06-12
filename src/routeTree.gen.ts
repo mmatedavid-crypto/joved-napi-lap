@@ -58,6 +58,7 @@ import { Route as JikingSlugRouteImport } from './routes/jiking.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
 import { Route as DevMemoryRouteImport } from './routes/dev.memory'
+import { Route as AngyalszamSzamRouteImport } from './routes/angyalszam.$szam'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as HoroszkopPeriodSignRouteImport } from './routes/horoszkop.$period.$sign'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -313,6 +314,11 @@ const DevMemoryRoute = DevMemoryRouteImport.update({
   path: '/dev/memory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AngyalszamSzamRoute = AngyalszamSzamRouteImport.update({
+  id: '/angyalszam/$szam',
+  path: '/angyalszam/$szam',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
   id: '/lovable/email/suppression',
   path: '/lovable/email/suppression',
@@ -395,6 +401,7 @@ export interface FileRoutesByFullPath {
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -454,6 +461,7 @@ export interface FileRoutesByTo {
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
+  '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
   '/dev/roxy': typeof DevRoxyRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
@@ -575,6 +584,7 @@ export interface FileRouteTypes {
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -634,6 +644,7 @@ export interface FileRouteTypes {
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -693,6 +704,7 @@ export interface FileRouteTypes {
     | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
+    | '/angyalszam/$szam'
     | '/dev/memory'
     | '/dev/roxy'
     | '/email/unsubscribe'
@@ -753,6 +765,7 @@ export interface RootRouteChildren {
   TranzitokRoute: typeof TranzitokRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
+  AngyalszamSzamRoute: typeof AngyalszamSzamRoute
   DevMemoryRoute: typeof DevMemoryRoute
   DevRoxyRoute: typeof DevRoxyRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -1122,6 +1135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevMemoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/angyalszam/$szam': {
+      id: '/angyalszam/$szam'
+      path: '/angyalszam/$szam'
+      fullPath: '/angyalszam/$szam'
+      preLoaderRoute: typeof AngyalszamSzamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/suppression': {
       id: '/lovable/email/suppression'
       path: '/lovable/email/suppression'
@@ -1228,6 +1248,7 @@ const rootRouteChildren: RootRouteChildren = {
   TranzitokRoute: TranzitokRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
+  AngyalszamSzamRoute: AngyalszamSzamRoute,
   DevMemoryRoute: DevMemoryRoute,
   DevRoxyRoute: DevRoxyRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
