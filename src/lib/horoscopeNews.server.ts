@@ -667,6 +667,39 @@ function cleanHoroscopeNewsHeading(value: unknown): string | undefined {
   return cleaned ? cleaned.charAt(0).toLocaleUpperCase("hu-HU") + cleaned.slice(1) : undefined;
 }
 
+function sourceOverview(source: unknown): string | undefined {
+  if (!source || typeof source !== "object") return undefined;
+  const overview = (source as Record<string, unknown>).overview;
+  return typeof overview === "string" && overview.trim() ? overview.trim() : undefined;
+}
+
+async function translateOverviewFaithfully(opts: {
+  overview: string;
+  period: HoroscopePeriodHU;
+  signName: string;
+}): Promise<string | undefined> {
+  const { aiJSON } = await import("./ai.server");
+  const result = await aiJSON<LeadTranslationAI>({
+    system: [
+      "Angolról magyarra fordítasz.",
+      "A teljes forrásszöveget mondatról mondatra, azonos sorrendben fordítsd le.",
+      "Ne adj hozzá, ne hagyj ki, ne értelmezz át és ne helyettesíts semmit csillagjegy-sablonnal.",
+      "Természetes magyar mondatokat írj, tegező formában.",
+      "Csak a translation mezőt tartalmazó JSON-t add vissza.",
+    ].join("\n"),
+    user: `Időszak: ${PERIOD_LABEL[opts.period]}\nJegy: ${opts.signName}\nFordítandó szöveg:\n${opts.overview}`,
+    schemaName: "HoroscopeOverviewTranslationHU",
+    schema: LEAD_TRANSLATION_SCHEMA as unknown as Record<string, unknown>,
+    readingType: `horoscope-overview:${opts.period}`,
+    providerPreference: "openai_first",
+    lovableModel: HOROSCOPE_NEWS_MODEL,
+    openaiModel: process.env.OPENAI_HOROSCOPE_NEWS_MODEL ?? "gpt-5.2",
+    allowLovableFallback: true,
+    timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
+  });
+  return result.ok ? cleanHoroscopeNewsText(result.data?.translation) : undefined;
+}
+
 function normalizeArticle(
   raw: ArticleAI,
   meta: {
