@@ -171,6 +171,11 @@ export function Layout({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link to="/numerologia" className="hover:text-gold">
+                  Számmisztika útmutató
+                </Link>
+              </li>
+              <li>
                 <Link to="/rolunk" className="hover:text-gold">
                   Rólunk
                 </Link>
