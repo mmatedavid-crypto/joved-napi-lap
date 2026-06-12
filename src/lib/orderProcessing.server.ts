@@ -137,6 +137,34 @@ async function runReadingForOrder(args: {
       name: (payload.name as string | undefined) ?? null,
     });
   }
+  if (args.productSlug === "personal_yearly") {
+    const { generatePersonalYearlyReport } = await import(
+      "@/lib/products/personalYearly.server"
+    );
+    const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
+    return generatePersonalYearlyReport({
+      birthDate: String(payload.birthDate ?? ""),
+      birthTime: (payload.birthTime as string | undefined) ?? null,
+      birthPlace: String(payload.birthPlace ?? ""),
+      area: String(payload.area ?? "altalanos"),
+      question: (payload.question as string | undefined) ?? null,
+      name: (payload.name as string | undefined) ?? null,
+    });
+  }
+  if (args.productSlug === "transits_personal") {
+    const { generateTransitsPersonalReport } = await import(
+      "@/lib/products/transitsPersonal.server"
+    );
+    const payload = (args.inputPayload ?? {}) as Record<string, unknown>;
+    return generateTransitsPersonalReport({
+      birthDate: String(payload.birthDate ?? ""),
+      birthTime: (payload.birthTime as string | undefined) ?? null,
+      birthPlace: String(payload.birthPlace ?? ""),
+      area: String(payload.area ?? "altalanos"),
+      question: (payload.question as string | undefined) ?? null,
+      name: (payload.name as string | undefined) ?? null,
+    });
+  }
   const { generatePaidOrderReading } = await import("@/lib/paidReadings.server");
   return generatePaidOrderReading({
     productSlug: args.productSlug,

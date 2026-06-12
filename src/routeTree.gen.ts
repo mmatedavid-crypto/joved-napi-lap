@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VedikusAsztrologiaRouteImport } from './routes/vedikus-asztrologia'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as TranzitokRouteImport } from './routes/tranzitok'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as TarotRouteImport } from './routes/tarot'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
@@ -34,6 +35,7 @@ import { Route as JikingRouteImport } from './routes/jiking'
 import { Route as ImpresszumRouteImport } from './routes/impresszum'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
+import { Route as EvesHoroszkopRouteImport } from './routes/eves-horoszkop'
 import { Route as ElallasiTajekoztatoRouteImport } from './routes/elallasi-tajekoztato'
 import { Route as DontesElottRouteImport } from './routes/dontes-elott'
 import { Route as BejelentkezesRouteImport } from './routes/bejelentkezes'
@@ -70,6 +72,11 @@ const VedikusAsztrologiaRoute = VedikusAsztrologiaRouteImport.update({
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
   id: '/unsubscribe',
   path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TranzitokRoute = TranzitokRouteImport.update({
+  id: '/tranzitok',
+  path: '/tranzitok',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarotNapiLapRoute = TarotNapiLapRouteImport.update({
@@ -186,6 +193,11 @@ const HoroszkopRoute = HoroszkopRouteImport.update({
 const HaromLapRoute = HaromLapRouteImport.update({
   id: '/harom-lap',
   path: '/harom-lap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvesHoroszkopRoute = EvesHoroszkopRouteImport.update({
+  id: '/eves-horoszkop',
+  path: '/eves-horoszkop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElallasiTajekoztatoRoute = ElallasiTajekoztatoRouteImport.update({
@@ -342,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -365,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -396,6 +410,7 @@ export interface FileRoutesByTo {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -419,6 +434,7 @@ export interface FileRoutesByTo {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -451,6 +467,7 @@ export interface FileRoutesById {
   '/bejelentkezes': typeof BejelentkezesRoute
   '/dontes-elott': typeof DontesElottRoute
   '/elallasi-tajekoztato': typeof ElallasiTajekoztatoRoute
+  '/eves-horoszkop': typeof EvesHoroszkopRoute
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
@@ -474,6 +491,7 @@ export interface FileRoutesById {
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
+  '/tranzitok': typeof TranzitokRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/dev/memory': typeof DevMemoryRoute
@@ -507,6 +525,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -530,6 +549,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -561,6 +581,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -584,6 +605,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -615,6 +637,7 @@ export interface FileRouteTypes {
     | '/bejelentkezes'
     | '/dontes-elott'
     | '/elallasi-tajekoztato'
+    | '/eves-horoszkop'
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
@@ -638,6 +661,7 @@ export interface FileRouteTypes {
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
+    | '/tranzitok'
     | '/unsubscribe'
     | '/vedikus-asztrologia'
     | '/dev/memory'
@@ -670,6 +694,7 @@ export interface RootRouteChildren {
   BejelentkezesRoute: typeof BejelentkezesRoute
   DontesElottRoute: typeof DontesElottRoute
   ElallasiTajekoztatoRoute: typeof ElallasiTajekoztatoRoute
+  EvesHoroszkopRoute: typeof EvesHoroszkopRoute
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRouteWithChildren
   ImpresszumRoute: typeof ImpresszumRoute
@@ -693,6 +718,7 @@ export interface RootRouteChildren {
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotRoute: typeof TarotRouteWithChildren
   TarotNapiLapRoute: typeof TarotNapiLapRoute
+  TranzitokRoute: typeof TranzitokRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
   DevMemoryRoute: typeof DevMemoryRoute
@@ -722,6 +748,13 @@ declare module '@tanstack/react-router' {
       path: '/unsubscribe'
       fullPath: '/unsubscribe'
       preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tranzitok': {
+      id: '/tranzitok'
+      path: '/tranzitok'
+      fullPath: '/tranzitok'
+      preLoaderRoute: typeof TranzitokRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tarot-napi-lap': {
@@ -883,6 +916,13 @@ declare module '@tanstack/react-router' {
       path: '/harom-lap'
       fullPath: '/harom-lap'
       preLoaderRoute: typeof HaromLapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eves-horoszkop': {
+      id: '/eves-horoszkop'
+      path: '/eves-horoszkop'
+      fullPath: '/eves-horoszkop'
+      preLoaderRoute: typeof EvesHoroszkopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elallasi-tajekoztato': {
@@ -1146,6 +1186,7 @@ const rootRouteChildren: RootRouteChildren = {
   BejelentkezesRoute: BejelentkezesRoute,
   DontesElottRoute: DontesElottRoute,
   ElallasiTajekoztatoRoute: ElallasiTajekoztatoRoute,
+  EvesHoroszkopRoute: EvesHoroszkopRoute,
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRouteWithChildren,
   ImpresszumRoute: ImpresszumRoute,
@@ -1169,6 +1210,7 @@ const rootRouteChildren: RootRouteChildren = {
   SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotRoute: TarotRouteWithChildren,
   TarotNapiLapRoute: TarotNapiLapRoute,
+  TranzitokRoute: TranzitokRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
   DevMemoryRoute: DevMemoryRoute,
