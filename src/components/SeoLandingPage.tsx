@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 
@@ -24,8 +25,10 @@ export function SeoLandingPage({
   ctaLabel: string;
   faq?: FaqItem[];
 }) {
+  const pagePath = typeof ctaTo === "string" ? undefined : undefined;
   return (
     <Layout>
+      <Breadcrumb items={[{ label: title }]} />
       <PageHeader eyebrow={eyebrow} title={title} lead={lead} />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
         {sections.map((section) => (

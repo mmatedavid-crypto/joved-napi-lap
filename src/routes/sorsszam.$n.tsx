@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
+import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { LIFE_PATH_MEANINGS_HU, LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
 
 const VALID = new Set(LIFE_PATH_NUMBERS.map(String));
@@ -23,6 +24,19 @@ export const Route = createFileRoute("/sorsszam/$n")({
         { property: "og:description", content: description },
       ],
       links: [{ rel: "canonical", href: `/sorsszam/${params.n}` }],
+      scripts: m
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify(
+                breadcrumbJsonLd([
+                  { label: "Számmisztika", href: "/numerologia" },
+                  { label: m.title, href: `/sorsszam/${params.n}` },
+                ]),
+              ),
+            },
+          ]
+        : [],
     };
   },
   notFoundComponent: () => (
@@ -59,6 +73,12 @@ function SorsszamPage() {
 
   return (
     <Layout>
+      <Breadcrumb
+        items={[
+          { label: "Számmisztika", href: "/numerologia" },
+          { label: m.title, href: `/sorsszam/${n}` },
+        ]}
+      />
       <PageHeader eyebrow={`Sorsszám ${n}`} title={m.title} lead={m.lead} />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
         <Section title="A szám alaprezgése">

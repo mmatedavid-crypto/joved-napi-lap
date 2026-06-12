@@ -53,7 +53,7 @@ function Page() {
       <PageHeader
         eyebrow="Személyes asztrológia"
         title="Személyes éves horoszkópod"
-        lead="12 hónap előrejelzés a saját születési képletedből, havi bontásban. Nem általános jegyhoroszkóp — a te natalcharthoz illesztett tranzitok."
+        lead="12 hónapos előrejelzés a saját születési képletedből, havi bontásban. Nem általános jegyhoroszkóp: a tranzitokat a te születési képletedhez illesztjük."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
