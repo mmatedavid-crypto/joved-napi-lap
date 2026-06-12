@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { allHoroscopeArticlePaths } from "@/lib/horoscopeNews";
 import { LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
 import { CARDS } from "@/data/cards";
+import { CHINESE_ANIMALS } from "@/data/chineseZodiac.hu";
+import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
 
 function xmlEscape(value: string): string {
   return value
@@ -40,6 +42,8 @@ const STATIC_PATHS = [
   "/szemelyes-30-napos-horoszkop",
   "/vedikus-asztrologia",
   "/tarot",
+  "/kinai-horoszkop",
+  "/jiking",
   "/rolunk",
   "/impresszum",
   "/aszf",
@@ -64,6 +68,16 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/tarot/${card.id}`,
             changefreq: "monthly",
             priority: "0.7",
+          })),
+          ...CHINESE_ANIMALS.map((a) => ({
+            path: `/kinai-horoszkop/${a.slug}`,
+            changefreq: "monthly",
+            priority: "0.7",
+          })),
+          ...HEXAGRAMS.map((h) => ({
+            path: `/jiking/${h.slug}`,
+            changefreq: "monthly",
+            priority: "0.6",
           })),
           ...allHoroscopeArticlePaths().map(({ path, period }) => ({
             path,
