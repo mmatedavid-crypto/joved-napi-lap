@@ -156,6 +156,11 @@ export function Layout({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link to="/tarot" className="hover:text-gold">
+                  Tarot kártya jelentések
+                </Link>
+              </li>
+              <li>
                 <Link to="/rolunk" className="hover:text-gold">
                   Rólunk
                 </Link>
