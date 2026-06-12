@@ -1,0 +1,258 @@
+// SERVER-ONLY. A "Tranzitok — személyes elemzés" termék Roxy + AI flow-ja.
+// 90 napos időablak, a /transits Roxy endpointra épülve, fallback a
+// /forecast/timeline-re, ha a tranzit-specifikus végpont nem felel.
+
+import { aiJSON } from "@/lib/ai.server";
+
+const LEGAL_FOOTER =
+  "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
+
+const AREA_LABEL: Record<string, string> = {
+  szerelem: "Szerelem / párkapcsolat",
+  munka: "Munka / karrier",
+  penz: "Pénz / döntések",
+  altalanos: "Általános — minden életterület",
+};
+
+export type TransitsPersonalInput = {
+  birthDate: string;
+  birthTime?: string | null;
+  birthPlace: string;
+  area: string;
+  question?: string | null;
+  name?: string | null;
+};
+
+type LocationHit = {
+  name?: string;
+  display?: string;
+  latitude?: number;
+  longitude?: number;
+  timezone?: string;
+  country?: string;
+};
+
+function pickLocation(raw: unknown): LocationHit | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+  const cities = (obj.cities ?? obj.results ?? obj.data) as unknown;
+  if (Array.isArray(cities) && cities.length > 0) {
+    const c = cities[0] as Record<string, unknown>;
+    return {
+      name: typeof c.name === "string" ? c.name : undefined,
+      display: typeof c.display === "string" ? c.display : undefined,
+      latitude: typeof c.latitude === "number" ? c.latitude : Number(c.latitude),
+      longitude: typeof c.longitude === "number" ? c.longitude : Number(c.longitude),
+      timezone: typeof c.timezone === "string" ? c.timezone : undefined,
+      country: typeof c.country === "string" ? c.country : undefined,
+    };
+  }
+  return null;
+}
+
+async function safeCallRoxy<T = unknown>(opts: {
+  endpoint: string;
+  method?: "GET" | "POST";
+  body?: Record<string, unknown>;
+  cacheKey: string;
+  ttlSeconds: number | null;
+}): Promise<T | null> {
+  try {
+    const { callRoxy } = await import("@/lib/roxy.server");
+    const r = await callRoxy<T>(opts);
+    return r.ok ? (r.data ?? null) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function generateTransitsPersonalReport(
+  input: TransitsPersonalInput,
+): Promise<{ title: string; body: string; raw?: Record<string, unknown> }> {
+  const today = new Date();
+  const startDate = today.toISOString().slice(0, 10);
+  const end = new Date(today.getTime() + 90 * 86_400_000);
+  const endDate = end.toISOString().slice(0, 10);
+  const birthTime = input.birthTime || "12:00";
+  const approximate = !input.birthTime;
+  const areaLabel = AREA_LABEL[input.area] ?? "Általános — minden életterület";
+
+  const locRaw = await safeCallRoxy<unknown>({
+    endpoint: `/location/search?q=${encodeURIComponent(input.birthPlace)}`,
+    method: "GET",
+    cacheKey: `loc:${input.birthPlace.toLowerCase().trim()}`,
+    ttlSeconds: 60 * 60 * 24 * 30,
+  });
+  const location = pickLocation(locRaw);
+
+  const natalBody: Record<string, unknown> = {
+    birthDate: input.birthDate,
+    birthTime,
+    name: input.name ?? undefined,
+  };
+  if (location?.latitude && location?.longitude) {
+    natalBody.latitude = location.latitude;
+    natalBody.longitude = location.longitude;
+  }
+  if (location?.timezone) natalBody.timezone = location.timezone;
+  const natal = await safeCallRoxy<unknown>({
+    endpoint: "/astrology/natal-chart",
+    method: "POST",
+    body: natalBody,
+    cacheKey: `natal:${input.birthDate}:${birthTime}:${input.birthPlace.toLowerCase().trim()}`,
+    ttlSeconds: 60 * 60 * 24 * 365,
+  });
+
+  let transits = await safeCallRoxy<unknown>({
+    endpoint: "/transits",
+    method: "POST",
+    body: {
+      birthDate: input.birthDate,
+      birthTime,
+      latitude: location?.latitude,
+      longitude: location?.longitude,
+      timezone: location?.timezone,
+      startDate,
+      endDate,
+    },
+    cacheKey: `transits90:${input.birthDate}:${birthTime}:${input.birthPlace.toLowerCase().trim()}:${startDate}`,
+    ttlSeconds: 60 * 60 * 12,
+  });
+  if (!transits) {
+    transits = await safeCallRoxy<unknown>({
+      endpoint: "/forecast/timeline",
+      method: "POST",
+      body: {
+        birthDate: input.birthDate,
+        birthTime,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
+        timezone: location?.timezone,
+        startDate,
+        endDate,
+      },
+      cacheKey: `forecast90:${input.birthDate}:${birthTime}:${input.birthPlace.toLowerCase().trim()}:${startDate}`,
+      ttlSeconds: 60 * 60 * 12,
+    });
+  }
+
+  const userInputSummary = [
+    `Név: ${input.name?.trim() || "—"}`,
+    `Születési dátum: ${input.birthDate}`,
+    `Születési idő: ${input.birthTime || "nincs megadva (12:00 közelítés)"}`,
+    `Születési hely: ${input.birthPlace}`,
+    location
+      ? `Helyszín feloldva: ${location.display ?? location.name ?? ""} (${location.latitude}, ${location.longitude}, ${location.timezone ?? "ismeretlen tz"})`
+      : "Helyszín nem feloldható — közelítés.",
+    `Életterület fókusz: ${areaLabel}`,
+    input.question?.trim() ? `Kérdés: ${input.question.trim()}` : "Kérdés: nincs megadva",
+    `Időablak: ${startDate} -> ${endDate} (90 nap)`,
+  ].join("\n");
+
+  const system = [
+    "Te magyar nyelvű asztrológiai fordító vagy a Jövőd.hu-nak.",
+    "FELADAT: a megkapott angol tranzit-forrásadatokat magyarra fordítod és személyes tranzit-elemzéssé szerkeszted.",
+    'TILTÁS: nem teszel hozzá saját jóslatot, nem találsz ki tranzitokat, nem ígérsz biztos jövőt. Ha valami nincs a forrásban: "a forrás erről nem ad külön jelzést".',
+    "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács.",
+    "FORMA: szigorúan ezekkel a magyar fejezetcímekkel, ## szinten, ebben a sorrendben:",
+    "## A jelenleg ható tranzitok",
+    "## Bolygó-bolygó kapcsolatok",
+    "## Feszültségi pontok (90 napon belül)",
+    "## Kapu-pontok és lehetőségek",
+    "## Hatás a választott életterületre",
+    "## Mire figyelj és mit időzíts",
+    "## Záró üzenet",
+    "A 'Bolygó-bolygó kapcsolatok' szakaszban sorold fel a legfontosabb 3-5 tranzitot (pl. Szaturnusz quadrátban a natal Nappal), és mindegyiknél írj 2-3 mondat magyar magyarázatot.",
+    `Ha a születési idő közelítés volt (${approximate ? "igen" : "nem"}), egy mondatban jelezd.`,
+  ].join("\n");
+
+  const user = [
+    "FELHASZNÁLÓI ADATOK:",
+    userInputSummary,
+    "",
+    "ROXY NATAL CHART (nyers JSON, angol):",
+    JSON.stringify(natal).slice(0, 12_000),
+    "",
+    "ROXY TRANZIT FORRÁS (nyers JSON, angol — /transits vagy /forecast/timeline 90 napra):",
+    JSON.stringify(transits).slice(0, 20_000),
+    "",
+    "Add vissza a magyar riportot Markdown formában. Ne tegyél hozzá címet a riport elejére — én adok hozzá külön címet.",
+  ].join("\n");
+
+  const ai = await aiJSON<{ markdown: string }>({
+    system,
+    user,
+    schemaName: "transits_personal_report",
+    schema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["markdown"],
+      properties: { markdown: { type: "string" } },
+    },
+    readingType: "transits_personal",
+    timeoutMs: 90_000,
+  });
+
+  const reportMd = ai.ok && ai.data?.markdown ? ai.data.markdown.trim() : "";
+  const fallbackBody = reportMd
+    ? reportMd
+    : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
+
+  const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
+  const title = `Személyes tranzit-elemzésed`;
+  const body = [
+    `# ${title}`,
+    "",
+    `${greeting}ez a tranzit-elemzés a saját születési képletedre épül, és a következő 90 napra (${startDate} → ${endDate}) szól.`,
+    `Életterület fókusz: **${areaLabel}**.`,
+    "",
+    fallbackBody,
+    "",
+    "---",
+    `_${LEGAL_FOOTER}_`,
+  ].join("\n");
+
+  return {
+    title,
+    body,
+    raw: {
+      location: locRaw ?? null,
+      natal: natal ?? null,
+      transits: transits ?? null,
+      ai_model: ai.meta?.model ?? null,
+      ai_fallback: ai.meta?.fallbackUsed ?? false,
+    },
+  };
+}
+
+function buildFallbackReport(opts: {
+  input: TransitsPersonalInput;
+  areaLabel: string;
+  startDate: string;
+  endDate: string;
+  location: LocationHit | null;
+}): string {
+  const { input, areaLabel, startDate, endDate, location } = opts;
+  return [
+    "## A jelenleg ható tranzitok",
+    "A forrásból most nem érkezett részletes tranzit-adat, ezért nem fogalmazunk meg konkrét jóslatot.",
+    "",
+    "## Bolygó-bolygó kapcsolatok",
+    "A forrás erről most nem ad külön jelzést.",
+    "",
+    "## Feszültségi pontok (90 napon belül)",
+    `Időszak: ${startDate} → ${endDate}. A forrás erről most nem ad külön jelzést.`,
+    "",
+    "## Kapu-pontok és lehetőségek",
+    "A forrás erről most nem ad külön jelzést.",
+    "",
+    "## Hatás a választott életterületre",
+    `Életterület fókusz: **${areaLabel}**.`,
+    "",
+    "## Mire figyelj és mit időzíts",
+    `Születési adatok: ${input.birthDate}${input.birthTime ? `, ${input.birthTime}` : ""}, ${input.birthPlace}${location ? ` (feloldva)` : ""}.`,
+    "",
+    "## Záró üzenet",
+    "A tranzitok nem dolgoznak helyetted. Csak a tempót mutatják meg, amiben te döntesz.",
+  ].join("\n");
+}
