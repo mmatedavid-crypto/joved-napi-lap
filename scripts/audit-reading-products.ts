@@ -305,9 +305,9 @@ if (
   !paidServer.includes("issues: quality.issues") ||
   !paidServer.includes("hasPaidSafetyFrame") ||
   !paidServer.includes("missing_safety_frame") ||
-  !paidServer.includes("önismereti és szimbolikus keret") ||
-  !paidServer.includes("az első két szövegrészben nevezd meg") ||
-  !paidServer.includes("ne kerülje meg ezt a konkrétumot")
+  !paidServer.includes("önismereti") ||
+  !paidServer.includes("Minden bekezdés mondjon valami újat és konkrétat") ||
+  !paidServer.includes("Ne használj Markdown-jeleket vagy emojit")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
 }

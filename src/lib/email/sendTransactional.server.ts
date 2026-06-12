@@ -49,25 +49,27 @@ export async function enqueueTransactionalEmail(
     return { ok: false, error: "email_suppressed" };
   }
 
-  // Unsubscribe token (one per email)
+  // The delivery API requires an unsubscribe token for every app email,
+  // including essential order/access messages.
   let unsubscribeToken: string | undefined;
-  if (!essentialTransactional) {
-    const { data: existingTok } = await supabaseAdmin
-      .from("email_unsubscribe_tokens")
-      .select("token, used_at")
-      .eq("email", normalized)
-      .maybeSingle();
-    if (existingTok && !existingTok.used_at) {
-      unsubscribeToken = existingTok.token;
-    } else if (existingTok && existingTok.used_at) {
+  const { data: existingTok } = await supabaseAdmin
+    .from("email_unsubscribe_tokens")
+    .select("token, used_at")
+    .eq("email", normalized)
+    .maybeSingle();
+  if (existingTok && !existingTok.used_at) {
+    unsubscribeToken = existingTok.token;
+  } else if (existingTok && existingTok.used_at) {
+    if (!essentialTransactional) {
       return { ok: false, error: "email_suppressed" };
-    } else {
-      unsubscribeToken = generateToken();
-      const { error: tokErr } = await supabaseAdmin
-        .from("email_unsubscribe_tokens")
-        .insert({ email: normalized, token: unsubscribeToken });
-      if (tokErr) return { ok: false, error: `unsubscribe token: ${tokErr.message}` };
     }
+    unsubscribeToken = existingTok.token;
+  } else {
+    unsubscribeToken = generateToken();
+    const { error: tokErr } = await supabaseAdmin
+      .from("email_unsubscribe_tokens")
+      .insert({ email: normalized, token: unsubscribeToken });
+    if (tokErr) return { ok: false, error: `unsubscribe token: ${tokErr.message}` };
   }
 
   const templateData = input.templateData ?? {};
