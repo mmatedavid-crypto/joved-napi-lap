@@ -15,6 +15,7 @@ import { Route as TranzitokRouteImport } from './routes/tranzitok'
 import { Route as TarotNapiLapRouteImport } from './routes/tarot-napi-lap'
 import { Route as TarotRouteImport } from './routes/tarot'
 import { Route as SzuletesiKepletRouteImport } from './routes/szuletesi-keplet'
+import { Route as SzerencseszamokRouteImport } from './routes/szerencseszamok'
 import { Route as Szemelyes30NaposHoroszkopRouteImport } from './routes/szemelyes-30-napos-horoszkop'
 import { Route as SzammisztikaRouteImport } from './routes/szammisztika'
 import { Route as SorsszamKalkulatorRouteImport } from './routes/sorsszam-kalkulator'
@@ -94,6 +95,11 @@ const TarotRoute = TarotRouteImport.update({
 const SzuletesiKepletRoute = SzuletesiKepletRouteImport.update({
   id: '/szuletesi-keplet',
   path: '/szuletesi-keplet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SzerencseszamokRoute = SzerencseszamokRouteImport.update({
+  id: '/szerencseszamok',
+  path: '/szerencseszamok',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Szemelyes30NaposHoroszkopRoute =
@@ -388,6 +394,7 @@ export interface FileRoutesByFullPath {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
+  '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
@@ -446,6 +453,7 @@ export interface FileRoutesByTo {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
+  '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
@@ -505,6 +513,7 @@ export interface FileRoutesById {
   '/sorsszam-kalkulator': typeof SorsszamKalkulatorRoute
   '/szammisztika': typeof SzammisztikaRoute
   '/szemelyes-30-napos-horoszkop': typeof Szemelyes30NaposHoroszkopRoute
+  '/szerencseszamok': typeof SzerencseszamokRoute
   '/szuletesi-keplet': typeof SzuletesiKepletRoute
   '/tarot': typeof TarotRouteWithChildren
   '/tarot-napi-lap': typeof TarotNapiLapRoute
@@ -565,6 +574,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
+    | '/szerencseszamok'
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
@@ -623,6 +633,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
+    | '/szerencseszamok'
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
@@ -681,6 +692,7 @@ export interface FileRouteTypes {
     | '/sorsszam-kalkulator'
     | '/szammisztika'
     | '/szemelyes-30-napos-horoszkop'
+    | '/szerencseszamok'
     | '/szuletesi-keplet'
     | '/tarot'
     | '/tarot-napi-lap'
@@ -740,6 +752,7 @@ export interface RootRouteChildren {
   SorsszamKalkulatorRoute: typeof SorsszamKalkulatorRoute
   SzammisztikaRoute: typeof SzammisztikaRoute
   Szemelyes30NaposHoroszkopRoute: typeof Szemelyes30NaposHoroszkopRoute
+  SzerencseszamokRoute: typeof SzerencseszamokRoute
   SzuletesiKepletRoute: typeof SzuletesiKepletRoute
   TarotRoute: typeof TarotRouteWithChildren
   TarotNapiLapRoute: typeof TarotNapiLapRoute
@@ -801,6 +814,13 @@ declare module '@tanstack/react-router' {
       path: '/szuletesi-keplet'
       fullPath: '/szuletesi-keplet'
       preLoaderRoute: typeof SzuletesiKepletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/szerencseszamok': {
+      id: '/szerencseszamok'
+      path: '/szerencseszamok'
+      fullPath: '/szerencseszamok'
+      preLoaderRoute: typeof SzerencseszamokRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/szemelyes-30-napos-horoszkop': {
@@ -1258,6 +1278,7 @@ const rootRouteChildren: RootRouteChildren = {
   SorsszamKalkulatorRoute: SorsszamKalkulatorRoute,
   SzammisztikaRoute: SzammisztikaRoute,
   Szemelyes30NaposHoroszkopRoute: Szemelyes30NaposHoroszkopRoute,
+  SzerencseszamokRoute: SzerencseszamokRoute,
   SzuletesiKepletRoute: SzuletesiKepletRoute,
   TarotRoute: TarotRouteWithChildren,
   TarotNapiLapRoute: TarotNapiLapRoute,
