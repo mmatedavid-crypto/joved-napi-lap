@@ -224,6 +224,8 @@ export async function generatePaidOrderReading(opts: {
         deep
           ? "A body legyen jól tagolt, címsorokkal, 1800-3200 karakter között."
           : "A body legyen jól tagolt, címsorokkal, 900-1800 karakter között.",
+        "Ne használj Markdown-jeleket: ne írj ## címsort, **félkövér** jelölést, csillagokat vagy kódblokkot. A címsor külön sor legyen, alatta közvetlenül a szöveg.",
+        "Ne ismételd vissza gépiesen a kérdést, és kerüld a homályos töltelékmondatokat. Az olvasat minden része adjon új, érthető és a megadott laphoz vagy helyzethez kötött szempontot.",
         "A body végén legyen egy rövid, természetes Megjegyzés arról, hogy az olvasat önismereti és szimbolikus keret, nem orvosi, jogi vagy pénzügyi tanács.",
         "Csak JSON-t adj vissza: { title, body }.",
       ].join("\n"),

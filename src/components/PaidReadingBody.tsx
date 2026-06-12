@@ -125,13 +125,22 @@ function parsePaidReadingBody(body: string): ReadingBlock[] {
     .map((part) => {
       const lines = part
         .split(/\n+/)
-        .map((line) => line.trim())
+        .map((line) => cleanReadingMarkdown(line))
         .filter(Boolean);
       if (lines.length >= 2 && isLikelyHeading(lines[0])) {
         return { heading: lines[0], text: lines.slice(1).join("\n") };
       }
       return { text: lines.join("\n") || part };
     });
+}
+
+function cleanReadingMarkdown(value: string): string {
+  return value
+    .trim()
+    .replace(/^#{1,6}\s+/, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/^[-*]\s+/, "• ");
 }
 
 function formatDownloadedReading(
