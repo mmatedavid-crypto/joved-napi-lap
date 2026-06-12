@@ -231,7 +231,6 @@ const checks: Check[] = [
       "GuestMemoryInsightPanel",
       "recordGuestReadingMemory",
       "rememberDailyCard",
-      "rememberDrawRef",
       "rememberedDrawKeyRef",
       'readingType: "tarot"',
       'topic: "mai lap"',

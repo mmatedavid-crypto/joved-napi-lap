@@ -26,6 +26,7 @@ const ALLOWED_SERVER_IMPORT_SOURCES = [
   "src/lib/horoscopeNews.server.ts",
   "src/lib/orderProcessing.server.ts",
   "src/lib/paidReadings.server.ts",
+  "src/lib/products/",
   "src/lib/readingQuality/readingCache.server.ts",
   "src/lib/roxy.server.ts",
   "src/lib/stripe.server.ts",
