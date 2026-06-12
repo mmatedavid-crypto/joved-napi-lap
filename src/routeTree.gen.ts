@@ -28,6 +28,7 @@ import { Route as MaiLapRouteImport } from './routes/mai-lap'
 import { Route as MaiIranytuRouteImport } from './routes/mai-iranytu'
 import { Route as KristalyRouteImport } from './routes/kristaly'
 import { Route as KoszonjukRouteImport } from './routes/koszonjuk'
+import { Route as KinaiHoroszkopRouteImport } from './routes/kinai-horoszkop'
 import { Route as ImpresszumRouteImport } from './routes/impresszum'
 import { Route as HoroszkopRouteImport } from './routes/horoszkop'
 import { Route as HaromLapRouteImport } from './routes/harom-lap'
@@ -150,6 +151,11 @@ const KristalyRoute = KristalyRouteImport.update({
 const KoszonjukRoute = KoszonjukRouteImport.update({
   id: '/koszonjuk',
   path: '/koszonjuk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KinaiHoroszkopRoute = KinaiHoroszkopRouteImport.update({
+  id: '/kinai-horoszkop',
+  path: '/kinai-horoszkop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImpresszumRoute = ImpresszumRouteImport.update({
@@ -309,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -357,6 +364,7 @@ export interface FileRoutesByTo {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -406,6 +414,7 @@ export interface FileRoutesById {
   '/harom-lap': typeof HaromLapRoute
   '/horoszkop': typeof HoroszkopRouteWithChildren
   '/impresszum': typeof ImpresszumRoute
+  '/kinai-horoszkop': typeof KinaiHoroszkopRoute
   '/koszonjuk': typeof KoszonjukRoute
   '/kristaly': typeof KristalyRoute
   '/mai-iranytu': typeof MaiIranytuRoute
@@ -456,6 +465,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
+    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
@@ -504,6 +514,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
+    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
@@ -552,6 +563,7 @@ export interface FileRouteTypes {
     | '/harom-lap'
     | '/horoszkop'
     | '/impresszum'
+    | '/kinai-horoszkop'
     | '/koszonjuk'
     | '/kristaly'
     | '/mai-iranytu'
@@ -601,6 +613,7 @@ export interface RootRouteChildren {
   HaromLapRoute: typeof HaromLapRoute
   HoroszkopRoute: typeof HoroszkopRouteWithChildren
   ImpresszumRoute: typeof ImpresszumRoute
+  KinaiHoroszkopRoute: typeof KinaiHoroszkopRoute
   KoszonjukRoute: typeof KoszonjukRoute
   KristalyRoute: typeof KristalyRoute
   MaiIranytuRoute: typeof MaiIranytuRoute
@@ -766,6 +779,13 @@ declare module '@tanstack/react-router' {
       path: '/koszonjuk'
       fullPath: '/koszonjuk'
       preLoaderRoute: typeof KoszonjukRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kinai-horoszkop': {
+      id: '/kinai-horoszkop'
+      path: '/kinai-horoszkop'
+      fullPath: '/kinai-horoszkop'
+      preLoaderRoute: typeof KinaiHoroszkopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/impresszum': {
@@ -997,6 +1017,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaromLapRoute: HaromLapRoute,
   HoroszkopRoute: HoroszkopRouteWithChildren,
   ImpresszumRoute: ImpresszumRoute,
+  KinaiHoroszkopRoute: KinaiHoroszkopRoute,
   KoszonjukRoute: KoszonjukRoute,
   KristalyRoute: KristalyRoute,
   MaiIranytuRoute: MaiIranytuRoute,
