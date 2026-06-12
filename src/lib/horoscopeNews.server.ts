@@ -10,7 +10,7 @@ import {
   type HoroscopePeriodHU,
 } from "./horoscopeNews";
 
-const NEWS_TRANSLATION_VERSION = "news-horo-hu-v6-faithful";
+const NEWS_TRANSLATION_VERSION = "news-horo-hu-v7-source-locked";
 const DAY_SECONDS = 60 * 60 * 24;
 const HOROSCOPE_NEWS_MODEL = process.env.LOVABLE_HOROSCOPE_NEWS_MODEL ?? "openai/gpt-5.2";
 const HOROSCOPE_NEWS_TIMEOUT_MS = Number(process.env.HOROSCOPE_NEWS_TIMEOUT_MS ?? 120_000);
@@ -210,6 +210,19 @@ type ArticleAI = {
   luckyNumber?: number;
   moonPhase?: string;
 };
+
+type LeadTranslationAI = {
+  translation: string;
+};
+
+const LEAD_TRANSLATION_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    translation: { type: "string" },
+  },
+  required: ["translation"],
+} as const;
 
 type RoxyHoroscopeSignals = {
   focusAreas: Array<"love" | "work" | "money" | "body" | "caution" | "opening">;
@@ -654,6 +667,39 @@ function cleanHoroscopeNewsHeading(value: unknown): string | undefined {
   return cleaned ? cleaned.charAt(0).toLocaleUpperCase("hu-HU") + cleaned.slice(1) : undefined;
 }
 
+function sourceOverview(source: unknown): string | undefined {
+  if (!source || typeof source !== "object") return undefined;
+  const overview = (source as Record<string, unknown>).overview;
+  return typeof overview === "string" && overview.trim() ? overview.trim() : undefined;
+}
+
+async function translateOverviewFaithfully(opts: {
+  overview: string;
+  period: HoroscopePeriodHU;
+  signName: string;
+}): Promise<string | undefined> {
+  const { aiJSON } = await import("./ai.server");
+  const result = await aiJSON<LeadTranslationAI>({
+    system: [
+      "Angolról magyarra fordítasz.",
+      "A teljes forrásszöveget mondatról mondatra, azonos sorrendben fordítsd le.",
+      "Ne adj hozzá, ne hagyj ki, ne értelmezz át és ne helyettesíts semmit csillagjegy-sablonnal.",
+      "Természetes magyar mondatokat írj, tegező formában.",
+      "Csak a translation mezőt tartalmazó JSON-t add vissza.",
+    ].join("\n"),
+    user: `Időszak: ${PERIOD_LABEL[opts.period]}\nJegy: ${opts.signName}\nFordítandó szöveg:\n${opts.overview}`,
+    schemaName: "HoroscopeOverviewTranslationHU",
+    schema: LEAD_TRANSLATION_SCHEMA as unknown as Record<string, unknown>,
+    readingType: `horoscope-overview:${opts.period}`,
+    providerPreference: "openai_first",
+    lovableModel: HOROSCOPE_NEWS_MODEL,
+    openaiModel: process.env.OPENAI_HOROSCOPE_NEWS_MODEL ?? "gpt-5.2",
+    allowLovableFallback: true,
+    timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
+  });
+  return result.ok ? cleanHoroscopeNewsText(result.data?.translation) : undefined;
+}
+
 function normalizeArticle(
   raw: ArticleAI,
   meta: {
@@ -832,10 +878,18 @@ export async function getHoroscopeNewsArticle(opts: {
     timeoutMs: HOROSCOPE_NEWS_TIMEOUT_MS,
   });
   const sourceSignals = extractRoxyHoroscopeSignals(roxy.data);
+  const overview = sourceOverview(roxy.data);
+  const faithfulLead = overview
+    ? await translateOverviewFaithfully({
+        overview,
+        period: opts.period,
+        signName: SIGN_HU[sign],
+      })
+    : undefined;
 
   const article =
-    translated.ok && translated.data
-      ? normalizeArticle(translated.data, {
+    translated.ok && translated.data && faithfulLead
+      ? normalizeArticle({ ...translated.data, lead: faithfulLead }, {
           period: opts.period,
           sign,
           signSlug: opts.signSlug,
@@ -854,7 +908,7 @@ export async function getHoroscopeNewsArticle(opts: {
       dateKey,
     });
     if (stale) return stale;
-    return localFallbackArticle({
+    const fallback = localFallbackArticle({
       period: opts.period,
       sign,
       signSlug: opts.signSlug,
@@ -864,6 +918,9 @@ export async function getHoroscopeNewsArticle(opts: {
       fallbackUsed: true,
       sourceSignals,
     });
+    // A Roxy-forrás elérhető volt: ilyenkor soha ne mutassunk helyi,
+    // csillagjegy-alapú sablont a forrás overview fordításaként.
+    return { ...fallback, lead: faithfulLead ?? "" };
   }
 
   await writeCache(
