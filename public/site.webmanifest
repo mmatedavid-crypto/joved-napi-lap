@@ -10,9 +10,9 @@
   "theme_color": "#181126",
   "icons": [
     {
-      "src": "/brand/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/__l5e/assets-v1/e7a03b1f-0f3b-4e01-88c0-c1c4bc3bc3ac/jovod-logo.png",
+      "sizes": "1250x1250",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

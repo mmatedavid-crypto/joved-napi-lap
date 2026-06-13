@@ -12,13 +12,15 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SITE_LEGAL } from "../lib/legal";
+import brandLogoAsset from "../assets/jovod-logo.png.asset.json";
+import brandShareAsset from "../assets/jovod-share.png.asset.json";
 
 const SITE_URL = "https://jovod.hu";
 const BRAND_NAME = "Jövőd.hu";
 const SITE_DESCRIPTION =
   "Magyar tarot, számmisztika, horoszkóp és önismereti olvasatok egy csendes napi rituáléhoz.";
-const BRAND_LOGO_URL = `${SITE_URL}/brand/logo.svg`;
-const BRAND_OG_IMAGE_URL = `${SITE_URL}/brand/og-image.svg`;
+const BRAND_LOGO_URL = `${SITE_URL}${brandLogoAsset.url}`;
+const BRAND_OG_IMAGE_URL = `${SITE_URL}${brandShareAsset.url}`;
 
 function NotFoundComponent() {
   return (
@@ -116,9 +118,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         property: "og:image",
         content: BRAND_OG_IMAGE_URL,
       },
-      { property: "og:image:type", content: "image/svg+xml" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1536" },
+      { property: "og:image:height", content: "1024" },
       { property: "og:image:alt", content: "Jövőd.hu logó és márkakép" },
       {
         name: "twitter:image",
@@ -130,8 +132,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
     links: [
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "apple-touch-icon", href: "/brand/logo.svg" },
+      { rel: "icon", href: brandLogoAsset.url, type: "image/png" },
+      { rel: "apple-touch-icon", href: brandLogoAsset.url },
       { rel: "manifest", href: "/site.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

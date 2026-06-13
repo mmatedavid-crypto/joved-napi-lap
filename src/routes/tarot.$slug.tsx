@@ -54,7 +54,10 @@ export const Route = createFileRoute("/tarot/$slug")({
               "@type": "Organization",
               name: "Jövőd.hu",
               url: SITE_URL,
-              logo: { "@type": "ImageObject", url: `${SITE_URL}/brand/logo.svg` },
+              logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/__l5e/assets-v1/e7a03b1f-0f3b-4e01-88c0-c1c4bc3bc3ac/jovod-logo.png`,
+              },
             },
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
           }),
