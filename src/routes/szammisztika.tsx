@@ -13,11 +13,10 @@ import {
 } from "@/lib/readingQuality/numerologyEngine";
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
-import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
-import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 
 export const Route = createFileRoute("/szammisztika")({
   head: () => ({
@@ -67,7 +66,6 @@ function Page() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QualityReading | null>(null);
   const [profile, setProfile] = useState<NumerologyProfile | null>(null);
-  const [paywall, setPaywall] = useState(false);
 
   async function fetchReading(d: string, nm?: string, cn?: string, remember = false) {
     setLoading(true);
@@ -203,24 +201,17 @@ function Page() {
             <Section eyebrow="Egy mondatban">
               <em>{result.oneSentence}</em>
             </Section>
-            <div className="text-center pt-4 border-t border-[oklch(0.78_0.10_80/0.15)] mt-2">
-              <div className="text-sm text-ivory/70 mb-2">
-                Teljes numerológiai életút elemzést kérsz?
-              </div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>
-                {productCtaLabel("Életút elemzés", "szammisztika_eletut")}
-              </button>
-            </div>
+            <SmartReadingFollowup
+              intent="numerology"
+              readingType="numerology"
+              topic={profile ? `${profile.lifePathNumber}-es sorsszám` : undefined}
+              situation={profile ? `személyes év: ${profile.personalYearNumber}` : undefined}
+              sourceRoute="/szammisztika"
+              inputPayload={{ dob, name, callName, preferredName: callName }}
+            />
           </div>
         )}
       </div>
-      <PaywallDialog
-        open={paywall}
-        onOpenChange={setPaywall}
-        productSlug="szammisztika_eletut"
-        sourceRoute="/szammisztika"
-        inputPayload={{ dob, name, callName, preferredName: callName }}
-      />
     </Layout>
   );
 }

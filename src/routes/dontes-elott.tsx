@@ -6,6 +6,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardBack, CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 import { roxyIchingDailyCast } from "@/lib/roxy.functions";
 import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { normalizeRoxyIching } from "@/lib/roxyNormalize";
@@ -13,10 +14,8 @@ import { CARDS, type TarotCard } from "@/data/cards";
 import { hexHU } from "@/lib/iching.hu";
 import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
-import { PaywallDialog } from "@/components/PaywallDialog";
-import { productCtaLabel } from "@/lib/products";
 import { saveReadingMemory } from "@/lib/readingMemory.functions";
-import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dontes-elott")({
@@ -67,7 +66,6 @@ function Page() {
   const [ichingFailed, setIchingFailed] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
-  const [paywall, setPaywall] = useState(false);
   const saveMemory = useServerFn(saveReadingMemory);
 
   async function draw() {
@@ -385,33 +383,26 @@ function Page() {
             >
               Új húzás
             </button>
-            <div className="mt-6 border-t border-[oklch(0.78_0.10_80/0.15)] pt-6">
-              <div className="text-sm text-ivory/70 mb-2">
-                Komplex döntéselőkészítő elemzést kérsz?
-              </div>
-              <button className="btn-gold" onClick={() => setPaywall(true)}>
-                {productCtaLabel("Komplex elemzés", "dontes_komplex")}
-              </button>
-            </div>
           </div>
         )}
+        {(slots || hex) && (
+          <SmartReadingFollowup
+            intent="decision"
+            readingType="decision"
+            topic={q || cat}
+            situation={cat}
+            question={q}
+            sourceRoute="/dontes-elott"
+            inputPayload={{
+              q,
+              cat,
+              mode,
+              cards: slots?.map((s) => localCardFromSlot(s).name),
+              hex: hex?.name,
+            }}
+          />
+        )}
       </div>
-      <PaywallDialog
-        open={paywall}
-        onOpenChange={setPaywall}
-        productSlug="dontes_komplex"
-        sourceRoute="/dontes-elott"
-        inputPayload={{
-          q,
-          cat,
-          mode,
-          cards: slots?.map((s) => localCardFromSlot(s).name),
-          hex: hex?.name,
-          memoryContext:
-            getGuestReadingContext({ readingType: "decision", topic: q || cat, situation: cat })
-              .contextText || undefined,
-        }}
-      />
     </Layout>
   );
 }

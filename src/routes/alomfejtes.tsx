@@ -7,10 +7,9 @@ import { aiDreamHU, type DreamHU } from "@/lib/roxyTranslate.functions";
 import { dreamTextToSlug } from "@/lib/roxyNormalize";
 import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
-import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
-import { productCtaLabel } from "@/lib/products";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
@@ -54,7 +53,6 @@ function Page() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<DreamHU | null>(null);
   const [noSymbol, setNoSymbol] = useState(false);
-  const [paywall, setPaywall] = useState(false);
   const [memoryNote, setMemoryNote] = useState("");
 
   async function run(slug: string) {
@@ -252,35 +250,18 @@ function Page() {
                 </Section>
               )}
             </div>
-            <div className="text-center pt-2">
-              <button className="btn-gold" onClick={() => setPaywall(true)}>
-                {productCtaLabel("Rövid személyes álomfejtés", "alomfejtes_rovid")}
-              </button>
-            </div>
+            <SmartReadingFollowup
+              intent="dream"
+              readingType="dream"
+              topic={result.title}
+              situation={emotion}
+              question={text}
+              sourceRoute="/alomfejtes"
+              inputPayload={{ title: result.title, text, emotion }}
+            />
           </div>
         )}
       </div>
-      <PaywallDialog
-        open={paywall}
-        onOpenChange={setPaywall}
-        productSlug="alomfejtes_rovid"
-        sourceRoute="/alomfejtes"
-        inputPayload={
-          result
-            ? {
-                title: result.title,
-                text,
-                emotion,
-                memoryContext:
-                  getGuestReadingContext({
-                    readingType: "dream",
-                    topic: result.title,
-                    situation: emotion,
-                  }).contextText || undefined,
-              }
-            : { text, emotion }
-        }
-      />
     </Layout>
   );
 }

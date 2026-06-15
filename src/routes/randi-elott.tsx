@@ -6,13 +6,12 @@ import { PageHeader, Section } from "@/components/Section";
 import { CardFace } from "@/components/TarotCard";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { CARDS, type TarotCard } from "@/data/cards";
-import { PaywallDialog } from "@/components/PaywallDialog";
-import { productCtaLabel } from "@/lib/products";
 import { saveReadingMemory } from "@/lib/readingMemory.functions";
-import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/randi-elott")({
@@ -57,7 +56,6 @@ function Page() {
   const [slots, setSlots] = useState<TarotSlot[] | null>(null);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
-  const [paywall, setPaywall] = useState(false);
   const drawCards = useServerFn(aiTarotDrawHU);
   const saveMemory = useServerFn(saveReadingMemory);
 
@@ -270,19 +268,23 @@ function Page() {
                 </div>
               )}
             </div>
-            <div className="surface p-5">
-              <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)] mb-1">
-                Részletes elemzés
-              </div>
-              <div className="font-display text-xl text-ivory">Párkapcsolat — mély elemzés</div>
-              <p className="font-editorial text-ivory/60 mt-1">
-                Mélyebb kapcsolati olvasat általában néhány percen belül, email értesítéssel és
-                közvetlen rendelési hozzáféréssel.
-              </p>
-              <button className="btn-gold mt-3" onClick={() => setPaywall(true)}>
-                {productCtaLabel("Megrendelem", "parkapcsolat_elemzes")}
-              </button>
-            </div>
+            <SmartReadingFollowup
+              intent="love"
+              readingType="love"
+              topic={q || sit}
+              situation={sit}
+              question={q}
+              sourceRoute="/randi-elott"
+              inputPayload={{
+                myName,
+                hisName,
+                myDob,
+                hisDob,
+                sit,
+                q,
+                cards: slots.map((s) => localCardFromSlot(s).name),
+              }}
+            />
             <div className="text-center">
               <button className="btn-ghost-gold" onClick={() => setSlots(null)}>
                 Új húzás
@@ -291,24 +293,6 @@ function Page() {
           </>
         )}
       </div>
-      <PaywallDialog
-        open={paywall}
-        onOpenChange={setPaywall}
-        productSlug="parkapcsolat_elemzes"
-        sourceRoute="/randi-elott"
-        inputPayload={{
-          myName,
-          hisName,
-          myDob,
-          hisDob,
-          sit,
-          q,
-          cards: slots?.map((s) => localCardFromSlot(s).name),
-          memoryContext:
-            getGuestReadingContext({ readingType: "love", topic: q || sit, situation: sit })
-              .contextText || undefined,
-        }}
-      />
     </Layout>
   );
 }

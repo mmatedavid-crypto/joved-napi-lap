@@ -19,6 +19,7 @@ import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 
 export const Route = createFileRoute("/mai-lap")({
   head: () => ({
@@ -219,18 +220,20 @@ function MaiLap() {
                   </>
                 )}
                 <div className="pt-3 border-t border-[oklch(0.78_0.10_80/0.15)] mt-4">
-                  <div className="text-sm text-ivory/70 mb-2">
-                    Mélyebb, személyre szabott üzenetet szeretnél?
-                  </div>
-                  <button
-                    className="btn-gold"
-                    onClick={() => {
-                      setPaywallProduct("napi_lap_ai");
-                      setPaywallOpen(true);
+                  <SmartReadingFollowup
+                    intent="daily"
+                    readingType="tarot"
+                    topic="mai lap"
+                    situation={reversed ? "fordított lap" : "álló lap"}
+                    question="Mire figyeljek ma?"
+                    sourceRoute="/mai-lap"
+                    inputPayload={{
+                      cardId: card.id,
+                      cardName: card.name,
+                      question: "Mire figyeljek ma?",
+                      category: "mai lap",
                     }}
-                  >
-                    {productCtaLabel("Kérek személyes olvasatot", "napi_lap_ai")}
-                  </button>
+                  />
                   {alreadyDrawnToday && (
                     <div className="mt-4 rounded-md border border-[oklch(0.78_0.10_80/0.16)] p-4">
                       <div className="text-sm text-ivory/72">
