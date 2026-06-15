@@ -77,6 +77,31 @@ const checks: StaticSafetyCheck[] = [
 
 const failures: string[] = [];
 
+const publicUiFiles = [
+  "src/components/ui/dialog.tsx",
+  "src/components/ui/sheet.tsx",
+  "src/components/ui/pagination.tsx",
+  "src/components/ui/carousel.tsx",
+];
+
+for (const file of publicUiFiles) {
+  const body = readFileSync(file, "utf8");
+  for (const forbidden of [
+    />Close</,
+    />Previous</,
+    />Next</,
+    />Previous slide</,
+    />Next slide</,
+    />More pages</,
+    /aria-label="Go to previous page"/,
+    /aria-label="Go to next page"/,
+  ]) {
+    if (forbidden.test(body)) {
+      failures.push(`${file}: public UI accessibility text must be Hungarian: ${forbidden}`);
+    }
+  }
+}
+
 for (const check of checks) {
   const body = readFileSync(check.file, "utf8");
 
