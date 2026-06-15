@@ -289,6 +289,36 @@ const checks: Check[] = [
     excludes: ['console.error("checkout.session.completed for unknown session:", sessionId)'],
   },
   {
+    name: "homepage daily briefing never displays raw provider or AI errors",
+    file: "src/components/PersonalDailyBriefing.tsx",
+    includes: [
+      "SAFE_DAILY_BRIEFING_ERROR",
+      "setError(SAFE_DAILY_BRIEFING_ERROR)",
+      "Most nem tudtam összeállítani a mai olvasatot",
+    ],
+    excludes: ["setError(\n        res.message ??", "setError(res.message"],
+  },
+  {
+    name: "daily briefing server returns a stable public failure message",
+    file: "src/lib/roxy.functions.ts",
+    includes: [
+      "PERSONAL_DAILY_BRIEFING_ERROR",
+      "message: PERSONAL_DAILY_BRIEFING_ERROR",
+      "Most nem tudtam összeállítani a mai olvasatot",
+    ],
+    excludes: ['message: ai.error ?? "AI hiba"', 'message: "AI hiba"'],
+  },
+  {
+    name: "shared tarot AI readings never expose model or guard diagnostics",
+    file: "src/lib/roxy.functions.ts",
+    includes: [
+      "TAROT_AI_READING_ERROR",
+      "message: TAROT_AI_READING_ERROR",
+      "Most nem sikerült elkészíteni az olvasatot",
+    ],
+    excludes: ['message: guard.issues.join("; ")'],
+  },
+  {
     name: "withdrawal page gives clear recovery steps for paid delivery issues",
     file: "src/routes/elallasi-tajekoztato.tsx",
     includes: [

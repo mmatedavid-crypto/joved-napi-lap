@@ -392,6 +392,9 @@ export type PersonalBriefingHU = {
   crystalLine?: string;
 };
 
+const PERSONAL_DAILY_BRIEFING_ERROR =
+  "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.";
+
 export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
@@ -514,7 +517,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           cached: false,
           fallbackUsed: true,
           briefing: null,
-          message: "Most nem értem el a háttértudást.",
+          message: PERSONAL_DAILY_BRIEFING_ERROR,
         };
       }
 
@@ -587,7 +590,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           cached: false,
           fallbackUsed: true,
           briefing: null,
-          message: ai.error ?? "AI hiba",
+          message: PERSONAL_DAILY_BRIEFING_ERROR,
         };
       }
 
@@ -598,7 +601,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
           cached: false,
           fallbackUsed: true,
           briefing: null,
-          message: "Most nem sikerült természetes magyar olvasatot készíteni.",
+          message: PERSONAL_DAILY_BRIEFING_ERROR,
         };
       }
 
@@ -667,6 +670,9 @@ export type TarotReadingHU = {
   them?: string;
   cardMessage?: string;
 };
+
+const TAROT_AI_READING_ERROR =
+  "Most nem sikerült elkészíteni az olvasatot. Próbáld újra egy pillanat múlva.";
 
 const TarotCardInput = z.object({
   id: z.string().min(1).max(64),
@@ -895,11 +901,11 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       });
 
       if (!ai.ok || !ai.data) {
-        return { ok: false, cached: false, reading: null, message: ai.error ?? "AI hiba" };
+        return { ok: false, cached: false, reading: null, message: TAROT_AI_READING_ERROR };
       }
       const guard = guardQualityReading(ai.data, [data.spread]);
       if (!guard.ok) {
-        return { ok: false, cached: false, reading: null, message: guard.issues.join("; ") };
+        return { ok: false, cached: false, reading: null, message: TAROT_AI_READING_ERROR };
       }
 
       // Map sections back to legacy TarotReadingHU shape so the UI files

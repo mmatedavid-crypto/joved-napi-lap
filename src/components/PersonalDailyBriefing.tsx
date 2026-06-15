@@ -26,6 +26,9 @@ import { productCtaLabel } from "@/lib/products";
 
 type Profile = { name?: string; dob?: string; sign?: string };
 
+const SAFE_DAILY_BRIEFING_ERROR =
+  "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.";
+
 type StoredBriefing = PersonalBriefingHU & {
   generatedFor: string;
   lifePathNum: number;
@@ -152,9 +155,7 @@ export function PersonalDailyBriefing() {
     });
 
     if (!res.ok || !res.briefing) {
-      setError(
-        res.message ?? "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.",
-      );
+      setError(SAFE_DAILY_BRIEFING_ERROR);
       setLoading(false);
       trackEvent("roxy_fallback_used", { domain: "daily_briefing" });
       return;
