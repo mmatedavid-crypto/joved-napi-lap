@@ -257,6 +257,12 @@ const checks: Check[] = [
       "később is visszanézheted",
       "kimásolhatod vagy letöltheted",
       "Mentéskor a fájl tartalmazza a címet",
+      "ReadingUseGuide",
+      "Olvasási iránytű",
+      "Először azt a mondatot keresd",
+      "Olvasd vissza azt a részt",
+      "Rendelés alapján visszanézzük",
+      "visszaviszed a saját helyzetedbe",
     ],
   },
   {

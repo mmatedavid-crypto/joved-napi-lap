@@ -96,6 +96,7 @@ export function PaidReadingBody({
           </button>
         </div>
       </div>
+      <ReadingUseGuide />
       {blocks.map((block, index) => (
         <section key={`${block.heading ?? "block"}-${index}`} className="space-y-2">
           {block.heading && (
@@ -114,6 +115,43 @@ export function PaidReadingBody({
         </section>
       ))}
     </div>
+  );
+}
+
+function ReadingUseGuide() {
+  const items = [
+    {
+      label: "Most",
+      text: "Először azt a mondatot keresd, amelyiknél megállsz egy pillanatra. Ott van a fő jel.",
+    },
+    {
+      label: "Pár nap múlva",
+      text: "Olvasd vissza azt a részt, ami cselekvés helyett figyelmet kér. Ez mutatja, mi mozdult.",
+    },
+    {
+      label: "Ha nem pontos",
+      text: "Írd meg, melyik rész nem talált. Rendelés alapján visszanézzük, és segítünk pontosítani.",
+    },
+  ] as const;
+
+  return (
+    <aside className="rounded-md border border-gold/15 bg-gold/[0.05] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Olvasási iránytű</div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/60">
+        Ez nem vizsga és nem végleges ítélet. Akkor használható jól, ha a legpontosabb részt
+        visszaviszed a saját helyzetedbe.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {items.map((item) => (
+          <div key={item.label} className="rounded-md border border-gold/10 bg-black/10 px-3 py-3">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">
+              {item.label}
+            </div>
+            <p className="mt-2 text-xs leading-relaxed text-ivory/56">{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </aside>
   );
 }
 
