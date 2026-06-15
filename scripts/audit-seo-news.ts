@@ -74,6 +74,11 @@ const checks: Check[] = [
     file: "src/routes/horoszkop.$period.$sign.tsx",
     includes: [
       'productSlug="horoszkop_szemelyre"',
+      "const [personalTopic, setPersonalTopic]",
+      "Mostani témád",
+      "personalTopic.trim() || articleSituation",
+      "situation: personalSituation",
+      "articleSituation,",
       "articleLead: article.lead",
       "articleSections: article.sections.slice(0, 4).map",
       "moonPhase: article.moonPhase",

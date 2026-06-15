@@ -195,6 +195,7 @@ function HoroscopeArticlePending() {
 function HoroscopeArticlePage() {
   const article = Route.useLoaderData() as HoroscopeNewsArticle;
   const [paywall, setPaywall] = useState(false);
+  const [personalTopic, setPersonalTopic] = useState("");
   const [memoryContext, setMemoryContext] = useState<string | undefined>(undefined);
   const siblingSigns = SIGNS_HU_ORDERED.map((sign) => ({
     sign,
@@ -207,12 +208,13 @@ function HoroscopeArticlePage() {
     path: horoscopeArticlePath(period, article.sign),
   }));
   const articleSituation = `${PERIOD_LABEL[article.period]} horoszkóp · ${periodDateLabel(article.period)}`;
+  const personalSituation = personalTopic.trim() || articleSituation;
 
   function openPersonalHoroscopePaywall() {
     const memory = getGuestReadingContext({
       readingType: "horoscope",
       topic: article.signName,
-      situation: articleSituation,
+      situation: personalSituation,
       limit: 8,
     });
     setMemoryContext(memory.contextText || memory.themeSummary || undefined);
@@ -266,8 +268,24 @@ function HoroscopeArticlePage() {
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ivory/62">
               Ha nem csak általános jegyszöveget szeretnél, kérhetsz rövid, személyes olvasatot a
-              mostani témádhoz igazítva.
+              mostani témádhoz igazítva. Írhatsz hozzá egy rövid helyzetet is.
             </p>
+            <div className="mt-4 max-w-xl">
+              <label
+                htmlFor="horoscope-article-personal-topic"
+                className="block text-[10px] uppercase tracking-[0.24em] text-[oklch(0.78_0.10_80/0.68)]"
+              >
+                Mostani témád <span className="tracking-normal text-ivory/42">(opcionális)</span>
+              </label>
+              <input
+                id="horoscope-article-personal-topic"
+                value={personalTopic}
+                onChange={(event) => setPersonalTopic(event.target.value)}
+                placeholder="Pl. szerelem, munka, döntés"
+                maxLength={120}
+                className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-[oklch(0.13_0.02_280/0.65)] px-3 py-2.5 text-sm text-ivory outline-none transition-colors placeholder:text-ivory/32 focus:border-gold/65"
+              />
+            </div>
           </div>
           <button className="btn-gold" onClick={openPersonalHoroscopePaywall}>
             {productCtaLabel("Személyes horoszkóp", "horoszkop_szemelyre")}
@@ -276,7 +294,7 @@ function HoroscopeArticlePage() {
         <GuestMemoryInsightPanel
           readingType="horoscope"
           topic={article.signName}
-          situation={articleSituation}
+          situation={personalSituation}
           className="mt-5"
         />
       </section>
@@ -333,7 +351,8 @@ function HoroscopeArticlePage() {
         inputPayload={{
           sign: article.signName,
           period: PERIOD_LABEL[article.period],
-          situation: articleSituation,
+          situation: personalSituation,
+          articleSituation,
           memoryContext,
           articleLead: article.lead,
           articleSections: article.sections.slice(0, 4).map((section) => ({
