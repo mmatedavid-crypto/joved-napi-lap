@@ -224,6 +224,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "numerology SEO pages never expose raw router error messages",
+    file: "src/routes/sorsszam.$n.tsx",
+    includes: ["SAFE_NUMEROLOGY_PAGE_ERROR", "A számmisztikai tartalom most nem töltődött be"],
+    excludes: ["lead={error.message}"],
+  },
+  {
+    name: "numerology type pages never expose raw router error messages",
+    file: "src/routes/numerologia.$type.tsx",
+    includes: ["SAFE_NUMEROLOGY_PAGE_ERROR", "A számmisztikai tartalom most nem töltődött be"],
+    excludes: ["lead={error.message}"],
+  },
+  {
     name: "homepage tarot spread avoids horizontal viewport overflow",
     file: "src/components/SpreadDeck.tsx",
     includes: ["const spreadX = (t - 0.5) * 70"],

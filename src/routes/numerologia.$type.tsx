@@ -6,6 +6,8 @@ import { getNumerologyType, NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
 
 const SITE_URL = "https://jovod.hu";
 const VALID = new Set(NUMEROLOGY_TYPES.map((t) => t.slug));
+const SAFE_NUMEROLOGY_PAGE_ERROR =
+  "A számmisztikai tartalom most nem töltődött be. Kérlek próbáld újra egy pillanat múlva.";
 
 export const Route = createFileRoute("/numerologia/$type")({
   beforeLoad: ({ params }) => {
@@ -68,9 +70,9 @@ export const Route = createFileRoute("/numerologia/$type")({
       </div>
     </Layout>
   ),
-  errorComponent: ({ error, reset }) => (
+  errorComponent: ({ reset }) => (
     <Layout>
-      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={error.message} />
+      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={SAFE_NUMEROLOGY_PAGE_ERROR} />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 text-center">
         <button onClick={reset} className="btn-gold">
           Újra

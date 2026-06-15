@@ -5,6 +5,8 @@ import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { LIFE_PATH_MEANINGS_HU, LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
 
 const VALID = new Set(LIFE_PATH_NUMBERS.map(String));
+const SAFE_NUMEROLOGY_PAGE_ERROR =
+  "A számmisztikai tartalom most nem töltődött be. Kérlek próbáld újra egy pillanat múlva.";
 
 export const Route = createFileRoute("/sorsszam/$n")({
   beforeLoad: ({ params }) => {
@@ -53,9 +55,9 @@ export const Route = createFileRoute("/sorsszam/$n")({
       </div>
     </Layout>
   ),
-  errorComponent: ({ error, reset }) => (
+  errorComponent: ({ reset }) => (
     <Layout>
-      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={error.message} />
+      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={SAFE_NUMEROLOGY_PAGE_ERROR} />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 text-center">
         <button onClick={reset} className="btn-gold">
           Újra
