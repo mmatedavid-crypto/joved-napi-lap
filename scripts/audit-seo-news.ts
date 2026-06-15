@@ -76,6 +76,7 @@ const checks: Check[] = [
       'productSlug="horoszkop_szemelyre"',
       "const [personalTopic, setPersonalTopic]",
       "Mostani témád",
+      "a cikk hangulatából kiindulva",
       "personalTopic.trim() || articleSituation",
       "situation: personalSituation",
       "articleSituation,",

@@ -267,8 +267,8 @@ function HoroscopeArticlePage() {
               {article.signName} horoszkóp a te helyzetedre
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ivory/62">
-              Ha nem csak általános jegyszöveget szeretnél, kérhetsz rövid, személyes olvasatot a
-              mostani témádhoz igazítva. Írhatsz hozzá egy rövid helyzetet is.
+              Ha a mostani időszakból egy konkrét saját helyzetedet szeretnéd tisztábban látni,
+              kérhetsz rövid, személyes olvasatot a cikk hangulatából kiindulva.
             </p>
             <div className="mt-4 max-w-xl">
               <label
