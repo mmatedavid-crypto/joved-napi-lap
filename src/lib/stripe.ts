@@ -7,9 +7,7 @@ const clientToken = import.meta.env.VITE_PAYMENTS_CLIENT_TOKEN as string | undef
 function paymentsEnvironment(): StripeEnvClient {
   if (clientToken?.startsWith("pk_test_")) return "sandbox";
   if (clientToken?.startsWith("pk_live_")) return "live";
-  throw new Error(
-    "A fizetés még nincs élesítve. Fejezd be a Stripe verifikációt a Payments fülön.",
-  );
+  throw new Error("A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később.");
 }
 
 let stripePromise: Promise<Stripe | null> | null = null;

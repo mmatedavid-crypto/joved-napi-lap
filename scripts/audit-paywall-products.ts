@@ -168,6 +168,17 @@ if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
   failed.push("PaywallDialog must not promise profile access to every guest checkout");
 }
 
+const stripeClient = readFileSync("src/lib/stripe.ts", "utf8");
+const paymentBanner = readFileSync("src/components/PaymentTestModeBanner.tsx", "utf8");
+for (const [file, body] of [
+  ["src/lib/stripe.ts", stripeClient],
+  ["src/components/PaymentTestModeBanner.tsx", paymentBanner],
+] as const) {
+  if (/Payments fül|Stripe verifikáció|fizetés még nincs élesítve/i.test(body)) {
+    failed.push(`${file} must not expose Lovable/admin payment setup wording`);
+  }
+}
+
 for (const needle of [
   'createFileRoute("/arak")',
   "Árak és olvasatok",
