@@ -245,8 +245,23 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   if (source.includes("Fizetés után pár percen belül kézhez kapod a riportot")) {
     failed.push(`${file}: delayed astrology route must not promise delivery within minutes`);
   }
+  if (/előrejelz(és|ést|ése)/i.test(source)) {
+    failed.push(`${file}: delayed astrology route must avoid prediction-style wording`);
+  }
   if (!source.includes("Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred")) {
     failed.push(`${file}: delayed astrology route must show accurate delivery timing`);
+  }
+}
+
+const delayedRouteExpectations = new Map<string, string>([
+  ["src/routes/szemelyes-30-napos-horoszkop.tsx", "Személyes 30 napos asztrológiai térkép"],
+  ["src/routes/eves-horoszkop.tsx", "12 hónapos időszaki térkép"],
+]);
+
+for (const { file, source } of delayedAstrologyRouteSources) {
+  const expected = delayedRouteExpectations.get(file);
+  if (expected && !source.includes(expected)) {
+    failed.push(`${file}: delayed astrology route missing sober map wording: ${expected}`);
   }
 }
 

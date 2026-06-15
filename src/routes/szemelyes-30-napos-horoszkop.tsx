@@ -22,7 +22,7 @@ export const Route = createFileRoute("/szemelyes-30-napos-horoszkop")({
       {
         name: "description",
         content:
-          "Személyes 30 napos előrejelzés a saját születési képletedből: szerelem, munka, döntések. 1490 Ft.",
+          "Személyes 30 napos asztrológiai térkép a saját születési képletedből: szerelem, munka, döntések. 1490 Ft.",
       },
       { name: "robots", content: "noindex,follow" },
     ],
@@ -53,7 +53,7 @@ function Page() {
       <PageHeader
         eyebrow="Személyes asztrológia"
         title="A következő 30 napod térképe"
-        lead="Egy riport a saját születési képletedről és a következő 30 nap legfontosabb időablakairól. Nem általános horoszkóp."
+        lead="Egy időszaki térkép a saját születési képletedről és a következő 30 nap legfontosabb időablakairól. Nem általános horoszkóp."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
