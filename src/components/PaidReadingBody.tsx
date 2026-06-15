@@ -130,7 +130,7 @@ function ReadingUseGuide() {
     },
     {
       label: "Ha nem pontos",
-      text: "Írd meg, melyik rész nem talált. Rendelés alapján visszanézzük, és segítünk pontosítani.",
+      text: "Írd meg, melyik rész nem talált, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
     },
   ] as const;
 
