@@ -32,6 +32,13 @@ type QueueMessage = {
   message: EmailPayload
 }
 
+type EmailQueueErrorCode =
+  | 'email_send_failed'
+  | 'email_send_rate_limited'
+  | 'email_send_forbidden'
+  | 'email_send_ttl_exceeded'
+  | 'email_send_retry_exhausted'
+
 // Check if an error is a rate-limit (429) response.
 // Uses EmailAPIError.status when available (email-js >=0.x with structured errors),
 // falls back to parsing the error message for older versions.
@@ -59,11 +66,17 @@ function getRetryAfterSeconds(error: unknown): number {
   return 60
 }
 
+function emailQueueErrorCode(error: unknown): EmailQueueErrorCode {
+  if (isRateLimited(error)) return 'email_send_rate_limited'
+  if (isForbidden(error)) return 'email_send_forbidden'
+  return 'email_send_failed'
+}
+
 async function moveToDlq(
   supabase: SupabaseClient<Database>,
   queue: string,
   msg: QueueMessage,
-  reason: string
+  reason: EmailQueueErrorCode
 ): Promise<void> {
   const payload = msg.message
   await supabase.from('email_send_log').insert({
@@ -212,14 +225,14 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
                   queued_at: queuedAt,
                   ttl_minutes: ttlMinutes[queue],
                 })
-                await moveToDlq(supabase, queue, msg, `TTL exceeded (${ttlMinutes[queue]} minutes)`)
+                await moveToDlq(supabase, queue, msg, 'email_send_ttl_exceeded')
                 continue
               }
             }
 
             // Move to DLQ if max failed send attempts reached.
             if (failedAttempts >= MAX_RETRIES) {
-              await moveToDlq(supabase, queue, msg, `Max retries (${MAX_RETRIES}) exceeded (attempted ${failedAttempts} times)`)
+              await moveToDlq(supabase, queue, msg, 'email_send_retry_exhausted')
               continue
             }
 
@@ -301,7 +314,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
                   template_name: payload.label || queue,
                   recipient_email: payload.to,
                   status: 'failed',
-                  error_message: errorMsg.slice(0, 1000),
+                  error_message: emailQueueErrorCode(error),
                 })
 
                 const retryAfterSecs = getRetryAfterSeconds(error)
@@ -322,7 +335,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
               // 403s are permanent configuration or authorization failures for this
               // message, so move straight to DLQ and stop processing the rest of the batch.
               if (isForbidden(error)) {
-                await moveToDlq(supabase, queue, msg, errorMsg.slice(0, 1000))
+                await moveToDlq(supabase, queue, msg, 'email_send_forbidden')
                 return Response.json({ processed: totalProcessed, stopped: 'forbidden' })
               }
 
@@ -332,7 +345,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
                 template_name: payload.label || queue,
                 recipient_email: payload.to,
                 status: 'failed',
-                error_message: errorMsg.slice(0, 1000),
+                error_message: emailQueueErrorCode(error),
               })
               if (payload?.message_id && typeof payload.message_id === 'string') {
                 failedAttemptsByMessageId.set(payload.message_id, failedAttempts + 1)

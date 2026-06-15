@@ -208,6 +208,29 @@ const checks: Check[] = [
     excludes: ["delivery_email_error: result.error.slice", "delivery_email_error: message.slice"],
   },
   {
+    name: "email queue stores stable error codes, not raw provider messages",
+    file: "src/routes/lovable/email/queue/process.ts",
+    includes: [
+      "type EmailQueueErrorCode",
+      "'email_send_failed'",
+      "'email_send_rate_limited'",
+      "'email_send_forbidden'",
+      "'email_send_ttl_exceeded'",
+      "'email_send_retry_exhausted'",
+      "function emailQueueErrorCode",
+      "error_message: emailQueueErrorCode(error)",
+      "moveToDlq(supabase, queue, msg, 'email_send_ttl_exceeded')",
+      "moveToDlq(supabase, queue, msg, 'email_send_retry_exhausted')",
+      "moveToDlq(supabase, queue, msg, 'email_send_forbidden')",
+    ],
+    excludes: [
+      "error_message: errorMsg.slice",
+      "await moveToDlq(supabase, queue, msg, errorMsg",
+      "await moveToDlq(supabase, queue, msg, `TTL exceeded",
+      "await moveToDlq(supabase, queue, msg, `Max retries",
+    ],
+  },
+  {
     name: "transactional email helper returns stable error codes",
     file: "src/lib/email/sendTransactional.server.ts",
     includes: [
