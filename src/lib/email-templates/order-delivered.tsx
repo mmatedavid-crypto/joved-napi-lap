@@ -48,6 +48,23 @@ const OrderDeliveredEmail = ({
   const missingBodyText = isGuest
     ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről."
     : "A részletes olvasatot ezen a linken és a profilodban is eléred.";
+  const feedbackOptions = [
+    {
+      label: "Eltalált",
+      feedback: "Eltalált",
+      body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
+    },
+    {
+      label: "Részben talált",
+      feedback: "Részben talált",
+      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.",
+    },
+    {
+      label: "Nem volt elég pontos",
+      feedback: "Nem volt elég pontos",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.",
+    },
+  ];
   return (
     <Html lang="hu" dir="ltr">
       <Head />
@@ -106,6 +123,29 @@ const OrderDeliveredEmail = ({
                 </>
               )}
             </Text>
+            <Section style={feedbackCard}>
+              <Text style={feedbackTitle}>Minőségi visszajelzés</Text>
+              <Text style={feedbackText}>
+                Segít, ha jelzed, mennyire talált el az olvasat. Ha nem volt elég pontos, rendelés
+                alapján visszanézzük, és segítünk pontosítani.
+              </Text>
+              <Section>
+                {feedbackOptions.map((option) => (
+                  <Link
+                    key={option.label}
+                    href={feedbackMailto({
+                      productName,
+                      shortOrderId,
+                      feedback: option.feedback,
+                      body: option.body,
+                    })}
+                    style={feedbackButton}
+                  >
+                    {option.label}
+                  </Link>
+                ))}
+              </Section>
+            </Section>
             <Text style={supportText}>
               Ha a gomb nem nyílik meg, írj nekünk a{" "}
               <Link href={`mailto:${SITE_LEGAL.supportEmail}`} style={link}>
@@ -174,6 +214,26 @@ function cleanReadingMarkdown(value: string): string {
     .replace(/^[-*]\s+/, "• ");
 }
 
+function feedbackMailto(opts: {
+  productName: string;
+  shortOrderId?: string;
+  feedback: string;
+  body: string;
+}): string {
+  const orderRef = opts.shortOrderId ?? "nincs rövid azonosító";
+  const subject = `Jövőd.hu visszajelzés · ${orderRef}`;
+  const body = [
+    opts.body,
+    "",
+    `Visszajelzés: ${opts.feedback}`,
+    `Rendelés: ${orderRef}`,
+    `Termék: ${opts.productName}`,
+    "",
+    "Röviden ezt szeretném hozzátenni:",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 const main = { backgroundColor: "#ffffff", fontFamily: "Georgia, serif" };
 const container = { padding: "32px 24px", maxWidth: "560px", margin: "0 auto" };
 const brand = { fontSize: "24px", color: "#181126", margin: "0 0 4px 0", fontWeight: 600 as const };
@@ -229,6 +289,37 @@ const supportText = {
   fontSize: "14px",
   lineHeight: "1.6",
   margin: "4px 0 12px 0",
+};
+const feedbackCard = {
+  backgroundColor: "#fffaf0",
+  border: "1px solid #eadbb6",
+  borderRadius: "10px",
+  padding: "16px",
+  margin: "18px 0 16px 0",
+};
+const feedbackTitle = {
+  color: "#5f4419",
+  fontSize: "12px",
+  fontWeight: 700 as const,
+  letterSpacing: "0.08em",
+  margin: "0 0 8px 0",
+  textTransform: "uppercase" as const,
+};
+const feedbackText = {
+  color: "#5b5368",
+  fontSize: "13px",
+  lineHeight: "1.55",
+  margin: "0 0 12px 0",
+};
+const feedbackButton = {
+  border: "1px solid #c9a85d",
+  borderRadius: "8px",
+  color: "#5f4419",
+  display: "inline-block",
+  fontSize: "13px",
+  margin: "0 8px 8px 0",
+  padding: "8px 10px",
+  textDecoration: "none",
 };
 const link = { color: "#5a3fb8", textDecoration: "underline" };
 const hr = { borderColor: "#e9e4f3", margin: "24px 0" };
