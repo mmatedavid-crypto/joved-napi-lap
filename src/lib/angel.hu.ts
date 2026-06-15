@@ -170,8 +170,8 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "555",
     intro:
-      "Az 555 a nagy változás száma. Ha mindenhol ezt látod, készülj: valami lezárul, és valami egészen új kezdődik — az ellenállás most többe kerül, mint az elengedés.",
-    pattern: "A megháromszorozott 5-ös a fordulat és a szabadság energiáját hozza. Gyakran költözés, váltás, új életszakasz előtt jelenik meg.",
+      "Az 555 a nagy változás száma. Ha mindenhol ezt látod, arra hívhatja fel a figyelmed, hogy valami régi forma lazul, és több tér kellene az új mozgásnak.",
+    pattern: "A megháromszorozott 5-ös a fordulat és a szabadság energiáját hordozza. Gyakran váltás, költözés vagy új életszakasz kérdéseinél tűnik fel.",
   },
   {
     szam: "666",
@@ -188,8 +188,8 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "888",
     intro:
-      "A 888 a bőség és az áramlás száma. Gyakori felbukkanása azt jelzi, hogy a befektetett munkád gyümölcse érik: anyagi vagy érzelmi visszatérülés közeledik.",
-    pattern: "A megháromszorozott 8-as az erő, az eredmény és a kiegyenlítődés energiáját hordozza — ami jár, az megérkezik.",
+      "A 888 a bőség és az áramlás száma. Gyakori felbukkanása arra utalhat, hogy érdemes észrevenned, hol érik már a befektetett figyelmed és munkád eredménye.",
+    pattern: "A megháromszorozott 8-as az erő, az eredmény és a kiegyenlítődés energiáját hordozza — nem ígéretként, inkább önismereti jelként.",
   },
   {
     szam: "999",

@@ -37,6 +37,16 @@ const checks: StaticSafetyCheck[] = [
     forbidden: [/\bbiztosan\b/i, /\bgyógyít/i, /\bgyógyítható\b/i],
     required: ["bukkanhat fel", "finoman feldolgozható"],
   },
+  {
+    file: "src/lib/angel.hu.ts",
+    forbidden: [
+      /\bkészülj\b/i,
+      /\bvisszatérülés közeledik\b/i,
+      /\bami jár, az megérkezik\b/i,
+      /\begészen új kezdődik\b/i,
+    ],
+    required: ["arra hívhatja fel a figyelmed", "nem ígéretként, inkább önismereti jelként"],
+  },
 ];
 
 const failures: string[] = [];
