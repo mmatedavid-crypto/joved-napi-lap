@@ -97,6 +97,65 @@ function Index() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-5xl px-4 md:px-6 pb-14">
+        <div className="rounded-md border border-gold/15 bg-[oklch(0.78_0.10_80/0.055)] p-5 md:p-7">
+          <div className="grid gap-6 md:grid-cols-[1fr_1.25fr] md:items-start">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+                Miért nem sablon?
+              </div>
+              <h2 className="mt-2 font-display text-3xl text-ivory">
+                A kérdésedből indul, nem egy előre írt magazinszövegből.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-ivory/62">
+                Az ingyenes olvasatok adnak egy első belső tükröt. A fizetős változat akkor jó,
+                amikor azt szeretnéd, hogy a szöveg már a konkrét helyzetedre, kérdésedre és
+                korábbi mintáidra is figyeljen.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                {
+                  title: "Konkrét helyzet",
+                  text: "Ha megírod, randi, döntés, ex vagy álom a téma, az olvasat erre reagál.",
+                },
+                {
+                  title: "Magyar hang",
+                  text: "A válasz természetes, rövid és józan magyar szövegként jelenik meg.",
+                },
+                {
+                  title: "Visszatérő ív",
+                  text: "Ha engeded a memóriát, az oldal észreveszi, milyen kérdéshez térsz vissza.",
+                },
+                {
+                  title: "Minőségi korlát",
+                  text: "Nem ígér biztos jövőt, nem ad orvosi, jogi vagy pénzügyi tanácsot.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/15 p-4"
+                >
+                  <h3 className="font-display text-xl text-ivory">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ivory/62">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3 border-t border-gold/10 pt-5">
+            <Link to="/mai-lap" className="btn-gold">
+              Kipróbálom ingyen
+            </Link>
+            <Link
+              to="/arak"
+              className="inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+            >
+              Személyes olvasatok {formatHuf(ENTRY_PRICE)}-tól
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-5xl px-4 md:px-6 pb-16">
         <div className="text-center mb-6">
           <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
