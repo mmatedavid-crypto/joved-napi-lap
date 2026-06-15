@@ -10,6 +10,10 @@ type ProcessOrderResult =
   | { ok: true; response?: PaidOrderReading; alreadyDone?: true; processing?: true }
   | { ok: false; error: string };
 
+const PUBLIC_ORDER_PROCESSING_ERROR =
+  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; próbáld újra később, vagy írj nekünk a vásárlási email címedről.";
+const ORDER_GENERATION_FAILED_CODE = "paid_reading_generation_failed";
+
 const PROCESSING_RETRY_AFTER_MS = Number(
   process.env.ORDER_PROCESSING_RETRY_AFTER_MS ?? 3 * 60 * 1000,
 );
@@ -100,11 +104,16 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
     return { ok: true, response: reading };
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
+    console.error("paid order processing failed", {
+      order_id: order.id,
+      product_slug: order.product_slug,
+      error: message,
+    });
     await supabaseAdmin
       .from("orders")
-      .update({ status: "failed", error_message: message })
+      .update({ status: "failed", error_message: ORDER_GENERATION_FAILED_CODE })
       .eq("id", order.id);
-    return { ok: false, error: message };
+    return { ok: false, error: PUBLIC_ORDER_PROCESSING_ERROR };
   }
 }
 

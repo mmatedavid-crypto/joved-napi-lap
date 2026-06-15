@@ -181,6 +181,23 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "paid order generation failures store safe codes, not raw exception text",
+    file: "src/lib/orderProcessing.server.ts",
+    includes: [
+      "PUBLIC_ORDER_PROCESSING_ERROR",
+      "ORDER_GENERATION_FAILED_CODE",
+      '"paid_reading_generation_failed"',
+      "paid order processing failed",
+      "error_message: ORDER_GENERATION_FAILED_CODE",
+      "return { ok: false, error: PUBLIC_ORDER_PROCESSING_ERROR }",
+    ],
+    excludes: [
+      "error_message: message",
+      "return { ok: false, error: message }",
+      ".update({ status: \"failed\", error_message: message })",
+    ],
+  },
+  {
     name: "delivered order email failures store safe codes, not raw provider errors",
     file: "src/lib/orderProcessing.server.ts",
     includes: [
