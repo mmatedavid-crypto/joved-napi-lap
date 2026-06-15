@@ -229,6 +229,8 @@ function feedbackMailto(opts: {
     `Rendelés: ${orderRef}`,
     `Termék: ${opts.productName}`,
     "",
+    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyik nem talált.",
+    "",
     "Röviden ezt szeretném hozzátenni:",
   ].join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
