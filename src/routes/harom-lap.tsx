@@ -47,6 +47,58 @@ function localCardFromSlot(slot: TarotSlot): TarotCard {
   return found ?? CARDS[0];
 }
 
+function threeCardFreeSynthesis(slots: TarotSlot[], question: string, category: string) {
+  const cards = slots.map((slot) => ({
+    card: localCardFromSlot(slot),
+    reversed: slot.roxy.reversed,
+    meaning: slot.hu.meaning,
+    oneLine: slot.hu.oneLine,
+  }));
+  const [past, present, future] = cards;
+  const questionText = question.trim();
+  const situation = questionText
+    ? `A kérdésed nem általános: „${questionText}”.`
+    : `Most ebben a témában kérsz irányt: ${category}.`;
+  const categoryHint = categoryFreeHint(category);
+  const pastTone = past.reversed ? "nem teljesen lezárt minta" : "hozott minta";
+  const presentTone = present.reversed ? "belső ellenállás" : "most látható középpont";
+  const futureTone = future.reversed ? "lassabban nyíló irány" : "lehetséges továbblépés";
+
+  return {
+    together: `${situation} A ${past.card.name} a múltban inkább ${pastTone}: azt mutatja, honnan hozod ezt a helyzetet. A ${present.card.name} most a ${presentTone}, ezért nem csak az számít, mit szeretnél, hanem az is, mire reagálsz túl gyorsan vagy túl csendben. A ${future.card.name} nem kész jóslat, hanem ${futureTone}: arra utalhat, merre mozdulhat a történet, ha nem a régi automatikus válaszodat ismétled.`,
+    attention: `${categoryHint} Figyeld meg, melyik lapnál érzel feszültséget: a múlt mutatja az ismétlést, a jelen a valódi tétet, a jövő pedig azt, ahol több szabadságod lehet, mint elsőre gondolnád.`,
+    oneLine:
+      future.oneLine ??
+      `${past.card.name}, ${present.card.name} és ${future.card.name} együtt nem lezárást, hanem irányt mutat.`,
+  };
+}
+
+function categoryFreeHint(category: string): string {
+  const normalized = category.toLocaleLowerCase("hu-HU");
+  if (normalized.includes("randi") || normalized.includes("ismerked")) {
+    return "Ennél a találkozásnál most nem az a legfontosabb, hogy gyorsan címkét kapjon, hanem hogy lásd, milyen tempóban közeledtek.";
+  }
+  if (normalized.includes("ex") || normalized.includes("visszatér")) {
+    return "Visszatérő történetnél érdemes külön figyelni, mi valódi változás, és mi csak ismerős hiányérzet.";
+  }
+  if (normalized.includes("szerelem")) {
+    return "Kapcsolati kérdésnél a lapok inkább a dinamika minőségét mutatják, nem azt, hogy valaki mit fog biztosan tenni.";
+  }
+  if (normalized.includes("munka")) {
+    return "Munkahelyi kérdésnél most a ritmus, a felelősség és a saját határaid adhatják a legtöbb információt.";
+  }
+  if (normalized.includes("pénz")) {
+    return "Anyagi témánál ez önismereti jelzés: nem pénzügyi tanács, hanem annak tükre, hol érdemes tisztábban látnod a mintát.";
+  }
+  if (normalized.includes("család")) {
+    return "Családi helyzetben gyakran nem csak a mostani mondat számít, hanem az, milyen régi szerep szólal meg benned.";
+  }
+  if (normalized.includes("döntés")) {
+    return "Döntés előtt a lapok nem helyetted választanak, hanem megmutathatják, melyik belső szempont kér több figyelmet.";
+  }
+  return "Általános élethelyzetnél a három lap azt segít szétválasztani, mi múltbeli teher, mi jelenlegi tét, és mi lehet új irány.";
+}
+
 function HaromLap() {
   const { user } = useAuth();
   const [question, setQuestion] = useState("");
@@ -235,13 +287,28 @@ function HaromLap() {
                     {s.hu.meaning}
                   </Section>
                 ))}
-                {slots[2]?.hu.oneLine && (
-                  <div className="md:col-span-2">
-                    <Section eyebrow="Egy mondatban az üzenet">
-                      <em>{slots[2].hu.oneLine}</em>
-                    </Section>
-                  </div>
-                )}
+                {(() => {
+                  const synthesis = threeCardFreeSynthesis(slots, question, category);
+                  return (
+                    <>
+                      <div className="md:col-span-2">
+                        <Section eyebrow="A három lap együtt">
+                          {synthesis.together}
+                        </Section>
+                      </div>
+                      <div className="md:col-span-2">
+                        <Section eyebrow="Mire figyelj most?">
+                          {synthesis.attention}
+                        </Section>
+                      </div>
+                      <div className="md:col-span-2">
+                        <Section eyebrow="Egy mondatban az üzenet">
+                          <em>{synthesis.oneLine}</em>
+                        </Section>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             )}
 

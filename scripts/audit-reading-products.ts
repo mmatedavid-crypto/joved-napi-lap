@@ -308,6 +308,23 @@ const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
 const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
 const orderProcessing = readFileSync("src/lib/orderProcessing.server.ts", "utf8");
 const reportQuality = readFileSync("src/lib/products/reportQuality.server.ts", "utf8");
+const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
+
+for (const needle of [
+  "function threeCardFreeSynthesis",
+  "categoryFreeHint",
+  "A három lap együtt",
+  "Mire figyelj most?",
+  "A kérdésed nem általános",
+  "randi",
+  "Visszatérő történetnél",
+  "Döntés előtt",
+  "nem pénzügyi tanács",
+]) {
+  if (!threeCardRoute.includes(needle)) {
+    policyFailures.push(`free three-card route must preserve contextual synthesis: ${needle}`);
+  }
+}
 
 const delegatedReports = [
   {
