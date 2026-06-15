@@ -84,7 +84,7 @@ function Page() {
     if (!a || !b) return;
     setLoading(true);
     const browserPattern = recordCompatibilityCheck({
-      partnerName: nb || "a nő",
+      partnerName: nb || "a másik fél",
       partnerBirthDate: b,
       status,
     });

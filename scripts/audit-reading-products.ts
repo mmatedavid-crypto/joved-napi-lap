@@ -336,6 +336,7 @@ for (const needle of [
   "Másik fél születési dátuma",
   "Te / első személy sorsszáma",
   "A másik fél sorsszáma",
+  'partnerName: nb || "a másik fél"',
 ]) {
   if (!compatibilityRoute.includes(needle)) {
     policyFailures.push(`compatibility route must use inclusive person labels: ${needle}`);
@@ -349,6 +350,7 @@ for (const forbiddenNeedle of [
   "Nő születési dátuma",
   "A férfi sorsszáma",
   "A nő sorsszáma",
+  'partnerName: nb || "a nő"',
 ]) {
   if (compatibilityRoute.includes(forbiddenNeedle)) {
     policyFailures.push(`compatibility route must not force gendered labels: ${forbiddenNeedle}`);
