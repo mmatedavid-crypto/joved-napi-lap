@@ -222,7 +222,7 @@ function Index() {
         <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-gold">
           <Link to="/alomfejtes" className="hover:underline">Álomfejtés</Link>
           <Link to="/angyalszam" className="hover:underline">Angyalszám</Link>
-          <Link to="/szemelyes-30-napos-horoszkop" className="hover:underline">30 napos előrejelzés</Link>
+          <Link to="/szemelyes-30-napos-horoszkop" className="hover:underline">30 napos asztrológiai térkép</Link>
           <Link to="/eves-horoszkop" className="hover:underline">Éves horoszkóp</Link>
           <Link to="/tranzitok" className="hover:underline">Tranzitelemzés</Link>
           <Link to="/vedikus-asztrologia" className="hover:underline">Védikus elemzés</Link>

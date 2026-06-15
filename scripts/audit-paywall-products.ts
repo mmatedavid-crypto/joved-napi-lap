@@ -33,6 +33,7 @@ const productsSource = readFileSync("src/lib/products.ts", "utf8");
 const pricingRoute = readFileSync("src/routes/arak.tsx", "utf8");
 const withdrawalRoute = readFileSync("src/routes/elallasi-tajekoztato.tsx", "utf8");
 const layout = readFileSync("src/components/Layout.tsx", "utf8");
+const homeRoute = readFileSync("src/routes/index.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
@@ -262,6 +263,12 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   const expected = delayedRouteExpectations.get(file);
   if (expected && !source.includes(expected)) {
     failed.push(`${file}: delayed astrology route missing sober map wording: ${expected}`);
+  }
+}
+
+for (const forbiddenNeedle of ["30 napos előrejelzés"]) {
+  if (homeRoute.includes(forbiddenNeedle)) {
+    failed.push(`Home route must avoid prediction-style paid astrology link: ${forbiddenNeedle}`);
   }
 }
 
