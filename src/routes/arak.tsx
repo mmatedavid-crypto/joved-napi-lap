@@ -20,6 +20,11 @@ const PRICING_FAQ = [
       "A rendelési link és a vásárlási email alapján utánanézünk, pótoljuk a hozzáférést, vagy hibás megjelenés esetén javítjuk és újraküldjük az olvasatot.",
   },
   {
+    question: "Mi van, ha az olvasat nem érződik elég pontosnak?",
+    answer:
+      "Az elkészült olvasatnál közvetlen minőségi visszajelzést kérhetsz. Ha részben talált vagy nem volt elég pontos, konkrét pontosítási kérdésekkel segítünk jelezni, melyik rész nem talált, mi maradt ki a helyzetedből, és milyen irányban vársz segítséget.",
+  },
+  {
     question: "Elállhatok a digitális olvasattól?",
     answer:
       "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését. Ha az olvasat elkészült és megnyílt, az elállási jog korlátozott lehet; technikai hiba vagy elmaradt hozzáférés esetén viszont utánanézünk és pótoljuk a teljesítést.",
@@ -40,9 +45,9 @@ const CHOICE_GUIDE = [
   },
   {
     title: "Kapcsolat vagy ex jár a fejemben",
-    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a Szerelmi tarot ad több teret, nem csak százalékot.",
+    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a kapcsolati olvasat ad több teret, nem csak százalékot.",
     productSlug: "parkapcsolat_elemzes",
-    cta: "Szerelmi tarot",
+    cta: "Kapcsolati olvasat",
   },
   {
     title: "Döntés előtt állok",
@@ -105,7 +110,7 @@ function PricingPage() {
       />
 
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20">
-        <section className="grid gap-3 md:grid-cols-3">
+        <section className="grid gap-3 md:grid-cols-4">
           <TrustPoint
             title="590 Ft-tól"
             text="A belépő olvasatok olcsók, hogy kockázat nélkül kipróbálhasd a hangot."
@@ -117,6 +122,10 @@ function PricingPage() {
           <TrustPoint
             title="Menthető olvasat"
             text="Az elkészült szöveg megnyitható, kimásolható és letölthető."
+          />
+          <TrustPoint
+            title="Pontosítási út"
+            text="Ha nem elég pontos, rendelés alapján visszanézzük, és konkrét kérdésekkel segítünk jelezni, mi nem talált."
           />
         </section>
 
@@ -184,15 +193,16 @@ function PricingPage() {
             />
             <ReadingTypeCard
               title="Részletes asztrológiai riport"
-               price={delayedPriceRange}
-               delivery="A terméknél jelzett időn belül"
-               bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
+              price={delayedPriceRange}
+              delivery="A terméknél jelzett időn belül"
+              bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
               result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
             />
           </div>
           <p className="mt-4 text-sm leading-relaxed text-ivory/58">
             Mindkét típus elérhető a biztonságos rendelési linken; bejelentkezve a profilban is
             visszanézhető. Vendégként az emailt és a rendelési linket érdemes megtartanod.
+            Elkészült olvasatnál minőségi visszajelzést is tudsz küldeni, ha valamit pontosítanál.
           </p>
         </section>
 
