@@ -56,8 +56,8 @@ const CHOICE_GUIDE = [
     cta: "Döntési elemzés",
   },
   {
-    title: "30 napos előrejelzést kérek",
-    text: "Ha tudni akarod, mire figyelj a következő 30 napban, a személyes 30 napos térkép a saját születési képletedre épül.",
+    title: "30 napos térképet kérek",
+    text: "Ha szeretnéd látni, mire figyelj a következő 30 napban, a személyes 30 napos térkép a saját születési képletedre épül.",
     productSlug: "personal_30_day",
     cta: "30 napos térkép",
   },
@@ -208,7 +208,7 @@ function PricingPage() {
 
         <PricingGroup
           title="Asztrológiai riportok"
-          lead="Személyes születési képletre épülő, többoldalas elemzések. A 30 napos előrejelzés a tranzitokat a saját képletedre vetíti."
+          lead="Személyes születési képletre épülő, többoldalas elemzések. A 30 napos térkép a tranzitokat a saját képletedre vetíti."
           products={delayed}
           category="delayed"
         />

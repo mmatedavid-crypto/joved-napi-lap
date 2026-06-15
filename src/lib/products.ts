@@ -146,7 +146,7 @@ export const PRODUCTS: ProductDef[] = [
     includes: [
       "egy új személyes lapolvasat",
       "rövid helyzethez kötött értelmezés",
-      "külön figyelmeztetés, ha a kérdés ismétlődik",
+      "külön jelzés, ha a kérdés ismétlődik",
     ],
     depthPromise: [
       "az új húzást a korábbi napi kérdésedhez képest is keretezi",
@@ -257,17 +257,17 @@ export const PRODUCTS: ProductDef[] = [
     slug: "personal_30_day",
     priceId: "personal_30_day_price",
     name: "A következő 30 napod térképe",
-    short: "Személyes 30 napos előrejelzés születési adataidból.",
+    short: "Személyes 30 napos időszaki térkép születési adataidból.",
     includes: [
       "születési képleted rövid összegzése",
       "30 napos időablak: szerelem, munka, döntések",
-      "konkrét napokra figyelmeztetés és lehetőség",
+      "konkrét napokra szóló figyelmi pontok és lehetőségi ablakok",
     ],
     depthPromise: [
       "a tranzitokat a saját képletedre vetíti, nem általános horoszkóp",
       "életterületre fókuszál: szerelem, munka, pénz-döntés vagy általános",
     ],
-    qualityPromise: "Több oldalas, személyre szabott előrejelzés a következő 30 napra.",
+    qualityPromise: "Több oldalas, személyre szabott időszaki térkép a következő 30 napra.",
     priceHuf: 1490,
     category: "delayed",
     standardHours: 1,
@@ -297,7 +297,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "personal_yearly",
     priceId: "personal_yearly_price",
     name: "Személyes éves horoszkóp",
-    short: "Teljes éves előrejelzés a saját születési képletedből, hónapról hónapra.",
+    short: "Teljes éves időszaki térkép a saját születési képletedből, hónapról hónapra.",
     includes: [
       "12 hónap kulcstémái a saját képletedre szabva",
       "kiemelt időablakok: szerelem, munka, döntések",
@@ -321,7 +321,7 @@ export const PRODUCTS: ProductDef[] = [
     includes: [
       "a most aktív tranzitok személyes értelmezése",
       "feszültségi és lehetőségi pontok 90 napra",
-      "konkrét napokra figyelmeztetés és kapu-pontok",
+      "konkrét napokra szóló figyelmi és kapu-pontok",
     ],
     depthPromise: [
       "a Szaturnusz/Jupiter/Mars-tranzitokat a saját bolygóid és házaid felől olvassa",

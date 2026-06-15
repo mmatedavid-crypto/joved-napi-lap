@@ -29,6 +29,7 @@ for (const product of PRODUCTS) {
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
+const productsSource = readFileSync("src/lib/products.ts", "utf8");
 const pricingRoute = readFileSync("src/routes/arak.tsx", "utf8");
 const withdrawalRoute = readFileSync("src/routes/elallasi-tajekoztato.tsx", "utf8");
 const layout = readFileSync("src/components/Layout.tsx", "utf8");
@@ -174,7 +175,7 @@ for (const needle of [
   "Kapcsolat vagy ex jár a fejemben",
   "Kapcsolati olvasat",
   "Döntés előtt állok",
-  "30 napos előrejelzést kérek",
+  "30 napos térképet kérek",
   "parkapcsolat_elemzes",
   "dontes_komplex",
   "personal_30_day",
@@ -208,6 +209,26 @@ for (const needle of [
   "nem ígér biztos jövőt",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
+}
+
+for (const forbiddenNeedle of [
+  "30 napos előrejelzést kérek",
+  "Ha tudni akarod, mire figyelj",
+  "A 30 napos előrejelzés",
+]) {
+  if (pricingRoute.includes(forbiddenNeedle)) {
+    failed.push(`Pricing route must avoid deterministic paid astrology wording: ${forbiddenNeedle}`);
+  }
+}
+
+for (const forbiddenNeedle of [
+  "Személyes 30 napos előrejelzés",
+  "Teljes éves előrejelzés",
+  "konkrét napokra figyelmeztetés",
+]) {
+  if (productsSource.includes(forbiddenNeedle)) {
+    failed.push(`Product catalog must avoid deterministic paid astrology wording: ${forbiddenNeedle}`);
+  }
 }
 
 for (const needle of [
