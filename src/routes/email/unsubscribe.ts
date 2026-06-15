@@ -14,6 +14,15 @@ function redactToken(token: string | null | undefined): string {
   return `${token.slice(0, 4)}***${token.slice(-4)}`;
 }
 
+const PUBLIC_UNSUBSCRIBE_ERROR =
+  "A leiratkozási kérést most nem tudtuk feldolgozni. Kérlek próbáld újra később.";
+const MISSING_UNSUBSCRIBE_TOKEN = "Hiányzó leiratkozási azonosító.";
+const INVALID_UNSUBSCRIBE_LINK = "Ez a leiratkozási link érvénytelen vagy lejárt.";
+
+function unsubscribeError(message: string, status: number): Response {
+  return Response.json({ error: message }, { status });
+}
+
 export const Route = createFileRoute("/email/unsubscribe")({
   server: {
     handlers: {
@@ -22,7 +31,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
         if (!supabaseUrl || !supabaseServiceKey) {
-          return Response.json({ error: "Server configuration error" }, { status: 500 });
+          return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
         }
 
         // Extract token from query params
@@ -30,7 +39,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
         const token = url.searchParams.get("token");
 
         if (!token) {
-          return Response.json({ error: "Token is required" }, { status: 400 });
+          return unsubscribeError(MISSING_UNSUBSCRIBE_TOKEN, 400);
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -43,7 +52,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
           .maybeSingle();
 
         if (lookupError || !tokenRecord) {
-          return Response.json({ error: "Invalid or expired token" }, { status: 404 });
+          return unsubscribeError(INVALID_UNSUBSCRIBE_LINK, 404);
         }
 
         if (tokenRecord.used_at) {
@@ -58,7 +67,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
         if (!supabaseUrl || !supabaseServiceKey) {
-          return Response.json({ error: "Server configuration error" }, { status: 500 });
+          return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
         }
 
         // Extract token from query params (always present for RFC 8058 one-click)
@@ -93,7 +102,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
         }
 
         if (!token) {
-          return Response.json({ error: "Token is required" }, { status: 400 });
+          return unsubscribeError(MISSING_UNSUBSCRIBE_TOKEN, 400);
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -106,7 +115,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
           .maybeSingle();
 
         if (lookupError || !tokenRecord) {
-          return Response.json({ error: "Invalid or expired token" }, { status: 404 });
+          return unsubscribeError(INVALID_UNSUBSCRIBE_LINK, 404);
         }
 
         if (tokenRecord.used_at) {
@@ -127,7 +136,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
             error: updateError,
             token_redacted: redactToken(token),
           });
-          return Response.json({ error: "Failed to process unsubscribe" }, { status: 500 });
+          return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
         }
 
         if (!updated) {
@@ -147,7 +156,7 @@ export const Route = createFileRoute("/email/unsubscribe")({
             error: suppressError,
             email_redacted: redactEmail(tokenRecord.email),
           });
-          return Response.json({ error: "Failed to process unsubscribe" }, { status: 500 });
+          return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
         }
 
         console.log("Email unsubscribed", {

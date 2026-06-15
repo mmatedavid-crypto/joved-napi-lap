@@ -160,6 +160,25 @@ const checks: Check[] = [
     excludes: ['console.error("Failed to mark token as used", { error: updateError, token })'],
   },
   {
+    name: "unsubscribe endpoint returns localized public errors",
+    file: "src/routes/email/unsubscribe.ts",
+    includes: [
+      "PUBLIC_UNSUBSCRIBE_ERROR",
+      "MISSING_UNSUBSCRIBE_TOKEN",
+      "INVALID_UNSUBSCRIBE_LINK",
+      "function unsubscribeError",
+      "A leiratkozási kérést most nem tudtuk feldolgozni",
+      "Hiányzó leiratkozási azonosító.",
+      "Ez a leiratkozási link érvénytelen vagy lejárt.",
+    ],
+    excludes: [
+      'Response.json({ error: "Server configuration error" }',
+      'Response.json({ error: "Token is required" }',
+      'Response.json({ error: "Invalid or expired token" }',
+      'Response.json({ error: "Failed to process unsubscribe" }',
+    ],
+  },
+  {
     name: "SSR fallback logging does not include raw response bodies",
     file: "src/server.ts",
     includes: [
