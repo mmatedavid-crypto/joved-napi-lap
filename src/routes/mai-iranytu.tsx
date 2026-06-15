@@ -67,12 +67,13 @@ type Compass = {
 
 type Stored = { dob?: string; name?: string; sign?: string };
 
-function rememberDailyCompass(out: Compass, sign: string) {
+function rememberDailyCompass(out: Compass, sign: string, focus: string) {
   const signName = sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined;
   recordGuestReadingMemory({
     readingType: "daily_compass",
     topic: "mai iránytű",
-    situation: signName,
+    question: focus.trim() || undefined,
+    situation: focus.trim() || signName,
     sourceRoute: "/mai-iranytu",
     title: signName ? `Mai iránytű · ${signName}` : "Mai iránytű",
     summary:
@@ -101,6 +102,7 @@ function Page() {
   const [dob, setDob] = useState<string>(stored.dob ?? "");
   const [name, setName] = useState<string>(stored.name ?? "");
   const [sign, setSign] = useState<string>(stored.sign ?? "");
+  const [focus, setFocus] = useState("");
   const [loading, setLoading] = useState(false);
   const [c, setC] = useState<Compass | null>(null);
   const [paywall, setPaywall] = useState(false);
@@ -228,7 +230,7 @@ function Page() {
     else if (out.moon) out.oneLine = `${out.moon} — figyelj a finomságokra.`;
 
     setC(out);
-    rememberDailyCompass(out, sign);
+    rememberDailyCompass(out, sign, focus);
     setLoading(false);
     trackEvent("daily_compass_completed");
   }
@@ -253,6 +255,18 @@ function Page() {
             />
           </div>
           <HUDateInput value={dob} onChange={setDob} label="Születési dátum (opcionális)" />
+          <div>
+            <label htmlFor="daily-focus" className="block text-sm text-ivory/80 mb-2">
+              Mi foglalkoztat ma? <span className="text-ivory/45">(opcionális)</span>
+            </label>
+            <input
+              id="daily-focus"
+              value={focus}
+              onChange={(e) => setFocus(e.target.value.slice(0, 160))}
+              placeholder="Pl. egy beszélgetés, munkahelyi döntés, belső nyugtalanság"
+              className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
+            />
+          </div>
           <div>
             <label className="block text-sm text-ivory/80 mb-2">
               Csillagjegy <span className="text-ivory/45">(opcionális)</span>
@@ -287,13 +301,16 @@ function Page() {
         <GuestMemoryInsightPanel
           readingType="daily_compass"
           topic="mai iránytű"
-          situation={sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined}
+          situation={focus.trim() || (sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined)}
         />
 
         {c && (
           <div className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               {c.cardName && <Section eyebrow="Mai lap">{c.cardName}</Section>}
+              {focus.trim() && (
+                <Section eyebrow="A mai fókuszod">{dailyFocusReflection(focus, c)}</Section>
+              )}
               {c.angelTitle && <Section eyebrow="Mai szám">{c.angelTitle}</Section>}
               {c.moon && <Section eyebrow="Holdjel">{c.moon}</Section>}
               {c.bio && (
@@ -331,8 +348,24 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="mai_iranytu_ai"
         sourceRoute="/mai-iranytu"
-        inputPayload={{ dob, name, sign, ...(c ?? {}) }}
+        inputPayload={{ dob, name, sign, situation: focus.trim() || undefined, ...(c ?? {}) }}
       />
     </Layout>
   );
+}
+
+function dailyFocusReflection(focus: string, compass: Compass): string {
+  const clean = focus.trim();
+  const lower = clean.toLocaleLowerCase("hu-HU");
+  const cardPart = compass.cardName ? `A mai lapod, a ${compass.cardName},` : "A mai iránytű";
+  if (/randi|kapcsolat|szerelem|ex|üzenet|nem ír|család/.test(lower)) {
+    return `${cardPart} ebben a kapcsolati térben nem gyors választ ad, hanem tempót mutat. A „${clean}” témában ma azt figyeld, hol reagálnál hiányból, és hol tudsz nyugodtabban jelen lenni.`;
+  }
+  if (/munka|állás|dönt|pénz|vált|projekt|feladat/.test(lower)) {
+    return `${cardPart} a „${clean}” kérdésében arra hívhatja fel a figyelmed, hogy ma ne mindent egyszerre akarj megoldani. Válaszd ki azt az egy lépést, ami tisztábbá teszi a következő órákat.`;
+  }
+  if (/félek|szorong|fáradt|nehéz|elakadt|bizonytalan/.test(lower)) {
+    return `${cardPart} a „${clean}” érzése mellett inkább lassítást kér. Ma nem az a fontos, hogy mindent megfejts, hanem hogy észrevedd, melyik gondolat tér vissza túl nagy erővel.`;
+  }
+  return `${cardPart} a „${clean}” témáját nem végleges válaszként, hanem napi jelként keretezi: mi az az apró döntés vagy felismerés, amit ma már nem érdemes eltolnod?`;
 }
