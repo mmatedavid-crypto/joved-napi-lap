@@ -38,6 +38,9 @@ const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
 for (const needle of [
   "Miben lesz személyesebb?",
   "Ebből indulunk ki",
+  "A fizetett olvasat fókusza",
+  "focusPreview.slice(0, 2).map",
+  "A részleteket lejjebb is ellenőrizheted fizetés előtt",
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
   "focusPreview.map",
   "function readingFocusPreview(",

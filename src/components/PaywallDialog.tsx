@@ -147,6 +147,25 @@ export function PaywallDialog({
               </div>
             )}
 
+            {focusPreview.length > 0 && (
+              <div className="rounded-md border border-gold/20 bg-gold/[0.055] p-4">
+                <div className="text-[10px] uppercase tracking-[0.22em] text-gold/75">
+                  A fizetett olvasat fókusza
+                </div>
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-ivory/70">
+                  {focusPreview.slice(0, 2).map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/75" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-2 text-xs leading-relaxed text-ivory/48">
+                  A részleteket lejjebb is ellenőrizheted fizetés előtt.
+                </p>
+              </div>
+            )}
+
             <div>
               <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
                 Email cím a vásárláshoz
