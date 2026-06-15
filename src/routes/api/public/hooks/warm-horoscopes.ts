@@ -5,16 +5,21 @@ import {
   type HoroscopePeriodHU,
 } from "@/lib/horoscopeNews";
 
-// Nyilvános cache-warmup végpont a pg_cron számára. Nem ad ki PII-t, csak
-// előmelegíti a horoszkóp olvasatokat a sitemap-news linkek mögött, hogy a
-// Google News-ról érkező látogatók azonnal nyitható, friss olvasatot lássanak.
-// Mivel csak cache-t generál és olvasható tartalmat ad vissza, nem igényel
-// titkos kulcsot — de a paraméterek limitáltak, hogy ne lehessen vele
-// költséget elszállítani.
+// Legacy warmup endpoint for scheduled jobs. It can trigger Roxy/AI work, so it
+// must stay protected even though it does not expose personal data.
 
 const MAX_LIMIT = 36;
 const DEFAULT_LIMIT = 12;
 const MAX_CONCURRENCY = 3;
+
+function isAuthorized(request: Request): boolean {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) return false;
+  const token = authHeader.slice("Bearer ".length).trim();
+  const prewarmSecret = process.env.HOROSCOPE_PREWARM_SECRET;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return Boolean(token && (token === prewarmSecret || token === serviceRoleKey));
+}
 
 function clampInt(value: string | null, def: number, min: number, max: number): number {
   const n = Number(value ?? def);
@@ -23,6 +28,10 @@ function clampInt(value: string | null, def: number, min: number, max: number): 
 }
 
 async function handle(request: Request) {
+  if (!isAuthorized(request)) {
+    return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+
   const url = new URL(request.url);
   const period = url.searchParams.get("period");
   const limit = clampInt(url.searchParams.get("limit"), DEFAULT_LIMIT, 1, MAX_LIMIT);

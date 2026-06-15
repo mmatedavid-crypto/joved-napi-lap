@@ -147,6 +147,27 @@ const checks: Check[] = [
     excludes: ["article.lead", "article.title", "roxy.data", "response_payload"],
   },
   {
+    name: "legacy public horoscope warmup route is authenticated",
+    file: "src/routes/api/public/hooks/warm-horoscopes.ts",
+    includes: [
+      'createFileRoute("/api/public/hooks/warm-horoscopes")',
+      "function isAuthorized",
+      "HOROSCOPE_PREWARM_SECRET",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "Authorization",
+      "Bearer ",
+      'return Response.json({ ok: false, error: "unauthorized" }, { status: 401 })',
+      "MAX_LIMIT = 36",
+      "MAX_CONCURRENCY = 3",
+      "getHoroscopeNewsArticle",
+    ],
+    excludes: [
+      "nem igényel\n// titkos kulcsot",
+      "nem igényel titkos kulcsot",
+      "Mivel csak cache-t generál",
+    ],
+  },
+  {
     name: "horoscope fallback is publishable Hungarian copy, not provider error text",
     file: "src/lib/horoscopeNews.server.ts",
     includes: [
