@@ -233,7 +233,7 @@ function buildFallbackReport(opts: {
   const { input, areaLabel, startDate, endDate, location } = opts;
   return [
     "## A következő 30 napod fő témája",
-    "A forrásból most nem érkezett részletes tranzit-adat, ezért nem fogalmazunk meg konkrét jóslatot. Ami biztosan a te kezedben van: hogyan figyelsz oda a választott életterületre a következő 30 napban.",
+    "A forrásból most nem érkezett részletes tranzit-adat, ezért nem fogalmazunk meg konkrét jóslatot. Ami most a te kezedben lehet: hogyan figyelsz oda a választott életterületre a következő 30 napban.",
     "",
     "## Születési képleted röviden",
     `Születési dátum: ${input.birthDate}${input.birthTime ? `, idő: ${input.birthTime}` : " (idő nincs megadva, közelítő elemzés)"}, hely: ${input.birthPlace}${location ? ` (feloldva)` : " (helyszín nem feloldható volt)"}.`,

@@ -87,6 +87,7 @@ const checks: Check[] = [
       "A fizetést Stripe dolgozza fel",
       "bankkártyaadatot nem tárolunk",
       "biztonságos rendelési linken és emailben",
+      "hagyományos szimbólumait",
       'to="/arak"',
       "SITE_LEGAL.operator.name",
       "SITE_LEGAL.operator.registeredOffice",
@@ -95,7 +96,7 @@ const checks: Check[] = [
       "mailto:${SITE_LEGAL.supportEmail}",
       "nem szakmai döntéshelyettesítő",
     ],
-    excludes: ["garantáltan", "mindenképpen", "biztosan"],
+    excludes: ["garantáltan", "mindenképpen", "biztosan", "Évtizedes szimbólumismeret"],
   },
   {
     name: "mobile bottom navigation gives direct profile access",

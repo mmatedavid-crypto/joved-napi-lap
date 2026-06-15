@@ -68,9 +68,9 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Mit adunk?">
           <p>
-            Fizetős olvasataink nem sablonos válaszok. Évtizedes szimbólumismeret és hagyományos
-            értelmezés alapján fogalmazunk, a te kérdésedhez és helyzetedhez igazítva. Az eredmény
-            nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
+            Fizetős olvasataink nem sablonos válaszok. A tarot, az asztrológia és a számmisztika
+            hagyományos szimbólumait a te kérdésedhez és helyzetedhez igazítva fogalmazzuk meg. Az
+            eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
           </p>
           <p>
             Nem vállalunk orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadást. A Jövőd.hu-n

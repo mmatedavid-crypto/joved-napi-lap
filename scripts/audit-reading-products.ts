@@ -442,6 +442,12 @@ for (const report of delegatedReports) {
       policyFailures.push(`${report.slug}: raw provider payload must not be stored in response_payload`);
     }
   }
+
+  for (const forbiddenNeedle of ["Ami biztosan", "biztosan a te kezedben"]) {
+    if (body.includes(forbiddenNeedle)) {
+      policyFailures.push(`${report.slug}: fallback report must avoid deterministic certainty wording`);
+    }
+  }
 }
 
 for (const needle of [
