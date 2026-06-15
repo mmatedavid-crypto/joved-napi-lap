@@ -151,6 +151,13 @@ function ReadingUseGuide() {
           </div>
         ))}
       </div>
+      <p className="mt-4 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/48">
+        Ha az olvasat valamelyik része félrement, írhatsz nekünk a{" "}
+        <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+          {SITE_LEGAL.supportEmail}
+        </a>{" "}
+        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik rész nem talált.
+      </p>
     </aside>
   );
 }

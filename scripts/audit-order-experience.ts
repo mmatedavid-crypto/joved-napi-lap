@@ -267,6 +267,9 @@ const checks: Check[] = [
       "mi maradt ki a helyzetedből",
       "milyen irányban vársz pontosítást",
       "visszaviszed a saját helyzetedbe",
+      "Ha az olvasat valamelyik része félrement",
+      "mailto:${SITE_LEGAL.supportEmail}",
+      "rendelésazonosítóval gyorsabban visszanézzük",
     ],
   },
   {
