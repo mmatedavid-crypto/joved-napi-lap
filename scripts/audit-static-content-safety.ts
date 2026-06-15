@@ -1,0 +1,60 @@
+import { readFileSync } from "node:fs";
+
+type StaticSafetyCheck = {
+  file: string;
+  forbidden: RegExp[];
+  required?: string[];
+};
+
+const checks: StaticSafetyCheck[] = [
+  {
+    file: "src/data/chineseZodiac.hu.ts",
+    forbidden: [
+      /\bidegrendszer\b/i,
+      /\bemésztés\b/i,
+      /\bhormon/i,
+      /\bpajzsmirigy\b/i,
+      /\bízület/i,
+      /\banyagcsere\b/i,
+      /\bmáj\b/i,
+      /\bmasszázs kötelező\b/i,
+      /\bgyógyít/i,
+    ],
+    required: ["ritmus", "támogató munka", "nem minden feszültséget saját feladatként"],
+  },
+  {
+    file: "src/data/numerologyTypes.hu.ts",
+    forbidden: [/\bgyógyít/i, /\bgyógyító/i],
+    required: ["mélyen támogató jelenlétként", "megtartó erőt", "mások támogatására"],
+  },
+  {
+    file: "src/data/lifePathMeanings.hu.ts",
+    forbidden: [/\bgyógyít/i, /\bgyógyító/i, /\bterapeuta\w*/i, /\bápoló\b/i],
+    required: ["egészséges határokkal", "spirituális érlelődésre", "tanítás, támogatás"],
+  },
+];
+
+const failures: string[] = [];
+
+for (const check of checks) {
+  const body = readFileSync(check.file, "utf8");
+
+  for (const forbidden of check.forbidden) {
+    if (forbidden.test(body)) {
+      failures.push(`${check.file}: unsafe static self-reflection claim still present: ${forbidden}`);
+    }
+  }
+
+  for (const required of check.required ?? []) {
+    if (!body.includes(required)) {
+      failures.push(`${check.file}: expected safer symbolic wording missing: ${required}`);
+    }
+  }
+}
+
+if (failures.length > 0) {
+  console.error(failures.join("\n"));
+  process.exit(1);
+}
+
+console.log(`Static content safety audit passed: ${checks.length} files.`);

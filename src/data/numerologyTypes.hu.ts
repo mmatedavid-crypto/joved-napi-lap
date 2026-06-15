@@ -38,7 +38,7 @@ export const LELEK_SZAM: NumerologyType = {
     { n: 9, title: "9-es lélekszám", body: "Tágabb értelmet keresel: szolgálatot, együttérzést, valamit, ami túlmutat rajtad. Akkor érzed teljesnek magad, ha az életed értelemmel tölt fel másokat is." },
     { n: 11, title: "11-es lélekszám", body: "Mestersz lélekszám: intuíció, ihlet, spirituális látás. Belső igazságokat akarsz közvetíteni — ám ehhez bátorság kell, mert a 11-es szenzitivitása sebezhetővé is tesz." },
     { n: 22, title: "22-es lélekszám", body: "Mestersz: nagy víziók megvalósítása a földön. Lelked olyat akar építeni, ami sokakat szolgál — ehhez fegyelmet és türelmet kell tanulnod." },
-    { n: 33, title: "33-as lélekszám", body: "Mestersz: szeretetből szolgálni. A lelked tanítóként vagy gyógyítóként akar jelen lenni — de először magadnak kell megadnod azt a szeretetet, amit másoknak adsz." },
+    { n: 33, title: "33-as lélekszám", body: "Mestersz: szeretetből szolgálni. A lelked tanítóként vagy mélyen támogató jelenlétként akar jelen lenni — de először magadnak kell megadnod azt a szeretetet, amit másoknak adsz." },
   ],
 };
 
@@ -63,7 +63,7 @@ export const SZEMELYISEG_SZAM: NumerologyType = {
     { n: 9, title: "9-es személyiség", body: "Bölcsnek, együttérzőnek, finomnak látnak. Egyfajta nemesség lengi körül a megjelenésedet." },
     { n: 11, title: "11-es személyiség", body: "Intuitívnak, érzékenynek, ihletettnek látszol. Mások gyakran kérik a véleményedet, anélkül hogy tudnák, miért." },
     { n: 22, title: "22-es személyiség", body: "Nagyívű látomásokat sugárzol — az emberek úgy érzik, valami fontosat építesz." },
-    { n: 33, title: "33-as személyiség", body: "Anyai/atyai gyógyító erőt érzékelnek benned. Akik melletted vannak, megkönnyebbülnek." },
+    { n: 33, title: "33-as személyiség", body: "Anyai/atyai, megtartó erőt érzékelnek benned. Akik melletted vannak, gyakran megkönnyebbülnek, mert nyugodtabb térbe érkeznek." },
   ],
 };
 
@@ -82,13 +82,13 @@ export const KIFEJEZES_SZAM: NumerologyType = {
     { n: 3, title: "3-as kifejezésszám", body: "Alkotásra születtél: szó, kép, hang. A feladatod, hogy az önkifejezésedet ne aprózd el — koncentráld egy fő alkotói pályára." },
     { n: 4, title: "4-es kifejezésszám", body: "Építkezésre születtél — rendszereket, struktúrákat hozol létre. A feladatod megtanulni, hogy a fegyelem nem rugalmatlanság, és a stabilitás nem unalom." },
     { n: 5, title: "5-ös kifejezésszám", body: "Szabadság, változatosság, kommunikáció. Sok mindennel megpróbálkozol — a feladatod megtanulni elkötelezni magad anélkül, hogy bezárva éreznéd magad." },
-    { n: 6, title: "6-os kifejezésszám", body: "Gondoskodásra, otthonra, gyógyításra születtél. A feladatod megtanulni a felelősséget örömmel hordozni, nem áldozatként." },
+    { n: 6, title: "6-os kifejezésszám", body: "Gondoskodásra, otthonteremtésre és mások támogatására születtél. A feladatod megtanulni a felelősséget örömmel hordozni, nem áldozatként." },
     { n: 7, title: "7-es kifejezésszám", body: "Mélységkutató: tudomány, spiritualitás, kutatás. A feladatod megtanulni, hogy a magány nem elszigeteltség, és a bölcsesség akkor szolgál, ha megosztod." },
     { n: 8, title: "8-as kifejezésszám", body: "Anyagi hatalom, vezetés, üzlet. A feladatod megtanulni, hogy az erő szolgálni való, nem dominálni." },
     { n: 9, title: "9-es kifejezésszám", body: "Humanitárius út: szolgálat, együttérzés, művészet a köz javára. A feladatod megtanulni elengedni — embereket, kötődéseket, régi sebeket." },
     { n: 11, title: "11-es kifejezésszám (mestersz)", body: "Spirituális tanító, ihletett közvetítő. Magas feszültségű szám — feladatod megtanulni földelni a látomásaidat." },
     { n: 22, title: "22-es kifejezésszám (mestersz)", body: "Mesterépítő: nagy víziókat valósítasz meg a fizikai síkon. Feladatod összekötni az ihletet és a megvalósítást." },
-    { n: 33, title: "33-as kifejezésszám (mestersz)", body: "Mester-tanító: feltétel nélküli szeretetből szolgálsz. Ritka szám — feladatod a saját szíved gyógyítása, mielőtt másokét gyógyítanád." },
+    { n: 33, title: "33-as kifejezésszám (mestersz)", body: "Mester-tanító: feltétel nélküli szeretetből szolgálsz. Ritka szám — feladatod a saját szívedhez is türelmesen visszatérni, mielőtt másoknak tartanál teret." },
   ],
 };
 

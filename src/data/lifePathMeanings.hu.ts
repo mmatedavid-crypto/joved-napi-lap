@@ -92,14 +92,14 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     title: "Sorsszám 6 jelentése — A gondoskodó szív",
     lead: "A 6-os sorsszám a gondoskodás, a felelősség és a szeretet energiáját hordozza. Szívközpontú lényként fontos dolgod van a világban.",
     essence:
-      "A 6-os szám mélyen gyökerező szeretetről, harmóniáról és együttérzésről tanúskodik. Képessé tesz mások támogatására, gyógyítására és megnyugtatására. Feladatod, hogy szíveddel és lelkeddel mások szolgálatába állj, fényt és reményt hozva a környezetedbe.",
+      "A 6-os szám mélyen gyökerező szeretetről, harmóniáról és együttérzésről tanúskodik. Képessé tesz mások támogatására, megnyugtatására és megtartására. Feladatod, hogy szívvel, de egészséges határokkal legyél jelen a környezetedben.",
     strengths:
       "Rendkívül támogató vagy, képes vagy figyelmesen meghallgatni másokat és valódi empátiával fordulni feléjük. Védelmező természettel bírsz, különösen a családod és a szeretteid iránt, és kiállsz azokért, akiknek nincs hangjuk. Romantikus lelkületű vagy, aki keményen dolgozik a békés, kölcsönös kapcsolatokért.",
     shadow:
       "Hajlamos lehetsz túlzottan passzív lenni, és mások kedvéért háttérbe szorítani a saját igényeidet. Az önfeláldozásod néha odáig vezethet, hogy elhanyagolod önmagad. Idealista látásmódod miatt csalódhatsz, amikor a valóság nem felel meg az elképzeléseidnek.",
     love: "Partnereid iránt hűséges, gondoskodó és rendkívül romantikus vagy, meleg és szeretetteljes otthont teremtve. Szeretetedet a gondoskodás, védelem és rendíthetetlen hűség által fejezed ki. Fontos, hogy megtaláld az egyensúlyt a szeretet és az esetleges túlzott ragaszkodás között.",
     career:
-      "Kiválóan teljesíthetsz olyan területeken, ahol a szolgálat, a gondoskodás és a harmónia megteremtése a cél. Lehetsz tanácsadó, terapeuta, szociális munkás, ápoló vagy tanár. Értékeled a szépséget és az egyensúlyt, ami vonzhat a lakberendezés, rendezvényszervezés vagy gyógyító művészetek felé.",
+      "Kiválóan teljesíthetsz olyan területeken, ahol a szolgálat, a gondoskodás és a harmónia megteremtése a cél. Vonzódhatsz a tanácsadói, segítői, oktatói vagy közösségi szerepekhez. Értékeled a szépséget és az egyensúlyt, ami kreatív, otthonteremtő vagy kapcsolódást építő utak felé is vihet.",
     advice:
       "Próbáld meg tudatosabban figyelni a saját igényeidre, és ne hagyd, hogy az önfeláldozás kimerítsen. Fontos, hogy megtaláld az egyensúlyt a mások támogatása és az önmagad gondozása között. Emellett érdemes elfogadni, hogy nem mindenki osztozik az idealista elképzeléseidben, és ez nem von le az emberi kapcsolatok értékéből.",
   },
@@ -141,7 +141,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     strengths:
       "Az életed során szerzett tapasztalatok révén megtanultad belső bölcsességed értékét és erejét. Képes vagy másokat is felébreszteni saját magasabb énjükre, példát mutatva, hogyan kezelhetők eleganciával és megértéssel a nehézségek.  Rendkívül toleráns vagy, nem ítélkezel faj, vallás vagy életmód alapján, teret és tiszteletet adsz mindenkinek.  Szíved lágysága sokak számára vonzó, akik támogatást keresnek, és tudod, mi kell ahhoz, hogy túljuss a kihívásokon.",
     shadow:
-      "A múltbéli nehéz tapasztalatok mély nyomot hagyhattak benned, és ha nem engeded meg magadnak a feldolgozást és gyógyulást, a sérelmek árnyékot vethetnek kapcsolataidra. Hajlamos lehetsz túlzásba vinni az önfeláldozást, mások igényeinek előtérbe helyezésével elhanyagolhatod saját szükségleteidet.  A sok megtapasztalt nehézség miatt kialakulhat benned az a gondolat, hogy az élet szenvedés, és hajlamos lehetsz többet tulajdonítani a küzdelmes időszakoknak, mint a könnyedebb pillanatoknak.",
+      "A múltbéli nehéz tapasztalatok mély nyomot hagyhattak benned, és ha nem adsz teret a feldolgozásnak, a régi sérelmek árnyékot vethetnek kapcsolataidra. Hajlamos lehetsz túlzásba vinni az önfeláldozást, mások igényeinek előtérbe helyezésével elhanyagolhatod saját szükségleteidet. A sok megtapasztalt nehézség miatt néha többet tulajdoníthatsz a küzdelmes időszakoknak, mint a könnyedebb pillanatoknak.",
     love: "Párkapcsolataidban együttérző, odaadó és érzelmileg gazdag tudsz lenni. Fontos számodra a mély, értelmes kapcsolat, ahol mindketten fejlődhettek, de vigyázz, nehogy túlságosan feloldódj a másikban.",
     career:
       "A 9-es sorsszámmal rendelkezők olyan karrierben virágoznak, melyek a nagyobb jó szolgálatára és a kreatív önkifejezésre adnak lehetőséget. Kiváló humanitáriusok, tanárok, tanácsadók, terapeuták, szociális munkások és non-profit vezetők lehetnek. Munkájukban a valódi értelmet keresik, nem pusztán a fizetést.",
@@ -159,7 +159,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Fokozott érzékenységed, bár a legnagyobb erőd, túlterhelővé válhat. A negatív érzelmek, a kemény környezet vagy a kritika mélyebben érinthet, ami szorongáshoz, önbizalomhiányhoz vagy elzárkózáshoz vezethet. Hajlamod van az analízisre és az önmagadban való elmélyedésre, ami döntésképtelenséget okozhat. Perfekcionista hajlamod miatt irreálisan magas elvárásokat támaszthatsz magaddal és másokkal szemben, ami frusztrációhoz vezethet, ha a valóság nem felel meg az ideális vízióidnak.",
     love: "Párkapcsolataidban a mély érzelmi és spirituális kapcsolódásra vágysz. Kulcsfontosságú számodra az őszinteség és a megértés, valamint egy olyan partner, aki képes elfogadni és támogatni egyedi érzékenységedet. Fontos, hogy megtaláld az egyensúlyt a szeretet és a függetlenség iránti igényed között.",
     career:
-      "Kiválóan teljesítesz olyan területeken, ahol inspirálhatsz és felemelhetsz másokat, például spirituális tanácsadóként, terapeutaként vagy coachként. Látnoki természeted és kreatív tehetséged révén művészeti, írói vagy humanitárius munkakörökben is megtalálhatod a helyedet. Olyan foglalkozásra van szükséged, amely lélekszintű értelmet ad, hisz a puszta profitközpontú környezet ürességet okozhat.",
+      "Kiválóan teljesítesz olyan területeken, ahol inspirálhatsz és felemelhetsz másokat, például spirituális tanácsadóként, segítőként vagy coachként. Látnoki természeted és kreatív tehetséged révén művészeti, írói vagy humanitárius munkakörökben is megtalálhatod a helyedet. Olyan foglalkozásra van szükséged, amely lélekszintű értelmet ad, hisz a puszta profitközpontú környezet ürességet okozhat.",
     advice:
       "Tanulj meg bízni a belső hangodban és az intuíciódban, ez a legfőbb iránytűd. Engedd meg magadnak, hogy megéld érzékenységedet, de találd meg a módját, hogy megvédd energiáidat a külső hatásoktól. Ne kritizáld magad, ha nem felelsz meg irreális elvárásaidnak; a tökéletesség helyett az önelfogadásra törekedj.",
   },
@@ -180,16 +180,16 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "33": {
     title: "Sorsszám 33 jelentése — Az Önzetlen Tanító",
-    lead: "A 33-as sorsszám a feltétel nélküli szeretet és az önzetlen szolgálat rezgését hordozza. Ez az út a gyógyítás és a spirituális fejlődés mentorálására hív.",
+    lead: "A 33-as sorsszám a feltétel nélküli szeretet és az önzetlen szolgálat rezgését hordozza. Ez az út mély támogatásra, tanításra és spirituális érlelődésre hív.",
     essence:
-      "A 33-as sorsszám a mesterszámok közé tartozik, a szív és a lélek mélységeivel való összekapcsolódásról szól. Az egyetemes szeretet csatornája, mely az emberiséget segíti a gyógyulásban és a megvilágosodás útján.  Ez az út a mély empátián és az élettapasztalatokon keresztül mutatja meg a reményt.",
+      "A 33-as sorsszám a mesterszámok közé tartozik, a szív és a lélek mélységeivel való összekapcsolódásról szól. Az egyetemes szeretet szimbóluma, amely másokat is emlékeztethet a reményre, az együttérzésre és a felelősségteljes jelenlétre. Ez az út a mély empátián és az élettapasztalatokon keresztül mutat irányt.",
     strengths:
       "Mélyen együttérző és empatikus, képes mások szenvedését autentikusan megérteni. Inspiráló jelenléte és tanítása motiválja az embereket a növekedésre és önfelfedezésre. Kreatív megközelítéssel és innovatív módon képes a komplex spirituális igazságokat átadni, láthatóvá téve a láthatatlant.",
     shadow:
       "Időnként túlzottan magas elvárásokat támaszthat önmagával és másokkal szemben, ami csalódottsághoz és kiégéshez vezethet. Mély érzelmi tudatossága sebezhetővé teszi a kritikával és negativitással szemben, határok kijelölésére lehet szüksége.  Az önfeláldozás tendenciája miatt hajlamos lehet elhanyagolni saját igényeit, ami kimerülést okozhat.",
     love: "Párkapcsolataiban mélyen elkötelezett, gondoskodó és spirituálisan érzékeny. Olyan társat keres, aki osztja szenvedélyét a fejlődés és a szolgálat iránt, és képes megérteni belső világának mélységeit.",
     career:
-      "A gyógyítás, tanítás és emberiség emelése iránti elhivatottság jellemzi. Kiváló spirituális vezető, terapeuta, oktató vagy mentor lehet, akinek munkája a lélek mélységeit táplálja. Műtárgyakkal, zenével vagy írásokkal is átadhatja üzenetét, ha azok egy magasabb célt szolgálnak.",
+      "A tanítás, támogatás és közösségi emelés iránti elhivatottság jellemzi. Kiváló spirituális vezető, oktató, mentor vagy kreatív közvetítő lehet, akinek munkája a lélek mélységeit szólítja meg. Műtárgyakkal, zenével vagy írásokkal is átadhatja üzenetét, ha azok egy magasabb célt szolgálnak.",
     advice:
       "Mély empátiája erőt ad, de fontos, hogy megtanulja az egészséges érzelmi határokat felállítani. Fordítson figyelmet saját feltöltődésére és szükségleteire, hogy hosszú távon tudja adni a legjobbját. Engedje meg magának, hogy elfogadja a tökéletlenséget, és emlékezzen, hogy a legnagyobb tanítás a szeretetteljes jelenlét.",
   },

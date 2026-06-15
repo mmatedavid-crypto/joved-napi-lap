@@ -8,6 +8,7 @@ const AUDITS = [
   "scripts/audit-trust-experience.ts",
   "scripts/audit-paywall-products.ts",
   "scripts/audit-reading-products.ts",
+  "scripts/audit-static-content-safety.ts",
   "scripts/audit-order-experience.ts",
   "scripts/audit-seo-news.ts",
 ];
