@@ -151,6 +151,8 @@ const checks: Check[] = [
       "idegenként induljon",
       "A minta helyben marad ebben a böngészőben",
       "készítünk belőle biztos jövőállítást",
+      "A személyesítés nem kötelező",
+      "a törlés nem érinti a rendeléseidet",
       "Később az adatkezelési oldalon bármikor visszakapcsolhatod",
       "Helyi minta törlése",
       "Személyesítés kikapcsolása",

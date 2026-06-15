@@ -75,7 +75,8 @@ export function GuestMemoryNotice() {
           </p>
           <p className="text-xs leading-relaxed text-ivory/48">
             A minta helyben marad ebben a böngészőben; nem bankkártyaadat, nem diagnózis, és nem
-            készítünk belőle biztos jövőállítást.
+            készítünk belőle biztos jövőállítást. A személyesítés nem kötelező: kikapcsolhatod, és
+            a törlés nem érinti a rendeléseidet.
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <button type="button" onClick={dismiss} className="text-gold hover:text-gold/80">
