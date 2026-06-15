@@ -1,17 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { SITE_LEGAL } from "@/lib/legal";
 
-function originFromRequest(request: Request): string {
-  const url = new URL(request.url);
-  const proto = request.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "");
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? url.host;
-  return `${proto}://${host}`;
-}
+const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl;
 
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const origin = originFromRequest(request);
+      GET: async () => {
+        const origin = SITEMAP_ORIGIN;
         return new Response(
           [
             "User-agent: *",

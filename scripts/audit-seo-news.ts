@@ -12,21 +12,38 @@ const checks: Check[] = [
     name: "news sitemap only exposes fresh horoscope articles",
     file: "src/routes/sitemap-news[.]xml.tsx",
     includes: [
+      "SITE_LEGAL.siteUrl",
+      "const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl",
       "getFreshPublishedHoroscopeNewsItems",
       "/horoszkop/${u.article.period}/${u.article.signSlug}",
       "<news:publication_date>${u.publicationDate}</news:publication_date>",
       "horoscopeSeoTitle(u.article.period, u.article.signName)",
       "Cache-Control",
     ],
+    excludes: ["x-forwarded-host", 'request.headers.get("host")', "originFromRequest"],
   },
   {
     name: "regular sitemap still exposes every horoscope landing article",
     file: "src/routes/sitemap[.]xml.tsx",
     includes: [
+      "SITE_LEGAL.siteUrl",
+      "const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl",
       "...allHoroscopeArticlePaths().map",
       'changefreq: period === "napi" ? "daily" : period === "heti" ? "weekly" : "monthly"',
       'priority: period === "napi" ? "0.8" : "0.6"',
     ],
+    excludes: ["x-forwarded-host", 'request.headers.get("host")', "originFromRequest"],
+  },
+  {
+    name: "robots sitemap URLs use the canonical production domain",
+    file: "src/routes/robots[.]txt.tsx",
+    includes: [
+      "SITE_LEGAL.siteUrl",
+      "const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl",
+      "`Sitemap: ${origin}/sitemap.xml`",
+      "`Sitemap: ${origin}/sitemap-news.xml`",
+    ],
+    excludes: ["x-forwarded-host", 'request.headers.get("host")', "originFromRequest"],
   },
   {
     name: "horoscope article fallback pages are not indexed",

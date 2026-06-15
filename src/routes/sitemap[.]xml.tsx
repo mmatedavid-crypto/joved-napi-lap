@@ -7,6 +7,7 @@ import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
 import { NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
 import { getPublishedMagazinPosts } from "@/data/magazin.hu";
 import { ANGEL_NUMBER_PAGES } from "@/lib/angel.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
 function xmlEscape(value: string): string {
   return value
@@ -17,12 +18,7 @@ function xmlEscape(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
-function originFromRequest(request: Request): string {
-  const url = new URL(request.url);
-  const proto = request.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "");
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? url.host;
-  return `${proto}://${host}`;
-}
+const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl;
 
 const STATIC_PATHS = [
   "/",
@@ -63,8 +59,8 @@ const STATIC_PATHS = [
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const origin = originFromRequest(request);
+      GET: async () => {
+        const origin = SITEMAP_ORIGIN;
         const today = new Date().toISOString().slice(0, 10);
         const paths = [
           ...STATIC_PATHS.map((path) => ({ path, changefreq: "weekly", priority: "0.7" })),
