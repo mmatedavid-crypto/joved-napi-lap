@@ -166,6 +166,17 @@ export function PaywallDialog({
               </div>
             )}
 
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/12 p-4">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-gold/75">
+                Pontossági visszajelzés
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-ivory/66">
+                Ha az elkészült olvasat részben talál, vagy fontos helyzet kimarad belőle,
+                rendelés alapján visszanézzük, és konkrét pontosítási kéréssel segítünk jelezni,
+                melyik rész igényel finomítást.
+              </p>
+            </div>
+
             <div>
               <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
                 Email cím a vásárláshoz
