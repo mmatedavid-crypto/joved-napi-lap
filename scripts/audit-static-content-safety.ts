@@ -57,6 +57,22 @@ const checks: StaticSafetyCheck[] = [
       "tisztábban szólhat hozzád",
     ],
   },
+  {
+    file: "src/data/ichingHexagrams.hu.ts",
+    forbidden: [
+      /\bValami jó közeledik\b/i,
+      /\bBocsáss meg\b/i,
+      /\bmegérkezik\b/i,
+      /\bki kell mondani vagy meg kell tenni\b/i,
+      /\bcélja a gyógyulás\b/i,
+    ],
+    required: [
+      "Egy kedvezőbb mozgás közeledhet",
+      "A megbékélés akkor értékes, ha belülről érik",
+      "Valamit talán tisztábban kell kimondani vagy vállalni",
+      "Az átharapás célja a tisztázás",
+    ],
+  },
 ];
 
 const failures: string[] = [];
