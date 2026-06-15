@@ -345,6 +345,25 @@ const checks: Check[] = [
     excludes: ["lead={error.message}"],
   },
   {
+    name: "natal chart page never displays raw provider or AI errors",
+    file: "src/routes/szuletesi-keplet.tsx",
+    includes: [
+      "SAFE_NATAL_CHART_ERROR",
+      "A képletet most nem sikerült elkészíteni",
+      "setErr(SAFE_NATAL_CHART_ERROR)",
+    ],
+    excludes: ['setErr(r.message ?? "A képletet most nem sikerült elkészíteni.")', "setErr(r.message"],
+  },
+  {
+    name: "natal chart translation returns stable public failure copy",
+    file: "src/lib/roxyTranslate.functions.ts",
+    includes: [
+      "A születési képlet magyar olvasata most nem készült el.",
+      "reading: null",
+    ],
+    excludes: ['message: t.error ?? "Magyarítási hiba."', "message: t.error"],
+  },
+  {
     name: "homepage tarot spread avoids horizontal viewport overflow",
     file: "src/components/SpreadDeck.tsx",
     includes: ["const spreadX = (t - 0.5) * 70"],

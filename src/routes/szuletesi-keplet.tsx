@@ -36,6 +36,9 @@ type City = {
   timezone: string; // IANA
 };
 
+const SAFE_NATAL_CHART_ERROR =
+  "A képletet most nem sikerült elkészíteni. Próbáld újra később, vagy ellenőrizd a megadott adatokat.";
+
 function parseCities(payload: unknown): City[] {
   if (!payload || typeof payload !== "object") return [];
   const raw = (payload as { cities?: unknown }).cities;
@@ -130,7 +133,7 @@ function Page() {
         },
       });
       if (!r.ok || !r.reading) {
-        setErr(r.message ?? "A képletet most nem sikerült elkészíteni.");
+        setErr(SAFE_NATAL_CHART_ERROR);
         return;
       }
       setChart(r.reading);

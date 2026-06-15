@@ -39,6 +39,7 @@ const SignSchema = z.enum([
 const AI_TRANSLATION_CACHE_VERSION = "hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 const STATIC_AI_TRANSLATION_TTL_SECONDS: number | null = null;
+const PUBLIC_AI_TRANSLATION_ERROR = "A magyar olvasat most nem készült el. Próbáld újra később.";
 
 function aiCacheKey(...parts: Array<string | number>): string {
   return ["aitr", AI_TRANSLATION_CACHE_VERSION, ...parts].join(":");
@@ -184,7 +185,8 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
         schema,
       });
       const reading = guardHoroscopeHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/horoscope", reading, DAY_SECONDS);
       return { ok: true, cached: false, reading };
@@ -272,7 +274,8 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
         schema,
       });
       const reading = guardCrystalHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/crystal", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
@@ -346,7 +349,8 @@ export const aiAngelHU = createServerFn({ method: "POST" })
         schema,
       });
       const reading = guardAngelHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/angel", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
@@ -417,7 +421,8 @@ export const aiDreamHU = createServerFn({ method: "POST" })
         schema,
       });
       const reading = guardDreamHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/dream", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
@@ -537,7 +542,8 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
         schema,
       });
       const reading = guardNumerologyHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/numerology", reading, STATIC_AI_TRANSLATION_TTL_SECONDS);
       return { ok: true, cached: false, reading };
@@ -804,7 +810,8 @@ export const aiMoonPhaseHU = createServerFn({ method: "POST" })
         schema: MOON_PHASE_SCHEMA,
       });
       const reading = guardMoonPhaseHU(t.data);
-      if (!t.ok || !reading) return { ok: false, cached: false, reading: null, message: t.error };
+      if (!t.ok || !reading)
+        return { ok: false, cached: false, reading: null, message: PUBLIC_AI_TRANSLATION_ERROR };
 
       await writeCache(cacheKey, "/ai/moon-phase", reading, 60 * 60 * 6);
       return { ok: true, cached: false, reading };
@@ -914,7 +921,7 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: t.error ?? "Magyarítási hiba.",
+          message: PUBLIC_AI_TRANSLATION_ERROR,
         };
 
       return {
@@ -1041,7 +1048,7 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: meta.error ?? "Magyarítási hiba.",
+          message: PUBLIC_AI_TRANSLATION_ERROR,
         };
 
       const positions: TarotSpreadPositionHU[] = spread.positions
@@ -1191,7 +1198,12 @@ export const aiNatalChartHU = createServerFn({ method: "POST" })
         schema: NATAL_CHART_SCHEMA,
       });
       if (!t.ok || !t.data)
-        return { ok: false, cached: false, reading: null, message: t.error ?? "Magyarítási hiba." };
+        return {
+          ok: false,
+          cached: false,
+          reading: null,
+          message: "A születési képlet magyar olvasata most nem készült el.",
+        };
 
       await writeCache(cacheKey, "/ai/natal-chart", t.data, 60 * 60 * 24 * 30);
       return { ok: true, cached: false, reading: t.data };
