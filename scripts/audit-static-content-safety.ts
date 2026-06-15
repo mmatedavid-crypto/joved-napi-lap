@@ -44,8 +44,18 @@ const checks: StaticSafetyCheck[] = [
       /\bvisszatérülés közeledik\b/i,
       /\bami jár, az megérkezik\b/i,
       /\begészen új kezdődik\b/i,
+      /\bjó úton vagy\b/i,
+      /\bpontosan ott vagy\b/i,
+      /\blenned kell\b/i,
+      /\bteremtő erejű\b/i,
+      /\bmanifesztáció\b/i,
     ],
-    required: ["arra hívhatja fel a figyelmed", "nem ígéretként, inkább önismereti jelként"],
+    required: [
+      "arra hívhatja fel a figyelmed",
+      "nem ígéretként, inkább önismereti jelként",
+      "önismereti jelként arra terelheti a figyelmed",
+      "tisztábban szólhat hozzád",
+    ],
   },
 ];
 

@@ -86,7 +86,7 @@ export const ANGEL_HU: Record<number, AngelMeaning> = {
   },
   11: {
     title: "Intuíció kapuja",
-    message: "Mester szám. Egy belső hang most pontosan szól hozzád.",
+    message: "Mester szám. Egy belső hang most tisztábban szólhat hozzád.",
     love: "Egy érzés most több mint hangulat — komolyan veheted.",
     decision: "Ne kérj rajta tovább megerősítést, mint amennyit a tested ad.",
     warn: "Ne misztifikálj túl mindent.",
@@ -152,7 +152,7 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "222",
     intro:
-      "A 222 az egyensúly, a türelem és a partnerség száma. Ha újra és újra felbukkan, az üzenete egyszerű: jó úton vagy, csak ne kapkodj — a dolgok a háttérben már rendeződnek.",
+      "A 222 az egyensúly, a türelem és a partnerség száma. Ha újra és újra felbukkan, arra hívhatja fel a figyelmed, hogy most nem a kapkodás, hanem az arányérzék visz közelebb.",
     pattern: "A megháromszorozott 2-es az együttműködést és a bizalmat hangsúlyozza. Gyakran kapcsolati kérdések idején jelenik meg.",
   },
   {
@@ -182,7 +182,7 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "777",
     intro:
-      "A 777 a spirituális mélyülés és a jó irány száma. Ha sokszor látod, az üzenete: pontosan ott vagy, ahol lenned kell — a belső munkád most kezd beérni.",
+      "A 777 a spirituális mélyülés és a belső irány száma. Ha sokszor látod, érdemes lehet több csendet adni annak, ami benned már tisztábban formálódik.",
     pattern: "A megháromszorozott 7-es a befelé figyelést és a szerencsés egybeeséseket erősíti. Sokan tanulás vagy önismereti időszakban látják.",
   },
   {
@@ -206,8 +206,8 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "1111",
     intro:
-      "Az 1111 az ébredés kapuja — a legtöbbet keresett angyalszám. Ha az órán, számlán, rendszámon újra és újra ezt látod, az üzenete: a gondolataid most rendkívül teremtő erejűek, válaszd meg őket tudatosan.",
-    pattern: "A négyszeres 1-es a manifesztáció legerősebb jele. Sokan életük nagy fordulópontjai előtt találkoznak vele sorozatosan.",
+      "Az 1111 az ébredés kapuja — a legtöbbet keresett angyalszám. Ha az órán, számlán, rendszámon újra és újra ezt látod, önismereti jelként arra terelheti a figyelmed, milyen gondolatot erősítesz magadban.",
+    pattern: "A négyszeres 1-es a kezdés, a fókusz és az éberség jele. Sokan fordulópontok idején veszik észre sorozatosan.",
   },
   {
     szam: "1212",
