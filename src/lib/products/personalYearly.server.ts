@@ -197,9 +197,9 @@ export async function generatePersonalYearlyReport(
     timeoutMs: 120_000,
   });
 
-  const reportMd =
-    ai.ok && ai.data?.markdown
-      ? usablePaidAstrologyReport(ai.data.markdown, {
+  const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
+  const reportMd = aiMarkdown
+    ? usablePaidAstrologyReport(aiMarkdown, {
           productSlug: "personal_yearly",
           minChars: 1800,
           requiredHeadings: [
@@ -209,7 +209,8 @@ export async function generatePersonalYearlyReport(
             "## Záró üzenet",
           ],
         })
-      : "";
+    : "";
+  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
   const fallbackBody = reportMd
     ? reportMd
     : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
@@ -236,7 +237,8 @@ export async function generatePersonalYearlyReport(
       natal: natal ?? null,
       yearly: yearly ?? null,
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: ai.meta?.fallbackUsed ?? false,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
+      report_quality_fallback: reportQualityFallback,
     },
   };
 }

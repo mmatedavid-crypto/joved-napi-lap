@@ -340,6 +340,10 @@ for (const report of delegatedReports) {
     `productSlug: "${report.slug}"`,
     "requiredHeadings",
     "minChars",
+    "const aiMarkdown",
+    "const reportQualityFallback = Boolean(aiMarkdown && !reportMd)",
+    "report_quality_fallback: reportQualityFallback",
+    "Boolean(ai.meta?.fallbackUsed || reportQualityFallback)",
   ]) {
     if (!body.includes(needle)) {
       policyFailures.push(`${report.slug}: report generator missing ${needle}`);

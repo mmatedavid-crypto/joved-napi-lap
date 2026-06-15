@@ -177,9 +177,9 @@ export async function generatePersonal30DayReport(
     timeoutMs: 90_000,
   });
 
-  const reportMd =
-    ai.ok && ai.data?.markdown
-      ? usablePaidAstrologyReport(ai.data.markdown, {
+  const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
+  const reportMd = aiMarkdown
+    ? usablePaidAstrologyReport(aiMarkdown, {
           productSlug: "personal_30_day",
           minChars: 1200,
           requiredHeadings: [
@@ -189,7 +189,8 @@ export async function generatePersonal30DayReport(
             "## Záró üzenet",
           ],
         })
-      : "";
+    : "";
+  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
   const fallbackBody = reportMd
     ? reportMd
     : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
@@ -216,7 +217,8 @@ export async function generatePersonal30DayReport(
       natal: natal ?? null,
       forecast: forecast ?? null,
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: ai.meta?.fallbackUsed ?? false,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
+      report_quality_fallback: reportQualityFallback,
     },
   };
 }
