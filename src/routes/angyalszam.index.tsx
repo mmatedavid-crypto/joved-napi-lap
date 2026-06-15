@@ -35,6 +35,7 @@ export const Route = createFileRoute("/angyalszam/")({
 function Page() {
   const call = useServerFn(aiAngelHU);
   const [num, setNum] = useState("");
+  const [situation, setSituation] = useState("");
   const [loading, setLoading] = useState(false);
   const [m, setM] = useState<{ number: string; meaning: AngelHU; root: number } | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -81,7 +82,8 @@ function Page() {
     recordGuestReadingMemory({
       readingType: "angel",
       topic: clean,
-      situation: meaning.title,
+      question: situation.trim() || undefined,
+      situation: situation.trim() || meaning.title,
       sourceRoute: "/angyalszam",
       title: `${clean} · ${meaning.title}`,
       summary:
@@ -115,6 +117,16 @@ function Page() {
             className="w-full bg-[oklch(0.14_0.04_295)] border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory text-center tabular-nums tracking-widest text-2xl focus:border-gold outline-none"
           />
           <p className="text-xs text-ivory/45 font-editorial">Példa: 111, 222, 333, 777, 1111</p>
+          <label htmlFor="angel-situation" className="block text-sm text-ivory/80">
+            Milyen helyzetben láttad? <span className="text-ivory/45">(opcionális)</span>
+          </label>
+          <input
+            id="angel-situation"
+            value={situation}
+            onChange={(e) => setSituation(e.target.value.slice(0, 160))}
+            placeholder="Pl. döntés előtt, üzenetre várva, szakítás után"
+            className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
+          />
           {err && <p className="text-sm text-gold">{err}</p>}
           <button className="btn-gold" disabled={loading}>
             {loading ? "Egy pillanat…" : "Megnézem"}
@@ -128,7 +140,7 @@ function Page() {
         <GuestMemoryInsightPanel
           readingType="angel"
           topic={m?.number}
-          situation={m?.meaning.title}
+          situation={situation.trim() || m?.meaning.title}
         />
 
         {m && (
@@ -146,6 +158,9 @@ function Page() {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {m.meaning.message && <Section eyebrow="A szám üzenete">{m.meaning.message}</Section>}
+              <Section eyebrow="A te helyzetedben">
+                {angelSituationReflection(m.number, m.root, m.meaning.title, situation)}
+              </Section>
               {m.meaning.love && <Section eyebrow="Szerelemben">{m.meaning.love}</Section>}
               {m.meaning.decision && <Section eyebrow="Döntés előtt">{m.meaning.decision}</Section>}
               {m.meaning.warn && <Section eyebrow="Mire figyelj?">{m.meaning.warn}</Section>}
@@ -187,8 +202,40 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="angyalszam_ai"
         sourceRoute="/angyalszam"
-        inputPayload={m ? { number: m.number, root: m.root } : undefined}
+        inputPayload={
+          m
+            ? {
+                number: m.number,
+                root: m.root,
+                situation: situation.trim() || undefined,
+                title: m.meaning.title,
+              }
+            : undefined
+        }
       />
     </Layout>
   );
+}
+
+function angelSituationReflection(
+  number: string,
+  root: number,
+  title: string,
+  situation: string,
+): string {
+  const cleanSituation = situation.trim();
+  const opening = cleanSituation
+    ? `A ${number} most nem önmagában érdekes, hanem abban a helyzetben, ahol észrevetted: „${cleanSituation}”.`
+    : `A ${number} most a ${title.toLocaleLowerCase("hu-HU")} minőségén keresztül olvasható.`;
+  const lower = cleanSituation.toLocaleLowerCase("hu-HU");
+  if (/ex|szakítás|visszatér|nem ír|üzenet|kapcsolat|randi|szerelem/.test(lower)) {
+    return `${opening} Kapcsolati térben ez inkább arra hívhatja fel a figyelmed, hogy ne csak a másik jelzését várd, hanem azt is nézd meg, milyen ismétlődő érzést indít el benned. A ${root}-es gyökér itt a tempó és a belső válasz mintáját emeli ki.`;
+  }
+  if (/dönt|munka|állás|pénz|vált|költöz/.test(lower)) {
+    return `${opening} Döntési helyzetben ez önismereti jel, nem utasítás: azt kérdezheti, milyen gondolatot erősítesz újra és újra, mielőtt lépnél. A ${root}-es gyökér segít megmutatni, hol kell tisztább belső irány.`;
+  }
+  if (/félek|szorong|bizonytalan|nehéz|elakadt/.test(lower)) {
+    return `${opening} Nehéz érzésnél a szám nem azt mondja, hogy minden megoldódik, hanem azt, hogy érdemes finoman észrevenned, melyik gondolat tér vissza benned túl gyakran. A ${root}-es gyökér ezt a belső ritmust teszi láthatóbbá.`;
+  }
+  return `${opening} A ${root}-es gyökér alapján ezt most nem jóslatként, hanem figyelmi jelként érdemes olvasni: mi az a gondolat vagy érzés, amelyik ugyanúgy ismétlődik benned, ahogy maga a szám is ismétlődött?`;
 }
