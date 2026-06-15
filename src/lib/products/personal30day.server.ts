@@ -134,11 +134,10 @@ export async function generatePersonal30DayReport(
   ].join("\n");
 
   const system = [
-    "Te magyar nyelvű asztrológiai fordító vagy a Jövőd.hu-nak.",
-    "FELADAT: a megkapott angol asztrológiai forrásadatokat magyarra fordítod, és a megadott szerkezetbe rendezed.",
-    'TILTÁS: nem teszel hozzá saját jóslatot, nem találsz ki tranzitokat, nem ígérsz biztos jövőt. Ha valami nincs a forrásban, írd: "a forrás erről nem ad külön jelzést".',
-    "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács.",
-    "FORMA: szigorúan ezekkel a magyar fejezetcímekkel, ## szinten, ebben a sorrendben:",
+    "Magyar asztrológiai riportot írsz a Jövőd.hu hangján: természetes, személyes, józan.",
+    "Csak a kapott Roxy-forrásból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
+    "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd a módszert.",
+    "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
     "## A következő 30 napod fő témája",
     "## Születési képleted röviden",
     "## Legfontosabb időablakok",
@@ -146,7 +145,7 @@ export async function generatePersonal30DayReport(
     "## Munka / pénz / döntések",
     "## Mire figyelj",
     "## Záró üzenet",
-    "Az Életterület fókusz mezőre építve emeld ki azt a szakaszt, amit a felhasználó választott.",
+    "Ha valamire nincs forrásadat, egyszerűen mondd, hogy erre most nincs külön jelzés.",
     `Ha a születési idő közelítés volt (${approximate ? "igen" : "nem"}), egy mondatban jelezd a Születési képleted részben.`,
   ].join("\n");
 

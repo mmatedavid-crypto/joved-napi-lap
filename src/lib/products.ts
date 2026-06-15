@@ -279,13 +279,13 @@ export const PRODUCTS: ProductDef[] = [
     name: "Védikus asztrológia — teljes elemzés",
     short: "Több oldalas védikus képlet-elemzés születési adatokból.",
     includes: [
-      "nakshatra, dasha periódusok",
-      "rashi, házak és bolygóhelyzetek",
-      "yogák és kulcsmotívumok az életutadban",
+      "sziderikus Nap, Hold és aszcendens, ha a forrásadat engedi",
+      "rashi, nakshatra és bolygóhelyzetek",
+      "kulcsmotívumok a választott életterületed körül",
     ],
     depthPromise: [
-      "klasszikus indiai (sidereal) képletértelmezés",
-      "élethosszú periódusok és visszatérő minták kibontása",
+      "védikus szemléletű, sziderikus képletértelmezés",
+      "visszatérő minták kibontása túlzó sorsállítás nélkül",
     ],
     qualityPromise: "Komplex, grafikus, többoldalas védikus riport. Nem napi horoszkóp.",
     priceHuf: 1990,

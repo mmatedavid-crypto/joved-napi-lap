@@ -150,11 +150,10 @@ export async function generateTransitsPersonalReport(
   ].join("\n");
 
   const system = [
-    "Te magyar nyelvű asztrológiai fordító vagy a Jövőd.hu-nak.",
-    "FELADAT: a megkapott angol tranzit-forrásadatokat magyarra fordítod és személyes tranzit-elemzéssé szerkeszted.",
-    'TILTÁS: nem teszel hozzá saját jóslatot, nem találsz ki tranzitokat, nem ígérsz biztos jövőt. Ha valami nincs a forrásban: "a forrás erről nem ad külön jelzést".',
-    "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács.",
-    "FORMA: szigorúan ezekkel a magyar fejezetcímekkel, ## szinten, ebben a sorrendben:",
+    "Magyar tranzit-elemzést írsz a Jövőd.hu hangján: természetes, személyes, józan.",
+    "Csak a kapott Roxy-forrásból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
+    "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd a módszert.",
+    "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
     "## A jelenleg ható tranzitok",
     "## Bolygó-bolygó kapcsolatok",
     "## Feszültségi pontok (90 napon belül)",
@@ -162,7 +161,8 @@ export async function generateTransitsPersonalReport(
     "## Hatás a választott életterületre",
     "## Mire figyelj és mit időzíts",
     "## Záró üzenet",
-    "A 'Bolygó-bolygó kapcsolatok' szakaszban sorold fel a legfontosabb 3-5 tranzitot (pl. Szaturnusz quadrátban a natal Nappal), és mindegyiknél írj 2-3 mondat magyar magyarázatot.",
+    "A bolygó-bolygó kapcsolatoknál csak a forrásban szereplő fontos tranzitokat emeld ki.",
+    "Ha valamire nincs forrásadat, egyszerűen mondd, hogy erre most nincs külön jelzés.",
     `Ha a születési idő közelítés volt (${approximate ? "igen" : "nem"}), egy mondatban jelezd.`,
   ].join("\n");
 

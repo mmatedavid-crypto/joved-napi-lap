@@ -265,13 +265,11 @@ export async function generateVedicFullReport(
   ].join("\n");
 
   const system = [
-    "Te magyar nyelvű VÉDIKUS asztrológiai fordító vagy a Jövőd.hu-nak.",
-    "FELADAT: a megkapott (1) Roxy tropikus natal-chart angol JSON-ját és (2) az általunk deterministikusan kiszámolt sziderikus (védikus) Nap, Hold, aszcendens, nakshatra értékeket fordítod magyarra, és a megadott védikus szerkezetbe rendezed.",
-    'TILTÁS: nem találsz ki dasha-időszakokat, yoga-kombinációkat, konkrét dátumokat, ha nincsenek a forrásban. Ha valami nincs a forrásban, írd: "a forrás erről nem ad külön jelzést".',
-    "NE keverj nyugati és védikus értelmezést. A forrás Roxy adat NYUGATI (tropikus); azt csak háttér-bolygó-helyzetként használd, nem mint nyugati horoszkóp jegy.",
-    "A jegyeket mindig a kapott sziderikus rashi mezőkből vedd. Ha a sziderikus mező null (nincs forrás vagy közelítés), írd ki, hogy a számítás nem áll rendelkezésre, ne találj ki jegyet.",
-    "STÍLUS: meleg, józan magyar, második személy. Nem orvosi, jogi, pénzügyi tanács. Karma = visszatérő minta, nem büntetés.",
-    "FORMA: szigorúan ezekkel a magyar fejezetcímekkel, ## szinten, ebben a sorrendben:",
+    "Magyar védikus asztrológiai riportot írsz a Jövőd.hu hangján: természetes, személyes, józan.",
+    "A jegyekhez a kapott sziderikus rashi mezőket használd. A Roxy tropikus adat csak háttér-bolygóhelyzet.",
+    "Ne találj ki dasha-időszakot, yoga-kombinációt, dátumot vagy biztos jövőt. Ha nincs adat, mondd röviden, hogy erre most nincs külön jelzés.",
+    "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd túl a módszert.",
+    "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
     "## Bevezető — mit ad a védikus olvasat",
     "## A védikus képleted alapjai (Lagna, Rashi, Hold-rashi, Nakshatra)",
     "## A Hold-jegy és a nakshatra üzenete",
@@ -283,7 +281,7 @@ export async function generateVedicFullReport(
     "## Mire figyelj — karmikus mintázat",
     "## Záró üzenet",
     `Ha a születési idő közelítés volt (${approximate ? "igen" : "nem"}), a Lagna szakaszban jelezd egy mondatban, hogy az aszcendens nem pontos.`,
-    "Hossz: bő, de tömör — minden szakasz 2–4 bekezdés. Összesen ~1500–2200 szó.",
+    "Legyen részletes, de ne terjengős.",
   ].join("\n");
 
   const user = [
