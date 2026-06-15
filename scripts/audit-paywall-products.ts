@@ -217,7 +217,10 @@ for (const needle of [
 
 const analytics = readFileSync("src/lib/analytics.ts", "utf8");
 for (const eventName of [
+  "smart_followup_shown",
+  "smart_followup_clicked",
   "paywall_opened",
+  "paywall_alternative_clicked",
   "checkout_confirmed",
   "checkout_started",
   "checkout_succeeded",
@@ -226,6 +229,23 @@ for (const eventName of [
 ]) {
   if (!analytics.includes(`"${eventName}"`)) {
     failed.push(`analytics EventName missing: ${eventName}`);
+  }
+}
+
+const smartFollowup = readFileSync("src/components/SmartReadingFollowup.tsx", "utf8");
+for (const needle of [
+  "Innen hogyan tovább?",
+  "Egy jó következő kérdés",
+  'trackEvent("smart_followup_shown"',
+  'trackEvent("smart_followup_clicked"',
+  "hasMemory",
+  "memoryCount",
+  "PaywallDialog",
+  "memoryContext: memory.contextText",
+  "followupOptions(",
+]) {
+  if (!smartFollowup.includes(needle)) {
+    failed.push(`SmartReadingFollowup missing: ${needle}`);
   }
 }
 

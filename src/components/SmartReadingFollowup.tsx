@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { trackEvent } from "@/lib/analytics";
 import { getGuestReadingContext, type GuestReadingType } from "@/lib/guestReadingMemory";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
@@ -43,7 +44,24 @@ export function SmartReadingFollowup({
     () => getGuestReadingContext({ readingType, topic, situation, limit: 8 }),
     [readingType, situation, topic],
   );
-  const options = followupOptions(intent, { question, situation, memory });
+  const options = useMemo(
+    () => followupOptions(intent, { question, situation, memory }),
+    [intent, memory, question, situation],
+  );
+  const optionSlugs = options.map((option) => option.slug).join(",");
+
+  useEffect(() => {
+    if (!optionSlugs) return;
+    trackEvent("smart_followup_shown", {
+      intent,
+      readingType,
+      sourceRoute,
+      optionSlugs,
+      hasMemory: memory.memories.length > 0,
+      memoryCount: memory.memories.length,
+    });
+  }, [intent, memory.memories.length, optionSlugs, readingType, sourceRoute]);
+
   if (!options.length) return null;
 
   const memoryLine = memory.memories.length >= 2 ? memory.insights.gentleNudge : "";
@@ -80,7 +98,16 @@ export function SmartReadingFollowup({
             <button
               key={option.slug}
               type="button"
-              onClick={() => setSelectedSlug(option.slug)}
+              onClick={() => {
+                trackEvent("smart_followup_clicked", {
+                  intent,
+                  readingType,
+                  sourceRoute,
+                  productSlug: option.slug,
+                  hasMemory: memory.memories.length > 0,
+                });
+                setSelectedSlug(option.slug);
+              }}
               className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4 text-left transition-colors hover:border-gold/45"
             >
               <div className="flex items-start justify-between gap-3">

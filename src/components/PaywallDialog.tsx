@@ -130,7 +130,14 @@ export function PaywallDialog({
                   {contextualAlternative.product.sourceRoute && (
                     <Link
                       to={contextualAlternative.product.sourceRoute}
-                      onClick={() => onOpenChange(false)}
+                      onClick={() => {
+                        trackEvent("paywall_alternative_clicked", {
+                          productSlug: product.slug,
+                          alternativeSlug: contextualAlternative.product.slug,
+                          sourceRoute,
+                        });
+                        onOpenChange(false);
+                      }}
                       className="shrink-0 rounded-md border border-gold/30 px-3 py-2 text-center text-xs text-gold transition-colors hover:border-gold/70 hover:text-gold"
                     >
                       Megnézem · {formatHuf(contextualAlternative.product.priceHuf)}
