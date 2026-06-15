@@ -4,6 +4,7 @@ import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { Section } from "@/components/Section";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 import {
   HOROSCOPE_PERIODS,
   PERIOD_LABEL,
@@ -343,6 +344,30 @@ function HoroscopeArticlePage() {
           ))}
         </div>
       </nav>
+      <div className="mt-10">
+        <SmartReadingFollowup
+          intent="horoscope"
+          readingType="horoscope"
+          topic={article.signName}
+          situation={personalSituation}
+          question={personalTopic.trim() || articleSituation}
+          sourceRoute={horoscopeArticlePath(article.period, article.sign)}
+          inputPayload={{
+            sign: article.signName,
+            period: PERIOD_LABEL[article.period],
+            situation: personalSituation,
+            articleSituation,
+            articleLead: article.lead,
+            articleSections: article.sections.slice(0, 4).map((section) => ({
+              heading: section.heading,
+              text: section.text,
+            })),
+            moonPhase: article.moonPhase,
+            luckyColor: article.luckyColor,
+            luckyNumber: article.luckyNumber,
+          }}
+        />
+      </div>
       <PaywallDialog
         open={paywall}
         onOpenChange={setPaywall}

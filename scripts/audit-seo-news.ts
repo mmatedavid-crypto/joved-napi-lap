@@ -85,6 +85,10 @@ const checks: Check[] = [
       "moonPhase: article.moonPhase",
       "luckyColor: article.luckyColor",
       "luckyNumber: article.luckyNumber",
+      "SmartReadingFollowup",
+      'intent="horoscope"',
+      'readingType="horoscope"',
+      "question={personalTopic.trim() || articleSituation}",
     ],
   },
   {
