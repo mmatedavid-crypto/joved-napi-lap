@@ -8,6 +8,20 @@ const SITE_NAME = "Jövőd.hu";
 const SENDER_DOMAIN = "notify.jovod.hu";
 const FROM_DOMAIN = "jovod.hu";
 
+export type TransactionalEmailError =
+  | "unknown_template"
+  | "missing_recipient_email"
+  | "email_suppressed"
+  | "unsubscribe_token_unavailable"
+  | "email_queue_unavailable";
+
+function redactEmail(email: string | null | undefined): string {
+  if (!email) return "***";
+  const [localPart, domain] = email.split("@");
+  if (!localPart || !domain) return "***";
+  return `${localPart[0]}***@${domain}`;
+}
+
 function generateToken(): string {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
@@ -30,12 +44,12 @@ export interface EnqueueTransactionalInput {
  */
 export async function enqueueTransactionalEmail(
   input: EnqueueTransactionalInput,
-): Promise<{ ok: true; messageId: string } | { ok: false; error: string }> {
+): Promise<{ ok: true; messageId: string } | { ok: false; error: TransactionalEmailError }> {
   const template = TEMPLATES[input.templateName];
-  if (!template) return { ok: false, error: `Unknown template: ${input.templateName}` };
+  if (!template) return { ok: false, error: "unknown_template" };
 
   const recipient = template.to || input.recipientEmail;
-  if (!recipient) return { ok: false, error: "recipientEmail required" };
+  if (!recipient) return { ok: false, error: "missing_recipient_email" };
   const normalized = recipient.toLowerCase();
   const essentialTransactional = Boolean(template.essentialTransactional);
 
@@ -69,7 +83,14 @@ export async function enqueueTransactionalEmail(
     const { error: tokErr } = await supabaseAdmin
       .from("email_unsubscribe_tokens")
       .insert({ email: normalized, token: unsubscribeToken });
-    if (tokErr) return { ok: false, error: `unsubscribe token: ${tokErr.message}` };
+    if (tokErr) {
+      console.error("Failed to create unsubscribe token for transactional email", {
+        error: tokErr,
+        recipient_redacted: redactEmail(normalized),
+        templateName: input.templateName,
+      });
+      return { ok: false, error: "unsubscribe_token_unavailable" };
+    }
   }
 
   const templateData = input.templateData ?? {};
@@ -111,17 +132,23 @@ export async function enqueueTransactionalEmail(
   });
 
   if (enqErr) {
+    console.error("Failed to enqueue transactional email", {
+      error: enqErr,
+      recipient_redacted: redactEmail(recipient),
+      templateName: input.templateName,
+      messageId,
+    });
     await supabaseAdmin.from("email_send_log").insert({
       message_id: messageId,
       template_name: input.templateName,
       recipient_email: recipient,
       status: "failed",
-      error_message: `enqueue: ${enqErr.message}`,
+      error_message: "email_queue_unavailable",
       metadata: {
         idempotency_key: idempotencyKey,
       } as never,
     });
-    return { ok: false, error: enqErr.message };
+    return { ok: false, error: "email_queue_unavailable" };
   }
 
   return { ok: true, messageId };

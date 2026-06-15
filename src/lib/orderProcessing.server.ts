@@ -297,7 +297,7 @@ async function queueDeliveredEmail(order: {
           .from("orders")
           .update({
             delivery_email_queued_at: null,
-            delivery_email_error: result.error.slice(0, 500),
+            delivery_email_error: result.error,
           })
           .eq("id", order.id);
       }
@@ -310,7 +310,7 @@ async function queueDeliveredEmail(order: {
         .from("orders")
         .update({
           delivery_email_queued_at: null,
-          delivery_email_error: message.slice(0, 500),
+          delivery_email_error: "delivery_email_exception",
         })
         .eq("id", order.id);
     } catch (updateError) {

@@ -181,6 +181,37 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "delivered order email failures store safe codes, not raw provider errors",
+    file: "src/lib/orderProcessing.server.ts",
+    includes: [
+      'delivery_email_error: result.error',
+      'delivery_email_error: "delivery_email_exception"',
+      "order delivered email queue failed:",
+    ],
+    excludes: ["delivery_email_error: result.error.slice", "delivery_email_error: message.slice"],
+  },
+  {
+    name: "transactional email helper returns stable error codes",
+    file: "src/lib/email/sendTransactional.server.ts",
+    includes: [
+      "export type TransactionalEmailError",
+      '"unknown_template"',
+      '"missing_recipient_email"',
+      '"email_suppressed"',
+      '"unsubscribe_token_unavailable"',
+      '"email_queue_unavailable"',
+      'error_message: "email_queue_unavailable"',
+      "recipient_redacted: redactEmail",
+    ],
+    excludes: [
+      "`Unknown template: ${input.templateName}`",
+      '"recipientEmail required"',
+      "`unsubscribe token: ${tokErr.message}`",
+      "return { ok: false, error: enqErr.message }",
+      "error_message: `enqueue: ${enqErr.message}`",
+    ],
+  },
+  {
     name: "failed order retry verifies Stripe payment before resetting processing",
     file: "src/lib/payments.functions.ts",
     includes: [
