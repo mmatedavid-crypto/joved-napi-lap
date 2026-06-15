@@ -43,17 +43,57 @@ function localCardFromSlot(slot: TarotSlot): TarotCard {
   return found ?? CARDS[0];
 }
 
-function rememberDailyCard(card: TarotCard, reversed: boolean, hu: TarotCardHU | null) {
+function rememberDailyCard(
+  card: TarotCard,
+  reversed: boolean,
+  hu: TarotCardHU | null,
+  focus: string,
+) {
+  const cleanFocus = focus.trim();
   recordGuestReadingMemory({
     readingType: "tarot",
     topic: "mai lap",
-    situation: reversed ? "fordított lap" : "álló lap",
+    question: cleanFocus || undefined,
+    situation: cleanFocus || (reversed ? "fordított lap" : "álló lap"),
     sourceRoute: "/mai-lap",
     title: `Mai lap · ${card.name}${reversed ? " fordítva" : ""}`,
-    summary: [hu?.oneLine, hu?.meaning].filter(Boolean).join(" ") || `${card.name} napi tarot lap.`,
+    summary:
+      [
+        cleanFocus ? `Mai fókusz: ${cleanFocus}.` : null,
+        hu?.oneLine,
+        hu?.meaning,
+      ]
+        .filter(Boolean)
+        .join(" ") || `${card.name} napi tarot lap.`,
     oneSentence: hu?.oneLine ?? undefined,
-    anchors: [card.name, reversed ? "fordított lap" : "álló lap", ...card.keywords],
+    anchors: [cleanFocus, card.name, reversed ? "fordított lap" : "álló lap", ...card.keywords].filter(
+      Boolean,
+    ),
   });
+}
+
+function dailyFocusReflection(card: TarotCard, focus: string, reversed: boolean): string {
+  const clean = focus.trim();
+  if (!clean) {
+    return `${card.name} ma nem nagy jóslatként érkezik, hanem figyelmi pontként: azt mutatja, melyik belső minőséget érdemes észrevenned, mielőtt automatikusan reagálnál.`;
+  }
+  const lower = clean.toLocaleLowerCase("hu-HU");
+  const orientation = reversed
+    ? "fordított állásban inkább azt kérdezi, hol akadsz el vagy hol húzódsz vissza"
+    : "álló lapként inkább azt mutatja, milyen minőségre támaszkodhatsz";
+  if (/randi|kapcsolat|szerelem|ex|üzenet|nem ír|ismerked/.test(lower)) {
+    return `A „${clean}” helyzetében ${card.name} ${orientation}. Ma nem azt érdemes bizonyítékként keresned, hogy a másik mit fog tenni, hanem azt, milyen tempóban maradsz nyugodt és önazonos.`;
+  }
+  if (/munka|állás|karrier|projekt|főnök|pénz|fizetés/.test(lower)) {
+    return `A „${clean}” témájában ${card.name} ${orientation}. A lap most azt segíthet látni, hol van valódi felelősséged, és hol viszel túl sok feszültséget puszta megfelelésből.`;
+  }
+  if (/dönt|válassz|lépjek|maradjak|menjek|igen|nem/.test(lower)) {
+    return `A „${clean}” kérdésében ${card.name} ${orientation}. Nem dönt helyetted, inkább megmutathatja, melyik válasz mögött van több belső nyugalom, és melyik csak a bizonytalanság gyors csökkentése.`;
+  }
+  if (/család|anya|apa|gyerek|barát|barátnő/.test(lower)) {
+    return `A „${clean}” helyzetében ${card.name} ${orientation}. Ma érdemes különválasztanod, mi a saját érzésed, és mi az a szerep, amit megszokásból veszel magadra.`;
+  }
+  return `A „${clean}” témájában ${card.name} ${orientation}. A mai üzenet akkor lesz használható, ha nem általános tanácsként olvasod, hanem egyetlen konkrét helyzetre viszed vissza.`;
 }
 
 function MaiLap() {
@@ -61,6 +101,7 @@ function MaiLap() {
   const [revealed, setRevealed] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [drawError, setDrawError] = useState<string | null>(null);
+  const [dailyFocus, setDailyFocus] = useState("");
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallProduct, setPaywallProduct] = useState<"napi_lap_ai" | "extra_huzas">(
     "napi_lap_ai",
@@ -134,9 +175,9 @@ function MaiLap() {
     const lc = localCardFromSlot(slot);
     const memoryKey = `${todayKey()}:${lc.id}:${slot.roxy.reversed ? "reversed" : "upright"}`;
     if (rememberedDrawKeyRef.current === memoryKey) return;
-    rememberDailyCard(lc, slot.roxy.reversed, slot.hu);
+    rememberDailyCard(lc, slot.roxy.reversed, slot.hu, dailyFocus);
     rememberedDrawKeyRef.current = memoryKey;
-  }, [slot, revealed]);
+  }, [slot, revealed, dailyFocus]);
 
   return (
     <Layout>
@@ -150,6 +191,23 @@ function MaiLap() {
           <div className="flex flex-col items-center gap-6">
             <div className="w-56">
               <CardBack />
+            </div>
+            <div className="w-full max-w-md space-y-2">
+              <label htmlFor="daily-card-focus" className="block text-sm text-ivory/78">
+                Mire kérsz ma finomabb fókuszt?{" "}
+                <span className="text-ivory/45">(opcionális)</span>
+              </label>
+              <input
+                id="daily-card-focus"
+                value={dailyFocus}
+                onChange={(e) => setDailyFocus(e.target.value)}
+                maxLength={140}
+                placeholder="Pl. randi előtt, munkahelyi döntés, belső nyugtalanság"
+                className="w-full rounded-md border border-[oklch(0.78_0.10_80/0.25)] bg-transparent px-4 py-3 text-ivory outline-none placeholder:text-ivory/40 focus:border-gold"
+              />
+              <p className="text-xs leading-relaxed text-ivory/45">
+                A napi lap ugyanaz marad, de az olvasatot ehhez a helyzethez kötjük vissza.
+              </p>
             </div>
             <button className="btn-gold" onClick={draw} disabled={drawing}>
               {drawing ? "Húzás..." : "Húzom a mai lapom"}
@@ -195,9 +253,12 @@ function MaiLap() {
                 {drawing && !hu && <ReadingLoadingState kind="tarot" title="A napi lapod készül" />}
                 <GuestMemoryInsightPanel
                   readingType="tarot"
-                  topic="mai lap"
-                  situation={reversed ? "fordított lap" : "álló lap"}
+                  topic={dailyFocus.trim() || "mai lap"}
+                  situation={dailyFocus.trim() || (reversed ? "fordított lap" : "álló lap")}
                 />
+                <Section eyebrow="A te fókuszodban">
+                  <StreamingText text={dailyFocusReflection(card, dailyFocus, reversed)} />
+                </Section>
                 {hu && (
                   <>
                     {hu.meaning && (
@@ -224,13 +285,14 @@ function MaiLap() {
                     intent="daily"
                     readingType="tarot"
                     topic="mai lap"
-                    situation={reversed ? "fordított lap" : "álló lap"}
-                    question="Mire figyeljek ma?"
+                    situation={dailyFocus.trim() || (reversed ? "fordított lap" : "álló lap")}
+                    question={dailyFocus.trim() || "Mire figyeljek ma?"}
                     sourceRoute="/mai-lap"
                     inputPayload={{
                       cardId: card.id,
                       cardName: card.name,
-                      question: "Mire figyeljek ma?",
+                      question: dailyFocus.trim() || "Mire figyeljek ma?",
+                      situation: dailyFocus.trim() || undefined,
                       category: "mai lap",
                     }}
                   />
@@ -280,8 +342,11 @@ function MaiLap() {
                     : card.name,
                 question:
                   paywallProduct === "extra_huzas"
-                    ? "Második nézőpontot kérek a mai napra."
-                    : "Mire figyeljek ma?",
+                    ? dailyFocus.trim()
+                      ? `Második nézőpontot kérek erre: ${dailyFocus.trim()}`
+                      : "Második nézőpontot kérek a mai napra."
+                    : dailyFocus.trim() || "Mire figyeljek ma?",
+                situation: dailyFocus.trim() || undefined,
                 category: paywallProduct === "extra_huzas" ? "extra napi húzás" : "mai lap",
               }
             : undefined

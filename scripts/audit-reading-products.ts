@@ -311,6 +311,22 @@ const reportQuality = readFileSync("src/lib/products/reportQuality.server.ts", "
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const loveRoute = readFileSync("src/routes/randi-elott.tsx", "utf8");
 const decisionRoute = readFileSync("src/routes/dontes-elott.tsx", "utf8");
+const dailyCardRoute = readFileSync("src/routes/mai-lap.tsx", "utf8");
+
+for (const needle of [
+  "dailyFocus",
+  "dailyFocusReflection",
+  "Mire kérsz ma finomabb fókuszt?",
+  "A napi lap ugyanaz marad",
+  "A te fókuszodban",
+  "dailyFocus.trim() || \"Mire figyeljek ma?\"",
+  "situation: dailyFocus.trim() || undefined",
+  "Mai fókusz:",
+]) {
+  if (!dailyCardRoute.includes(needle)) {
+    policyFailures.push(`daily card route must preserve user focus reflection: ${needle}`);
+  }
+}
 
 for (const needle of [
   "function threeCardFreeSynthesis",
