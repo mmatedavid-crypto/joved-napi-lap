@@ -6,20 +6,28 @@ import { TEMPLATES } from "@/lib/email-templates/registry";
 // Renders all registered templates with their previewData.
 // Gated by LOVABLE_API_KEY — only the Go API calls this.
 
+const PUBLIC_EMAIL_PREVIEW_ERROR =
+  "Az email előnézetet most nem tudtuk elkészíteni. Kérlek próbáld újra később.";
+const PUBLIC_EMAIL_PREVIEW_AUTH_ERROR = "Nincs jogosultság az email előnézet megnyitásához.";
+
+function publicEmailPreviewError(message: string, status: number): Response {
+  return Response.json({ error: message }, { status });
+}
+
 export const Route = createFileRoute("/lovable/email/transactional/preview")({
   server: {
     handlers: {
       POST: async ({ request }) => {
         const apiKey = process.env.LOVABLE_API_KEY;
         if (!apiKey) {
-          return Response.json({ error: "Server configuration error" }, { status: 500 });
+          return publicEmailPreviewError(PUBLIC_EMAIL_PREVIEW_ERROR, 500);
         }
 
         // Verify the caller is authorized with LOVABLE_API_KEY
         const authHeader = request.headers.get("Authorization");
         const token = authHeader?.replace(/^Bearer\s+/i, "");
         if (token !== apiKey) {
-          return Response.json({ error: "Unauthorized" }, { status: 401 });
+          return publicEmailPreviewError(PUBLIC_EMAIL_PREVIEW_AUTH_ERROR, 401);
         }
 
         const templateNames = Object.keys(TEMPLATES);
@@ -72,7 +80,7 @@ export const Route = createFileRoute("/lovable/email/transactional/preview")({
               subject: "",
               html: "",
               status: "render_failed",
-              errorMessage: err instanceof Error ? err.message : String(err),
+              errorMessage: PUBLIC_EMAIL_PREVIEW_ERROR,
             });
           }
         }

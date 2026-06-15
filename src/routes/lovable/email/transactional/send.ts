@@ -13,6 +13,14 @@ const SENDER_DOMAIN = "notify.jovod.hu";
 // FROM_DOMAIN is the domain shown in the From: header (e.g., "example.com").
 // Can be the root domain when display_from_root is enabled — this is cosmetic only.
 const FROM_DOMAIN = "jovod.hu";
+const PUBLIC_EMAIL_SEND_ERROR =
+  "Az emailt most nem tudtuk előkészíteni. Kérlek próbáld újra később.";
+const PUBLIC_EMAIL_SEND_AUTH_ERROR = "Nincs jogosultság az email küldéséhez.";
+const PUBLIC_EMAIL_SEND_PAYLOAD_ERROR = "Az email küldéséhez szükséges adatok hiányosak vagy hibásak.";
+
+function publicEmailSendError(message: string, status: number): Response {
+  return Response.json({ error: message }, { status });
+}
 
 function redactEmail(email: string | null | undefined): string {
   if (!email) return "***";
@@ -39,14 +47,14 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
         if (!supabaseUrl || !supabaseServiceKey) {
           console.error("Missing required environment variables");
-          return Response.json({ error: "Server configuration error" }, { status: 500 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
         }
 
         // Verify the caller has a valid Supabase auth token.
         // In TanStack, there is no Supabase gateway — we validate the JWT ourselves.
         const authHeader = request.headers.get("Authorization");
         if (!authHeader?.startsWith("Bearer ")) {
-          return Response.json({ error: "Unauthorized" }, { status: 401 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_AUTH_ERROR, 401);
         }
 
         const token = authHeader.slice("Bearer ".length).trim();
@@ -57,7 +65,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
         } = await supabase.auth.getUser(token);
 
         if (authError || !user) {
-          return Response.json({ error: "Unauthorized" }, { status: 401 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_AUTH_ERROR, 401);
         }
 
         // Parse request body
@@ -76,11 +84,11 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
             templateData = body.templateData;
           }
         } catch {
-          return Response.json({ error: "Invalid JSON in request body" }, { status: 400 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_PAYLOAD_ERROR, 400);
         }
 
         if (!templateName) {
-          return Response.json({ error: "templateName is required" }, { status: 400 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_PAYLOAD_ERROR, 400);
         }
 
         // 1. Look up template from registry (early — needed to resolve recipient)
@@ -88,12 +96,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
         if (!template) {
           console.error("Template not found in registry", { templateName });
-          return Response.json(
-            {
-              error: `Template '${templateName}' not found. Available: ${Object.keys(TEMPLATES).join(", ")}`,
-            },
-            { status: 404 },
-          );
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_PAYLOAD_ERROR, 404);
         }
 
         // Resolve effective recipient: template-level `to` takes precedence over
@@ -103,12 +106,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
         const essentialTransactional = Boolean(template.essentialTransactional);
 
         if (!effectiveRecipient) {
-          return Response.json(
-            {
-              error: "recipientEmail is required (unless the template defines a fixed recipient)",
-            },
-            { status: 400 },
-          );
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_PAYLOAD_ERROR, 400);
         }
 
         // 2. Check suppression list (fail-closed: if we can't verify, don't send)
@@ -123,7 +121,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
             error: suppressionError,
             recipient_redacted: redactEmail(effectiveRecipient),
           });
-          return Response.json({ error: "Failed to verify suppression status" }, { status: 500 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
         }
 
         if (suppressed && (!essentialTransactional || suppressed.reason !== "unsubscribe")) {
@@ -166,7 +164,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
               status: "failed",
               error_message: "Failed to look up unsubscribe token",
             });
-            return Response.json({ error: "Failed to prepare email" }, { status: 500 });
+            return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
           }
 
           if (existingToken && !existingToken.used_at) {
@@ -193,7 +191,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
                 status: "failed",
                 error_message: "Failed to create unsubscribe token",
               });
-              return Response.json({ error: "Failed to prepare email" }, { status: 500 });
+              return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
             }
 
             // If another request raced us, our upsert was silently ignored.
@@ -216,7 +214,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
                 status: "failed",
                 error_message: "Failed to confirm unsubscribe token storage",
               });
-              return Response.json({ error: "Failed to prepare email" }, { status: 500 });
+              return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
             }
             unsubscribeToken = storedToken.token;
           } else {
@@ -291,7 +289,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
             error_message: "Failed to enqueue email",
           });
 
-          return Response.json({ error: "Failed to enqueue email" }, { status: 500 });
+          return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
         }
 
         console.log("Transactional email enqueued", {

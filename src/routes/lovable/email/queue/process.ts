@@ -84,6 +84,13 @@ async function moveToDlq(
   }
 }
 
+const PUBLIC_EMAIL_QUEUE_ERROR = 'Az email sort most nem tudtuk feldolgozni. Kérlek próbáld újra később.'
+const PUBLIC_EMAIL_QUEUE_AUTH_ERROR = 'Nincs jogosultság az email sor feldolgozásához.'
+
+function publicEmailQueueError(message: string, status: number): Response {
+  return Response.json({ error: message }, { status })
+}
+
 export const Route = createFileRoute("/lovable/email/queue/process")({
   server: {
     handlers: {
@@ -94,22 +101,19 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
 
         if (!apiKey || !supabaseUrl || !supabaseServiceKey) {
           console.error('Missing required environment variables')
-          return Response.json(
-            { error: 'Server configuration error' },
-            { status: 500 }
-          )
+          return publicEmailQueueError(PUBLIC_EMAIL_QUEUE_ERROR, 500)
         }
 
         // Verify the caller is authorized with the service role key.
         // In the TanStack stack, the pg_cron job sends the service role key as a Bearer token.
         const authHeader = request.headers.get('Authorization')
         if (!authHeader?.startsWith('Bearer ')) {
-          return Response.json({ error: 'Unauthorized' }, { status: 401 })
+          return publicEmailQueueError(PUBLIC_EMAIL_QUEUE_AUTH_ERROR, 401)
         }
 
         const token = authHeader.slice('Bearer '.length).trim()
         if (token !== supabaseServiceKey) {
-          return Response.json({ error: 'Forbidden' }, { status: 403 })
+          return publicEmailQueueError(PUBLIC_EMAIL_QUEUE_AUTH_ERROR, 403)
         }
 
         const supabase: SupabaseClient<Database> = createClient(supabaseUrl, supabaseServiceKey)

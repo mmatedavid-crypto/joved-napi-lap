@@ -13,6 +13,15 @@ interface SuppressionPayload {
   retry_count: number;
 }
 
+const PUBLIC_EMAIL_WEBHOOK_ERROR =
+  "Az email eseményt most nem tudtuk feldolgozni. Kérlek próbáld újra később.";
+const PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR = "Nincs jogosultság az email esemény feldolgozásához.";
+const PUBLIC_EMAIL_WEBHOOK_PAYLOAD_ERROR = "Az email esemény adatai hiányosak vagy hibásak.";
+
+function publicEmailWebhookError(message: string, status: number): Response {
+  return Response.json({ error: message }, { status });
+}
+
 function parseSuppressionPayload(body: string): SuppressionPayload {
   const parsed = JSON.parse(body);
   if (!parsed.data) {
@@ -59,7 +68,7 @@ export const Route = createFileRoute("/lovable/email/suppression")({
 
         if (!apiKey || !supabaseUrl || !supabaseServiceKey) {
           console.error("Missing required environment variables");
-          return Response.json({ error: "Server configuration error" }, { status: 500 });
+          return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
 
         // Verify HMAC signature using the Lovable API Key (same as auth-email-hook)
@@ -76,24 +85,24 @@ export const Route = createFileRoute("/lovable/email/suppression")({
             switch (error.code) {
               case "invalid_signature":
                 console.error("Invalid webhook signature");
-                return Response.json({ error: "Invalid signature" }, { status: 401 });
+                return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
               case "stale_timestamp":
                 console.error("Stale webhook timestamp");
-                return Response.json({ error: "Stale timestamp" }, { status: 401 });
+                return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
               case "invalid_payload":
               case "invalid_json":
                 console.error("Invalid payload", { code: error.code });
-                return Response.json({ error: "Invalid payload" }, { status: 400 });
+                return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_PAYLOAD_ERROR, 400);
               default:
                 console.error("Webhook verification failed", {
                   code: error.code,
                   message: error.message,
                 });
-                return Response.json({ error: "Verification failed" }, { status: 401 });
+                return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
             }
           }
           console.error("Unexpected error during verification", { error });
-          return Response.json({ error: "Internal error" }, { status: 500 });
+          return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -114,7 +123,7 @@ export const Route = createFileRoute("/lovable/email/suppression")({
             error: suppressError,
             email_redacted: normalizedEmail[0] + "***@" + normalizedEmail.split("@")[1],
           });
-          return Response.json({ error: "Failed to write suppression" }, { status: 500 });
+          return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
 
         // 2. Append a new log entry for the suppression event (never update existing rows)
