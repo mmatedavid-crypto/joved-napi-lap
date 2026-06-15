@@ -85,6 +85,8 @@ for (const needle of [
   "a profilodban később is visszanézhető",
   "kimásolható és letölthető",
   "az elkészült olvasat kimásolható és letölthető",
+  "Fontos, hogy pontos címet adj meg",
+  "ehhez kötjük az olvasat elküldését és visszakeresését",
   "paymentsAvailable",
   "canStartPayment",
   "A fizetés előkészítése most nem elérhető",

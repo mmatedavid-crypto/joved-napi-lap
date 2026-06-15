@@ -180,7 +180,10 @@ export function PaywallDialog({
                 className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
               />
               {!user && (
-                <p className="text-xs text-ivory/45 mt-1">Vendég vásárlás — fiók nem kötelező.</p>
+                <p className="text-xs text-ivory/45 mt-1">
+                  Vendég vásárlás — fiók nem kötelező. Fontos, hogy pontos címet adj meg, mert
+                  ehhez kötjük az olvasat elküldését és visszakeresését.
+                </p>
               )}
               {email && !emailValid && (
                 <p className="mt-1 text-xs text-gold/75">
