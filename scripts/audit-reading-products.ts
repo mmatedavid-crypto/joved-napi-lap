@@ -1,18 +1,18 @@
 import { readFileSync } from "node:fs";
-import { PRODUCTS } from "../src/lib/products";
-import { composePaidOrderReading } from "../src/lib/paidReadings";
-import { CARDS } from "../src/data/cards";
-import { composeThreeCardTarot } from "../src/lib/readingQuality/tarotEngine";
+import { PRODUCTS } from "../src/lib/products.ts";
+import { composePaidOrderReading } from "../src/lib/paidReadings.ts";
+import { CARDS } from "../src/data/cards.ts";
+import { composeThreeCardTarot } from "../src/lib/readingQuality/tarotEngine.ts";
 import {
   calculateNumerologyProfile,
   composeNumerologyReading,
-} from "../src/lib/readingQuality/numerologyEngine";
+} from "../src/lib/readingQuality/numerologyEngine.ts";
 import {
   calculateCompatibilityProfile,
   composeCompatibilityReading,
-} from "../src/lib/readingQuality/compatibilityEngine";
-import { composeHoroscopeReading } from "../src/lib/readingQuality/horoscopeEngine";
-import { textFromReading } from "../src/lib/readingQuality/qualityGuard";
+} from "../src/lib/readingQuality/compatibilityEngine.ts";
+import { composeHoroscopeReading } from "../src/lib/readingQuality/horoscopeEngine.ts";
+import { textFromReading } from "../src/lib/readingQuality/qualityGuard.ts";
 
 const demoPayloads: Record<string, Record<string, unknown>> = {
   napi_lap_ai: { cardName: "A Csillag", question: "Mire figyeljek ma?" },
@@ -51,6 +51,13 @@ const demoPayloads: Record<string, Record<string, unknown>> = {
   },
   szammisztika_eletut: { name: "Kovács Éva Anna", dob: "1988-11-29" },
 };
+
+const delegatedReportProducts = new Set([
+  "personal_30_day",
+  "vedic_full",
+  "personal_yearly",
+  "transits_personal",
+]);
 
 const extraPaidChecks: Array<{
   name: string;
@@ -122,19 +129,21 @@ function inspect(name: string, title: string, body: string, minLength: number, s
   return { name, title, chars: body.length, ok: issues.length === 0, issues };
 }
 
-const paid = PRODUCTS.map((product) => {
-  const reading = composePaidOrderReading(
-    product.slug,
-    product.name,
-    demoPayloads[product.slug] ?? {},
-  );
-  return inspect(
-    product.slug,
-    reading.title,
-    reading.body,
-    product.category === "instant" ? 900 : 1400,
-  );
-});
+const paid = PRODUCTS.filter((product) => !delegatedReportProducts.has(product.slug)).map(
+  (product) => {
+    const reading = composePaidOrderReading(
+      product.slug,
+      product.name,
+      demoPayloads[product.slug] ?? {},
+    );
+    return inspect(
+      product.slug,
+      reading.title,
+      reading.body,
+      product.category === "instant" ? 900 : 1400,
+    );
+  },
+);
 
 for (const check of extraPaidChecks) {
   const reading = composePaidOrderReading(check.slug, check.productName, check.payload);
@@ -268,6 +277,70 @@ const failed = [...paid, ...freeReadings, ...contextChecks].filter((item) => !it
 const policyFailures: string[] = [];
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
 const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
+const orderProcessing = readFileSync("src/lib/orderProcessing.server.ts", "utf8");
+
+const delegatedReports = [
+  {
+    slug: "personal_30_day",
+    file: "src/lib/products/personal30day.server.ts",
+    fn: "generatePersonal30DayReport",
+    schema: "personal_30_day_report",
+    route: "@/lib/products/personal30day.server",
+    heading: "## A következő 30 napod fő témája",
+  },
+  {
+    slug: "vedic_full",
+    file: "src/lib/products/vedicFull.server.ts",
+    fn: "generateVedicFullReport",
+    schema: "vedic_full_report",
+    route: "@/lib/products/vedicFull.server",
+    heading: "## A védikus képleted alapjai",
+  },
+  {
+    slug: "personal_yearly",
+    file: "src/lib/products/personalYearly.server.ts",
+    fn: "generatePersonalYearlyReport",
+    schema: "personal_yearly_report",
+    route: "@/lib/products/personalYearly.server",
+    heading: "## Az éved fő motívuma",
+  },
+  {
+    slug: "transits_personal",
+    file: "src/lib/products/transitsPersonal.server.ts",
+    fn: "generateTransitsPersonalReport",
+    schema: "transits_personal_report",
+    route: "@/lib/products/transitsPersonal.server",
+    heading: "## A jelenleg ható tranzitok",
+  },
+] as const;
+
+for (const report of delegatedReports) {
+  const body = readFileSync(report.file, "utf8");
+  for (const needle of [
+    `args.productSlug === "${report.slug}"`,
+    report.route,
+    report.fn,
+  ]) {
+    if (!orderProcessing.includes(needle)) {
+      policyFailures.push(`${report.slug}: order processing must delegate to ${report.fn}`);
+    }
+  }
+  for (const needle of [
+    `export async function ${report.fn}`,
+    "safeCallRoxy",
+    "callRoxy",
+    "aiJSON",
+    report.schema,
+    report.heading,
+    "buildFallbackReport",
+    "LEGAL_FOOTER",
+    "Nem orvosi, jogi, pénzügyi",
+  ]) {
+    if (!body.includes(needle)) {
+      policyFailures.push(`${report.slug}: report generator missing ${needle}`);
+    }
+  }
+}
 
 if (!paidServer.includes('providerPreference: "openai_first"')) {
   policyFailures.push("paid readings must prefer the strongest OpenAI/GPT route");

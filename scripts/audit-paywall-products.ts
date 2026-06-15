@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { PRODUCTS } from "../src/lib/products";
+import { PRODUCTS } from "../src/lib/products.ts";
 
 const failed: string[] = [];
 
