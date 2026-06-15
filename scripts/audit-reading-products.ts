@@ -312,6 +312,7 @@ const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const loveRoute = readFileSync("src/routes/randi-elott.tsx", "utf8");
 const decisionRoute = readFileSync("src/routes/dontes-elott.tsx", "utf8");
 const dailyCardRoute = readFileSync("src/routes/mai-lap.tsx", "utf8");
+const compatibilityRoute = readFileSync("src/routes/osszeillunk.tsx", "utf8");
 
 for (const needle of [
   "dailyFocus",
@@ -325,6 +326,32 @@ for (const needle of [
 ]) {
   if (!dailyCardRoute.includes(needle)) {
     policyFailures.push(`daily card route must preserve user focus reflection: ${needle}`);
+  }
+}
+
+for (const needle of [
+  "Te / első személy neve",
+  "Másik fél neve",
+  "Te / első személy születési dátuma",
+  "Másik fél születési dátuma",
+  "Te / első személy sorsszáma",
+  "A másik fél sorsszáma",
+]) {
+  if (!compatibilityRoute.includes(needle)) {
+    policyFailures.push(`compatibility route must use inclusive person labels: ${needle}`);
+  }
+}
+
+for (const forbiddenNeedle of [
+  "A férfi neve",
+  "A nő neve",
+  "Férfi születési dátuma",
+  "Nő születési dátuma",
+  "A férfi sorsszáma",
+  "A nő sorsszáma",
+]) {
+  if (compatibilityRoute.includes(forbiddenNeedle)) {
+    policyFailures.push(`compatibility route must not force gendered labels: ${forbiddenNeedle}`);
   }
 }
 

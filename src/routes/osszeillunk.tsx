@@ -247,7 +247,7 @@ function Page() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="compat-name-a" className="block text-sm text-ivory/80 mb-2">
-                A férfi neve (opcionális)
+                Te / első személy neve (opcionális)
               </label>
               <input
                 id="compat-name-a"
@@ -258,7 +258,7 @@ function Page() {
             </div>
             <div>
               <label htmlFor="compat-name-b" className="block text-sm text-ivory/80 mb-2">
-                A nő neve (opcionális)
+                Másik fél neve (opcionális)
               </label>
               <input
                 id="compat-name-b"
@@ -267,8 +267,13 @@ function Page() {
                 className={inp}
               />
             </div>
-            <HUDateInput label="Férfi születési dátuma" required value={a} onChange={setA} />
-            <HUDateInput label="Nő születési dátuma" required value={b} onChange={setB} />
+            <HUDateInput
+              label="Te / első személy születési dátuma"
+              required
+              value={a}
+              onChange={setA}
+            />
+            <HUDateInput label="Másik fél születési dátuma" required value={b} onChange={setB} />
           </div>
           <div>
             <label htmlFor="compat-status" className="block text-sm text-ivory/80 mb-2">
@@ -306,14 +311,17 @@ function Page() {
                 {profile.score}%
               </div>
               <p className="font-editorial text-ivory/70 mt-2">
-                {na || "A férfi"} és {nb || "a nő"} — {status}
+                {na || "Te"} és {nb || "a másik fél"} — {status}
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-4">
-              <Section eyebrow="A férfi sorsszáma" title={`${profile.personA.lifePathNumber}`}>
+              <Section
+                eyebrow="Te / első személy sorsszáma"
+                title={`${profile.personA.lifePathNumber}`}
+              >
                 Születési ritmusa ezt a kapcsolati térbe is behozza.
               </Section>
-              <Section eyebrow="A nő sorsszáma" title={`${profile.personB.lifePathNumber}`}>
+              <Section eyebrow="A másik fél sorsszáma" title={`${profile.personB.lifePathNumber}`}>
                 Ez a szám mutatja, milyen alaptempóból közeledik.
               </Section>
               <Section eyebrow="A kapcsolat száma" title={`${profile.relationshipNumber}`}>
