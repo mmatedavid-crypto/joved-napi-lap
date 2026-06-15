@@ -69,6 +69,7 @@ export function PaywallDialog({
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
   const inputSummary = summarizeInputPayload(inputPayload);
   const focusPreview = readingFocusPreview(product, inputPayload, inputSummary);
+  const contextualAlternative = contextualProductAlternative(product, inputPayload, sourceRoute);
   const deliveryLabel =
     product.category === "instant"
       ? "azonnal, fizetés után"
@@ -111,6 +112,33 @@ export function PaywallDialog({
                 </p>
               )}
             </div>
+
+            {contextualAlternative && (
+              <div className="rounded-md border border-gold/20 bg-[oklch(0.78_0.10_80/0.06)] p-4">
+                <div className="text-[10px] uppercase tracking-[0.22em] text-gold/75">
+                  Lehet, hogy ehhez jobban illik
+                </div>
+                <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="font-display text-xl leading-tight text-ivory">
+                      {contextualAlternative.product.name}
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-ivory/62">
+                      {contextualAlternative.reason}
+                    </p>
+                  </div>
+                  {contextualAlternative.product.sourceRoute && (
+                    <Link
+                      to={contextualAlternative.product.sourceRoute}
+                      onClick={() => onOpenChange(false)}
+                      className="shrink-0 rounded-md border border-gold/30 px-3 py-2 text-center text-xs text-gold transition-colors hover:border-gold/70 hover:text-gold"
+                    >
+                      Megnézem · {formatHuf(contextualAlternative.product.priceHuf)}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div>
               <label htmlFor="checkout-email" className="block text-sm text-ivory/80 mb-1">
@@ -564,6 +592,82 @@ function readingFocusPreview(
   }
 
   return lines.slice(0, 3);
+}
+
+function contextualProductAlternative(
+  product: ProductDef,
+  payload: Record<string, unknown> | undefined,
+  sourceRoute: string | undefined,
+): { product: ProductDef; reason: string } | null {
+  if (product.category === "delayed") return null;
+  const text = [
+    sourceRoute,
+    payloadText(payload, "question"),
+    payloadText(payload, "q"),
+    payloadText(payload, "situation"),
+    payloadText(payload, "sit"),
+    payloadText(payload, "status"),
+    payloadText(payload, "category"),
+    payloadText(payload, "cat"),
+    payloadText(payload, "memoryContext"),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  const pick = (slug: string, reason: string) => {
+    const candidate = PRODUCTS_BY_SLUG[slug];
+    if (!candidate || candidate.slug === product.slug) return null;
+    return { product: candidate, reason };
+  };
+
+  if (product.slug === "horoszkop_szemelyre" || sourceRoute?.startsWith("/horoszkop")) {
+    if (/(éves|12 hónap|következő év|egész év|egy év)/.test(text)) {
+      return pick(
+        "personal_yearly",
+        "Ha nem mai irányt, hanem hosszabb éves ívet kérsz, az éves riport természetesebb választ ad.",
+      );
+    }
+    if (/(tranzit|most ható|bolygó|időzítés|fordulópont)/.test(text)) {
+      return pick(
+        "transits_personal",
+        "Ha az érdekel, milyen időzítésben mozog most a helyzeted, a tranzit-elemzés pontosabb keret.",
+      );
+    }
+    if (/(30 nap|következő hónap|hónap|hetek|időszak|előrejelzés)/.test(text)) {
+      return pick(
+        "personal_30_day",
+        "Ha nem csak rövid napi választ keresel, hanem a következő hetek ívét, a 30 napos térkép jobb illeszkedés.",
+      );
+    }
+  }
+
+  if (
+    (product.slug === "napi_lap_ai" || product.slug === "extra_huzas") &&
+    /(dönt|válassz|munkahely|állás|költöz|szakíts|maradjak|menjek|elfogadjam)/.test(text)
+  ) {
+    return pick(
+      "dontes_komplex",
+      "Ha valódi döntési helyzet van mögötte, a komplex döntés-elemzés többet ad egy napi lapnál.",
+    );
+  }
+
+  if (
+    product.slug !== "parkapcsolat_elemzes" &&
+    /(ex|visszatér|kapcsolat|randi|szeret|összeill|ismerked)/.test(text)
+  ) {
+    return pick(
+      "parkapcsolat_elemzes",
+      "Kapcsolati kérdésnél jobb, ha a válasz külön kezeli a tempót, a vonzalmat és a visszatérő mintát.",
+    );
+  }
+
+  return null;
+}
+
+function payloadText(payload: Record<string, unknown> | undefined, key: string): string {
+  const value = payload?.[key];
+  return typeof value === "string" ? value : "";
 }
 
 function summarizeInputPayload(
