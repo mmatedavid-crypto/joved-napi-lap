@@ -66,6 +66,14 @@ export function SmartReadingFollowup({
 
   const memoryLine = memory.memories.length >= 2 ? memory.insights.gentleNudge : "";
   const selectedProduct = selectedSlug ? PRODUCTS_BY_SLUG[selectedSlug] : null;
+  const selectedPayload = {
+    ...inputPayload,
+    ...(question ? { question } : {}),
+    ...(situation ? { situation } : {}),
+    ...(memory.contextText || memory.themeSummary
+      ? { memoryContext: memory.contextText || memory.themeSummary }
+      : {}),
+  };
 
   return (
     <section className="surface p-5 md:p-6">
@@ -132,12 +140,7 @@ export function SmartReadingFollowup({
           }}
           productSlug={selectedProduct.slug}
           sourceRoute={sourceRoute}
-          inputPayload={{
-            ...inputPayload,
-            question,
-            situation,
-            memoryContext: memory.contextText || memory.themeSummary || undefined,
-          }}
+          inputPayload={selectedPayload}
         />
       )}
     </section>
@@ -155,6 +158,13 @@ function followupOptions(
   const text = `${context.question ?? ""} ${context.situation ?? ""} ${context.memory.themeSummary}`.toLocaleLowerCase(
     "hu-HU",
   );
+  const loveIntent = /(szerelem|kapcsolat|randi|ex|visszatér|ismerked|szeret|összeill)/.test(
+    text,
+  );
+  const decisionIntent = /(dönt|választ|munka|állás|költöz|maradjak|menjek|elfogadjam)/.test(
+    text,
+  );
+  const recurringIntent = /(újra|megint|visszatérő|ismétlődik|ugyanaz)/.test(text);
   if (intent === "love" || intent === "compatibility") {
     return [
       {
@@ -170,6 +180,38 @@ function followupOptions(
         label: "Mit lépjek most józanul?",
         reason:
           "Akkor hasznos, ha nem az érzés a kérdés, hanem az, hogyan ne ismételd ugyanazt a kört.",
+      },
+    ];
+  }
+  if (intent === "daily" && loveIntent) {
+    return [
+      {
+        slug: "parkapcsolat_elemzes",
+        label: recurringIntent ? "Mi ismétlődik ebben a kapcsolatban?" : "Mit mutat ez kettőtökről?",
+        reason:
+          "Ha a napi lap valójában kapcsolati kérdést érintett meg, jobb külön nézni a tempót, vonzalmat és visszatérő mintát.",
+      },
+      {
+        slug: "harom_lap_mely",
+        label: "Mi ennek a története?",
+        reason:
+          "A három lap segít látni, honnan jön ez az érzés, mi történik most, és merre mozdulhat óvatosan.",
+      },
+    ];
+  }
+  if (intent === "daily" && decisionIntent) {
+    return [
+      {
+        slug: "dontes_komplex",
+        label: "Hogyan döntsek tisztábban?",
+        reason:
+          "Ha a napi üzenet mögött valódi választás áll, a döntési elemzés külön kezeli a félelmet, vágyat és józan szempontot.",
+      },
+      {
+        slug: "harom_lap_mely",
+        label: "Mi ennek a mélyebb mintája?",
+        reason:
+          "Akkor hasznos, ha a döntés nem egyszeri kérdés, hanem egy régebbi belső minta folytatása.",
       },
     ];
   }
@@ -244,10 +286,8 @@ function followupOptions(
       reason: "Rövid, olcsó személyes olvasat, ha a napi lapnál konkrétabb választ szeretnél.",
     },
     {
-      slug: /(dönt|választ|munka|állás|költöz)/.test(text) ? "dontes_komplex" : "harom_lap_mely",
-      label: /(dönt|választ|munka|állás|költöz)/.test(text)
-        ? "Hogyan döntsek tisztábban?"
-        : "Mi ennek a mélyebb mintája?",
+      slug: decisionIntent ? "dontes_komplex" : "harom_lap_mely",
+      label: decisionIntent ? "Hogyan döntsek tisztábban?" : "Mi ennek a mélyebb mintája?",
       reason:
         "Akkor hasznos, ha a rövid napi üzenet után több összefüggést szeretnél látni.",
     },

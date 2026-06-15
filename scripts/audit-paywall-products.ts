@@ -258,8 +258,19 @@ for (const needle of [
   "hasMemory",
   "memoryCount",
   "PaywallDialog",
-  "memoryContext: memory.contextText",
+  "const selectedPayload",
+  "...inputPayload",
+  "...(question ? { question } : {})",
+  "...(situation ? { situation } : {})",
+  "memoryContext: memory.contextText || memory.themeSummary",
   "followupOptions(",
+  "const loveIntent",
+  "const decisionIntent",
+  "const recurringIntent",
+  'intent === "daily" && loveIntent',
+  'intent === "daily" && decisionIntent',
+  "Mi ismétlődik ebben a kapcsolatban?",
+  "Hogyan döntsek tisztábban?",
 ]) {
   if (!smartFollowup.includes(needle)) {
     failed.push(`SmartReadingFollowup missing: ${needle}`);
