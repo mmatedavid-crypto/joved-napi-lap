@@ -36,6 +36,16 @@ const layout = readFileSync("src/components/Layout.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
+const delayedAstrologyRouteFiles = [
+  "src/routes/szemelyes-30-napos-horoszkop.tsx",
+  "src/routes/eves-horoszkop.tsx",
+  "src/routes/vedikus-asztrologia.tsx",
+  "src/routes/tranzitok.tsx",
+] as const;
+const delayedAstrologyRouteSources = delayedAstrologyRouteFiles.map((file) => ({
+  file,
+  source: readFileSync(file, "utf8"),
+}));
 for (const needle of [
   "Miben lesz személyesebb?",
   "Ebből indulunk ki",
@@ -228,6 +238,15 @@ for (const forbiddenNeedle of [
 ]) {
   if (productsSource.includes(forbiddenNeedle)) {
     failed.push(`Product catalog must avoid deterministic paid astrology wording: ${forbiddenNeedle}`);
+  }
+}
+
+for (const { file, source } of delayedAstrologyRouteSources) {
+  if (source.includes("Fizetés után pár percen belül kézhez kapod a riportot")) {
+    failed.push(`${file}: delayed astrology route must not promise delivery within minutes`);
+  }
+  if (!source.includes("Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred")) {
+    failed.push(`${file}: delayed astrology route must show accurate delivery timing`);
   }
 }
 

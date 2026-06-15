@@ -151,7 +151,7 @@ function Page() {
             {productCtaLabel("Kérem az éves horoszkópomat", "personal_yearly")}
           </button>
           <p className="text-[11px] text-ivory/45 text-center font-editorial">
-            Fizetés után pár percen belül kézhez kapod a riportot ezen az oldalon és emailben is.
+            Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred a riportot.
           </p>
         </form>
 
