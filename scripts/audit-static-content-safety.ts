@@ -82,6 +82,8 @@ const publicUiFiles = [
   "src/components/ui/sheet.tsx",
   "src/components/ui/pagination.tsx",
   "src/components/ui/carousel.tsx",
+  "src/components/ui/sidebar.tsx",
+  "src/components/ui/breadcrumb.tsx",
 ];
 
 for (const file of publicUiFiles) {
@@ -93,8 +95,13 @@ for (const file of publicUiFiles) {
     />Previous slide</,
     />Next slide</,
     />More pages</,
+    />More</,
+    />Toggle Sidebar</,
     /aria-label="Go to previous page"/,
     /aria-label="Go to next page"/,
+    /aria-label="Toggle Sidebar"/,
+    /aria-label="breadcrumb"/,
+    /aria-label="pagination"/,
   ]) {
     if (forbidden.test(body)) {
       failures.push(`${file}: public UI accessibility text must be Hungarian: ${forbidden}`);
