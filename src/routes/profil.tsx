@@ -458,7 +458,8 @@ function OrderStatusNote({
     return (
       <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2">
         <p className="text-xs leading-relaxed text-ivory/55">
-          A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet.
+          A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet; a
+          rendelés nem vész el, csak a fizetési visszajelzésre várunk.
         </p>
         <ProfileSupportContact className="mt-2" orderId={order.id} />
       </div>
@@ -485,6 +486,10 @@ function OrderStatusNote({
         <p className="text-xs leading-relaxed text-ivory/65">
           A feldolgozás elakadt, de a rendelés nem vész el. Megpróbálhatod újraindítani az
           olvasatkészítést; ezt csak akkor engedjük, ha a fizetés igazoltan sikeres.
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-ivory/52">
+          Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük az
+          olvasatot, vagy visszatérítjük.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button

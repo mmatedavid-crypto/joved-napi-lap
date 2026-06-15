@@ -199,8 +199,11 @@ const checks: Check[] = [
     includes: [
       "OrderStatusNote",
       "A fizetés állapotát még egyeztetjük",
+      "csak a fizetési visszajelzésre várunk",
       "Az olvasat készül",
       "A feldolgozás elakadt",
+      "kézzel elkészítjük az",
+      "visszatérítjük",
       "SITE_LEGAL.supportEmail",
     ],
   },
