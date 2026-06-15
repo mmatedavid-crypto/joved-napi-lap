@@ -230,9 +230,9 @@ export async function generateTransitsPersonalReport(
     title,
     body,
     raw: {
-      location: locRaw ?? null,
-      natal: natal ?? null,
-      transits: transits ?? null,
+      location_resolved: Boolean(location),
+      natal_available: Boolean(natal),
+      transits_available: Boolean(transits),
       ai_model: ai.meta?.model ?? null,
       ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
       report_quality_fallback: reportQualityFallback,

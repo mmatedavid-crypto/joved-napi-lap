@@ -343,10 +343,25 @@ for (const report of delegatedReports) {
     "const aiMarkdown",
     "const reportQualityFallback = Boolean(aiMarkdown && !reportMd)",
     "report_quality_fallback: reportQualityFallback",
+    "location_resolved: Boolean(location)",
+    "natal_available: Boolean(natal)",
     "Boolean(ai.meta?.fallbackUsed || reportQualityFallback)",
   ]) {
     if (!body.includes(needle)) {
       policyFailures.push(`${report.slug}: report generator missing ${needle}`);
+    }
+  }
+
+  for (const forbiddenNeedle of [
+    "location: locRaw ?? null",
+    "natal: natal ?? null",
+    "forecast: forecast ?? null",
+    "yearly: yearly ?? null",
+    "transits: transits ?? null",
+    "vedic_summary: vedicSummary",
+  ]) {
+    if (body.includes(forbiddenNeedle)) {
+      policyFailures.push(`${report.slug}: raw provider payload must not be stored in response_payload`);
     }
   }
 }

@@ -213,9 +213,9 @@ export async function generatePersonal30DayReport(
     title,
     body,
     raw: {
-      location: locRaw ?? null,
-      natal: natal ?? null,
-      forecast: forecast ?? null,
+      location_resolved: Boolean(location),
+      natal_available: Boolean(natal),
+      forecast_available: Boolean(forecast),
       ai_model: ai.meta?.model ?? null,
       ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
       report_quality_fallback: reportQualityFallback,

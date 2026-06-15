@@ -233,9 +233,9 @@ export async function generatePersonalYearlyReport(
     title,
     body,
     raw: {
-      location: locRaw ?? null,
-      natal: natal ?? null,
-      yearly: yearly ?? null,
+      location_resolved: Boolean(location),
+      natal_available: Boolean(natal),
+      yearly_available: Boolean(yearly),
       ai_model: ai.meta?.model ?? null,
       ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
       report_quality_fallback: reportQualityFallback,

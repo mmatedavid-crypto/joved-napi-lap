@@ -317,13 +317,13 @@ export const getOrderBySession = createServerFn({ method: "POST" })
         ? addMissingReconciliationFields(fallbackOrderResult.data)
         : null;
       const order = await reconcilePendingPayment(fallbackOrder, data.sessionId);
-      return { order };
+      return { order: order ? stripPrivateOrderFields(order) : null };
     }
 
     if (orderResultWithReconciliation.error) throw orderResultWithReconciliation.error;
 
     const order = await reconcilePendingPayment(orderResultWithReconciliation.data, data.sessionId);
-    return { order };
+    return { order: order ? stripPrivateOrderFields(order) : null };
   });
 
 async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
@@ -521,7 +521,16 @@ function stripPrivateOrderFields<T extends Record<string, unknown>>(order: T) {
     payment_rechecked_at: _paymentRecheckedAt,
     ...publicOrder
   } = order;
-  return publicOrder;
+  return {
+    ...publicOrder,
+    response_payload: sanitizePublicResponsePayload(publicOrder.response_payload),
+  };
+}
+
+function sanitizePublicResponsePayload(payload: unknown): unknown {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return payload;
+  const { raw: _raw, ...publicPayload } = payload as Record<string, unknown>;
+  return publicPayload;
 }
 
 // Generálja a fizetett olvasat tartalmát és megjelöli a rendelést "delivered"-ként.
