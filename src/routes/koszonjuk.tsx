@@ -388,12 +388,12 @@ function PaidReadingFeedback({ order }: { order: OrderView }) {
     {
       label: "Részben talált",
       value: "partial",
-      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.",
+      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Nem volt elég pontos",
       value: "missed",
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
@@ -403,7 +403,8 @@ function PaidReadingFeedback({ order }: { order: OrderView }) {
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
       <p className="mt-2 text-sm leading-relaxed text-ivory/62">
         Fontos, hogy ne csak elkészüljön az olvasat, hanem valóban használható legyen. Ha valami nem
-        talált, írj nekünk: rendelés alapján visszanézzük, és segítünk pontosítani.
+        talált, írj nekünk: rendelés alapján visszanézzük, és konkrét pontosítási kéréssel segítünk
+        továbbmenni.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => {

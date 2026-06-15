@@ -57,12 +57,12 @@ const OrderDeliveredEmail = ({
     {
       label: "Részben talált",
       feedback: "Részben talált",
-      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.",
+      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Nem volt elég pontos",
       feedback: "Nem volt elég pontos",
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ];
   return (
@@ -127,7 +127,7 @@ const OrderDeliveredEmail = ({
               <Text style={feedbackTitle}>Minőségi visszajelzés</Text>
               <Text style={feedbackText}>
                 Segít, ha jelzed, mennyire talált el az olvasat. Ha nem volt elég pontos, rendelés
-                alapján visszanézzük, és segítünk pontosítani.
+                alapján visszanézzük, és konkrét pontosítási kéréssel segítünk továbbmenni.
               </Text>
               <Section>
                 {feedbackOptions.map((option) => (
