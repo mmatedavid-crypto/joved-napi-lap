@@ -30,6 +30,7 @@ for (const product of PRODUCTS) {
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
 const pricingRoute = readFileSync("src/routes/arak.tsx", "utf8");
+const withdrawalRoute = readFileSync("src/routes/elallasi-tajekoztato.tsx", "utf8");
 const layout = readFileSync("src/components/Layout.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
@@ -96,6 +97,9 @@ for (const needle of [
   "pótoljuk a hozzáférést",
   "javítjuk vagy újraküldjük",
   "vállalt határidőt",
+  "kérem a digitális tartalom teljesítésének megkezdését",
+  "elkészült digitális olvasatnál az elállási jog korlátozott",
+  "Technikai hiba esetén a hozzáférést pótoljuk",
   "const formatPromise = readingFormatPromise(product)",
   "function readingFormatPromise(product: ProductDef)",
   "Forma:",
@@ -187,10 +191,23 @@ for (const needle of [
   "Nem kötelező",
   "technikai hiba miatt nem nyílik meg",
   "pótoljuk a hozzáférést",
+  "Elállhatok a digitális olvasattól?",
+  "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését",
+  "az elállási jog korlátozott lehet",
   "Ezek jóslatok?",
   "nem ígér biztos jövőt",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
+}
+
+for (const needle of [
+  "kifejezetten kéri, hogy a digitális tartalom",
+  "az elállási jog a vonatkozó szabályok szerint",
+  "korlátozott lehet",
+  "technikai hiba miatt az olvasat nem jelenik meg",
+  "a hozzáférést pótoljuk",
+]) {
+  if (!withdrawalRoute.includes(needle)) failed.push(`Withdrawal route missing: ${needle}`);
 }
 
 if (!layout.includes('{ to: "/arak", label: "Árak" }')) {

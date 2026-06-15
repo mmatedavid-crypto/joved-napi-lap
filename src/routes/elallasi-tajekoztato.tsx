@@ -29,9 +29,15 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
 
       <LegalSection title="Teljesítés megkezdése">
         <p>
-          A fizetés megkezdése előtt a felhasználó elfogadja, hogy a szolgáltatás teljesítése a
-          sikeres fizetés után megkezdődhet. Ha a digitális tartalom elkészítése és megjelenítése
-          már megtörtént, az elállási jog a vonatkozó szabályok szerint korlátozott lehet.
+          A fizetés megkezdése előtt a felhasználó kifejezetten kéri, hogy a digitális tartalom
+          teljesítése a sikeres fizetés után megkezdődjön. Ha a digitális olvasat elkészült és a
+          rendelési oldalon vagy a profilban megnyílt, az elállási jog a vonatkozó szabályok szerint
+          korlátozott lehet.
+        </p>
+        <p>
+          Ez nem érinti azt az esetet, amikor technikai hiba miatt az olvasat nem jelenik meg, nem
+          hozzáférhető, vagy nyilvánvalóan hibásan töltődik be. Ilyenkor a rendelést ellenőrizzük,
+          és a hozzáférést pótoljuk.
         </p>
       </LegalSection>
 

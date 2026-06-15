@@ -20,6 +20,11 @@ const PRICING_FAQ = [
       "A rendelési link és a vásárlási email alapján utánanézünk, pótoljuk a hozzáférést, vagy hibás megjelenés esetén javítjuk és újraküldjük az olvasatot.",
   },
   {
+    question: "Elállhatok a digitális olvasattól?",
+    answer:
+      "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését. Ha az olvasat elkészült és megnyílt, az elállási jog korlátozott lehet; technikai hiba vagy elmaradt hozzáférés esetén viszont utánanézünk és pótoljuk a teljesítést.",
+  },
+  {
     question: "Ezek jóslatok?",
     answer:
       "Nem. A Jövőd.hu szimbolikus, önismereti digitális tartalmat ad. Nem orvosi, jogi, pénzügyi vagy krízistanácsadás, és nem ígér biztos jövőt.",

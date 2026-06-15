@@ -368,7 +368,9 @@ export function PaywallDialog({
                 <Link to="/elallasi-tajekoztato" className="text-gold hover:text-gold/80">
                   elállási tájékoztatót
                 </Link>
-                ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után.
+                ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után, és
+                tudomásul veszem, hogy az elkészült digitális olvasatnál az elállási jog korlátozott
+                lehet. Technikai hiba esetén a hozzáférést pótoljuk vagy utánanézünk.
               </span>
             </label>
 
