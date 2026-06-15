@@ -129,6 +129,10 @@ function ReadingUseGuide() {
       text: "Olvasd vissza azt a részt, ami cselekvés helyett figyelmet kér. Ez mutatja, mi mozdult.",
     },
     {
+      label: "7 nap múlva",
+      text: "Nézd meg, melyik téma tért vissza azóta. Ebből születik a következő jó kérdés.",
+    },
+    {
       label: "Ha nem pontos",
       text: "Írd meg, melyik rész nem talált, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
     },
@@ -141,7 +145,7 @@ function ReadingUseGuide() {
         Ez nem vizsga és nem végleges ítélet. Akkor használható jól, ha a legpontosabb részt
         visszaviszed a saját helyzetedbe.
       </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => (
           <div key={item.label} className="rounded-md border border-gold/10 bg-black/10 px-3 py-3">
             <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">
