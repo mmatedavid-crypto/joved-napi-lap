@@ -32,6 +32,11 @@ const checks: StaticSafetyCheck[] = [
     forbidden: [/\bgyógyít/i, /\bgyógyító/i, /\bterapeuta\w*/i, /\bápoló\b/i],
     required: ["egészséges határokkal", "spirituális érlelődésre", "tanítás, támogatás"],
   },
+  {
+    file: "src/data/cards.ts",
+    forbidden: [/\bbiztosan\b/i, /\bgyógyít/i, /\bgyógyítható\b/i],
+    required: ["bukkanhat fel", "finoman feldolgozható"],
+  },
 ];
 
 const failures: string[] = [];
