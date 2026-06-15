@@ -3,6 +3,7 @@
 // havi bontás-fókusszal hívjuk a Roxy forecast/timeline-t.
 
 import { aiJSON } from "@/lib/ai.server";
+import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -196,7 +197,19 @@ export async function generatePersonalYearlyReport(
     timeoutMs: 120_000,
   });
 
-  const reportMd = ai.ok && ai.data?.markdown ? ai.data.markdown.trim() : "";
+  const reportMd =
+    ai.ok && ai.data?.markdown
+      ? usablePaidAstrologyReport(ai.data.markdown, {
+          productSlug: "personal_yearly",
+          minChars: 1800,
+          requiredHeadings: [
+            "## Az éved fő motívuma",
+            "## Születési képleted röviden",
+            "## Havi bontás (12 hónap)",
+            "## Záró üzenet",
+          ],
+        })
+      : "";
   const fallbackBody = reportMd
     ? reportMd
     : buildFallbackReport({ input, areaLabel, startDate, endDate, location });

@@ -9,6 +9,7 @@
 // fordítja le és rendezi védikus szerkezetbe — nem talál ki dashákat.
 
 import { aiJSON } from "@/lib/ai.server";
+import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -311,7 +312,19 @@ export async function generateVedicFullReport(
     timeoutMs: 120_000,
   });
 
-  const reportMd = ai.ok && ai.data?.markdown ? ai.data.markdown.trim() : "";
+  const reportMd =
+    ai.ok && ai.data?.markdown
+      ? usablePaidAstrologyReport(ai.data.markdown, {
+          productSlug: "vedic_full",
+          minChars: 1800,
+          requiredHeadings: [
+            "## Bevezető — mit ad a védikus olvasat",
+            "## A védikus képleted alapjai (Lagna, Rashi, Hold-rashi, Nakshatra)",
+            "## A választott életterületed mélyebben",
+            "## Záró üzenet",
+          ],
+        })
+      : "";
   const fallbackBody = reportMd
     ? reportMd
     : buildFallbackReport({ input, areaLabel, vedicSummary, location });

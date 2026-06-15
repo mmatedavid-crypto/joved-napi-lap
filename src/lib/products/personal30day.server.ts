@@ -4,6 +4,7 @@
 // email-template változatlanul tudja megjeleníteni.
 
 import { aiJSON } from "@/lib/ai.server";
+import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -176,7 +177,19 @@ export async function generatePersonal30DayReport(
     timeoutMs: 90_000,
   });
 
-  const reportMd = ai.ok && ai.data?.markdown ? ai.data.markdown.trim() : "";
+  const reportMd =
+    ai.ok && ai.data?.markdown
+      ? usablePaidAstrologyReport(ai.data.markdown, {
+          productSlug: "personal_30_day",
+          minChars: 1200,
+          requiredHeadings: [
+            "## A következő 30 napod fő témája",
+            "## Születési képleted röviden",
+            "## Mire figyelj",
+            "## Záró üzenet",
+          ],
+        })
+      : "";
   const fallbackBody = reportMd
     ? reportMd
     : buildFallbackReport({ input, areaLabel, startDate, endDate, location });

@@ -278,6 +278,7 @@ const policyFailures: string[] = [];
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
 const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
 const orderProcessing = readFileSync("src/lib/orderProcessing.server.ts", "utf8");
+const reportQuality = readFileSync("src/lib/products/reportQuality.server.ts", "utf8");
 
 const delegatedReports = [
   {
@@ -335,10 +336,29 @@ for (const report of delegatedReports) {
     "buildFallbackReport",
     "LEGAL_FOOTER",
     "Nem orvosi, jogi, pénzügyi",
+    "usablePaidAstrologyReport",
+    `productSlug: "${report.slug}"`,
+    "requiredHeadings",
+    "minChars",
   ]) {
     if (!body.includes(needle)) {
       policyFailures.push(`${report.slug}: report generator missing ${needle}`);
     }
+  }
+}
+
+for (const needle of [
+  "inspectPaidAstrologyReport",
+  "usablePaidAstrologyReport",
+  "too_short",
+  "missing_heading",
+  "forbidden_claim_or_phrase",
+  "too_much_raw_english",
+  "weak_hungarian_signal",
+  "[paid_astrology_report_rejected]",
+]) {
+  if (!reportQuality.includes(needle)) {
+    policyFailures.push(`paid astrology report quality guard missing ${needle}`);
   }
 }
 
