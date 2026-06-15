@@ -48,6 +48,61 @@ function pickDomain(cat: string): "love" | "career" | "finances" {
   return "career";
 }
 
+function decisionTarotSynthesis(slots: TarotSlot[], question: string, category: string) {
+  const cards = slots.map((slot) => ({
+    card: localCardFromSlot(slot),
+    reversed: slot.roxy.reversed,
+    oneLine: slot.hu.oneLine,
+  }));
+  const questionText = question.trim();
+  const opening = questionText
+    ? `A döntési helyzeted: „${questionText}”.`
+    : `Most a ${category} témájában kérsz tisztább irányt.`;
+  const categoryHint = decisionCategoryHint(category);
+
+  if (cards.length === 1) {
+    const card = cards[0];
+    const direction = card.reversed
+      ? "inkább azt jelzi, hol tartasz vissza valamit vagy hol félsz túl gyorsan lépni"
+      : "inkább azt mutatja, melyik belső szempont kér most több figyelmet";
+    return {
+      heading: "Mit tisztít a döntés?",
+      text: `${opening} A ${card.card.name} ${direction}. ${categoryHint} Ez a lap nem dönt helyetted: abban segít, hogy ne a sürgetésből, hanem a valódi tét felismeréséből mozdulj.`,
+      oneLine:
+        card.oneLine ??
+        `A ${card.card.name} most nem parancsot ad, hanem a döntés valódi súlyát mutatja.`,
+    };
+  }
+
+  const [past, present, future] = cards;
+  return {
+    heading: "A döntés íve",
+    text: `${opening} A ${past.card.name} azt mutatja, milyen előzményből jössz; a ${present.card.name} a mostani nyomást vagy lehetőséget teszi láthatóvá; a ${future.card.name} pedig arra utalhat, milyen irány nyílhat, ha tisztábban választasz. ${categoryHint} Itt nem az a cél, hogy azonnal kimondj egy végleges igent vagy nemet, hanem hogy meglásd, melyik félelem és melyik valódi vágy beszél benned.`,
+    oneLine:
+      future.oneLine ??
+      `${past.card.name}, ${present.card.name} és ${future.card.name} együtt a döntés belső ívét mutatja.`,
+  };
+}
+
+function decisionCategoryHint(category: string): string {
+  switch (category) {
+    case "szerelem":
+      return "Kapcsolati döntésnél most az érzelmi biztonság és a vágy tempója különválhat egymástól.";
+    case "munka":
+      return "Munkahelyi döntésnél a felelősség, a fejlődés és a kimerülés határát érdemes külön megnézni.";
+    case "pénz":
+      return "Anyagi kérdésnél ez önismereti jelzés, nem pénzügyi tanács: azt mutatja, hol döntesz félelemből vagy túlzott reményből.";
+    case "család":
+      return "Családi döntésnél gyakran régi szerepek is beleszólnak abba, mit érzel kötelességnek.";
+    case "költözés":
+      return "Költözésnél nem csak a hely változik, hanem az is, milyen életformához szeretnél közelebb kerülni.";
+    case "ex / visszatérés":
+      return "Visszatérő történetnél külön figyeld, valódi változás látszik-e, vagy csak a régi hiány kér új választ.";
+    default:
+      return "A döntés most akkor tisztul, ha nem csak a külső következményt, hanem a belső indítékot is látod.";
+  }
+}
+
 function Page() {
   const { user } = useAuth();
   const callIching = useServerFn(roxyIchingDailyCast);
@@ -313,13 +368,6 @@ function Page() {
                         <Section eyebrow={domainLabel}>{slots[2].hu[domain]!}</Section>
                       </div>
                     )}
-                    {slots[slots.length - 1]?.hu.oneLine && (
-                      <div className="md:col-span-2">
-                        <Section eyebrow="Egy mondatban">
-                          <em>{slots[slots.length - 1].hu.oneLine}</em>
-                        </Section>
-                      </div>
-                    )}
                   </>
                 ) : (
                   <>
@@ -329,15 +377,23 @@ function Page() {
                     {slots[0].hu[domain] && (
                       <Section eyebrow={domainLabel}>{slots[0].hu[domain]!}</Section>
                     )}
-                    {slots[0].hu.oneLine && (
-                      <div className="md:col-span-2">
-                        <Section eyebrow="Egy mondatban">
-                          <em>{slots[0].hu.oneLine}</em>
-                        </Section>
-                      </div>
-                    )}
                   </>
                 )}
+                {(() => {
+                  const synthesis = decisionTarotSynthesis(slots, q, cat);
+                  return (
+                    <>
+                      <div className="md:col-span-2">
+                        <Section eyebrow={synthesis.heading}>{synthesis.text}</Section>
+                      </div>
+                      <div className="md:col-span-2">
+                        <Section eyebrow="Egy mondatban">
+                          <em>{synthesis.oneLine}</em>
+                        </Section>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             )}
           </>

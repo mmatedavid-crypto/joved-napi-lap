@@ -309,6 +309,8 @@ const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
 const orderProcessing = readFileSync("src/lib/orderProcessing.server.ts", "utf8");
 const reportQuality = readFileSync("src/lib/products/reportQuality.server.ts", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
+const loveRoute = readFileSync("src/routes/randi-elott.tsx", "utf8");
+const decisionRoute = readFileSync("src/routes/dontes-elott.tsx", "utf8");
 
 for (const needle of [
   "function threeCardFreeSynthesis",
@@ -323,6 +325,36 @@ for (const needle of [
 ]) {
   if (!threeCardRoute.includes(needle)) {
     policyFailures.push(`free three-card route must preserve contextual synthesis: ${needle}`);
+  }
+}
+
+for (const needle of [
+  "function loveQuestionSynthesis",
+  "loveSituationHint",
+  "A kérdésedre figyelve",
+  "Mit mutat ez rólatok?",
+  "A három lap együtt",
+  "rövid fellángolásnál",
+  "tartósabb figyelemmel",
+  "nem automatikus válasz",
+]) {
+  if (!loveRoute.includes(needle)) {
+    policyFailures.push(`love tarot route must answer user situation/question: ${needle}`);
+  }
+}
+
+for (const needle of [
+  "function decisionTarotSynthesis",
+  "decisionCategoryHint",
+  "A döntési helyzeted",
+  "Mit tisztít a döntés?",
+  "A döntés íve",
+  "nem pénzügyi tanács",
+  "nem dönt helyetted",
+  "nem parancsot ad",
+]) {
+  if (!decisionRoute.includes(needle)) {
+    policyFailures.push(`decision tarot route must answer user situation/question: ${needle}`);
   }
 }
 

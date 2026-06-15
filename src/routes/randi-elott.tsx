@@ -44,6 +44,60 @@ function localCardFromSlot(slot: TarotSlot): TarotCard {
   return found ?? CARDS[0];
 }
 
+function loveQuestionSynthesis(slots: TarotSlot[], sit: string, question: string, hisName: string) {
+  const him = hisName.trim() || "ő";
+  const cards = slots.map((slot) => ({
+    card: localCardFromSlot(slot),
+    reversed: slot.roxy.reversed,
+    oneLine: slot.hu.oneLine,
+  }));
+  const questionText = question.trim();
+  const opening = questionText
+    ? `A kérdésedre figyelve: „${questionText}”.`
+    : `A helyzeted most innen indul: ${sit}.`;
+  const situation = loveSituationHint(sit, him);
+
+  if (cards.length === 1) {
+    const card = cards[0];
+    const direction = card.reversed ? "óvatosságot és belső visszatartást" : "egy tisztább irányt";
+    return {
+      heading: "Mit mutat ez rólatok?",
+      text: `${opening} A ${card.card.name} ebben a kapcsolati térben ${direction} jelezhet. ${situation} Ez nem bizonyíték arra, hogy ${him} mit fog tenni, inkább azt mutatja, milyen tempóban érdemes olvasnod a jeleket.`,
+      oneLine:
+        card.oneLine ??
+        `A ${card.card.name} most nem biztos választ, hanem kapcsolati tempót mutat.`,
+    };
+  }
+
+  const [you, between, them] = cards;
+  return {
+    heading: "A három lap együtt",
+    text: `${opening} A ${you.card.name} azt mutatja, mit hozol te ebbe a történetbe; a ${between.card.name} a köztetek lévő valódi feszültséget vagy lehetőséget jelzi; a ${them.card.name} pedig inkább ${him} oldalának tempójára utalhat. ${situation} Ha visszatérésről vagy bizonytalanságról van szó, ne csak azt nézd, megjelenik-e, hanem azt is, hogy a közeledés tartósabb figyelemmel jár-e, vagy csak rövid érzelmi hullám.`,
+    oneLine:
+      them.oneLine ??
+      `${you.card.name}, ${between.card.name} és ${them.card.name} együtt a kapcsolati tempót mutatja.`,
+  };
+}
+
+function loveSituationHint(sit: string, him: string): string {
+  switch (sit) {
+    case "randi előtt":
+      return "Ez a randi most inkább azt taníthatja, hogyan maradj jelen anélkül, hogy előre eldöntenéd a történet végét.";
+    case "randi után":
+      return "A találkozás utóhangja beszédesebb lehet, mint az első benyomás: figyeld, mi maradt benned nyugodt és mi lett túl hangos.";
+    case "most ismerkedünk":
+      return "Új ismerkedésnél a vonzalom mellett az számít, megjelenik-e következetes figyelem és valódi kíváncsiság.";
+    case "nem ír vissza":
+      return "A csend most nem automatikus válasz: inkább azt érdemes nézni, hogy a hallgatás milyen hatást vált ki belőled.";
+    case "ex / visszatérő történet":
+      return `Visszatérő történetnél ${him} esetleges közeledése csak akkor jelent többet rövid fellángolásnál, ha más tempó és több felelősség is látszik mellette.`;
+    case "nem tudom, mit akar":
+      return "A bizonytalanságban most az a fontos, hogy ne csak az ő jelzéseit olvasd, hanem a saját nyugalmad hiányát is.";
+    default:
+      return "A kapcsolati tér most inkább mintát mutat, nem végleges választ.";
+  }
+}
+
 function Page() {
   const { user } = useAuth();
   const [myDob, setMyDob] = useState("");
@@ -260,13 +314,21 @@ function Page() {
                   )}
                 </>
               )}
-              {slots[slots.length - 1]?.hu.oneLine && (
-                <div className="md:col-span-2">
-                  <Section eyebrow="Egy mondatban">
-                    <em>{slots[slots.length - 1].hu.oneLine}</em>
-                  </Section>
-                </div>
-              )}
+              {(() => {
+                const synthesis = loveQuestionSynthesis(slots, sit, q, hisName);
+                return (
+                  <>
+                    <div className="md:col-span-2">
+                      <Section eyebrow={synthesis.heading}>{synthesis.text}</Section>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Section eyebrow="Egy mondatban">
+                        <em>{synthesis.oneLine}</em>
+                      </Section>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
             <SmartReadingFollowup
               intent="love"
