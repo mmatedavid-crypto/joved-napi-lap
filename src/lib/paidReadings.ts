@@ -61,6 +61,65 @@ function normalizeSignKey(value: string): string {
   return "aries";
 }
 
+const PAID_SIGN_TENSION: Record<string, string> = {
+  aries: "a gyors lendület és a türelmesebb kivárás között",
+  taurus: "a biztonság megtartása és a változás beengedése között",
+  gemini: "a sok gondolat és az egyetlen tiszta fókusz között",
+  cancer: "az érzelmi biztonság és a régi érzések újraéledése között",
+  leo: "a láthatóság igénye és a méltóságteljes visszalépés között",
+  virgo: "a javítás vágya és az önkritika elengedése között",
+  libra: "a harmónia megőrzése és a valódi döntés kimondása között",
+  scorpio: "a mélység iránti vágy és a kontroll elengedése között",
+  sagittarius: "a szabadságvágy és a vállalható ígéret között",
+  capricorn: "a felelősség, kontroll és időzítés között",
+  aquarius: "a távolságtartás és a valódi kapcsolódás között",
+  pisces: "az intuíció és az elmosódó határok között",
+};
+
+function signDisplayName(value: string): string {
+  if (!value) return "";
+  const key = normalizeSignKey(value);
+  return SIGN_HU[key] ?? value;
+}
+
+function signTension(value: string): string {
+  if (!value) return "a belső ritmus és a külső elvárások között";
+  const key = normalizeSignKey(value);
+  return PAID_SIGN_TENSION[key] ?? "a belső ritmus és a külső elvárások között";
+}
+
+function situationReflection(situation: string): { heading: string; text: string } {
+  const lower = situation.toLocaleLowerCase("hu-HU");
+  if (/(szerelem|kapcsolat|randi|ex|visszatér|ismerked)/.test(lower)) {
+    return {
+      heading: "Kapcsolati fókusz",
+      text: `A „${situation}” témájában most nem az a legerősebb kérdés, hogy a másik mit lép. Inkább az, milyen tempóban maradsz önazonos: hol keresel valódi kölcsönösséget, és hol próbálsz egy bizonytalan jelből túl nagy választ kiolvasni.`,
+    };
+  }
+  if (/(munka|állás|karrier|projekt|pénz|vállalkoz|ügyfél)/.test(lower)) {
+    return {
+      heading: "Munka és irány",
+      text: `A „${situation}” témájában a fókusz nem a gyors bizonyítás. Inkább azt érdemes ma figyelni, melyik feladat ad valódi tartást, és melyik csak azért sürget, mert félsz lemaradni vagy rosszul látszani.`,
+    };
+  }
+  if (/(dönt|válassz|irány|költöz|menjek|maradjak|elfogadjam)/.test(lower)) {
+    return {
+      heading: "Döntési fókusz",
+      text: `A „${situation}” témájában ne végleges választ kényszeríts ki magadból. Ma inkább azt figyeld, melyik opció mellett lesz csendesebb a belső zaj, és melyik csak rövid időre csökkenti a bizonytalanságot.`,
+    };
+  }
+  if (/(család|otthon|anya|apa|gyerek|barát)/.test(lower)) {
+    return {
+      heading: "Közeli kapcsolatok",
+      text: `A „${situation}” témájában most az lehet beszédes, hol viszel túl sok felelősséget mások érzéseiért. A mai irány nem hideg távolság, hanem tisztább határ: meddig vagy jelen szívből, és honnantól fáradsz el szerepből.`,
+    };
+  }
+  return {
+    heading: "A megadott témád felől",
+    text: `A „${situation}” témájában ez az olvasat nem nagy előrejelzést ad, hanem napi fókuszt: hol érdemes ma kevesebb zajból, tisztább belső ritmusból reagálnod.`,
+  };
+}
+
 function cardsFromPayload(input: Record<string, unknown>, count = 3): TarotCard[] {
   const raw = Array.isArray(input.cards) ? input.cards : [];
   const cards = raw.map((item) => cardByName(text(item))).filter(Boolean);
@@ -202,7 +261,9 @@ function premiumCelticCross(input: Record<string, unknown>): PaidReadingPayload 
 
 function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload {
   const name = text(input.name);
-  const sign = text(input.sign);
+  const rawSign = text(input.sign);
+  const sign = signDisplayName(rawSign);
+  const tension = signTension(rawSign);
   const situation = text(input.situation) || text(input.question) || text(input.q);
   const personalYear = text(input.personalYear);
   const title = name ? `Mai iránytű · ${name}` : "Mai iránytű · személyes üzenet";
@@ -211,15 +272,10 @@ function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload
     sections: [
       {
         heading: "Mai alaphang",
-        text: `A mai napod nem nagy fordulatként, hanem finom hangolásként olvasható. ${sign ? `A ${sign} minősége most azt kéri, hogy pontosabban figyeld, hol gyorsítasz túl.` : "A hangsúly azon van, hol térsz vissza saját ritmusodhoz."}`,
+        text: `A mai napod nem nagy fordulatként, hanem finom hangolásként olvasható. ${sign ? `A ${sign} minősége most főleg ${tension} kér pontosabb figyelmet.` : "A hangsúly azon van, hol térsz vissza saját ritmusodhoz."}`,
       },
       ...(situation
-        ? [
-            {
-              heading: "A megadott témád felől",
-              text: `A „${situation}” témájában ez az olvasat nem nagy előrejelzést ad, hanem napi fókuszt: hol érdemes ma kevesebb zajból, tisztább belső ritmusból reagálnod.`,
-            },
-          ]
+        ? [situationReflection(situation)]
         : []),
       {
         heading: "Személyes ritmus",
@@ -256,6 +312,7 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   const rawSign = text(input.sign) || text(input.zodiac) || "Bak";
   const signKey = normalizeSignKey(rawSign);
   const signName = SIGN_HU[signKey] ?? rawSign;
+  const tension = signTension(rawSign);
   const situation = text(input.situation) || text(input.question) || text(input.q);
   const articleLead = text(input.articleLead);
   const articleSections = horoscopeArticleSections(input.articleSections);
@@ -275,16 +332,11 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
     {
       heading: "Miért rólad szólhat ma?",
       text: name
-        ? `${name}, ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: mikor tartasz túl erősen valamit kézben, és mikor engedsz épp annyit, hogy a helyzet mozdulni tudjon.`
-        : `Ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: mikor tartasz túl erősen valamit kézben, és mikor engedsz épp annyit, hogy a helyzet mozdulni tudjon.`,
+        ? `${name}, ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`
+        : `Ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`,
     },
     ...(situation
-      ? [
-          {
-            heading: "A megadott helyzeted felől",
-            text: `A „${situation}” témájában a mai horoszkóp nem kész választ ad. A ${signName} mintája inkább arra hívhatja fel a figyelmed, hogy melyik reakciód születik valódi belső rendből, és melyik csak abból, hogy szeretnéd gyorsan kontroll alá venni a bizonytalanságot.`,
-          },
-        ]
+      ? [situationReflection(situation)]
       : []),
     ...(articleLead || articleSections.length || moonPhase || luckyColor || luckyNumber
       ? [

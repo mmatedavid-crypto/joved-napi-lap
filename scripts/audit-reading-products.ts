@@ -16,14 +16,25 @@ import { textFromReading } from "../src/lib/readingQuality/qualityGuard.ts";
 
 const demoPayloads: Record<string, Record<string, unknown>> = {
   napi_lap_ai: { cardName: "A Csillag", question: "Mire figyeljek ma?" },
-  mai_iranytu_ai: { name: "Anna", dob: "1992-04-17", sign: "Rák", personalYear: 4 },
+  mai_iranytu_ai: {
+    name: "Anna",
+    dob: "1992-04-17",
+    sign: "cancer",
+    personalYear: 4,
+    situation: "Bizonytalan vagyok egy új randi miatt",
+  },
   angyalszam_ai: { number: "1111", root: 11 },
   kristaly_ai: { mode: "month", month: 2, crystal: "Ametiszt" },
   alomfejtes_rovid: {
     text: "Egy régi házban jártam, víz folyt a lépcsőkön, és kerestem egy szobát.",
     emotion: "fear",
   },
-  horoszkop_szemelyre: { name: "Dávid", sign: "Bak", personalYear: 8 },
+  horoszkop_szemelyre: {
+    name: "Dávid",
+    sign: "Bak",
+    personalYear: 8,
+    situation: "Munkahelyi döntés előtt állok",
+  },
   extra_huzas: { cardName: "Az Erő", question: "Mi a következő jó lépés?" },
   harom_lap_mely: {
     cards: ["A Szeretők", "A Remete", "A Csillag"],
@@ -225,7 +236,25 @@ const contextChecks = [
       "Horoszkóp — személyre szabott",
       demoPayloads.horoszkop_szemelyre,
     ).body,
-    required: ["Bak", "felelősség", "személyes"],
+    required: ["Bak", "felelősség", "Munka és irány", "Munkahelyi döntés"],
+  },
+  {
+    name: "context:paid_daily_compass_situation",
+    body: composePaidOrderReading(
+      "mai_iranytu_ai",
+      "Mai iránytű — személyes üzenet",
+      demoPayloads.mai_iranytu_ai,
+    ).body,
+    required: ["Rák", "Kapcsolati fókusz", "új randi", "érzelmi biztonság"],
+  },
+  {
+    name: "context:paid_horoscope_gemini_specific",
+    body: composePaidOrderReading(
+      "horoszkop_szemelyre",
+      "Horoszkóp — személyre szabott",
+      { name: "Lilla", sign: "Ikrek", situation: "Túl sok üzenet és döntés jön egyszerre" },
+    ).body,
+    required: ["Ikrek", "sok gondolat", "Döntési fókusz", "Túl sok üzenet"],
   },
   {
     name: "context:paid_ex_return",
