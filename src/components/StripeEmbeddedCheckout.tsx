@@ -67,7 +67,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
               },
             });
 
-            if ("error" in result) throw new Error(result.error);
+            if ("error" in result) throw new CheckoutStartError(result.error);
             if (!result.clientSecret) throw new Error("Nem jött vissza checkout azonosító");
             trackEvent("checkout_succeeded", { productSlug, express, sourceRoute, environment });
             return result.clientSecret;
@@ -131,19 +131,55 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
 }
 
 function safeCheckoutErrorReason(error: unknown): string {
+  if (error instanceof CheckoutStartError) return error.code;
   const message = error instanceof Error ? error.message : "";
   if (message === "Érvénytelen email cím") return "invalid_email";
   if (message === "Ismeretlen termék") return "unknown_product";
+  if (message === "Érvénytelen felhasználói azonosító") return "invalid_user_id";
   return "checkout_start_failed";
 }
 
 function safeCheckoutErrorMessage(error: unknown): string {
+  if (error instanceof CheckoutStartError) return checkoutErrorMessageByCode(error.code);
   const message = error instanceof Error ? error.message : "";
   if (message === "Érvénytelen email cím") {
-    return "Kérlek ellenőrizd az email címet, mert erre küldjük az olvasat értesítését is.";
+    return checkoutErrorMessageByCode("invalid_email");
   }
   if (message === "Ismeretlen termék") {
+    return checkoutErrorMessageByCode("unknown_product");
+  }
+  if (message === "Érvénytelen felhasználói azonosító") {
+    return checkoutErrorMessageByCode("invalid_user_id");
+  }
+  return checkoutErrorMessageByCode("checkout_start_failed");
+}
+
+type CheckoutErrorCode =
+  | "invalid_email"
+  | "unknown_product"
+  | "invalid_user_id"
+  | "missing_product_price"
+  | "missing_express_price"
+  | "checkout_session_unavailable"
+  | "order_insert_failed"
+  | "checkout_start_failed";
+
+class CheckoutStartError extends Error {
+  constructor(readonly code: CheckoutErrorCode) {
+    super(code);
+    this.name = "CheckoutStartError";
+  }
+}
+
+function checkoutErrorMessageByCode(code: CheckoutErrorCode): string {
+  if (code === "invalid_email") {
+    return "Kérlek ellenőrizd az email címet, mert erre küldjük az olvasat értesítését is.";
+  }
+  if (code === "unknown_product") {
     return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Kérlek válassz újra a termékek közül.";
+  }
+  if (code === "invalid_user_id") {
+    return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. Frissítsd az oldalt, majd próbáld újra.";
   }
   return "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 }

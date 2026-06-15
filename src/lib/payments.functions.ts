@@ -11,7 +11,16 @@ import {
   EXPRESS_HOURS,
 } from "@/lib/products";
 
-type CheckoutSessionResult = { clientSecret: string } | { error: string };
+type CheckoutErrorCode =
+  | "invalid_email"
+  | "unknown_product"
+  | "invalid_user_id"
+  | "missing_product_price"
+  | "missing_express_price"
+  | "checkout_session_unavailable"
+  | "order_insert_failed"
+  | "checkout_start_failed";
+type CheckoutSessionResult = { clientSecret: string } | { error: CheckoutErrorCode };
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
 type PublicOrderFields = Pick<
@@ -221,13 +230,13 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           error: orderError.message,
         });
         await expireUnusableCheckoutSession(stripe, session.id);
-        throw new Error("Most nem sikerült előkészíteni a rendelést. Próbáld újra később.");
+        throw new Error("order_insert_failed");
       }
 
       return { clientSecret: session.client_secret };
     } catch (error) {
       console.error("createCheckoutSession error:", error);
-      return { error: safeCheckoutErrorMessage(error) };
+      return { error: safeCheckoutErrorCode(error) };
     }
   });
 
@@ -267,19 +276,19 @@ function isMissingColumnError(error: unknown): boolean {
   );
 }
 
-function safeCheckoutErrorMessage(error: unknown): string {
+function safeCheckoutErrorCode(error: unknown): CheckoutErrorCode {
   const message = error instanceof Error ? error.message : "";
-  const allowedMessages = [
-    "Ismeretlen termék",
-    "Érvénytelen email cím",
-    "Érvénytelen felhasználói azonosító",
-    "A termék ára nem található",
-    "Az express ár nem található",
-    "A fizetési munkamenet nem indítható el. Próbáld újra később.",
-    "Most nem sikerült előkészíteni a rendelést. Próbáld újra később.",
-  ];
-
-  return allowedMessages.includes(message) ? message : CHECKOUT_GENERIC_ERROR;
+  if (message === "Ismeretlen termék") return "unknown_product";
+  if (message === "Érvénytelen email cím") return "invalid_email";
+  if (message === "Érvénytelen felhasználói azonosító") return "invalid_user_id";
+  if (message === "A termék ára nem található") return "missing_product_price";
+  if (message === "Az express ár nem található") return "missing_express_price";
+  if (message === "A fizetési munkamenet nem indítható el. Próbáld újra később.") {
+    return "checkout_session_unavailable";
+  }
+  if (message === "order_insert_failed") return "order_insert_failed";
+  if (message === CHECKOUT_GENERIC_ERROR) return "checkout_start_failed";
+  return "checkout_start_failed";
 }
 
 async function expireUnusableCheckoutSession(stripe: Stripe, sessionId: string): Promise<void> {

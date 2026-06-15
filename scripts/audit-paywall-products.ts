@@ -157,6 +157,9 @@ for (const needle of [
   'trackEvent("checkout_failed"',
   'trackEvent("checkout_retry_clicked"',
   "safeCheckoutErrorReason(error)",
+  "CheckoutStartError",
+  "checkoutErrorMessageByCode",
+  "invalid_user_id",
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.",
   "vásárlási email címedről",
 ]) {
@@ -168,6 +171,28 @@ if (checkout.includes("setCheckoutError(message ||")) {
 }
 if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
   failed.push("Stripe checkout analytics must not include customer email");
+}
+
+const paymentsServer = readFileSync("src/lib/payments.functions.ts", "utf8");
+for (const needle of [
+  "type CheckoutErrorCode",
+  "CheckoutSessionResult = { clientSecret: string } | { error: CheckoutErrorCode }",
+  "safeCheckoutErrorCode(error)",
+  'return "invalid_email"',
+  'return "unknown_product"',
+  'return "invalid_user_id"',
+  'return "order_insert_failed"',
+  'return "checkout_start_failed"',
+]) {
+  if (!paymentsServer.includes(needle)) failed.push(`payments.functions checkout missing: ${needle}`);
+}
+for (const forbidden of [
+  "return { error: safeCheckoutErrorMessage(error) }",
+  "type CheckoutSessionResult = { clientSecret: string } | { error: string }",
+]) {
+  if (paymentsServer.includes(forbidden)) {
+    failed.push(`payments.functions checkout must not use raw text errors: ${forbidden}`);
+  }
 }
 
 if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
