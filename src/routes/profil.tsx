@@ -62,6 +62,11 @@ type OrderResponsePayload = {
   body?: string;
 };
 
+type RetryNotice = {
+  kind: "success" | "info" | "error";
+  text: string;
+};
+
 function shortOrderId(id: string | undefined | null): string | undefined {
   return id ? id.slice(0, 8).toUpperCase() : undefined;
 }
@@ -84,6 +89,7 @@ function Page() {
   const [memoryClearing, setMemoryClearing] = useState(false);
   const [memoryCleared, setMemoryCleared] = useState(false);
   const [retryingOrders, setRetryingOrders] = useState<Set<string>>(() => new Set());
+  const [retryNotices, setRetryNotices] = useState<Record<string, RetryNotice>>({});
   const awakenedOrders = useRef(new Set<string>());
   const guestImportAttempted = useRef(false);
 
@@ -168,10 +174,42 @@ function Page() {
 
   async function retryOrder(orderId: string) {
     setRetryingOrders((current) => new Set(current).add(orderId));
+    setRetryNotices((current) => {
+      const next = { ...current };
+      delete next[orderId];
+      return next;
+    });
     try {
-      await wakeOrder({ data: { orderId } });
+      const result = await wakeOrder({ data: { orderId } });
       const refreshed = await call({});
       setOrders(refreshed.orders ?? []);
+      if (result.ok) {
+        setRetryNotices((current) => ({
+          ...current,
+          [orderId]: {
+            kind: result.processing ? "info" : "success",
+            text: result.processing
+              ? "Az olvasat feldolgozása már fut. Pár perc múlva frissíts rá, vagy hagyd nyitva a profilt."
+              : "Újraindítottuk a feldolgozást. Ha elkészül, itt a profilban és emailben is látni fogod.",
+          },
+        }));
+      } else {
+        setRetryNotices((current) => ({
+          ...current,
+          [orderId]: {
+            kind: "error",
+            text: result.error,
+          },
+        }));
+      }
+    } catch {
+      setRetryNotices((current) => ({
+        ...current,
+        [orderId]: {
+          kind: "error",
+          text: "Most nem sikerült újraindítani a feldolgozást. A rendelés nem vész el; próbáld újra később, vagy írj nekünk a vásárlási email címedről.",
+        },
+      }));
     } finally {
       setRetryingOrders((current) => {
         const next = new Set(current);
@@ -334,6 +372,7 @@ function Page() {
                       retrying={retryingOrders.has(o.id)}
                       onRetry={() => retryOrder(o.id)}
                     />
+                    <OrderRetryNotice notice={retryNotices[o.id]} />
 
                     {canOpen && (
                       <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
@@ -469,6 +508,21 @@ function OrderStatusNote({
   }
 
   return null;
+}
+
+function OrderRetryNotice({ notice }: { notice?: RetryNotice }) {
+  if (!notice) return null;
+  const tone =
+    notice.kind === "error"
+      ? "border-red-400/25 bg-red-950/20 text-red-100/80"
+      : notice.kind === "success"
+        ? "border-gold/20 bg-gold/[0.07] text-ivory/70"
+        : "border-[oklch(0.78_0.10_80/0.16)] bg-black/10 text-ivory/62";
+  return (
+    <div className={`mt-3 rounded-md border px-3 py-2 text-xs leading-relaxed ${tone}`}>
+      {notice.text}
+    </div>
+  );
 }
 
 function profileOrderPreparationLead(order: ProfileOrder): string {

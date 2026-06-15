@@ -40,6 +40,8 @@ type OrderForPaymentRecheck = PublicOrderFields &
 
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
+const ORDER_PROCESSING_GENERIC_ERROR =
+  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; kérlek próbáld újra később, vagy írj nekünk a vásárlási email címedről.";
 const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
 const HUF_MINOR_UNIT_MULTIPLIER = 100;
 const ORDER_SELECT_BASE =
@@ -470,7 +472,8 @@ export const processMyOrder = createServerFn({ method: "POST" })
     }
 
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
-    return processPaidOrderBySession(order.stripe_session_id);
+    const result = await processPaidOrderBySession(order.stripe_session_id);
+    return safeOrderProcessingResult(result);
   });
 
 async function prepareFailedOrderRetry(
@@ -533,6 +536,19 @@ function sanitizePublicResponsePayload(payload: unknown): unknown {
   return publicPayload;
 }
 
+function safeOrderProcessingResult<T extends { ok: boolean; error?: string }>(result: T): T {
+  if (result.ok || !result.error) return result;
+  const allowedMessages = [
+    "Rendelés nem található",
+    "Még nincs kifizetve",
+    "Még nincs feldolgozható állapotban",
+    "A fizetés állapota nem ellenőrizhető",
+    "Most nem sikerült ellenőrizni a fizetést",
+  ];
+  if (allowedMessages.includes(result.error)) return result;
+  return { ...result, error: ORDER_PROCESSING_GENERIC_ERROR };
+}
+
 // Generálja a fizetett olvasat tartalmát és megjelöli a rendelést "delivered"-ként.
 // Idempotens: ha már delivered, nem fut újra.
 export const processOrder = createServerFn({ method: "POST" })
@@ -543,5 +559,6 @@ export const processOrder = createServerFn({ method: "POST" })
   })
   .handler(async ({ data }) => {
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
-    return processPaidOrderBySession(data.sessionId);
+    const result = await processPaidOrderBySession(data.sessionId);
+    return safeOrderProcessingResult(result);
   });
