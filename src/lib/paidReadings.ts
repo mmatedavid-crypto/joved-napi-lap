@@ -66,6 +66,15 @@ const INPUT_BRIEF_LABELS: Record<string, string> = {
   topic: "Téma",
 };
 
+type PaidTarotSpreadCard = {
+  position: string;
+  cardName: string;
+  orientation: string;
+  keywords: string[];
+  meaning: string;
+  oneLine: string;
+};
+
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -86,6 +95,52 @@ function briefValue(value: unknown): string {
   return "";
 }
 
+function paidTarotSpreadFromPayload(input: Record<string, unknown>): PaidTarotSpreadCard[] {
+  if (!Array.isArray(input.cardSpread)) return [];
+  return input.cardSpread
+    .map((item) => {
+      const record = asRecord(item);
+      const keywords = Array.isArray(record.keywords)
+        ? record.keywords.map((keyword) => text(keyword)).filter(Boolean)
+        : [];
+      return {
+        position: text(record.position),
+        cardName: text(record.cardName),
+        orientation: text(record.orientation),
+        keywords,
+        meaning: text(record.meaning),
+        oneLine: text(record.oneLine),
+      };
+    })
+    .filter((item) => item.position && item.cardName);
+}
+
+function briefPaidTarotSpread(input: Record<string, unknown>): string[] {
+  const spread = paidTarotSpreadFromPayload(input);
+  if (!spread.length) return [];
+  return [
+    `Kártyakirakás: ${spread
+      .map((item) => {
+        const orientation = item.orientation ? `, ${item.orientation}` : "";
+        const keywords = item.keywords.length ? ` · ${item.keywords.slice(0, 3).join(", ")}` : "";
+        return `${item.position}: ${item.cardName}${orientation}${keywords}`;
+      })
+      .join(" | ")}`,
+  ];
+}
+
+function briefFreeSynthesis(input: Record<string, unknown>): string[] {
+  const synthesis = asRecord(input.freeSynthesis);
+  const lines = [
+    ["Három lap együtt", text(synthesis.together)],
+    ["Mire figyeljen", text(synthesis.attention)],
+    ["Egy mondatban", text(synthesis.oneLine)],
+  ]
+    .filter(([, value]) => value)
+    .map(([label, value]) => `${label}: ${String(value).slice(0, 320)}`);
+  return lines;
+}
+
 export function paidReadingInputBrief(inputPayload: unknown): string {
   const input = asRecord(inputPayload);
   const seen = new Set<string>();
@@ -96,6 +151,7 @@ export function paidReadingInputBrief(inputPayload: unknown): string {
     seen.add(label);
     lines.push(`${label}: ${value.slice(0, 280)}`);
   }
+  lines.push(...briefPaidTarotSpread(input), ...briefFreeSynthesis(input));
   return lines.join("\n");
 }
 
@@ -188,7 +244,8 @@ function cardsFromPayload(input: Record<string, unknown>, count = 3): TarotCard[
 }
 
 function completeCardsFromPayload(input: Record<string, unknown>, count: number): TarotCard[] {
-  const selected = cardsFromPayload(input, count);
+  const spreadCards = paidTarotSpreadFromPayload(input).map((item) => cardByName(item.cardName));
+  const selected = spreadCards.length ? spreadCards.slice(0, count) : cardsFromPayload(input, count);
   const used = new Set(selected.map((card) => card.id));
   for (const card of CARDS) {
     if (selected.length >= count) break;
@@ -198,6 +255,37 @@ function completeCardsFromPayload(input: Record<string, unknown>, count: number)
     }
   }
   return selected.slice(0, count);
+}
+
+function paidSpreadContextSections(input: Record<string, unknown>): QualityReading["sections"] {
+  const spread = paidTarotSpreadFromPayload(input);
+  const synthesis = asRecord(input.freeSynthesis);
+  const sections: QualityReading["sections"] = [];
+  if (spread.length) {
+    sections.push({
+      heading: "A kirakás pontos lenyomata",
+      text: spread
+        .map((item) => {
+          const orientation = item.orientation ? ` ${item.orientation} helyzetben` : "";
+          const keywords = item.keywords.length
+            ? ` Kulcsszavai: ${item.keywords.slice(0, 3).join(", ")}.`
+            : "";
+          const meaning = item.oneLine || item.meaning;
+          return `${item.position}: ${item.cardName}${orientation}.${keywords}${meaning ? ` ${meaning}` : ""}`;
+        })
+        .join(" "),
+    });
+  }
+  const together = text(synthesis.together);
+  const attention = text(synthesis.attention);
+  const oneLine = text(synthesis.oneLine);
+  if (together || attention || oneLine) {
+    sections.push({
+      heading: "A rövid olvasatból továbbmélyítve",
+      text: [together, attention, oneLine].filter(Boolean).join(" "),
+    });
+  }
+  return sections;
 }
 
 function renderReading(reading: QualityReading): PaidReadingPayload {
@@ -663,6 +751,7 @@ export function composePaidOrderReading(
       category,
     });
     reading.sections.push(
+      ...paidSpreadContextSections(input),
       {
         heading: "A mélyebb réteg",
         text: question

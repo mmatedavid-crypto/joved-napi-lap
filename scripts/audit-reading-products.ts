@@ -567,6 +567,8 @@ if (
   !paidServer.includes('"hisName"') ||
   !paidServer.includes('"text"') ||
   !paidServer.includes('"emotion"') ||
+  !paidServer.includes('"cardSpread"') ||
+  !paidServer.includes('"freeSynthesis"') ||
   !paidServer.includes('"memoryContext"') ||
   !paidServer.includes("countContextHits(body, anchors)") ||
   !paidServer.includes("function paidReadingMinimumContextHits") ||
@@ -594,7 +596,13 @@ if (
   !paidReadingsSource.includes('sit: "Helyzet"') ||
   !paidReadingsSource.includes('myName: "Első név"') ||
   !paidReadingsSource.includes('emotion: "Érzés"') ||
-  !paidReadingsSource.includes('memoryContext: "Visszatérő minta"')
+  !paidReadingsSource.includes('memoryContext: "Visszatérő minta"') ||
+  !paidReadingsSource.includes("function paidTarotSpreadFromPayload") ||
+  !paidReadingsSource.includes("function briefPaidTarotSpread") ||
+  !paidReadingsSource.includes("function briefFreeSynthesis") ||
+  !paidReadingsSource.includes("Kártyakirakás:") ||
+  !paidReadingsSource.includes("A kirakás pontos lenyomata") ||
+  !paidReadingsSource.includes("A rövid olvasatból továbbmélyítve")
 ) {
   policyFailures.push("paid readings must build a short Hungarian customer context brief");
 }
