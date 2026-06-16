@@ -259,7 +259,7 @@ export async function generatePaidOrderReading(opts: {
     const deep = isDeepPaidProduct(opts.productSlug);
     const ai = await aiJSON<PaidReadingPayload>({
       system: [
-        "Írj természetes, választékos magyar olvasatot a megadott adatokból és a helyi draft tényeiből.",
+        "Írj természetes, választékos magyar olvasatot a megadott adatokból és a kiinduló vázlat tényeiből.",
         "Beszélj közvetlenül az olvasóhoz. Ne magyarázd a feladatot, ne dicsérd a saját szövegedet, és ne ismételd vissza szó szerint a kérdését.",
         "Minden bekezdés mondjon valami újat és konkrétat. Kerüld a ködös spirituális közhelyeket, a túl sok ellentétpárt, a gondolatjeles felsorolásokat és a hatásvadász egyszavas kijelentéseket.",
         "A lapot, számot vagy jegyet önismereti tükörként értelmezd. Ne állíts biztos jövőt, egészségi, jogi vagy pénzügyi eredményt.",
@@ -275,7 +275,7 @@ export async function generatePaidOrderReading(opts: {
         inputBrief ? `Ügyfélhelyzet röviden:\n${inputBrief}` : "",
         "Felhasználói input:",
         JSON.stringify(opts.inputPayload ?? {}, null, 2),
-        "Biztonságos helyi prémium draft:",
+        "Kiinduló biztonsági vázlat:",
         JSON.stringify(draft, null, 2),
       ].join("\n\n"),
       schemaName: "PaidReading",

@@ -268,6 +268,20 @@ export function PaywallDialog({
                   </ul>
                 </div>
 
+                <div className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-ivory/48">
+                    Nem ezt keresed, ha
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-ivory/58">
+                    {wrongFitPromise(product).map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full border border-ivory/35" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
                 <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-4">
                   <div className="text-xs uppercase tracking-[0.18em] text-gold/75">
                     Miben lesz személyesebb?
@@ -562,6 +576,49 @@ function choiceFitPromise(product: ProductDef): string[] {
     "gyors, olcsó próbaolvasatot szeretnél, mielőtt mélyebb elemzést kérsz",
     "egy konkrét kérdésre vagy napi helyzetre elég néhány fókuszált bekezdés",
     "azonnali visszajelzést keresel, nem hosszú írásos riportot",
+  ];
+}
+
+function wrongFitPromise(product: ProductDef): string[] {
+  if (product.slug === "parkapcsolat_elemzes") {
+    return [
+      "biztos választ vársz arra, hogy visszajön-e, szeret-e vagy írni fog-e",
+      "egy másik ember döntését szeretnéd kész tényként kimondatni",
+    ];
+  }
+  if (product.slug === "dontes_komplex") {
+    return [
+      "azt várod, hogy az olvasat helyetted válasszon két út között",
+      "jogi, pénzügyi vagy egészségügyi döntéshez kérsz szakmai tanácsot",
+    ];
+  }
+  if (product.slug === "kristaly_ai") {
+    return [
+      "testi vagy lelki hatásígéretet keresel",
+      "orvosi vagy terápiás tanács helyett próbálnád használni",
+    ];
+  }
+  if (product.slug === "alomfejtes_rovid") {
+    return [
+      "diagnózist, traumamagyarázatot vagy biztos lelki okot vársz",
+      "az álmot szó szerinti jóslatként szeretnéd kezelni",
+    ];
+  }
+  if (product.slug === "horoszkop_szemelyre") {
+    return [
+      "részletes születési képletet vagy hosszú tranzitriportot keresel",
+      "biztos eseményjóslatot vársz a mai napra",
+    ];
+  }
+  if (product.category === "delayed") {
+    return [
+      "azonnali, pár perces választ szeretnél",
+      "biztos dátumot, eredményt vagy megváltozhatatlan jövőt vársz",
+    ];
+  }
+  return [
+    "biztos jövőállítást vagy kész döntést vársz",
+    "orvosi, jogi vagy pénzügyi tanács helyett használnád",
   ];
 }
 

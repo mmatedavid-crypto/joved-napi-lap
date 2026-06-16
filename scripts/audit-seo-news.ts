@@ -88,11 +88,19 @@ const checks: Check[] = [
     file: "src/routes/horoszkop.$period.$sign.tsx",
     includes: [
       "article.fallbackUsed && article.sourceCached",
-      "A friss háttérszámítás most lassabban érkezik",
-      "az utolsó ellenőrzött magyar",
-      "automatikusan frissül",
+      "korábban ellenőrzött magyar horoszkóp-olvasatot",
+      "új szerkesztett változat",
     ],
-    excludes: ["provider response", "raw response", "Roxy hiba"],
+    excludes: [
+      "provider response",
+      "raw response",
+      "Roxy hiba",
+      "háttérszámítás",
+      "háttéradat",
+      "API",
+      "endpoint",
+      "provider",
+    ],
   },
   {
     name: "horoscope article cross-links same sign across all periods",

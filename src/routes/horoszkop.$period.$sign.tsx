@@ -260,9 +260,8 @@ function HoroscopeArticlePage() {
 
       {article.fallbackUsed && article.sourceCached ? (
         <div className="mt-6 rounded-md border border-gold/15 bg-[oklch(0.13_0.03_292/0.58)] px-4 py-3 text-center text-sm leading-relaxed text-ivory/62">
-          A friss háttérszámítás most lassabban érkezik, ezért az utolsó ellenőrzött magyar
-          olvasatot mutatjuk ehhez az időszakhoz. Amint elkészül az új változat, ez az oldal
-          automatikusan frissül.
+          Ehhez az időszakhoz most a korábban ellenőrzött magyar horoszkóp-olvasatot mutatjuk.
+          Amint elkészül az új szerkesztett változat, ez az oldal frissül.
         </div>
       ) : null}
 

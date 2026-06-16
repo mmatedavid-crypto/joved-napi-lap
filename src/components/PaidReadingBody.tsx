@@ -304,13 +304,13 @@ function paidReadingAssurance(
   if (generation.qualityRejected) {
     return {
       heading: "Az első változat nem ment át a belső ellenőrzésen",
-      text: "Ezért nem azt mutatjuk, hanem egy biztonságos, helyi prémium olvasatot. Ha így is úgy érzed, hogy egy fontos rész kimaradt a helyzetedből, a pontosítási vázlattal gyorsan jelezheted, merre kell finomítani.",
+      text: "Ezért nem azt mutatjuk, hanem egy óvatosabban szerkesztett olvasatot. Ha így is úgy érzed, hogy egy fontos rész kimaradt a helyzetedből, a pontosítási vázlattal gyorsan jelezheted, merre kell finomítani.",
     };
   }
   if (generation.source === "local_premium_draft" || generation.fallbackUsed) {
     return {
-      heading: "Tartalék minőségi útvonalon készült",
-      text: "Az olvasat ilyenkor is a megadott adatokból és a Jövőd.hu saját értelmezési rétegéből áll össze. Érdemes külön megnézni, reagál-e a konkrét kérdésedre; ha nem, rendelés alapján visszanézzük.",
+      heading: "Szerkesztett biztonsági változat",
+      text: "Az olvasat ilyenkor is a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Érdemes külön megnézni, reagál-e a konkrét kérdésedre; ha nem, rendelés alapján visszanézzük.",
     };
   }
   return null;
