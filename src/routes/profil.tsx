@@ -325,17 +325,7 @@ function Page() {
               <MemoryNextSteps memories={memories} insights={insights} />
               <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
                 {memories.slice(0, 6).map((memory) => (
-                  <li key={memory.id} className="py-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-ivory">{memory.title || memory.topic || "Olvasat"}</div>
-                      <div className="text-xs text-ivory/45">
-                        {new Date(memory.created_at).toLocaleDateString("hu-HU")}
-                      </div>
-                    </div>
-                    <p className="text-sm text-ivory/60 mt-1">
-                      {memory.one_sentence || memory.summary}
-                    </p>
-                  </li>
+                  <MemoryHistoryItem key={memory.id} memory={memory} />
                 ))}
               </ul>
               <button
@@ -1016,6 +1006,101 @@ function memoryNextStepItems(
   });
 
   return suggestions.slice(0, 3);
+}
+
+function MemoryHistoryItem({ memory }: { memory: ReadingMemory }) {
+  const continuation = memoryContinuation(memory);
+  return (
+    <li className="py-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-ivory">{memory.title || memory.topic || "Olvasat"}</div>
+        <div className="text-xs text-ivory/45">
+          {new Date(memory.created_at).toLocaleDateString("hu-HU")}
+        </div>
+      </div>
+      <p className="mt-1 text-sm text-ivory/60">{memory.one_sentence || memory.summary}</p>
+      <div className="mt-3 rounded-md border border-gold/10 bg-gold/[0.035] px-3 py-3">
+        <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">Folytasd innen</div>
+        <p className="mt-1 text-xs leading-relaxed text-ivory/52">{continuation.reason}</p>
+        <Link
+          to={continuation.to}
+          className="mt-2 inline-flex text-xs text-gold transition-colors hover:text-gold/80"
+        >
+          {continuation.label}
+        </Link>
+      </div>
+    </li>
+  );
+}
+
+function memoryContinuation(memory: ReadingMemory): { label: string; reason: string; to: string } {
+  const source = [
+    memory.reading_type,
+    memory.topic,
+    memory.situation,
+    memory.title,
+    memory.one_sentence,
+    memory.summary,
+    ...(memory.anchors ?? []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("hu-HU");
+
+  if (/kapcsolat|összeill|compatibility|love|randi|ex|visszatér/.test(source)) {
+    return {
+      label: "Kapcsolati dinamika folytatása",
+      reason:
+        "Ha ez a kapcsolat vagy visszatérő kötődés még dolgozik benned, innen nem újrakezded, hanem pontosabban nézed a tempót és a szándékot.",
+      to: "/osszeillunk",
+    };
+  }
+  if (/dönt|dont|decision|választás|munka|költöz|irány/.test(source)) {
+    return {
+      label: "Döntés újranézése",
+      reason:
+        "Ha azóta sem lett tiszta a belső igen vagy nem, érdemes ugyanazt a döntést szűkebb kérdéssel továbbvinni.",
+      to: "/dontes-elott",
+    };
+  }
+  if (/álom|alom|dream/.test(source)) {
+    return {
+      label: "Álom továbbfejtése",
+      reason:
+        "Ha ugyanaz az érzés vagy kép visszatért, a folytatásban már az álom hangulatát is érdemes hozzátenni.",
+      to: "/alomfejtes",
+    };
+  }
+  if (/szám|szam|numerology|sors|életút|születésnap|személyes év/.test(source)) {
+    return {
+      label: "Számmisztikai ív mélyítése",
+      reason:
+        "Ha a szám nem csak címke volt, hanem működésmód, nézd meg újra teljes névvel vagy az idei személyes év felől.",
+      to: "/szammisztika",
+    };
+  }
+  if (/horoszkóp|horoszkop|asztrol|tranzit|képlet|keplet|hold|időszak/.test(source)) {
+    return {
+      label: "Időszakos térkép folytatása",
+      reason:
+        "Ha nem napi jegyszöveget keresel, hanem azt, milyen időminőség ismétlődik körülötted, innen érdemes továbbmenni.",
+      to: "/szemelyes-30-napos-horoszkop",
+    };
+  }
+  if (/tarot|lap|húzás|huzas|kártya/.test(source)) {
+    return {
+      label: "Három lapos folytatás",
+      reason:
+        "Ha egy lap megállított, a következő jó kérdés már nem mindenre kérdez rá, hanem a történet múltjára, jelenére és irányára.",
+      to: "/harom-lap",
+    };
+  }
+  return {
+    label: "Mai iránytű folytatása",
+    reason:
+      "Ha az olvasatban volt egy mondat, ami veled maradt, vidd tovább rövid napi fókuszként.",
+    to: "/mai-iranytu",
+  };
 }
 
 function MemoryInsightCard({ eyebrow, text }: { eyebrow: string; text: string }) {
