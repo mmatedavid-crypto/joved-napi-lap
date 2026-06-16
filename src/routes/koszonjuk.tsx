@@ -65,6 +65,8 @@ function Page() {
   const [err, setErr] = useState<string | null>(null);
   const [pollingPaused, setPollingPaused] = useState(false);
   const [orderLookupPending, setOrderLookupPending] = useState(false);
+  const [retryingFailedOrder, setRetryingFailedOrder] = useState(false);
+  const [retryNotice, setRetryNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (!session_id) {
@@ -122,6 +124,39 @@ function Page() {
       stop = true;
     };
   }, [session_id, fetchOrder, runProcess]);
+
+  async function retryFailedOrder() {
+    if (!session_id) return;
+    setRetryingFailedOrder(true);
+    setRetryNotice(null);
+    trackEvent("paid_order_retry_clicked", {
+      productSlug: order?.product_slug ?? "",
+      status: order?.status ?? "",
+      source: "thank_you",
+    });
+    try {
+      const result = await runProcess({ data: { sessionId: session_id } });
+      const refreshed = await fetchOrder({ data: { sessionId: session_id } });
+      setOrder(refreshed.order);
+      if (!result.ok) {
+        setRetryNotice(
+          "Most nem sikerült újraindítani a feldolgozást. A rendelés nem vész el; írj nekünk a vásárlási email címedről, és utánanézünk.",
+        );
+        return;
+      }
+      setRetryNotice(
+        result.processing
+          ? "Az olvasat feldolgozása már fut. Tartsd nyitva ezt az oldalt, vagy frissíts rá később."
+          : "Újraindítottuk a feldolgozást. Ha elkészül, ezen az oldalon jelenik meg.",
+      );
+    } catch {
+      setRetryNotice(
+        "Most nem sikerült újraindítani a feldolgozást. A rendelés nem vész el; írj nekünk a vásárlási email címedről, és utánanézünk.",
+      );
+    } finally {
+      setRetryingFailedOrder(false);
+    }
+  }
 
   if (!session_id) {
     return (
@@ -284,13 +319,32 @@ function Page() {
               <Section eyebrow="Sajnos hiba történt">
                 <p>
                   Nem sikerült automatikusan feldolgozni az olvasatot. Ez nem jelenti azt, hogy a
-                  vásárlásod elveszett: kérlek írj nekünk a vásárlási email címedről, és vagy
-                  elkészítjük kézzel, vagy visszatérítjük.
+                  vásárlásod elveszett: megpróbálhatod újraindítani az olvasatkészítést. Ezt csak
+                  akkor engedjük, ha a fizetés igazoltan sikeres.
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
-                  A gyors azonosításhoz írd meg a rövid rendelésazonosítót, a termék nevét és a
-                  vásárlás nagyjábóli időpontját.
+                  Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük
+                  az olvasatot, vagy visszatérítjük.
                 </p>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => void retryFailedOrder()}
+                    disabled={retryingFailedOrder}
+                    className="inline-flex items-center justify-center rounded-md border border-gold/25 px-4 py-3 text-sm text-gold transition-colors hover:border-gold/60 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {retryingFailedOrder ? "Újrapróbálás…" : "Feldolgozás újrapróbálása"}
+                  </button>
+                  <span className="text-xs leading-relaxed text-ivory/50">
+                    A gyors azonosításhoz add meg ezt is:{" "}
+                    {shortOrderId(order.id) ?? "a rendelés rövid azonosítója"}.
+                  </span>
+                </div>
+                {retryNotice && (
+                  <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-ivory/62">
+                    {retryNotice}
+                  </p>
+                )}
                 <SupportContact className="mt-4" orderId={order.id} />
               </Section>
             )}

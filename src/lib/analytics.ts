@@ -22,6 +22,7 @@ export type EventName =
   | "checkout_succeeded"
   | "checkout_failed"
   | "checkout_retry_clicked"
+  | "paid_order_retry_clicked"
   | "paid_reading_feedback_clicked"
   | "roxy_call_started"
   | "roxy_call_succeeded"
@@ -49,7 +50,10 @@ export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
   try {
     const plausibleWindow = window as Window & {
-      plausible?: (event: string, options?: { props: Record<string, string | number | boolean> }) => void;
+      plausible?: (
+        event: string,
+        options?: { props: Record<string, string | number | boolean> },
+      ) => void;
     };
     const props = Object.fromEntries(
       Object.entries(payload ?? {}).flatMap(([key, value]) =>

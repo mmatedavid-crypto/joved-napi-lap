@@ -353,7 +353,10 @@ export const getOrderBySession = createServerFn({ method: "POST" })
 
     const order = await reconcilePendingPayment(orderResultWithReconciliation.data, data.sessionId);
     return {
-      order: await attachOrderFeedback(supabaseAdmin, order ? stripPrivateOrderFields(order) : null),
+      order: await attachOrderFeedback(
+        supabaseAdmin,
+        order ? stripPrivateOrderFields(order) : null,
+      ),
     };
   });
 
@@ -710,6 +713,19 @@ export const processOrder = createServerFn({ method: "POST" })
     return data;
   })
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .select("id, status, stripe_session_id, stripe_environment")
+      .eq("stripe_session_id", data.sessionId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (order?.status === "failed") {
+      const retryReady = await prepareFailedOrderRetry(supabaseAdmin, order);
+      if (!retryReady.ok) return retryReady;
+    }
+
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
     const result = await processPaidOrderBySession(data.sessionId);
     return safeOrderProcessingResult(result);
