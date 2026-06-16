@@ -80,6 +80,11 @@ export function PaywallDialog({
   const deliverySummary = checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn);
   const accessSummary = deliveryAccessText(isLoggedIn);
   const formatPromise = readingFormatPromise(product);
+  const supportMailto = paywallSupportMailto({
+    product,
+    sourceRoute,
+    inputSummary,
+  });
 
   return (
     <Dialog
@@ -354,7 +359,7 @@ export function PaywallDialog({
                       Technikai hiba esetén pótoljuk a teljesítést vagy utánanézünk:{" "}
                       <a
                         className="text-gold hover:text-gold/80"
-                        href={`mailto:${SITE_LEGAL.supportEmail}`}
+                        href={supportMailto}
                       >
                         {SITE_LEGAL.supportEmail}
                       </a>
@@ -710,6 +715,31 @@ function contextualProductAlternative(
 function payloadText(payload: Record<string, unknown> | undefined, key: string): string {
   const value = payload?.[key];
   return typeof value === "string" ? value : "";
+}
+
+function paywallSupportMailto(input: {
+  product: ProductDef;
+  sourceRoute?: string;
+  inputSummary: Array<{ label: string; value: string }>;
+}): string {
+  const subject = `Jövőd.hu rendelési segítség - ${input.product.name}`;
+  const body = [
+    "Segítséget szeretnék kérni a rendeléshez vagy a fizetés előkészítéséhez.",
+    "",
+    `Termék: ${input.product.name}`,
+    `Ár: ${formatHuf(input.product.priceHuf)}`,
+    input.sourceRoute ? `Oldal: ${input.sourceRoute}` : null,
+    ...input.inputSummary.map((item) => `${item.label}: ${item.value}`),
+    "",
+    "A vásárlási email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
+
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function summarizeInputPayload(
