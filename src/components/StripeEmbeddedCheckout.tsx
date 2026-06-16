@@ -101,7 +101,10 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
           </p>
           <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
             Ha már próbáltad újra, írj nekünk a vásárlási email címedről:{" "}
-            <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+            <a
+              className="text-gold hover:text-gold/80"
+              href={checkoutSupportMailto({ productSlug, sourceRoute })}
+            >
               {SITE_LEGAL.supportEmail}
             </a>
             .
@@ -133,6 +136,24 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
 function defaultCheckoutReturnUrl(environment: "sandbox" | "live"): string {
   const origin = environment === "live" ? SITE_LEGAL.siteUrl : window.location.origin;
   return `${origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+}
+
+function checkoutSupportMailto(input: { productSlug: string; sourceRoute?: string }): string {
+  const subject = `Jövőd.hu fizetési segítség - ${input.productSlug}`;
+  const body = [
+    "Segítséget szeretnék kérni, mert nem indult el a fizetés.",
+    "",
+    `Termék: ${input.productSlug}`,
+    input.sourceRoute ? `Oldal: ${input.sourceRoute}` : null,
+    "A vásárlási email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
+
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function safeCheckoutErrorReason(error: unknown): string {
