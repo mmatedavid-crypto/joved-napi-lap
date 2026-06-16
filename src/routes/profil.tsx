@@ -83,10 +83,12 @@ function Page() {
   const importGuestMemories = useServerFn(importGuestReadingMemories);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState("");
   const [memories, setMemories] = useState<ReadingMemory[]>([]);
   const [themeSummary, setThemeSummary] = useState("");
   const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
+  const [memoryError, setMemoryError] = useState("");
   const [guestImportCount, setGuestImportCount] = useState(0);
   const [claimedGuestOrderCount, setClaimedGuestOrderCount] = useState(0);
   const [memoryClearing, setMemoryClearing] = useState(false);
@@ -104,6 +106,7 @@ function Page() {
     if (!user) return;
     let stop = false;
     async function loadOrders() {
+      setOrdersError("");
       const r = await call({});
       if (stop) return;
       const nextOrders = r.orders ?? [];
@@ -129,9 +132,16 @@ function Page() {
       }
     }
 
-    loadOrders().catch(() => setOrdersLoading(false));
+    loadOrders().catch(() => {
+      if (stop) return;
+      setOrdersError(
+        "A rendelési előzményeket most nem tudtuk betölteni. A rendeléseid ettől nem vesznek el; frissíts rá később, vagy írj nekünk a vásárlási email címedről.",
+      );
+      setOrdersLoading(false);
+    });
     async function loadAndImportMemory() {
       try {
+        setMemoryError("");
         const guestMemories = guestImportAttempted.current
           ? []
           : getGuestReadingMemoriesForAccountImport();
@@ -154,7 +164,13 @@ function Page() {
       }
     }
 
-    loadAndImportMemory().catch(() => setMemoriesLoading(false));
+    loadAndImportMemory().catch(() => {
+      if (stop) return;
+      setMemoryError(
+        "Az olvasati memóriát most nem tudtuk betölteni. Ez nem érinti a rendeléseidet, és később újra megpróbálhatod.",
+      );
+      setMemoriesLoading(false);
+    });
     return () => {
       stop = true;
     };
@@ -248,7 +264,10 @@ function Page() {
             profilt. A vendég böngészőminták legfeljebb 180 napig maradnak meg.
           </p>
           {memoriesLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
-          {!memoriesLoading && memories.length === 0 && (
+          {memoryError && (
+            <ProfileLoadError message={memoryError} supportLabel="Memória betöltési segítség" />
+          )}
+          {!memoriesLoading && !memoryError && memories.length === 0 && (
             <div className="space-y-4">
               <p className="text-ivory/70">
                 Ahogy használod az oldalt, itt finoman kirajzolódnak a visszatérő kérdéseid és
@@ -334,6 +353,9 @@ function Page() {
 
         <Section eyebrow="Előzményeid">
           {ordersLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
+          {ordersError && (
+            <ProfileLoadError message={ordersError} supportLabel="Rendelési előzmény segítség" />
+          )}
           {!ordersLoading && claimedGuestOrderCount > 0 && (
             <p className="mb-4 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm leading-relaxed text-ivory/68">
               Áthoztuk {claimedGuestOrderCount} korábbi vendégvásárlásodat ebbe a profilba, mert
@@ -341,7 +363,7 @@ function Page() {
               működnek.
             </p>
           )}
-          {!ordersLoading && orders.length === 0 && (
+          {!ordersLoading && !ordersError && orders.length === 0 && (
             <p className="text-ivory/70">
               Még nincs vásárlásod.{" "}
               <Link to="/" className="text-gold hover:underline">
@@ -349,7 +371,7 @@ function Page() {
               </Link>
             </p>
           )}
-          {!ordersLoading && orders.length > 0 && (
+          {!ordersLoading && !ordersError && orders.length > 0 && (
             <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
               {orders.map((o) => {
                 const payload = getOrderPayload(o.response_payload);
@@ -584,6 +606,40 @@ function ProfileSupportContact({
       {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
     </p>
   );
+}
+
+function ProfileLoadError({
+  message,
+  supportLabel,
+}: {
+  message: string;
+  supportLabel: string;
+}) {
+  return (
+    <div className="rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
+      <p className="text-sm leading-relaxed text-ivory/68">{message}</p>
+      <p className="mt-2 text-xs leading-relaxed text-ivory/50">
+        Segítség:{" "}
+        <a className="text-gold hover:text-gold/80" href={profileLoadErrorMailto(supportLabel)}>
+          {SITE_LEGAL.supportEmail}
+        </a>
+      </p>
+    </div>
+  );
+}
+
+function profileLoadErrorMailto(label: string): string {
+  const subject = `Jövőd.hu profil segítség · ${label}`;
+  const body = [
+    "Segítséget szeretnék kérni a profilom betöltéséhez.",
+    "",
+    `Téma: ${label}`,
+    "A vásárlási vagy belépési email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function profileSupportMailto(shortId?: string): string {

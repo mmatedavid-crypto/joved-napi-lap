@@ -186,6 +186,30 @@ const checks: Check[] = [
     excludes: ["kötelező", "bankkártya szükséges"],
   },
   {
+    name: "profile load failures are visible and safe",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "ordersError",
+      "memoryError",
+      "ProfileLoadError",
+      "profileLoadErrorMailto",
+      "A rendelési előzményeket most nem tudtuk betölteni",
+      "A rendeléseid ettől nem vesznek el",
+      "Az olvasati memóriát most nem tudtuk betölteni",
+      "Ez nem érinti a rendeléseidet",
+      "Rendelési előzmény segítség",
+      "Memória betöltési segítség",
+      "Segítséget szeretnék kérni a profilom betöltéséhez.",
+      "SITE_LEGAL.supportEmail",
+    ],
+    excludes: [
+      "loadOrders().catch(() => setOrdersLoading(false))",
+      "loadAndImportMemory().catch(() => setMemoriesLoading(false))",
+      "setOrdersError(e instanceof Error ? e.message",
+      "setMemoryError(e instanceof Error ? e.message",
+    ],
+  },
+  {
     name: "thank-you page never displays raw order status errors",
     file: "src/routes/koszonjuk.tsx",
     includes: [
