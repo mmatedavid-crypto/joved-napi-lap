@@ -99,6 +99,32 @@ function categoryFreeHint(category: string): string {
   return "Általános élethelyzetnél a három lap azt segít szétválasztani, mi múltbeli teher, mi jelenlegi tét, és mi lehet új irány.";
 }
 
+function threeCardPaidPayload(slots: TarotSlot[] | null, question: string, category: string) {
+  if (!slots) return { question, category };
+  const synthesis = threeCardFreeSynthesis(slots, question, category);
+  return {
+    cards: slots.map((slot) => localCardFromSlot(slot).name),
+    cardSpread: slots.map((slot, index) => {
+      const card = localCardFromSlot(slot);
+      return {
+        position: LABELS[index],
+        cardName: card.name,
+        orientation: slot.roxy.reversed ? "fordított" : "álló",
+        keywords: card.keywords,
+        meaning: slot.hu.meaning,
+        oneLine: slot.hu.oneLine,
+      };
+    }),
+    freeSynthesis: {
+      together: synthesis.together,
+      attention: synthesis.attention,
+      oneLine: synthesis.oneLine,
+    },
+    question,
+    category,
+  };
+}
+
 function HaromLap() {
   const { user } = useAuth();
   const [question, setQuestion] = useState("");
@@ -362,9 +388,7 @@ function HaromLap() {
         productSlug={paywallProduct}
         sourceRoute="/harom-lap"
         inputPayload={{
-          cards: slots?.map((s) => localCardFromSlot(s).name),
-          question,
-          category,
+          ...threeCardPaidPayload(slots, question, category),
           memoryContext:
             getGuestReadingContext({
               readingType: "tarot",

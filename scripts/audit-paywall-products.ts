@@ -418,6 +418,12 @@ for (const needle of [
   "mi tart vissza",
   "mi mozgat belül",
   "merre nyílhat",
+  "function threeCardPaidPayload",
+  "cardSpread: slots.map",
+  "position: LABELS[index]",
+  'orientation: slot.roxy.reversed ? "fordított" : "álló"',
+  "freeSynthesis",
+  "...threeCardPaidPayload(slots, question, category)",
 ]) {
   if (!threeCardRouteText.includes(needle)) {
     failed.push(`Three-card paid CTA missing: ${needle}`);
