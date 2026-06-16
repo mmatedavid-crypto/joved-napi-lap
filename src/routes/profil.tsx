@@ -557,12 +557,27 @@ function ProfileSupportContact({
   return (
     <p className={`text-xs leading-relaxed text-ivory/55 ${className}`.trim()}>
       Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
-      <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+      <a className="text-gold hover:text-gold/80" href={profileSupportMailto(shortId)}>
         {SITE_LEGAL.supportEmail}
       </a>
       {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
     </p>
   );
+}
+
+function profileSupportMailto(shortId?: string): string {
+  const orderRef = shortId ?? "nincs rövid azonosító";
+  const subject = `Jövőd.hu rendelési segítség · ${orderRef}`;
+  const body = [
+    "Segítséget szeretnék kérni a profilomban látható rendelésemhez.",
+    "",
+    `Rendelés: ${orderRef}`,
+    "A vásárlási email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {

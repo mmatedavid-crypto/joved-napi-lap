@@ -83,7 +83,15 @@ const checks: Check[] = [
   {
     name: "thank-you page exposes support contact",
     file: "src/routes/koszonjuk.tsx",
-    includes: ["SupportContact", "SITE_LEGAL.supportEmail", "Ügyfélszolgálat"],
+    includes: [
+      "SupportContact",
+      "supportMailto(shortId)",
+      "Jövőd.hu rendelési segítség",
+      "A vásárlási email címem:",
+      "Mi történt röviden:",
+      "SITE_LEGAL.supportEmail",
+      "Ügyfélszolgálat",
+    ],
   },
   {
     name: "thank-you page distinguishes instant and detailed paid preparation",
@@ -310,6 +318,10 @@ const checks: Check[] = [
       "Rendelés:",
       "shortOrderId(o.id)",
       "ProfileSupportContact",
+      "profileSupportMailto(shortId)",
+      "Jövőd.hu rendelési segítség",
+      "A vásárlási email címem:",
+      "Mi történt röviden:",
       "Ha továbbra is így marad",
       "vásárlási email címedről",
       "Add meg ezt is",

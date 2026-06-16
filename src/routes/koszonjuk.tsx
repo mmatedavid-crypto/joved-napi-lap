@@ -369,13 +369,28 @@ function SupportContact({ className = "", orderId }: { className?: string; order
   return (
     <p className={`text-sm leading-relaxed text-ivory/58 ${className}`.trim()}>
       Ügyfélszolgálat:{" "}
-      <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+      <a className="text-gold hover:text-gold/80" href={supportMailto(shortId)}>
         {SITE_LEGAL.supportEmail}
       </a>
       . A gyors azonosításhoz a vásárlási email címedről írj
       {shortId ? `, és add meg ezt: ${shortId}.` : "."}
     </p>
   );
+}
+
+function supportMailto(shortId?: string): string {
+  const orderRef = shortId ?? "nincs rövid azonosító";
+  const subject = `Jövőd.hu rendelési segítség · ${orderRef}`;
+  const body = [
+    "Segítséget szeretnék kérni a rendelésemhez.",
+    "",
+    `Rendelés: ${orderRef}`,
+    "A vásárlási email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function PaidReadingFeedback({ order }: { order: OrderView }) {
