@@ -56,6 +56,23 @@ Az `errorCode` csak stabil belső kód lehet. Ha régi adatban nyersebb hibaszö
 Ha az `orderHealth` lekérés nem sikerül, az endpoint `order_health_summary_unavailable` hibát ad.
 Ez belső üzemeltetési jelzés, nem ügyfélnek szánt szöveg.
 
+Az endpoint külön `deliveryEmailHealth` blokkot is ad a már `delivered` állapotú fizetős
+olvasatokról. Ez azt figyeli, hogy az elkészült olvasathoz tartozó kézbesítési email rendben
+sorba állt-e:
+
+- `delivered`: hány elkészült rendelést vizsgált az időablakban.
+- `queued`: hány rendelésnél látszik email-sorbaállítás.
+- `missing`: hány elkészült rendelésnél nincs email-sorbaállítás és nincs stabil hibakód sem.
+- `failed`: hány elkészült rendelésnél stabil email-kézbesítési hibakód látszik.
+- `needsAttentionCount`: hány termék/email állapot csoport kér emberi figyelmet.
+- `products`: termék, kategória, email állapot, `errorCode`, darabszám és időablak szerinti
+  aggregátum.
+
+Ha a `deliveryEmailHealth` lekérés nem sikerül, az endpoint
+`delivery_email_health_summary_unavailable` hibát ad. Ez különösen fontos, mert az olvasat ettől még
+elkészülhetett, de az ügyfél csak akkor érzi biztonságosnak a vásárlást, ha emailben vagy a
+profiljában ténylegesen megtalálja.
+
 ## Prioritások
 
 `high`
@@ -86,6 +103,15 @@ Az `orderHealth.products[].action` értelmezése:
   biztonságos újrapróbálást.
 - `watch`: nincs azonnali beavatkozási jel.
 
+A `deliveryEmailHealth.products[].action` értelmezése:
+
+- `manual_review_first`: az olvasat elkészült, de email-kézbesítési hibakód látszik. Ellenőrizd,
+  hogy a profilban vagy biztonságos rendelési linken elérhető-e, majd szükség esetén küldj kézi
+  pótlást.
+- `retry_watch`: az olvasat elkészült, de nincs email-sorbaállítási nyom. Ez lehet régi adat vagy
+  félbeszakadt kézbesítési állapot, ezért ezt nézd meg a failed rendelések után.
+- `watch`: az email-sorbaállítás rendben látszik.
+
 ## Biztonsági határok
 
 Az összesítő nem adhat vissza:
@@ -107,7 +133,10 @@ minőségi mintát fogalmazd át belső fejlesztési megfigyeléssé.
    olvasat sürgősebb, mint a későbbi minőségi visszajelzés.
 3. Ha van `failed` vagy régi `processing`, kezdd a `manual_review_first` és `retry_watch`
    csoportokkal.
-4. Utána menj a `high` prioritású termékekre.
-5. Ha nincs `high`, nézd meg a `medium` termékeket, ahol `negativeDetailCount > 0`.
-6. Javítás után figyeld, csökken-e a `missRate`, a `negativeDetailCount` és a `failed` arány.
-7. A termék akkor javul üzletileg is, ha nem csak a panasz csökken, hanem az `accurate` arány nő.
+4. Utána nézd meg a `deliveryEmailHealth.needsAttentionCount` értéket. A `failed` vagy `missing`
+   email állapot ügyféloldalon ugyanúgy bizalomvesztéshez vezethet, mint egy elakadt feldolgozás.
+5. Ezután menj a `high` prioritású termékekre.
+6. Ha nincs `high`, nézd meg a `medium` termékeket, ahol `negativeDetailCount > 0`.
+7. Javítás után figyeld, csökken-e a `missRate`, a `negativeDetailCount`, a `failed` és a `missing`
+   email arány.
+8. A termék akkor javul üzletileg is, ha nem csak a panasz csökken, hanem az `accurate` arány nő.

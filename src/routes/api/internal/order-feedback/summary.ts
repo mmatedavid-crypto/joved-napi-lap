@@ -54,6 +54,31 @@ type OrderHealthSummary = {
   action: "manual_review_first" | "retry_watch" | "watch";
 };
 
+type DeliveryEmailState = "queued" | "missing" | "failed";
+
+type DeliveryEmailHealthRow = {
+  product_slug: string | null;
+  product_name: string | null;
+  category: string | null;
+  delivery_email_error: string | null;
+  delivery_email_queued_at: string | null;
+  delivered_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type DeliveryEmailHealthSummary = {
+  productSlug: string;
+  productName: string;
+  category: string;
+  emailState: DeliveryEmailState;
+  errorCode: string;
+  total: number;
+  oldestDeliveredAt: string | null;
+  newestUpdatedAt: string | null;
+  action: "manual_review_first" | "retry_watch" | "watch";
+};
+
 const DEFAULT_DAYS = 30;
 const MAX_DAYS = 180;
 const ATTENTION_MIN_TOTAL = 3;
@@ -88,6 +113,19 @@ function normalizeOrderHealthErrorCode(value: string | null, status: string): st
   if (!trimmed) return status === "processing" ? "processing" : "none";
   if (/^[a-z0-9_:-]{3,80}$/i.test(trimmed)) return trimmed;
   return "internal_error";
+}
+
+function normalizeDeliveryEmailErrorCode(value: string | null): string {
+  const trimmed = value?.trim();
+  if (!trimmed) return "none";
+  if (/^[a-z0-9_:-]{3,80}$/i.test(trimmed)) return trimmed;
+  return "internal_error";
+}
+
+function deliveryEmailState(row: DeliveryEmailHealthRow): DeliveryEmailState {
+  if (row.delivery_email_error?.trim()) return "failed";
+  if (row.delivery_email_queued_at) return "queued";
+  return "missing";
 }
 
 function emptyCounts() {
@@ -262,6 +300,55 @@ function summarizeOrderHealth(
   });
 }
 
+function summarizeDeliveryEmailHealth(
+  rows: DeliveryEmailHealthRow[],
+): DeliveryEmailHealthSummary[] {
+  const byKey = new Map<string, DeliveryEmailHealthSummary>();
+
+  for (const row of rows) {
+    const productSlug = row.product_slug || "unknown";
+    const productName = row.product_name || productSlug;
+    const category = row.category || "unknown";
+    const emailState = deliveryEmailState(row);
+    const errorCode = normalizeDeliveryEmailErrorCode(row.delivery_email_error);
+    const key = `${productSlug}:${emailState}:${errorCode}`;
+    const current =
+      byKey.get(key) ??
+      ({
+        productSlug,
+        productName,
+        category,
+        emailState,
+        errorCode,
+        total: 0,
+        oldestDeliveredAt: null,
+        newestUpdatedAt: null,
+        action: "watch",
+      } satisfies DeliveryEmailHealthSummary);
+
+    current.total += 1;
+    if (
+      row.delivered_at &&
+      (!current.oldestDeliveredAt || row.delivered_at < current.oldestDeliveredAt)
+    ) {
+      current.oldestDeliveredAt = row.delivered_at;
+    }
+    if (!current.newestUpdatedAt || row.updated_at > current.newestUpdatedAt) {
+      current.newestUpdatedAt = row.updated_at;
+    }
+    if (emailState === "failed") current.action = "manual_review_first";
+    if (emailState === "missing") current.action = "retry_watch";
+    byKey.set(key, current);
+  }
+
+  return [...byKey.values()].sort((a, b) => {
+    const actionRank = { manual_review_first: 2, retry_watch: 1, watch: 0 } as const;
+    if (a.action !== b.action) return actionRank[b.action] - actionRank[a.action];
+    if (b.total !== a.total) return b.total - a.total;
+    return (b.newestUpdatedAt ?? "").localeCompare(a.newestUpdatedAt ?? "");
+  });
+}
+
 async function handleSummary(request: Request) {
   if (!isAuthorized(request)) {
     return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
@@ -313,11 +400,35 @@ async function handleSummary(request: Request) {
     );
   }
 
+  const { data: deliveryEmailHealthData, error: deliveryEmailHealthError } = await supabaseAdmin
+    .from("orders")
+    .select(
+      "product_slug, product_name, category, delivery_email_error, delivery_email_queued_at, delivered_at, created_at, updated_at",
+    )
+    .gte("delivered_at", since)
+    .eq("status", "delivered")
+    .order("delivered_at", { ascending: false })
+    .limit(1000);
+
+  if (deliveryEmailHealthError) {
+    console.error("delivery email health summary failed:", {
+      code: deliveryEmailHealthError.code,
+      message: deliveryEmailHealthError.message,
+    });
+    return Response.json(
+      { ok: false, error: "delivery_email_health_summary_unavailable" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const rows = (data ?? []) as FeedbackRow[];
   const products = summarizeRows(rows);
   const orderHealth = summarizeOrderHealth(
     (orderHealthData ?? []) as OrderHealthRow[],
     staleProcessingMinutes,
+  );
+  const deliveryEmailHealth = summarizeDeliveryEmailHealth(
+    (deliveryEmailHealthData ?? []) as DeliveryEmailHealthRow[],
   );
   const totals = products.reduce(
     (acc, item) => ({
@@ -365,6 +476,22 @@ async function handleSummary(request: Request) {
         },
         needsAttentionCount: orderHealth.filter((item) => item.action !== "watch").length,
         products: orderHealth,
+      },
+      deliveryEmailHealth: {
+        totals: {
+          delivered: deliveryEmailHealth.reduce((acc, item) => acc + item.total, 0),
+          queued: deliveryEmailHealth
+            .filter((item) => item.emailState === "queued")
+            .reduce((acc, item) => acc + item.total, 0),
+          missing: deliveryEmailHealth
+            .filter((item) => item.emailState === "missing")
+            .reduce((acc, item) => acc + item.total, 0),
+          failed: deliveryEmailHealth
+            .filter((item) => item.emailState === "failed")
+            .reduce((acc, item) => acc + item.total, 0),
+        },
+        needsAttentionCount: deliveryEmailHealth.filter((item) => item.action !== "watch").length,
+        products: deliveryEmailHealth,
       },
       products,
     },
