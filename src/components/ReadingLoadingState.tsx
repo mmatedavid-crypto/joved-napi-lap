@@ -20,10 +20,10 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Az utolsó simítások: a válasz rövid, személyes, használható legyen.",
   ],
   horoscope: [
-    "Lekérdezzük a Nap, a Hold és a bolygók aktuális állását.",
+    "Figyelembe vesszük a Nap, a Hold és a bolygók aktuális állását.",
     "Megnézzük, milyen tranzitok érintik most a jegyedet.",
     "Összevetjük a holdfázist és a jegyuralkodókat a mai konstellációval.",
-    "Az asztrológiai képletből személyes, olvasható üzenetet formálunk.",
+    "Az asztrológiai képlet időminőségéből személyes, olvasható üzenetet formálunk.",
     "A szerelem, munka és belső fókusz részeit külön igazítjuk.",
     "Ha érkezik szerencseszám vagy szín, azt is hozzátesszük.",
   ],

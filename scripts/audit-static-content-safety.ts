@@ -211,6 +211,23 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/components/ReadingLoadingState.tsx",
+    forbidden: [
+      /\bLekérdezzük\b/i,
+      /\bAPI\b/i,
+      /\bháttéradat\b/i,
+      /\bszolgáltató\b/i,
+      /\blefordít/i,
+    ],
+    required: [
+      "Figyelembe vesszük a Nap, a Hold és a bolygók aktuális állását",
+      "Az asztrológiai képlet időminőségéből",
+      "a Major és Minor Arcana hagyományával",
+      "hagyományos álomfejtésben",
+      "hagyományos jelentésével",
+    ],
+  },
+  {
     file: "src/lib/dream.hu.ts",
     forbidden: [/\bSzinte sosem szó szerinti\b/i, /\bA vég is kapu\b/i],
     required: [

@@ -36,15 +36,16 @@ export const Route = createFileRoute("/rolunk")({
           </p>
         </Section>
 
-        <Section eyebrow="Hogyan készül egy olvasat?">
+        <Section eyebrow="Milyen hagyományból indul?">
           <p>
-            Olvasataink a tarot, az asztrológia és a számmisztika hagyományaira, valamint a megadott
-            adataidra és kérdésedre épülnek. Minden szöveg közérthető, természetes magyar nyelven,
-            a Jövőd.hu visszafogott hangján szólal meg.
+            Olvasataink régi jelképrendszerekből indulnak: a tarot képeiből, az asztrológiai
+            időminőségekből, a számmisztika mintáiból és azokból a népi megfigyelésekből, amelyek
+            régóta segítenek értelmet adni visszatérő emberi helyzeteknek.
           </p>
           <p>
-            Nem kész válaszokat vagy biztos jóslatokat adunk. A szimbólumok jelentését a helyzetedhez
-            igazítjuk, hogy új nézőpontot és használható önismereti kapaszkodót kapj.
+            Nem kész válaszokat vagy biztos jóslatokat adunk. A szimbólumok jelentését a
+            helyzetedhez, kérdésedhez és megadott adataidhoz kapcsoljuk, hogy új nézőpontot és
+            használható önismereti kapaszkodót kapj.
           </p>
         </Section>
 
