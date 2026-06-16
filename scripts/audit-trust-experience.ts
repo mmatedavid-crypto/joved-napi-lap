@@ -258,6 +258,12 @@ const checks: Check[] = [
     name: "thank-you page never displays raw order status errors",
     file: "src/routes/koszonjuk.tsx",
     includes: [
+      "Hiányzik a rendelési azonosító",
+      "nem a fizetés utáni teljes visszatérési link",
+      "kapott teljes köszönőoldali linket",
+      "Vendégvásárlásnál a vásárlási email cím a legfontosabb azonosító",
+      'to="/profil"',
+      'to="/arak"',
       "safeOrderStatusErrorMessage(e)",
       "function safeOrderStatusErrorMessage",
       "function OrderPreparationTimeline",

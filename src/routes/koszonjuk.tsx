@@ -190,11 +190,35 @@ function Page() {
   if (!session_id) {
     return (
       <Layout>
-        <PageHeader eyebrow="Köszönjük" title="Nincs vásárlási adat" />
-        <div className="mx-auto max-w-md px-4 pb-20">
-          <Link to="/" className="btn-gold">
-            Vissza a főoldalra
-          </Link>
+        <PageHeader
+          eyebrow="Köszönjük"
+          title="Hiányzik a rendelési azonosító"
+          lead="Ez általában akkor történik, ha nem a fizetés utáni teljes visszatérési link nyílt meg."
+        />
+        <div className="mx-auto max-w-2xl px-4 pb-20 space-y-4">
+          <Section eyebrow="Mit tehetsz most?">
+            <p>
+              Ha már fizettél, a vásárlás nem ettől az oldaltól függ. Nyisd meg újra a Stripe után
+              kapott teljes köszönőoldali linket, vagy nézd meg a profilodat, ha be voltál
+              jelentkezve.
+            </p>
+            <p className="mt-3 text-sm text-ivory/58">
+              Vendégvásárlásnál a vásárlási email cím a legfontosabb azonosító. Ha nem találod a
+              linket vagy az emailt, írj nekünk arról a címről, amellyel vásároltál.
+            </p>
+            <SupportContact className="mt-4" />
+          </Section>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/profil" className="btn-gold">
+              Profil megnyitása
+            </Link>
+            <Link
+              to="/arak"
+              className="inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.28)] px-4 py-3 text-sm text-ivory/75 hover:text-gold"
+            >
+              Vissza az árakhoz
+            </Link>
+          </div>
         </div>
       </Layout>
     );
