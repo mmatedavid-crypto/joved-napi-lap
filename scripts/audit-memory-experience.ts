@@ -80,6 +80,20 @@ const checks: Check[] = [
       'to: "/harom-lap"',
       "Mai iránytű",
       'to: "/mai-iranytu"',
+      "30 napos térkép",
+      'to: "/szemelyes-30-napos-horoszkop"',
+      "ha nem napi jegyszöveg kell",
+    ],
+  },
+  {
+    name: "empty profile offers a deeper astrology entry path",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "Születési képlet",
+      'to: "/szuletesi-keplet"',
+      "mélyebb személyes alapot",
+      "későbbi 30 napos vagy éves térkép",
+      "Képlet megnézése",
     ],
   },
   {

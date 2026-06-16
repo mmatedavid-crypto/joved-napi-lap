@@ -500,6 +500,12 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
       to: "/dontes-elott",
       cta: "Döntés előtt",
     },
+    {
+      title: "Születési képlet",
+      text: "Ha mélyebb személyes alapot szeretnél, innen indulhat a későbbi 30 napos vagy éves térkép.",
+      to: "/szuletesi-keplet",
+      cta: "Képlet megnézése",
+    },
   ] as const;
 
   return (
@@ -989,6 +995,13 @@ function memoryNextStepItems(
       label: "Álomfejtés",
       reason: "ha képekben és visszatérő érzésekben jelenik meg a téma",
       to: "/alomfejtes",
+    });
+  }
+  if (/horoszkóp|horoszkop|asztrol|tranzit|születési|keplet|képlet|időszak|hetek|hónap|month|year/.test(text)) {
+    push({
+      label: "30 napos térkép",
+      reason: "ha nem napi jegyszöveg kell, hanem személyesebb időszaki fókusz",
+      to: "/szemelyes-30-napos-horoszkop",
     });
   }
   push({
