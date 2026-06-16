@@ -4,6 +4,7 @@ import { getStripe, getStripeEnvironment, paymentsAvailable } from "@/lib/stripe
 import { createCheckoutSession } from "@/lib/payments.functions";
 import { SITE_LEGAL } from "@/lib/legal";
 import { trackEvent } from "@/lib/analytics";
+import { PRODUCTS_BY_SLUG } from "@/lib/products";
 
 export interface StripeEmbeddedCheckoutProps {
   productSlug: string;
@@ -139,11 +140,12 @@ function defaultCheckoutReturnUrl(environment: "sandbox" | "live"): string {
 }
 
 function checkoutSupportMailto(input: { productSlug: string; sourceRoute?: string }): string {
-  const subject = `Jövőd.hu fizetési segítség - ${input.productSlug}`;
+  const productName = PRODUCTS_BY_SLUG[input.productSlug]?.name ?? input.productSlug;
+  const subject = `Jövőd.hu fizetési segítség - ${productName}`;
   const body = [
     "Segítséget szeretnék kérni, mert nem indult el a fizetés.",
     "",
-    `Termék: ${input.productSlug}`,
+    `Termék: ${productName}`,
     input.sourceRoute ? `Oldal: ${input.sourceRoute}` : null,
     "A vásárlási email címem:",
     "Mi történt röviden:",
