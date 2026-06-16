@@ -62,8 +62,9 @@ function PrivacyPage() {
         <p>
           A szolgáltatás használatakor kezelhetünk email címet, rendelési adatot, fizetési
           állapotot, a kiválasztott olvasat típusát, a felhasználó által megadott kérdést vagy
-          születési adatot, olvasati előzményt és visszatérő témamintát, valamint technikai és
-          analitikai adatokat.
+          születési adatot, olvasati előzményt és visszatérő témamintát, a fizetős olvasathoz adott
+          minőségi visszajelzést és opcionális rövid pontosítást, valamint technikai és analitikai
+          adatokat.
         </p>
         <p>Bankkártyaadatot nem tárolunk; a fizetést külső fizetési szolgáltató kezeli.</p>
       </LegalSection>
@@ -73,6 +74,19 @@ function PrivacyPage() {
           Az adatokat a digitális olvasat elkészítéséhez, a rendelés teljesítéséhez,
           ügyfélszolgálati segítséghez, visszaélések megelőzéséhez, valamint a szolgáltatás
           minőségének javításához használjuk.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Minőségi visszajelzés fizetős olvasatoknál">
+        <p>
+          Az elkészült fizetős olvasatoknál röviden jelezheted, hogy az olvasat eltalált, részben
+          talált vagy nem volt elég pontos. Ha szeretnéd, néhány mondatban azt is leírhatod, melyik
+          rész maradt ki vagy milyen irányban vártál volna pontosabb segítséget.
+        </p>
+        <p>
+          Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati,
+          hibajavítási és szolgáltatásminőségi célra használjuk. A visszajelzés nem helyettesíti a
+          panaszt vagy ügyfélszolgálati kérést; ha választ vársz, írj a kapcsolati email címre is.
         </p>
       </LegalSection>
 
@@ -159,8 +173,10 @@ function PrivacyPage() {
         <p>
           A rendeléshez kapcsolódó adatokat szerződés teljesítése és jogi kötelezettség alapján, az
           önként megadott kérdéseket és profiladatokat a szolgáltatás nyújtásához szükséges
-          mértékben kezeljük. Az adatokat csak addig őrizzük meg, ameddig a szolgáltatás, jogi
-          kötelezettség vagy jogos érdek indokolja.
+          mértékben kezeljük. A fizetős olvasathoz adott minőségi visszajelzést a rendelési
+          adatokkal együtt őrizhetjük meg, amíg ügyfélszolgálati, hibajavítási vagy jogos
+          szolgáltatásminőségi érdek indokolja. Az adatokat csak addig őrizzük meg, ameddig a
+          szolgáltatás, jogi kötelezettség vagy jogos érdek indokolja.
         </p>
       </LegalSection>
 
