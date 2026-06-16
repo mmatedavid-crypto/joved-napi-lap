@@ -175,6 +175,9 @@ for (const needle of [
   "A vásárlási email címem:",
   "Mi történt röviden:",
   "invalid_user_id",
+  'message === "Érvénytelen visszatérési cím"',
+  'return "invalid_return_url"',
+  'checkoutErrorMessageByCode("invalid_return_url")',
   "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.",
   "vásárlási email címedről",
 ]) {

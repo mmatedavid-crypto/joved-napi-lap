@@ -162,6 +162,7 @@ function safeCheckoutErrorReason(error: unknown): string {
   if (message === "Érvénytelen email cím") return "invalid_email";
   if (message === "Ismeretlen termék") return "unknown_product";
   if (message === "Érvénytelen felhasználói azonosító") return "invalid_user_id";
+  if (message === "Érvénytelen visszatérési cím") return "invalid_return_url";
   return "checkout_start_failed";
 }
 
@@ -176,6 +177,9 @@ function safeCheckoutErrorMessage(error: unknown): string {
   }
   if (message === "Érvénytelen felhasználói azonosító") {
     return checkoutErrorMessageByCode("invalid_user_id");
+  }
+  if (message === "Érvénytelen visszatérési cím") {
+    return checkoutErrorMessageByCode("invalid_return_url");
   }
   return checkoutErrorMessageByCode("checkout_start_failed");
 }
