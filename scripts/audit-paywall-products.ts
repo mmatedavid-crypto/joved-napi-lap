@@ -146,6 +146,8 @@ for (const needle of [
   "clientSecretPromise.current = null",
   "customerEmail",
   "checkoutReturnUrl",
+  "defaultCheckoutReturnUrl(environment)",
+  'environment === "live" ? SITE_LEGAL.siteUrl : window.location.origin',
   "safeCheckoutErrorMessage(error)",
   "paymentsAvailable",
   "canLoadStripe",

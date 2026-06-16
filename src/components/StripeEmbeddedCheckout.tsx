@@ -45,9 +45,9 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
         setCheckoutError(null);
         clientSecretPromise.current = (async () => {
           try {
-            const checkoutReturnUrl =
-              returnUrl || `${window.location.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
             const environment = getStripeEnvironment();
+            const checkoutReturnUrl =
+              returnUrl || defaultCheckoutReturnUrl(environment);
             trackEvent("checkout_started", {
               productSlug,
               express,
@@ -128,6 +128,11 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
       )}
     </div>
   );
+}
+
+function defaultCheckoutReturnUrl(environment: "sandbox" | "live"): string {
+  const origin = environment === "live" ? SITE_LEGAL.siteUrl : window.location.origin;
+  return `${origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
 }
 
 function safeCheckoutErrorReason(error: unknown): string {
