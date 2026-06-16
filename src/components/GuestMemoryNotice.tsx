@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   clearGuestPersonalization,
+  hasGuestPersonalizationDecision,
   isGuestPersonalizationEnabled,
   setGuestPersonalizationEnabled,
 } from "@/lib/guestReadingMemory";
@@ -14,14 +15,26 @@ export function GuestMemoryNotice() {
   const [visible, setVisible] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [needsDecision, setNeedsDecision] = useState(false);
 
   useEffect(() => {
     const personalizationEnabled = isGuestPersonalizationEnabled();
-    setDisabled(!personalizationEnabled);
+    const hasDecision = hasGuestPersonalizationDecision();
     const dismissed = loadLocal<boolean>(DISMISSED_KEY);
     const memoryCount = Number(loadCookie(MEMORY_COUNT_COOKIE) ?? "0");
-    setVisible(personalizationEnabled && !dismissed && memoryCount > 0);
+
+    setDisabled(!personalizationEnabled);
+    setNeedsDecision(!hasDecision);
+    setVisible(!hasDecision || (personalizationEnabled && !dismissed && memoryCount > 0));
   }, []);
+
+  function enablePersonalization() {
+    setGuestPersonalizationEnabled(true);
+    setDisabled(false);
+    setNeedsDecision(false);
+    saveLocal(DISMISSED_KEY, true);
+    setVisible(false);
+  }
 
   function dismiss() {
     saveLocal(DISMISSED_KEY, true);
@@ -37,6 +50,7 @@ export function GuestMemoryNotice() {
   function disablePersonalization() {
     setGuestPersonalizationEnabled(false);
     setDisabled(true);
+    setNeedsDecision(false);
     setCleared(true);
     saveLocal(DISMISSED_KEY, true);
   }
@@ -70,8 +84,8 @@ export function GuestMemoryNotice() {
       ) : (
         <div className="space-y-3">
           <p className="text-sm leading-relaxed text-ivory/72">
-            Ebből a böngészőből emlékszünk néhány korábbi olvasati mintára, hogy ne minden alkalom
-            idegenként induljon. Ezt finoman használjuk, és bármikor törölheted.
+            A Jövőd.hu akkor tud igazán személyes ívet adni, ha ebben a böngészőben megjegyezhet
+            néhány korábbi olvasati mintát, hogy ne minden alkalom idegenként induljon.
           </p>
           <p className="text-xs leading-relaxed text-ivory/48">
             A minta helyben marad ebben a böngészőben; nem bankkártyaadat, nem diagnózis, és nem
@@ -79,19 +93,53 @@ export function GuestMemoryNotice() {
             a törlés nem érinti a rendeléseidet.
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-            <button type="button" onClick={dismiss} className="text-gold hover:text-gold/80">
-              Értem
-            </button>
-            <button type="button" onClick={clearMemory} className="text-ivory/62 hover:text-gold">
-              Helyi minta törlése
-            </button>
-            <button
-              type="button"
-              onClick={disablePersonalization}
-              className="text-ivory/62 hover:text-gold"
-            >
-              Személyesítés kikapcsolása
-            </button>
+            {needsDecision ? (
+              <>
+                <button
+                  type="button"
+                  onClick={enablePersonalization}
+                  className="text-gold hover:text-gold/80"
+                >
+                  Bekapcsolom
+                </button>
+                <button
+                  type="button"
+                  onClick={disablePersonalization}
+                  className="text-ivory/62 hover:text-gold"
+                >
+                  Most nem
+                </button>
+              </>
+            ) : (
+              <>
+                {disabled && (
+                  <button
+                    type="button"
+                    onClick={enablePersonalization}
+                    className="text-gold hover:text-gold/80"
+                  >
+                    Bekapcsolom
+                  </button>
+                )}
+                <button type="button" onClick={dismiss} className="text-gold hover:text-gold/80">
+                  Értem
+                </button>
+                <button
+                  type="button"
+                  onClick={clearMemory}
+                  className="text-ivory/62 hover:text-gold"
+                >
+                  Helyi minta törlése
+                </button>
+                <button
+                  type="button"
+                  onClick={disablePersonalization}
+                  className="text-ivory/62 hover:text-gold"
+                >
+                  Személyesítés kikapcsolása
+                </button>
+              </>
+            )}
             <Link to="/adatkezelesi-tajekoztato" className="text-ivory/50 hover:text-gold">
               Adatkezelés
             </Link>

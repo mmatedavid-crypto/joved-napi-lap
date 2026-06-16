@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
 import {
   clearGuestPersonalization,
+  hasGuestPersonalizationDecision,
   isGuestPersonalizationEnabled,
   setGuestPersonalizationEnabled,
 } from "@/lib/guestReadingMemory";
@@ -25,8 +26,10 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
 function PrivacyPage() {
   const [localCleared, setLocalCleared] = useState(false);
   const [personalizationEnabled, setPersonalizationEnabledState] = useState(true);
+  const [personalizationDecided, setPersonalizationDecided] = useState(false);
 
   useEffect(() => {
+    setPersonalizationDecided(hasGuestPersonalizationDecision());
     setPersonalizationEnabledState(isGuestPersonalizationEnabled());
   }, []);
 
@@ -37,6 +40,7 @@ function PrivacyPage() {
 
   function setLocalPersonalization(enabled: boolean) {
     setGuestPersonalizationEnabled(enabled);
+    setPersonalizationDecided(true);
     setPersonalizationEnabledState(enabled);
     setLocalCleared(!enabled);
   }
@@ -116,10 +120,11 @@ function PrivacyPage() {
         </p>
         <p>
           Bejelentkezve ezek az adatok a felhasználói fiókodhoz kapcsolódhatnak. Vendégként a
-          személyesebb olvasati ív helyi böngészőadatként marad nálad, például localStorage-ban és
-          néhány rövid cookie-jelzésben. Ilyen jelzés lehet, hogy több különböző összeillést néztél
-          meg, vagy hogy visszatérően döntési, kapcsolati vagy álomtémákat kérdezel. A helyi vendég
-          olvasati mintákat legfeljebb 180 napig használjuk.
+          személyesebb olvasati ív csak akkor indul el, ha ebben a böngészőben bekapcsolod a helyi
+          személyesítést. Ilyenkor a minta helyi böngészőadatként marad nálad, például
+          localStorage-ban és néhány rövid cookie-jelzésben. Ilyen jelzés lehet, hogy több különböző
+          összeillést néztél meg, vagy hogy visszatérően döntési, kapcsolati vagy álomtémákat
+          kérdezel. A helyi vendég olvasati mintákat legfeljebb 180 napig használjuk.
         </p>
         <p>
           Az új olvasatok ezt csak finoman használják: visszatérő témára, heti-havi ívre vagy
@@ -137,7 +142,8 @@ function PrivacyPage() {
           A működéshez és a személyesebb élményhez használhatunk cookie-t, localStorage-t vagy
           sessionStorage-t. Ilyen lehet például egy napi húzás megjegyzése, egy folyamatban lévő
           olvasat átmeneti adata, vagy az, hogy az összeillés kalkulátorban több különböző
-          kapcsolatot néztél meg rövid időn belül.
+          kapcsolatot néztél meg rövid időn belül. A visszatérő olvasati minták mentését először
+          külön bekapcsolhatod, és ugyanitt később le is állíthatod.
         </p>
         <p>
           Ezek az adatok nem bankkártyaadatok, és nem helyettesítenek szakmai tanácsadást. A régi
@@ -151,9 +157,11 @@ function PrivacyPage() {
           </p>
           <p className="mt-2 text-xs text-ivory/50">
             Jelenlegi állapot:{" "}
-            {personalizationEnabled
-              ? "a helyi személyesítés be van kapcsolva."
-              : "a helyi személyesítés ki van kapcsolva ebben a böngészőben."}
+            {!personalizationDecided
+              ? "még nem döntöttél a helyi személyesítésről ebben a böngészőben."
+              : personalizationEnabled
+                ? "a helyi személyesítés be van kapcsolva."
+                : "a helyi személyesítés ki van kapcsolva ebben a böngészőben."}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="button" onClick={clearLocalPersonalization} className="btn-ghost-gold">

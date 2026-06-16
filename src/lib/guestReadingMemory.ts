@@ -45,6 +45,7 @@ export type GuestReadingInsights = {
 };
 
 const KEY = "guest_reading_memory";
+const ACCEPTED_KEY = "guest_reading_personalization_accepted";
 const DISABLED_KEY = "guest_reading_personalization_disabled";
 const COOKIE_TOTAL_KEY = "guest_reading_memory_count";
 const COOKIE_LAST_TYPE_KEY = "guest_reading_memory_last_type";
@@ -95,7 +96,11 @@ function readAll(): GuestReadingMemory[] {
 }
 
 export function isGuestPersonalizationEnabled(): boolean {
-  return loadLocal<boolean>(DISABLED_KEY) !== true;
+  return loadLocal<boolean>(ACCEPTED_KEY) === true && loadLocal<boolean>(DISABLED_KEY) !== true;
+}
+
+export function hasGuestPersonalizationDecision(): boolean {
+  return loadLocal<boolean>(ACCEPTED_KEY) === true || loadLocal<boolean>(DISABLED_KEY) === true;
 }
 
 function countValues(values: string[]): [string, number][] {
@@ -349,6 +354,7 @@ export function clearGuestPersonalization() {
 }
 
 export function setGuestPersonalizationEnabled(enabled: boolean) {
+  saveLocal(ACCEPTED_KEY, enabled);
   saveLocal(DISABLED_KEY, !enabled);
   if (!enabled) clearGuestPersonalization();
 }
