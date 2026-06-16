@@ -134,13 +134,13 @@ for (const needle of [
   "Teljesítési biztonság",
   "fulfillmentPromise(product.category).map",
   "function fulfillmentPromise(category: ProductDef",
-  "nem nyílik meg az olvasat",
-  "pótoljuk a hozzáférést",
+  "ha a hozzáférés megakad",
+  "rendelés alapján utánanézünk és segítünk",
   "javítjuk vagy újraküldjük",
   "vállalt határidőt",
   "kérem a digitális tartalom teljesítésének megkezdését",
   "elkészült digitális olvasatnál az elállási jog korlátozott",
-  "Technikai hiba esetén a hozzáférést pótoljuk",
+  "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.",
   "const formatPromise = readingFormatPromise(product)",
   "function readingFormatPromise(product: ProductDef)",
   "Forma:",
@@ -256,6 +256,18 @@ for (const forbidden of [
 if (paywall.includes("{deliveryLabel} · a profilodban és ezen az oldalon")) {
   failed.push("PaywallDialog must not promise profile access to every guest checkout");
 }
+for (const forbidden of [
+  "Technikai hiba esetén",
+  "technikai hiba miatt nem nyílik meg az olvasat",
+  "technikai hiba miatt nem nyílik meg",
+]) {
+  if (paywall.includes(forbidden)) {
+    failed.push(`PaywallDialog must use customer-friendly access wording: ${forbidden}`);
+  }
+  if (pricingRoute.includes(forbidden)) {
+    failed.push(`Pricing route must use customer-friendly access wording: ${forbidden}`);
+  }
+}
 
 const stripeClient = readFileSync("src/lib/stripe.ts", "utf8");
 const paymentBanner = readFileSync("src/components/PaymentTestModeBanner.tsx", "utf8");
@@ -324,8 +336,8 @@ for (const needle of [
   "Vásárlás előtt jó tudni",
   "Kell fiókot létrehoznom",
   "Nem kötelező",
-  "technikai hiba miatt nem nyílik meg",
-  "pótoljuk a hozzáférést",
+  "Mi történik, ha nem nyílik meg az olvasat?",
+  "segítünk a hozzáférésben",
   "Mi van, ha az olvasat nem érződik elég pontosnak?",
   "konkrét pontosítási kérdésekkel",
   "milyen irányban vársz segítséget",

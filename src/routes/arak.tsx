@@ -16,9 +16,9 @@ const PRICING_FAQ = [
       "Az azonnali olvasatok rövidebb, személyes válaszok. A részletes olvasatok több részből álló írásos elemzések, a terméknél feltüntetett elkészülési idővel.",
   },
   {
-    question: "Mi történik, ha technikai hiba miatt nem nyílik meg az olvasat?",
+    question: "Mi történik, ha nem nyílik meg az olvasat?",
     answer:
-      "A rendelési link és a vásárlási email alapján utánanézünk, pótoljuk a hozzáférést, vagy hibás megjelenés esetén javítjuk és újraküldjük az olvasatot.",
+      "A rendelési link és a vásárlási email alapján utánanézünk, segítünk a hozzáférésben, vagy hibás megjelenés esetén javítjuk és újraküldjük az olvasatot.",
   },
   {
     question: "Mi van, ha az olvasat nem érződik elég pontosnak?",
@@ -28,7 +28,7 @@ const PRICING_FAQ = [
   {
     question: "Elállhatok a digitális olvasattól?",
     answer:
-      "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését. Ha az olvasat elkészült és megnyílt, az elállási jog korlátozott lehet; technikai hiba vagy elmaradt hozzáférés esetén viszont utánanézünk és pótoljuk a teljesítést.",
+      "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését. Ha az olvasat elkészült és megnyílt, az elállási jog korlátozott lehet; ha viszont a hozzáférés elmarad vagy megakad, utánanézünk és segítünk.",
   },
   {
     question: "Ezek jóslatok?",

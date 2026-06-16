@@ -372,7 +372,7 @@ export function PaywallDialog({
                   <div>
                     <div className="mb-1 font-medium text-ivory/82">Segítség</div>
                     <p>
-                      Technikai hiba esetén pótoljuk a teljesítést vagy utánanézünk:{" "}
+                      Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk:{" "}
                       <a
                         className="text-gold hover:text-gold/80"
                         href={supportMailto}
@@ -424,7 +424,7 @@ export function PaywallDialog({
                 </Link>
                 ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után, és
                 tudomásul veszem, hogy az elkészült digitális olvasatnál az elállási jog korlátozott
-                lehet. Technikai hiba esetén a hozzáférést pótoljuk vagy utánanézünk.
+                lehet. Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.
               </span>
             </label>
 
@@ -638,7 +638,7 @@ function qualityReviewPromise(product: ProductDef): string[] {
 
 function fulfillmentPromise(category: ProductDef["category"]): string[] {
   const base = [
-    "ha technikai hiba miatt nem nyílik meg az olvasat, utánanézünk és pótoljuk a hozzáférést",
+    "ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk",
     "ha a szöveg hibásan jelenik meg, javítjuk vagy újraküldjük a vásárlási email címed alapján",
   ];
   if (category === "delayed") {
