@@ -290,6 +290,26 @@ const checks: Check[] = [
     excludes: ["new Error(`h3 swallowed SSR error: ${body}`)"],
   },
   {
+    name: "catastrophic error page is localized and not indexed",
+    file: "src/lib/error-page.ts",
+    includes: [
+      '<html lang="hu">',
+      "Az oldal most nem töltött be | Jövőd.hu",
+      '<meta name="robots" content="noindex,nofollow" />',
+      "Most nem töltött be az oldal",
+      "A rendelésed vagy olvasatod ettől nem vész el",
+      "Újrapróbálom",
+      "Vissza a főoldalra",
+    ],
+    excludes: [
+      '<html lang="en">',
+      "This page didn't load",
+      "Something went wrong on our end",
+      "Try again",
+      "Go home",
+    ],
+  },
+  {
     name: "checkout insert errors redact Stripe session ids",
     file: "src/lib/payments.functions.ts",
     includes: [
