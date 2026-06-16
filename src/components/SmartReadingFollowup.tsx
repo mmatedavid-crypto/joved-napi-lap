@@ -50,6 +50,10 @@ export function SmartReadingFollowup({
     () => followupOptions(intent, { question, situation, memory }),
     [intent, memory, question, situation],
   );
+  const intro = useMemo(
+    () => followupIntro({ intent, question, situation, memory }),
+    [intent, memory, question, situation],
+  );
   const optionSlugs = options.map((option) => option.slug).join(",");
 
   useEffect(() => {
@@ -72,6 +76,7 @@ export function SmartReadingFollowup({
     ...inputPayload,
     ...(question ? { question } : {}),
     ...(situation ? { situation } : {}),
+    ...(intro.context ? { followupContext: intro.context } : {}),
     ...(memory.contextText || memory.themeSummary
       ? { memoryContext: memory.contextText || memory.themeSummary }
       : {}),
@@ -86,9 +91,13 @@ export function SmartReadingFollowup({
         <div>
           <h2 className="font-display text-2xl text-ivory">Egy jó következő kérdés</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
-            Ha ez az olvasat megmozdított valamit, nem biztos, hogy újabb általános választ kell
-            kérned. Válassz inkább ahhoz, ami most tényleg tisztázásra vár.
+            {intro.text}
           </p>
+          {intro.context && (
+            <p className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2 text-sm leading-relaxed text-ivory/68">
+              {intro.context}
+            </p>
+          )}
           {memoryLine && (
             <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.055] px-3 py-2 text-sm leading-relaxed text-ivory/68">
               {memoryLine}
@@ -151,6 +160,66 @@ export function SmartReadingFollowup({
       )}
     </section>
   );
+}
+
+function shortenContext(value: string, max = 180): string {
+  const clean = value.trim().replace(/\s+/g, " ");
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max - 1).trim()}…`;
+}
+
+function followupIntro({
+  intent,
+  question,
+  situation,
+  memory,
+}: {
+  intent: FollowupIntent;
+  question?: string;
+  situation?: string;
+  memory: ReturnType<typeof getGuestReadingContext>;
+}): { text: string; context: string } {
+  const q = question?.trim();
+  const sit = situation?.trim();
+  if (q) {
+    return {
+      text: "A következő lépés akkor lesz pontosabb, ha ugyanabból a kérdésből indul tovább, nem egy új, általános olvasatból.",
+      context: `A kérdés, amiből továbbmegyünk: „${shortenContext(q)}”`,
+    };
+  }
+  if (sit) {
+    return {
+      text: "A mostani olvasat után nem az a cél, hogy még több választ gyűjts, hanem hogy a konkrét helyzetedhez válassz mélyebb irányt.",
+      context: `A helyzet, amit már megadtál: ${shortenContext(sit)}`,
+    };
+  }
+  if (memory.themeSummary) {
+    return {
+      text: "Mivel már több jelből is körvonalazódik egy minta, érdemes olyan folytatást választani, amely nem idegenként kezeli a kérdéseidet.",
+      context: shortenContext(memory.themeSummary, 220),
+    };
+  }
+  const fallbackByIntent: Record<FollowupIntent, string> = {
+    daily:
+      "Ha ez az olvasat megmozdított valamit, nem biztos, hogy újabb általános választ kell kérned. Válassz inkább ahhoz, ami most tényleg tisztázásra vár.",
+    love:
+      "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
+    decision:
+      "Döntés előtt a jó folytatás nem helyetted választ, hanem megmutatja, melyik érzés húz és melyik tart vissza.",
+    compatibility:
+      "Összeillés után a mélyebb érték nem a százalékban van, hanem abban, miért működhet, hol akadhat el, és mit ismételtek.",
+    dream:
+      "Álom után a jó folytatás nem diagnózist keres, hanem azt, milyen érzés maradt veled, és mit tükrözhet önismereti jelként.",
+    numerology:
+      "Számmisztikánál a mélyebb folytatás akkor ér valamit, ha nem címkéket ad, hanem megmutatja, hogyan működik benned a minta.",
+    horoscope:
+      "Horoszkóp után a személyesebb folytatás nem általános jegyszöveg, hanem időszakos fókusz és saját ritmus.",
+    angel:
+      "Angyalszámnál a folytatás akkor jó, ha a számot nem külső bizonyítékként, hanem a mostani helyzeted jelzéseként kezeli.",
+    crystal:
+      "Kristálynál a folytatás nem hatást ígér, hanem azt keresi, milyen szimbolikus minőségre van most szükséged.",
+  };
+  return { text: fallbackByIntent[intent], context: "" };
 }
 
 function followupOptions(

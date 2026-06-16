@@ -62,6 +62,7 @@ const INPUT_BRIEF_LABELS: Record<string, string> = {
   cardName: "Lap",
   cards: "Lapok",
   memoryContext: "Visszatérő minta",
+  followupContext: "Miért ezt ajánlottuk",
   articleLead: "Horoszkópcikk alaphangja",
   topic: "Téma",
 };

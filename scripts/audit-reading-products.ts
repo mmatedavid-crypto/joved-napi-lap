@@ -577,6 +577,7 @@ if (
   !paidServer.includes('"compatibilitySnapshot"') ||
   !paidServer.includes('"freeReadingSummary"') ||
   !paidServer.includes('"comparisonContext"') ||
+  !paidServer.includes('"followupContext"') ||
   !paidServer.includes('"memoryContext"') ||
   !paidServer.includes("countContextHits(body, anchors)") ||
   !paidServer.includes("function paidReadingMinimumContextHits") ||
@@ -604,6 +605,7 @@ if (
   !paidReadingsSource.includes('sit: "Helyzet"') ||
   !paidReadingsSource.includes('myName: "Első név"') ||
   !paidReadingsSource.includes('emotion: "Érzés"') ||
+  !paidReadingsSource.includes('followupContext: "Miért ezt ajánlottuk"') ||
   !paidReadingsSource.includes('memoryContext: "Visszatérő minta"') ||
   !paidReadingsSource.includes("function paidTarotSpreadFromPayload") ||
   !paidReadingsSource.includes("function briefPaidTarotSpread") ||

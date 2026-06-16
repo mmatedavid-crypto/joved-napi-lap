@@ -146,6 +146,7 @@ function collectContextStrings(value: unknown, depth = 0): string[] {
     "heading",
     "comparisonContext",
     "memoryContext",
+    "followupContext",
     "articleLead",
     "topic",
   ]);
