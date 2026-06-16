@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 type FeedbackValue = "accurate" | "partial" | "missed";
+type ReviewPriority = "high" | "medium" | "low";
 
 type FeedbackRow = {
   product_slug: string | null;
@@ -24,6 +25,8 @@ type ProductFeedbackSummary = {
   missRate: number;
   detailRate: number;
   needsAttention: boolean;
+  reviewPriority: ReviewPriority;
+  reviewRecommendation: string;
 };
 
 const DEFAULT_DAYS = 30;
@@ -65,6 +68,38 @@ function hasWrittenDetail(row: FeedbackRow): boolean {
   return detail.length >= 12;
 }
 
+function reviewPriorityFor(item: {
+  total: number;
+  missed: number;
+  negative: number;
+  negativeDetailCount: number;
+  missRate: number;
+  needsAttention: boolean;
+}): ReviewPriority {
+  if (item.negativeDetailCount >= 2) return "high";
+  if (item.missed >= 2 && item.missRate >= 0.4) return "high";
+  if (item.needsAttention) return "medium";
+  if (item.negativeDetailCount >= 1) return "medium";
+  if (item.negative >= 2 && item.total >= 5) return "medium";
+  return "low";
+}
+
+function recommendationFor(
+  priority: ReviewPriority,
+  item: { negativeDetailCount: number },
+): string {
+  if (priority === "high") {
+    return "manual_review_first";
+  }
+  if (priority === "medium" && item.negativeDetailCount > 0) {
+    return "read_feedback_details";
+  }
+  if (priority === "medium") {
+    return "watch_next_orders";
+  }
+  return "no_action";
+}
+
 function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
   const byProduct = new Map<
     string,
@@ -93,6 +128,15 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
       const negative = item.partial + item.missed;
       const missRate = item.total > 0 ? Number((negative / item.total).toFixed(2)) : 0;
       const detailRate = item.total > 0 ? Number((item.detailCount / item.total).toFixed(2)) : 0;
+      const needsAttention = item.total >= ATTENTION_MIN_TOTAL && missRate >= ATTENTION_MISS_RATE;
+      const reviewPriority = reviewPriorityFor({
+        total: item.total,
+        missed: item.missed,
+        negative,
+        negativeDetailCount: item.negativeDetailCount,
+        missRate,
+        needsAttention,
+      });
       return {
         productSlug: item.productSlug,
         productName: item.productName,
@@ -105,10 +149,18 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
         negativeDetailCount: item.negativeDetailCount,
         missRate,
         detailRate,
-        needsAttention: item.total >= ATTENTION_MIN_TOTAL && missRate >= ATTENTION_MISS_RATE,
+        needsAttention,
+        reviewPriority,
+        reviewRecommendation: recommendationFor(reviewPriority, {
+          negativeDetailCount: item.negativeDetailCount,
+        }),
       };
     })
     .sort((a, b) => {
+      const priorityRank = { high: 2, medium: 1, low: 0 } as const;
+      if (a.reviewPriority !== b.reviewPriority) {
+        return priorityRank[b.reviewPriority] - priorityRank[a.reviewPriority];
+      }
       if (a.needsAttention !== b.needsAttention) return a.needsAttention ? -1 : 1;
       if (b.missRate !== a.missRate) return b.missRate - a.missRate;
       return b.total - a.total;
@@ -173,6 +225,11 @@ async function handleSummary(request: Request) {
       generatedAt: new Date().toISOString(),
       totals,
       needsAttentionCount: products.filter((item) => item.needsAttention).length,
+      reviewPriorityCounts: {
+        high: products.filter((item) => item.reviewPriority === "high").length,
+        medium: products.filter((item) => item.reviewPriority === "medium").length,
+        low: products.filter((item) => item.reviewPriority === "low").length,
+      },
       products,
     },
     { headers: { "Cache-Control": "no-store" } },
