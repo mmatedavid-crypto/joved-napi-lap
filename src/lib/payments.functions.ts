@@ -10,6 +10,7 @@ import {
   EXPRESS_PRICE_HUF,
   EXPRESS_HOURS,
 } from "@/lib/products";
+import { SITE_LEGAL } from "@/lib/legal";
 
 type CheckoutErrorCode =
   | "invalid_email"
@@ -17,6 +18,7 @@ type CheckoutErrorCode =
   | "invalid_user_id"
   | "missing_product_price"
   | "missing_express_price"
+  | "invalid_return_url"
   | "checkout_session_unavailable"
   | "order_insert_failed"
   | "checkout_start_failed";
@@ -158,7 +160,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     if (data.userId && !/^[a-zA-Z0-9_-]+$/.test(data.userId)) {
       throw new Error("Érvénytelen felhasználói azonosító");
     }
-    return data;
+    return {
+      ...data,
+      returnUrl: normalizeCheckoutReturnUrl(data.returnUrl, data.environment),
+      sourceRoute: normalizeSourceRoute(data.sourceRoute),
+    };
   })
   .handler(async ({ data }): Promise<CheckoutSessionResult> => {
     try {
@@ -197,6 +203,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       const totalHuf = product.priceHuf + (wantsExpress ? EXPRESS_PRICE_HUF : 0);
       const hours = wantsExpress ? EXPRESS_HOURS : (product.standardHours ?? 0);
+      const checkoutReturnUrl = data.returnUrl;
       const deliverBy =
         product.category === "delayed"
           ? new Date(Date.now() + hours * 3600_000).toISOString()
@@ -206,7 +213,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         line_items: lineItems,
         mode: "payment",
         ui_mode: "embedded_page",
-        return_url: data.returnUrl,
+        return_url: checkoutReturnUrl,
         customer: customerId,
         payment_intent_data: {
           description: wantsExpress ? `${product.name} + Express` : product.name,
@@ -301,6 +308,7 @@ function safeCheckoutErrorCode(error: unknown): CheckoutErrorCode {
   if (message === "Ismeretlen termék") return "unknown_product";
   if (message === "Érvénytelen email cím") return "invalid_email";
   if (message === "Érvénytelen felhasználói azonosító") return "invalid_user_id";
+  if (message === "Érvénytelen visszatérési cím") return "invalid_return_url";
   if (message === "A termék ára nem található") return "missing_product_price";
   if (message === "Az express ár nem található") return "missing_express_price";
   if (message === "A fizetési munkamenet nem indítható el. Próbáld újra később.") {
@@ -309,6 +317,56 @@ function safeCheckoutErrorCode(error: unknown): CheckoutErrorCode {
   if (message === "order_insert_failed") return "order_insert_failed";
   if (message === CHECKOUT_GENERIC_ERROR) return "checkout_start_failed";
   return "checkout_start_failed";
+}
+
+function normalizeCheckoutReturnUrl(returnUrl: string, environment: StripeEnv): string {
+  const fallback = `${SITE_LEGAL.siteUrl}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+  const clean = returnUrl.trim();
+  try {
+    const url = new URL(clean);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error("Érvénytelen visszatérési cím");
+    }
+    if (environment === "live" && url.protocol !== "https:") {
+      throw new Error("Érvénytelen visszatérési cím");
+    }
+    const site = new URL(SITE_LEGAL.siteUrl);
+    const allowedHosts = new Set([site.host, `www.${site.host}`]);
+    if (environment === "sandbox") {
+      allowedHosts.add("localhost:3000");
+      allowedHosts.add("localhost:5173");
+      allowedHosts.add("localhost:8080");
+      allowedHosts.add("localhost:8081");
+      allowedHosts.add("localhost:8082");
+      allowedHosts.add("localhost:8084");
+      allowedHosts.add("localhost:8090");
+      allowedHosts.add("127.0.0.1:3000");
+      allowedHosts.add("127.0.0.1:5173");
+      allowedHosts.add("127.0.0.1:8080");
+      allowedHosts.add("127.0.0.1:8081");
+      allowedHosts.add("127.0.0.1:8082");
+      allowedHosts.add("127.0.0.1:8084");
+      allowedHosts.add("127.0.0.1:8090");
+    }
+    if (!allowedHosts.has(url.host)) {
+      throw new Error("Érvénytelen visszatérési cím");
+    }
+    if (url.pathname !== "/koszonjuk") {
+      throw new Error("Érvénytelen visszatérési cím");
+    }
+    if (clean.includes("{CHECKOUT_SESSION_ID}")) return clean;
+    return `${url.origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Érvénytelen visszatérési cím") throw error;
+    return fallback;
+  }
+}
+
+function normalizeSourceRoute(sourceRoute?: string): string | undefined {
+  if (!sourceRoute) return undefined;
+  if (!sourceRoute.startsWith("/") || sourceRoute.startsWith("//")) return undefined;
+  if (sourceRoute.includes("\n") || sourceRoute.includes("\r")) return undefined;
+  return sourceRoute.slice(0, 180);
 }
 
 async function expireUnusableCheckoutSession(stripe: Stripe, sessionId: string): Promise<void> {

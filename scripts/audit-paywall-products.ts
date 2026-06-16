@@ -170,6 +170,8 @@ for (const needle of [
   "checkoutErrorMessageByCode",
   "checkoutSupportMailto",
   "Jövőd.hu fizetési segítség",
+  '"invalid_return_url"',
+  "A fizetés visszaigazoló oldala most nem állítható be biztonságosan",
   "A vásárlási email címem:",
   "Mi történt röviden:",
   "invalid_user_id",
@@ -194,15 +196,33 @@ for (const needle of [
   'return "invalid_email"',
   'return "unknown_product"',
   'return "invalid_user_id"',
+  'return "invalid_return_url"',
   'return "order_insert_failed"',
   'return "checkout_start_failed"',
+  "normalizeCheckoutReturnUrl(data.returnUrl, data.environment)",
+  "normalizeSourceRoute(data.sourceRoute)",
+  "function normalizeCheckoutReturnUrl",
+  "SITE_LEGAL.siteUrl",
+  'environment === "live" && url.protocol !== "https:"',
+  'url.pathname !== "/koszonjuk"',
+  'clean.includes("{CHECKOUT_SESSION_ID}")',
+  "function normalizeSourceRoute",
+  'sourceRoute.startsWith("//")',
+  "sourceRoute.slice(0, 180)",
 ]) {
   if (!paymentsServer.includes(needle))
     failed.push(`payments.functions checkout missing: ${needle}`);
 }
+if (
+  /return_url:\s*data\.returnUrl/.test(paymentsServer) &&
+  !paymentsServer.includes("normalizeCheckoutReturnUrl(data.returnUrl, data.environment)")
+) {
+  failed.push("payments.functions must not trust a raw client returnUrl");
+}
 for (const forbidden of [
   "return { error: safeCheckoutErrorMessage(error) }",
   "type CheckoutSessionResult = { clientSecret: string } | { error: string }",
+  "return_url: data.returnUrl,",
 ]) {
   if (paymentsServer.includes(forbidden)) {
     failed.push(`payments.functions checkout must not use raw text errors: ${forbidden}`);

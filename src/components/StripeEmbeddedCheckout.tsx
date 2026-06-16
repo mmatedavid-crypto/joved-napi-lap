@@ -186,6 +186,7 @@ type CheckoutErrorCode =
   | "invalid_user_id"
   | "missing_product_price"
   | "missing_express_price"
+  | "invalid_return_url"
   | "checkout_session_unavailable"
   | "order_insert_failed"
   | "checkout_start_failed";
@@ -206,6 +207,9 @@ function checkoutErrorMessageByCode(code: CheckoutErrorCode): string {
   }
   if (code === "invalid_user_id") {
     return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. Frissítsd az oldalt, majd próbáld újra.";
+  }
+  if (code === "invalid_return_url") {
+    return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Frissítsd az oldalt, majd próbáld újra.";
   }
   return "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
 }
