@@ -66,6 +66,7 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 import { Route as ApiPublicHooksWarmHoroscopesRouteImport } from './routes/api/public/hooks/warm-horoscopes'
+import { Route as ApiInternalOrderFeedbackSummaryRouteImport } from './routes/api/internal/order-feedback/summary'
 import { Route as ApiInternalHoroscopeNewsPrewarmRouteImport } from './routes/api/internal/horoscope-news/prewarm'
 
 const VedikusAsztrologiaRoute = VedikusAsztrologiaRouteImport.update({
@@ -365,6 +366,12 @@ const ApiInternalHoroscopeNewsPrewarmRoute =
     path: '/api/internal/horoscope-news/prewarm',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiInternalOrderFeedbackSummaryRoute =
+  ApiInternalOrderFeedbackSummaryRouteImport.update({
+    id: '/api/internal/order-feedback/summary',
+    path: '/api/internal/order-feedback/summary',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -420,6 +427,7 @@ export interface FileRoutesByFullPath {
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
+  '/api/internal/order-feedback/summary': typeof ApiInternalOrderFeedbackSummaryRoute
   '/api/public/hooks/warm-horoscopes': typeof ApiPublicHooksWarmHoroscopesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -480,6 +488,7 @@ export interface FileRoutesByTo {
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
+  '/api/internal/order-feedback/summary': typeof ApiInternalOrderFeedbackSummaryRoute
   '/api/public/hooks/warm-horoscopes': typeof ApiPublicHooksWarmHoroscopesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -541,6 +550,7 @@ export interface FileRoutesById {
   '/horoszkop/$period/$sign': typeof HoroszkopPeriodSignRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/internal/horoscope-news/prewarm': typeof ApiInternalHoroscopeNewsPrewarmRoute
+  '/api/internal/order-feedback/summary': typeof ApiInternalOrderFeedbackSummaryRoute
   '/api/public/hooks/warm-horoscopes': typeof ApiPublicHooksWarmHoroscopesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -603,6 +613,7 @@ export interface FileRouteTypes {
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
+    | '/api/internal/order-feedback/summary'
     | '/api/public/hooks/warm-horoscopes'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
@@ -663,6 +674,7 @@ export interface FileRouteTypes {
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
+    | '/api/internal/order-feedback/summary'
     | '/api/public/hooks/warm-horoscopes'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
@@ -723,6 +735,7 @@ export interface FileRouteTypes {
     | '/horoszkop/$period/$sign'
     | '/lovable/email/suppression'
     | '/api/internal/horoscope-news/prewarm'
+    | '/api/internal/order-feedback/summary'
     | '/api/public/hooks/warm-horoscopes'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
@@ -783,6 +796,7 @@ export interface RootRouteChildren {
   TarotIndexRoute: typeof TarotIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiInternalHoroscopeNewsPrewarmRoute: typeof ApiInternalHoroscopeNewsPrewarmRoute
+  ApiInternalOrderFeedbackSummaryRoute: typeof ApiInternalOrderFeedbackSummaryRoute
   ApiPublicHooksWarmHoroscopesRoute: typeof ApiPublicHooksWarmHoroscopesRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -1198,6 +1212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiInternalHoroscopeNewsPrewarmRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/internal/order-feedback/summary': {
+      id: '/api/internal/order-feedback/summary'
+      path: '/api/internal/order-feedback/summary'
+      fullPath: '/api/internal/order-feedback/summary'
+      preLoaderRoute: typeof ApiInternalOrderFeedbackSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1266,6 +1287,7 @@ const rootRouteChildren: RootRouteChildren = {
   TarotIndexRoute: TarotIndexRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiInternalHoroscopeNewsPrewarmRoute: ApiInternalHoroscopeNewsPrewarmRoute,
+  ApiInternalOrderFeedbackSummaryRoute: ApiInternalOrderFeedbackSummaryRoute,
   ApiPublicHooksWarmHoroscopesRoute: ApiPublicHooksWarmHoroscopesRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
