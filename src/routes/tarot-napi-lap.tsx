@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/tarot-napi-lap")({
   head: () => ({
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/tarot-napi-lap")({
           "Tarot napi lap húzás magyarul: egy rövid, elegáns önismereti üzenet a mai napodra, jóslati túlzás nélkül.",
       },
     ],
-    links: [{ rel: "canonical", href: "/tarot-napi-lap" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/tarot-napi-lap` }],
   }),
   component: () => (
     <SeoLandingPage

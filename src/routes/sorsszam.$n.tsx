@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { LIFE_PATH_MEANINGS_HU, LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
 const VALID = new Set(LIFE_PATH_NUMBERS.map(String));
 const SAFE_NUMEROLOGY_PAGE_ERROR =
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/sorsszam/$n")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
       ],
-      links: [{ rel: "canonical", href: `/sorsszam/${params.n}` }],
+      links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/sorsszam/${params.n}` }],
       scripts: m
         ? [
             {

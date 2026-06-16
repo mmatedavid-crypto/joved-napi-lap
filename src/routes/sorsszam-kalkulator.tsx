@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/sorsszam-kalkulator")({
   head: () => ({
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/sorsszam-kalkulator")({
           "Sorsszám kalkulátor magyarul: életút szám, személyes év és névelemzés számmisztikai önismereti olvasathoz.",
       },
     ],
-    links: [{ rel: "canonical", href: "/sorsszam-kalkulator" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/sorsszam-kalkulator` }],
   }),
   component: () => (
     <SeoLandingPage

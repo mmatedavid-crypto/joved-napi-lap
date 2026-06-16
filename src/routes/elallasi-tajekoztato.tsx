@@ -11,7 +11,7 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
         content: "Elállási és teljesítési tájékoztató a Jövőd.hu digitális olvasataihoz.",
       },
     ],
-    links: [{ rel: "canonical", href: "/elallasi-tajekoztato" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/elallasi-tajekoztato` }],
   }),
   component: () => (
     <LegalPage

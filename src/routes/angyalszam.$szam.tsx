@@ -32,7 +32,7 @@ export const Route = createFileRoute("/angyalszam/$szam")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: `/angyalszam/${page.szam}` }],
+      links: [{ rel: "canonical", href: url }],
       scripts: [
         {
           type: "application/ld+json",

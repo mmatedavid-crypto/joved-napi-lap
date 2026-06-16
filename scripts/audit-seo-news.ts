@@ -282,6 +282,29 @@ const publicHubCanonicalChecks = [
   ["src/routes/mai-iranytu.tsx", 'href: `${SITE_LEGAL.siteUrl}/mai-iranytu`'],
 ] as const;
 
+const publicContentCanonicalChecks = [
+  ["src/routes/tarot-napi-lap.tsx", 'href: `${SITE_LEGAL.siteUrl}/tarot-napi-lap`'],
+  ["src/routes/sorsszam-kalkulator.tsx", 'href: `${SITE_LEGAL.siteUrl}/sorsszam-kalkulator`'],
+  ["src/routes/angyalszam-jelentese.tsx", 'href: `${SITE_LEGAL.siteUrl}/angyalszam-jelentese`'],
+  ["src/routes/alomfejtes-jelentes.tsx", 'href: `${SITE_LEGAL.siteUrl}/alomfejtes-jelentes`'],
+  ["src/routes/aszf.tsx", 'href: `${SITE_LEGAL.siteUrl}/aszf`'],
+  ["src/routes/impresszum.tsx", 'href: `${SITE_LEGAL.siteUrl}/impresszum`'],
+  ["src/routes/elallasi-tajekoztato.tsx", 'href: `${SITE_LEGAL.siteUrl}/elallasi-tajekoztato`'],
+  [
+    "src/routes/adatkezelesi-tajekoztato.tsx",
+    'href: `${SITE_LEGAL.siteUrl}/adatkezelesi-tajekoztato`',
+  ],
+  ["src/routes/sorsszam.$n.tsx", 'href: `${SITE_LEGAL.siteUrl}/sorsszam/${params.n}`'],
+  ["src/routes/magazin.$slug.tsx", 'href: `${SITE_LEGAL.siteUrl}/magazin/${p.slug}`'],
+  ["src/routes/angyalszam.$szam.tsx", "href: url"],
+  ["src/routes/tarot.$slug.tsx", "href: url"],
+  ["src/routes/jiking.index.tsx", 'href: `${SITE_URL}/jiking`'],
+  ["src/routes/jiking.$slug.tsx", "href: url"],
+  ["src/routes/numerologia.$type.tsx", 'href: `${SITE_URL}/numerologia/${t.slug}`'],
+  ["src/routes/kinai-horoszkop.index.tsx", 'href: `${SITE_URL}/kinai-horoszkop`'],
+  ["src/routes/kinai-horoszkop.$animal.tsx", "href: url"],
+] as const;
+
 for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
   const body = readFileSync(file, "utf8");
   if (!body.includes("SITE_LEGAL.siteUrl") || !body.includes(canonicalNeedle)) {
@@ -289,6 +312,16 @@ for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
   }
   if (body.includes('links: [{ rel: "canonical", href: "/')) {
     failed.push(`${file}: public hub must not use a relative canonical URL`);
+  }
+}
+
+for (const [file, canonicalNeedle] of publicContentCanonicalChecks) {
+  const body = readFileSync(file, "utf8");
+  if (!body.includes(canonicalNeedle)) {
+    failed.push(`${file}: public content must use a production-domain canonical URL`);
+  }
+  if (body.includes('links: [{ rel: "canonical", href: "/')) {
+    failed.push(`${file}: public content must not use a relative canonical URL`);
   }
 }
 

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/jiking/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/jiking` },
     ],
-    links: [{ rel: "canonical", href: "/jiking" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/jiking` }],
     scripts: [
       {
         type: "application/ld+json",

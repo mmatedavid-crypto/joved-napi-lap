@@ -11,7 +11,7 @@ export const Route = createFileRoute("/aszf")({
         content: "A Jövőd.hu digitális olvasatainak használati és vásárlási feltételei.",
       },
     ],
-    links: [{ rel: "canonical", href: "/aszf" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/aszf` }],
   }),
   component: () => (
     <LegalPage

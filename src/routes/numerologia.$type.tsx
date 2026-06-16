@@ -18,7 +18,7 @@ export const Route = createFileRoute("/numerologia/$type")({
     if (!t) {
       return {
         meta: [{ title: "Számmisztika | Jövőd.hu" }],
-        links: [{ rel: "canonical", href: `/numerologia/${params.type}` }],
+        links: [{ rel: "canonical", href: `${SITE_URL}/numerologia/${params.type}` }],
       };
     }
     const title = `${t.title} | Jövőd.hu`;
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/numerologia/$type")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: `${SITE_URL}/numerologia/${t.slug}` },
       ],
-      links: [{ rel: "canonical", href: `/numerologia/${t.slug}` }],
+      links: [{ rel: "canonical", href: `${SITE_URL}/numerologia/${t.slug}` }],
       scripts: [
         {
           type: "application/ld+json",

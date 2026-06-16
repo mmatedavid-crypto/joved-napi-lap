@@ -20,7 +20,7 @@ export const Route = createFileRoute("/kinai-horoszkop/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/kinai-horoszkop` },
     ],
-    links: [{ rel: "canonical", href: "/kinai-horoszkop" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/kinai-horoszkop` }],
     scripts: [
       {
         type: "application/ld+json",

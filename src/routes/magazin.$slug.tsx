@@ -25,7 +25,7 @@ export const Route = createFileRoute("/magazin/$slug")({
         { property: "article:published_time", content: p.publishedAt },
         { property: "article:section", content: p.categoryLabel },
       ],
-      links: [{ rel: "canonical", href: `/magazin/${p.slug}` }],
+      links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/magazin/${p.slug}` }],
     };
   },
   notFoundComponent: () => (

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/alomfejtes-jelentes")({
   head: () => ({
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/alomfejtes-jelentes")({
           "Álomfejtés magyarul: visszatérő álmok, álomszimbólumok és belső jelentések józan, önismereti megközelítésben.",
       },
     ],
-    links: [{ rel: "canonical", href: "/alomfejtes-jelentes" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/alomfejtes-jelentes` }],
   }),
   component: () => (
     <SeoLandingPage

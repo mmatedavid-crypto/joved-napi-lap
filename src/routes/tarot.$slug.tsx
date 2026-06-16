@@ -28,7 +28,7 @@ export const Route = createFileRoute("/tarot/$slug")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: `/tarot/${card.id}` }],
+      links: [{ rel: "canonical", href: url }],
       scripts: [
         {
           type: "application/ld+json",

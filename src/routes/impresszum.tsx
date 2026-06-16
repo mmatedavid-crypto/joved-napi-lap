@@ -11,7 +11,7 @@ export const Route = createFileRoute("/impresszum")({
         content: "A Jövőd.hu üzemeltetői és kapcsolatfelvételi adatai.",
       },
     ],
-    links: [{ rel: "canonical", href: "/impresszum" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/impresszum` }],
   }),
   component: () => (
     <LegalPage

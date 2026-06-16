@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoLandingPage } from "@/components/SeoLandingPage";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/angyalszam-jelentese")({
   head: () => ({
@@ -11,7 +12,7 @@ export const Route = createFileRoute("/angyalszam-jelentese")({
           "Angyalszám jelentése magyarul: 111, 222, 333, 777 és 1111 önismereti értelmezése, rövid és személyes olvasattal.",
       },
     ],
-    links: [{ rel: "canonical", href: "/angyalszam-jelentese" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/angyalszam-jelentese` }],
   }),
   component: () => (
     <SeoLandingPage

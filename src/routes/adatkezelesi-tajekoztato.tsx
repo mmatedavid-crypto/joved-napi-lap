@@ -18,7 +18,7 @@ export const Route = createFileRoute("/adatkezelesi-tajekoztato")({
         content: "A Jövőd.hu adatkezelési tájékoztatója.",
       },
     ],
-    links: [{ rel: "canonical", href: "/adatkezelesi-tajekoztato" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/adatkezelesi-tajekoztato` }],
   }),
   component: PrivacyPage,
 });

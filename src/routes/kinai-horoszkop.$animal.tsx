@@ -28,7 +28,7 @@ export const Route = createFileRoute("/kinai-horoszkop/$animal")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: `/kinai-horoszkop/${animal.slug}` }],
+      links: [{ rel: "canonical", href: url }],
       scripts: [
         {
           type: "application/ld+json",
