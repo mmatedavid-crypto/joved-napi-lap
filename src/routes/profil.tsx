@@ -55,6 +55,7 @@ type ProfileOrder = {
   deliver_by?: string | null;
   delivered_at?: string | null;
   feedback?: FeedbackValue | null;
+  delivery_email_status?: "queued" | "attention_needed" | null;
   response_payload?: unknown;
 };
 
@@ -412,6 +413,10 @@ function Page() {
                       retrying={retryingOrders.has(o.id)}
                       onRetry={() => retryOrder(o.id)}
                     />
+                    {o.status === "delivered" &&
+                      o.delivery_email_status === "attention_needed" && (
+                        <ProfileDeliveryEmailNotice orderId={o.id} />
+                      )}
                     <OrderRetryNotice notice={retryNotices[o.id]} />
 
                     {canOpen && (
@@ -636,6 +641,18 @@ function OrderRetryNotice({ notice }: { notice?: RetryNotice }) {
   return (
     <div className={`mt-3 rounded-md border px-3 py-2 text-xs leading-relaxed ${tone}`}>
       {notice.text}
+    </div>
+  );
+}
+
+function ProfileDeliveryEmailNotice({ orderId }: { orderId?: string }) {
+  return (
+    <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
+      <p className="text-xs leading-relaxed text-ivory/62">
+        Az olvasat elkészült és itt a profilban megnyitható. Ha az email késik vagy nem találod, ez
+        a profilnézet marad a biztos hozzáférésed.
+      </p>
+      <ProfileSupportContact className="mt-2" orderId={orderId} />
     </div>
   );
 }

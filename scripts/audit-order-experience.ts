@@ -97,6 +97,20 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "thank-you page reassures when delivered email delivery needs attention",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      'delivery_email_status?: "queued" | "attention_needed" | null',
+      'order.delivery_email_status === "attention_needed"',
+      "DeliveryEmailNotice",
+      "Email kézbesítés",
+      "Az olvasatod már elkészült",
+      "innen biztonságosan elérhető",
+      "SupportContact",
+    ],
+    excludes: ["delivery_email_error", "delivery_email_queued_at"],
+  },
+  {
     name: "thank-you page distinguishes instant and detailed paid preparation",
     file: "src/routes/koszonjuk.tsx",
     includes: [
@@ -237,7 +251,10 @@ const checks: Check[] = [
     file: "src/lib/payments.functions.ts",
     includes: [
       "ORDER_SELECT_PROFILE_WITH_RECONCILIATION",
+      "ORDER_SELECT_WITH_DELIVERY_STATE",
       "stripe_session_id",
+      "delivery_email_queued_at",
+      "delivery_email_error",
       "reconcilePendingPayment(order, sessionId)",
       "export const processMyOrder",
       '.eq("user_id", context.userId)',
@@ -245,6 +262,9 @@ const checks: Check[] = [
       "safeOrderProcessingResult",
       "ORDER_PROCESSING_GENERIC_ERROR",
       "function stripPrivateOrderFields",
+      "function publicDeliveryEmailStatus",
+      "delivery_email_status: publicDeliveryEmailStatus(order)",
+      '"attention_needed"',
       "function sanitizePublicResponsePayload",
       "raw: _raw",
       "generation: rawGeneration",
@@ -255,6 +275,8 @@ const checks: Check[] = [
       "qualityIssues: Array.isArray(generation.qualityIssues)",
       "response_payload: sanitizePublicResponsePayload(publicOrder.response_payload)",
       "_stripeSessionId",
+      "_deliveryEmailQueuedAt",
+      "_deliveryEmailError",
       "reconciled.map(stripPrivateOrderFields)",
     ],
     excludes: [
@@ -396,6 +418,19 @@ const checks: Check[] = [
       "Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni",
       "SITE_LEGAL.supportEmail",
     ],
+  },
+  {
+    name: "profile reassures when delivered email delivery needs attention",
+    file: "src/routes/profil.tsx",
+    includes: [
+      'delivery_email_status?: "queued" | "attention_needed" | null',
+      'o.delivery_email_status === "attention_needed"',
+      "ProfileDeliveryEmailNotice",
+      "Az olvasat elkészült és itt a profilban megnyitható",
+      "profilnézet marad a biztos hozzáférésed",
+      "ProfileSupportContact",
+    ],
+    excludes: ["delivery_email_error", "delivery_email_queued_at"],
   },
   {
     name: "paid reading body can be copied or downloaded for later use",

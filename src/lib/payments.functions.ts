@@ -46,7 +46,12 @@ type OrderForPaymentRecheck = PublicOrderFields &
   Partial<
     Pick<
       OrderRow,
-      "stripe_session_id" | "stripe_environment" | "stripe_payment_intent" | "payment_rechecked_at"
+      | "stripe_session_id"
+      | "stripe_environment"
+      | "stripe_payment_intent"
+      | "payment_rechecked_at"
+      | "delivery_email_queued_at"
+      | "delivery_email_error"
     >
   >;
 
@@ -58,8 +63,9 @@ const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
 const HUF_MINOR_UNIT_MULTIPLIER = 100;
 const ORDER_SELECT_BASE =
   "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
-const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
-const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
+const ORDER_SELECT_WITH_DELIVERY_STATE = `${ORDER_SELECT_BASE}, delivery_email_queued_at, delivery_email_error`;
+const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_WITH_DELIVERY_STATE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
+const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_WITH_DELIVERY_STATE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const FEEDBACK_VALUES: OrderFeedbackValue[] = ["accurate", "partial", "missed"];
 const CLAIMABLE_GUEST_ORDER_STATUSES = [
   "paid",
@@ -766,12 +772,28 @@ function stripPrivateOrderFields<T extends Record<string, unknown>>(order: T) {
     stripe_environment: _stripeEnvironment,
     stripe_payment_intent: _stripePaymentIntent,
     payment_rechecked_at: _paymentRecheckedAt,
+    delivery_email_queued_at: _deliveryEmailQueuedAt,
+    delivery_email_error: _deliveryEmailError,
     ...publicOrder
   } = order;
   return {
     ...publicOrder,
+    delivery_email_status: publicDeliveryEmailStatus(order),
     response_payload: sanitizePublicResponsePayload(publicOrder.response_payload),
   };
+}
+
+function publicDeliveryEmailStatus(
+  order: Record<string, unknown>,
+): "queued" | "attention_needed" | null {
+  if (order.status !== "delivered") return null;
+  const hasDeliveryState =
+    Object.prototype.hasOwnProperty.call(order, "delivery_email_queued_at") ||
+    Object.prototype.hasOwnProperty.call(order, "delivery_email_error");
+  if (!hasDeliveryState) return null;
+  const error = typeof order.delivery_email_error === "string" ? order.delivery_email_error : "";
+  if (error.trim()) return "attention_needed";
+  return order.delivery_email_queued_at ? "queued" : "attention_needed";
 }
 
 async function attachOrderFeedback<T extends { id?: unknown }>(

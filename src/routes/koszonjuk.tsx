@@ -32,6 +32,7 @@ type OrderView = {
   product_slug?: string | null;
   source_route?: string | null;
   feedback?: FeedbackValue | null;
+  delivery_email_status?: "queued" | "attention_needed" | null;
   response_payload?: unknown;
 };
 
@@ -339,6 +340,9 @@ function Page() {
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
                       Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
+                    {order.delivery_email_status === "attention_needed" && (
+                      <DeliveryEmailNotice orderId={order.id} />
+                    )}
                     <PaidReadingFeedback
                       order={order}
                       sessionId={session_id}
@@ -452,6 +456,19 @@ function OrderPollingPaused({ order }: { order: OrderView }) {
         Frissíts rá később erre az oldalra. Ha sürgős, írj nekünk a vásárlási email címedről, és add
         meg a rövid rendelésazonosítót: {shortOrderId(order.id) ?? "a köszönőoldalon látható kód"}.
       </p>
+    </div>
+  );
+}
+
+function DeliveryEmailNotice({ orderId }: { orderId?: string }) {
+  return (
+    <div className="mt-4 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
+      <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/62">
+        Az olvasatod már elkészült, ezért innen biztonságosan elérhető akkor is, ha az email
+        később érkezik meg vagy nem találod a postafiókodban.
+      </p>
+      <SupportContact className="mt-2" orderId={orderId} />
     </div>
   );
 }
