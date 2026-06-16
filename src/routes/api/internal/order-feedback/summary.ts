@@ -29,11 +29,38 @@ type ProductFeedbackSummary = {
   reviewRecommendation: string;
 };
 
+type OrderHealthRow = {
+  product_slug: string | null;
+  product_name: string | null;
+  category: string | null;
+  status: string | null;
+  error_message: string | null;
+  express: boolean | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type OrderHealthSummary = {
+  productSlug: string;
+  productName: string;
+  category: string;
+  status: string;
+  errorCode: string;
+  total: number;
+  express: number;
+  staleProcessing: number;
+  oldestCreatedAt: string | null;
+  newestUpdatedAt: string | null;
+  action: "manual_review_first" | "retry_watch" | "watch";
+};
+
 const DEFAULT_DAYS = 30;
 const MAX_DAYS = 180;
 const ATTENTION_MIN_TOTAL = 3;
 const ATTENTION_MISS_RATE = 0.34;
 const LEGACY_BUTTON_NOTES = new Set(["Eltalált", "Részben talált", "Nem volt elég pontos"]);
+const DEFAULT_STALE_PROCESSING_MINUTES = 15;
+const MAX_STALE_PROCESSING_MINUTES = 180;
 
 function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get("Authorization");
@@ -48,6 +75,19 @@ function parseDays(value: string | null): number {
   const parsed = Number(value ?? DEFAULT_DAYS);
   if (!Number.isFinite(parsed)) return DEFAULT_DAYS;
   return Math.max(1, Math.min(MAX_DAYS, Math.floor(parsed)));
+}
+
+function parseStaleProcessingMinutes(value: string | null): number {
+  const parsed = Number(value ?? DEFAULT_STALE_PROCESSING_MINUTES);
+  if (!Number.isFinite(parsed)) return DEFAULT_STALE_PROCESSING_MINUTES;
+  return Math.max(5, Math.min(MAX_STALE_PROCESSING_MINUTES, Math.floor(parsed)));
+}
+
+function normalizeOrderHealthErrorCode(value: string | null, status: string): string {
+  const trimmed = value?.trim();
+  if (!trimmed) return status === "processing" ? "processing" : "none";
+  if (/^[a-z0-9_:-]{3,80}$/i.test(trimmed)) return trimmed;
+  return "internal_error";
 }
 
 function emptyCounts() {
@@ -167,6 +207,61 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
     });
 }
 
+function summarizeOrderHealth(
+  rows: OrderHealthRow[],
+  staleProcessingMinutes: number,
+): OrderHealthSummary[] {
+  const staleBefore = Date.now() - staleProcessingMinutes * 60_000;
+  const byKey = new Map<string, OrderHealthSummary>();
+
+  for (const row of rows) {
+    const productSlug = row.product_slug || "unknown";
+    const productName = row.product_name || productSlug;
+    const category = row.category || "unknown";
+    const status = row.status || "unknown";
+    const errorCode = normalizeOrderHealthErrorCode(row.error_message, status);
+    const key = `${productSlug}:${status}:${errorCode}`;
+    const current =
+      byKey.get(key) ??
+      ({
+        productSlug,
+        productName,
+        category,
+        status,
+        errorCode,
+        total: 0,
+        express: 0,
+        staleProcessing: 0,
+        oldestCreatedAt: null,
+        newestUpdatedAt: null,
+        action: "watch",
+      } satisfies OrderHealthSummary);
+
+    current.total += 1;
+    if (row.express) current.express += 1;
+    if (status === "processing" && new Date(row.updated_at).getTime() < staleBefore) {
+      current.staleProcessing += 1;
+    }
+    if (!current.oldestCreatedAt || row.created_at < current.oldestCreatedAt) {
+      current.oldestCreatedAt = row.created_at;
+    }
+    if (!current.newestUpdatedAt || row.updated_at > current.newestUpdatedAt) {
+      current.newestUpdatedAt = row.updated_at;
+    }
+    if (status === "failed" || current.staleProcessing > 0) {
+      current.action = status === "failed" ? "manual_review_first" : "retry_watch";
+    }
+    byKey.set(key, current);
+  }
+
+  return [...byKey.values()].sort((a, b) => {
+    const actionRank = { manual_review_first: 2, retry_watch: 1, watch: 0 } as const;
+    if (a.action !== b.action) return actionRank[b.action] - actionRank[a.action];
+    if (b.total !== a.total) return b.total - a.total;
+    return (b.newestUpdatedAt ?? "").localeCompare(a.newestUpdatedAt ?? "");
+  });
+}
+
 async function handleSummary(request: Request) {
   if (!isAuthorized(request)) {
     return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
@@ -174,6 +269,9 @@ async function handleSummary(request: Request) {
 
   const url = new URL(request.url);
   const days = parseDays(url.searchParams.get("days"));
+  const staleProcessingMinutes = parseStaleProcessingMinutes(
+    url.searchParams.get("staleProcessingMinutes"),
+  );
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
@@ -194,8 +292,33 @@ async function handleSummary(request: Request) {
     );
   }
 
+  const { data: orderHealthData, error: orderHealthError } = await supabaseAdmin
+    .from("orders")
+    .select(
+      "product_slug, product_name, category, status, error_message, express, created_at, updated_at",
+    )
+    .gte("created_at", since)
+    .in("status", ["failed", "processing", "paid"])
+    .order("created_at", { ascending: false })
+    .limit(1000);
+
+  if (orderHealthError) {
+    console.error("order health summary failed:", {
+      code: orderHealthError.code,
+      message: orderHealthError.message,
+    });
+    return Response.json(
+      { ok: false, error: "order_health_summary_unavailable" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const rows = (data ?? []) as FeedbackRow[];
   const products = summarizeRows(rows);
+  const orderHealth = summarizeOrderHealth(
+    (orderHealthData ?? []) as OrderHealthRow[],
+    staleProcessingMinutes,
+  );
   const totals = products.reduce(
     (acc, item) => ({
       total: acc.total + item.total,
@@ -222,6 +345,7 @@ async function handleSummary(request: Request) {
       ok: true,
       days,
       since,
+      staleProcessingMinutes,
       generatedAt: new Date().toISOString(),
       totals,
       needsAttentionCount: products.filter((item) => item.needsAttention).length,
@@ -229,6 +353,18 @@ async function handleSummary(request: Request) {
         high: products.filter((item) => item.reviewPriority === "high").length,
         medium: products.filter((item) => item.reviewPriority === "medium").length,
         low: products.filter((item) => item.reviewPriority === "low").length,
+      },
+      orderHealth: {
+        totals: {
+          open: orderHealth.reduce((acc, item) => acc + item.total, 0),
+          failed: orderHealth
+            .filter((item) => item.status === "failed")
+            .reduce((acc, item) => acc + item.total, 0),
+          staleProcessing: orderHealth.reduce((acc, item) => acc + item.staleProcessing, 0),
+          express: orderHealth.reduce((acc, item) => acc + item.express, 0),
+        },
+        needsAttentionCount: orderHealth.filter((item) => item.action !== "watch").length,
+        products: orderHealth,
       },
       products,
     },
