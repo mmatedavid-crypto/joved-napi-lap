@@ -18,6 +18,13 @@ const PUBLIC_EMAIL_SEND_ERROR =
 const PUBLIC_EMAIL_SEND_AUTH_ERROR = "Nincs jogosultság az email küldéséhez.";
 const PUBLIC_EMAIL_SEND_PAYLOAD_ERROR = "Az email küldéséhez szükséges adatok hiányosak vagy hibásak.";
 
+type TransactionalSendErrorCode =
+  | "unsubscribe_token_lookup_failed"
+  | "unsubscribe_token_create_failed"
+  | "unsubscribe_token_confirm_failed"
+  | "email_suppression_missing"
+  | "email_enqueue_failed";
+
 function publicEmailSendError(message: string, status: number): Response {
   return Response.json({ error: message }, { status });
 }
@@ -162,7 +169,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
               template_name: templateName,
               recipient_email: effectiveRecipient,
               status: "failed",
-              error_message: "Failed to look up unsubscribe token",
+              error_message: "unsubscribe_token_lookup_failed" satisfies TransactionalSendErrorCode,
             });
             return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
           }
@@ -189,7 +196,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
                 template_name: templateName,
                 recipient_email: effectiveRecipient,
                 status: "failed",
-                error_message: "Failed to create unsubscribe token",
+                error_message: "unsubscribe_token_create_failed" satisfies TransactionalSendErrorCode,
               });
               return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
             }
@@ -212,7 +219,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
                 template_name: templateName,
                 recipient_email: effectiveRecipient,
                 status: "failed",
-                error_message: "Failed to confirm unsubscribe token storage",
+                error_message: "unsubscribe_token_confirm_failed" satisfies TransactionalSendErrorCode,
               });
               return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
             }
@@ -228,7 +235,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
               template_name: templateName,
               recipient_email: effectiveRecipient,
               status: "suppressed",
-              error_message: "Unsubscribe token used but email missing from suppressed list",
+              error_message: "email_suppression_missing" satisfies TransactionalSendErrorCode,
             });
             return Response.json({ success: false, reason: "email_suppressed" });
           }
@@ -286,7 +293,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
             template_name: templateName,
             recipient_email: effectiveRecipient,
             status: "failed",
-            error_message: "Failed to enqueue email",
+            error_message: "email_enqueue_failed" satisfies TransactionalSendErrorCode,
           });
 
           return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);

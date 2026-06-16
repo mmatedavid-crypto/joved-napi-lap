@@ -496,6 +496,25 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "lovable send route stores stable email log error codes",
+    file: "src/routes/lovable/email/transactional/send.ts",
+    includes: [
+      "type TransactionalSendErrorCode",
+      '"unsubscribe_token_lookup_failed"',
+      '"unsubscribe_token_create_failed"',
+      '"unsubscribe_token_confirm_failed"',
+      '"email_suppression_missing"',
+      '"email_enqueue_failed"',
+    ],
+    excludes: [
+      'error_message: "Failed to look up unsubscribe token"',
+      'error_message: "Failed to create unsubscribe token"',
+      'error_message: "Failed to confirm unsubscribe token storage"',
+      'error_message: "Unsubscribe token used but email missing from suppressed list"',
+      'error_message: "Failed to enqueue email"',
+    ],
+  },
+  {
     name: "unsubscribe page clarifies transactional order notices",
     file: "src/routes/unsubscribe.tsx",
     includes: [
