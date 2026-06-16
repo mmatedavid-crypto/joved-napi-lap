@@ -590,6 +590,17 @@ const checks: Check[] = [
     excludes: ["stripe_session_id", "response_payload"],
   },
   {
+    name: "order feedback table exists in generated supabase types",
+    file: "src/integrations/supabase/types.ts",
+    includes: [
+      "order_feedback: {",
+      'feedback: "accurate" | "partial" | "missed"',
+      'source: "thank_you" | "profile"',
+      "order_feedback_order_id_fkey",
+      'referencedRelation: "orders"',
+    ],
+  },
+  {
     name: "internal order feedback summary is protected and aggregate-only",
     file: "src/routes/api/internal/order-feedback/summary.ts",
     includes: [
