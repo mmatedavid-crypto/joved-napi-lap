@@ -62,14 +62,14 @@ function Page() {
     try {
       const r = await call({ data: { slug } });
       if (r.ok && r.reading) {
-        if (r.cached) trackEvent("roxy_cache_hit", { domain: "dream" });
-        else trackEvent("roxy_cache_miss", { domain: "dream" });
+        if (r.cached) trackEvent("knowledge_cache_hit", { domain: "dream" });
+        else trackEvent("knowledge_cache_miss", { domain: "dream" });
         reading = r.reading;
       } else {
-        trackEvent("roxy_fallback_used", { domain: "dream" });
+        trackEvent("local_meaning_used", { domain: "dream" });
       }
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "dream" });
+      trackEvent("local_meaning_used", { domain: "dream" });
     }
     if (!reading) {
       const local = dreamMeaning(slug);

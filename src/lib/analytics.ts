@@ -24,12 +24,12 @@ export type EventName =
   | "checkout_retry_clicked"
   | "paid_order_retry_clicked"
   | "paid_reading_feedback_clicked"
-  | "roxy_call_started"
-  | "roxy_call_succeeded"
-  | "roxy_call_failed"
-  | "roxy_cache_hit"
-  | "roxy_cache_miss"
-  | "roxy_fallback_used"
+  | "knowledge_lookup_started"
+  | "knowledge_lookup_succeeded"
+  | "knowledge_lookup_failed"
+  | "knowledge_cache_hit"
+  | "knowledge_cache_miss"
+  | "local_meaning_used"
   | "daily_compass_opened"
   | "daily_compass_completed"
   | "iching_started"
@@ -42,9 +42,9 @@ export type EventName =
   | "crystal_opened"
   | "horoscope_opened"
   | "astrology_advanced_enabled"
-  | "roxy_domain_started"
-  | "roxy_domain_succeeded"
-  | "roxy_domain_failed";
+  | "knowledge_domain_started"
+  | "knowledge_domain_succeeded"
+  | "knowledge_domain_failed";
 
 export function trackEvent(name: EventName, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;

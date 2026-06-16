@@ -81,17 +81,17 @@ function Page() {
         data: mode === "month" ? { mode: "month", month } : { mode: "zodiac", sign: sign as never },
       });
       if (res.ok && res.reading) {
-        if (res.cached) trackEvent("roxy_cache_hit", { domain: "crystal" });
-        else trackEvent("roxy_cache_miss", { domain: "crystal" });
+        if (res.cached) trackEvent("knowledge_cache_hit", { domain: "crystal" });
+        else trackEvent("knowledge_cache_miss", { domain: "crystal" });
         setR(res.reading);
         if (remember) rememberCrystalReading(res.reading, topic);
         setLoading(false);
         return;
       } else {
-        trackEvent("roxy_fallback_used", { domain: "crystal" });
+        trackEvent("local_meaning_used", { domain: "crystal" });
       }
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "crystal" });
+      trackEvent("local_meaning_used", { domain: "crystal" });
     }
     // Fallback: helyi kristály-szövegtár.
     let crystalName: string | undefined;

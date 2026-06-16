@@ -126,13 +126,13 @@ function Page() {
           if (local) out.cardName = local.name;
         }
         if (r.cached) {
-          trackEvent("roxy_cache_hit", { domain: "tarot" });
+          trackEvent("knowledge_cache_hit", { domain: "tarot" });
         } else {
-          trackEvent("roxy_cache_miss", { domain: "tarot" });
+          trackEvent("knowledge_cache_miss", { domain: "tarot" });
         }
-      } else trackEvent("roxy_fallback_used", { domain: "tarot" });
+      } else trackEvent("local_meaning_used", { domain: "tarot" });
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "tarot" });
+      trackEvent("local_meaning_used", { domain: "tarot" });
     }
     if (!out.cardName) {
       // local fallback: pick deterministically by date
@@ -149,13 +149,13 @@ function Page() {
           const m = moonPhaseHU(n.moonPhase);
           if (m) out.moon = m;
           if (r.cached) {
-            trackEvent("roxy_cache_hit", { domain: "horoscope" });
+            trackEvent("knowledge_cache_hit", { domain: "horoscope" });
           } else {
-            trackEvent("roxy_cache_miss", { domain: "horoscope" });
+            trackEvent("knowledge_cache_miss", { domain: "horoscope" });
           }
-        } else trackEvent("roxy_fallback_used", { domain: "horoscope" });
+        } else trackEvent("local_meaning_used", { domain: "horoscope" });
       } catch {
-        trackEvent("roxy_fallback_used", { domain: "horoscope" });
+        trackEvent("local_meaning_used", { domain: "horoscope" });
       }
     }
 
@@ -173,13 +173,13 @@ function Page() {
             out.bio = bioPhraseHU(v);
           }
           if (r.cached) {
-            trackEvent("roxy_cache_hit", { domain: "biorhythm" });
+            trackEvent("knowledge_cache_hit", { domain: "biorhythm" });
           } else {
-            trackEvent("roxy_cache_miss", { domain: "biorhythm" });
+            trackEvent("knowledge_cache_miss", { domain: "biorhythm" });
           }
-        } else trackEvent("roxy_fallback_used", { domain: "biorhythm" });
+        } else trackEvent("local_meaning_used", { domain: "biorhythm" });
       } catch {
-        trackEvent("roxy_fallback_used", { domain: "biorhythm" });
+        trackEvent("local_meaning_used", { domain: "biorhythm" });
       }
       out.personalYear = personalYear(dob);
 
@@ -192,16 +192,16 @@ function Page() {
           const root = n.rootNumber;
           out.angelTitle = angelMeaning(digits, root).title;
           if (r.cached) {
-            trackEvent("roxy_cache_hit", { domain: "angel" });
+            trackEvent("knowledge_cache_hit", { domain: "angel" });
           } else {
-            trackEvent("roxy_cache_miss", { domain: "angel" });
+            trackEvent("knowledge_cache_miss", { domain: "angel" });
           }
         } else {
-          trackEvent("roxy_fallback_used", { domain: "angel" });
+          trackEvent("local_meaning_used", { domain: "angel" });
           out.angelTitle = angelMeaning(digits).title;
         }
       } catch {
-        trackEvent("roxy_fallback_used", { domain: "angel" });
+        trackEvent("local_meaning_used", { domain: "angel" });
         out.angelTitle = angelMeaning(digits).title;
       }
     }
@@ -214,13 +214,13 @@ function Page() {
         const cn = normalizeRoxyCrystal(r.data).hungarianName;
         if (cn) out.crystalName = cn;
         if (r.cached) {
-          trackEvent("roxy_cache_hit", { domain: "crystal" });
+          trackEvent("knowledge_cache_hit", { domain: "crystal" });
         } else {
-          trackEvent("roxy_cache_miss", { domain: "crystal" });
+          trackEvent("knowledge_cache_miss", { domain: "crystal" });
         }
-      } else trackEvent("roxy_fallback_used", { domain: "crystal" });
+      } else trackEvent("local_meaning_used", { domain: "crystal" });
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "crystal" });
+      trackEvent("local_meaning_used", { domain: "crystal" });
     }
     if (!out.crystalName) out.crystalName = FALLBACK_BIRTHSTONE[month];
     out.crystalLine = crystalMeaning(out.crystalName).m.oneLine;

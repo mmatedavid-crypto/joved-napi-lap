@@ -226,7 +226,7 @@ function Page() {
             },
           }).catch(() => {});
         }
-        trackEvent(r.fallbackUsed ? "roxy_fallback_used" : "roxy_cache_miss", {
+        trackEvent(r.fallbackUsed ? "local_meaning_used" : "knowledge_cache_miss", {
           domain: "compatibility_quality",
         });
         setLoading(false);
@@ -293,7 +293,7 @@ function Page() {
         },
       }).catch(() => {});
     }
-    trackEvent("roxy_fallback_used", { domain: "compatibility" });
+    trackEvent("local_meaning_used", { domain: "compatibility" });
     trackEvent("compatibility_completed", { score: fallbackProfile.score, status });
     setLoading(false);
   }

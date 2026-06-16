@@ -35,7 +35,7 @@ export const Route = createFileRoute("/dev/roxy")({
   },
   head: () => ({
     meta: [
-      { title: "Roxy diagnostics — dev | Jövőd.hu" },
+      { title: "Tudástár diagnostics — dev | Jövőd.hu" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -182,7 +182,7 @@ function Page() {
           <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.7)]">
             Dev
           </div>
-          <h1 className="font-display text-3xl text-ivory">Roxy diagnostics</h1>
+          <h1 className="font-display text-3xl text-ivory">Tudástár diagnostics</h1>
           <p className="text-sm text-ivory/60 mt-1 font-editorial">
             Belső próba — nem linkelt oldal. Csak normalizált kimenetet mutatunk.
           </p>

@@ -151,9 +151,9 @@ function Page() {
         const r = await callIching({ data: { seed } });
         if (r.ok) {
           if (r.cached) {
-            trackEvent("roxy_cache_hit", { domain: "iching" });
+            trackEvent("knowledge_cache_hit", { domain: "iching" });
           } else {
-            trackEvent("roxy_cache_miss", { domain: "iching" });
+            trackEvent("knowledge_cache_miss", { domain: "iching" });
           }
           const n = normalizeRoxyIching(r.data);
           const h = hexHU(n.primary?.number);
@@ -172,7 +172,7 @@ function Page() {
           trackEvent("iching_completed", { hex: n.primary?.number });
         } else throw new Error("iching-fail");
       } catch {
-        trackEvent("roxy_fallback_used", { domain: "iching" });
+        trackEvent("local_meaning_used", { domain: "iching" });
         setIchingFailed(true);
       }
     } else {

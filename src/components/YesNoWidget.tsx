@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { aiTarotYesNoHU, type TarotYesNoHU } from "@/lib/roxyTranslate.functions";
 
-// Egyszerű igen/nem/talán mini-widget a főoldalra. A Roxy /tarot/yes-no
-// végpontot használja a roxyTranslate.functions.ts magyarító rétegén át.
+// Egyszerű igen/nem/talán mini-widget a főoldalra. A szerveroldali olvasat
+// kész, magyar szöveget ad vissza.
 export function YesNoWidget() {
   const ask = useServerFn(aiTarotYesNoHU);
   const [q, setQ] = useState("");

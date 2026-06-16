@@ -92,7 +92,7 @@ function Page() {
     const fallbackReading = composeNumerologyReading(fallbackProfile);
     setResult(fallbackReading);
     if (remember) rememberNumerologyReading(fallbackReading, fallbackProfile);
-    trackEvent("roxy_fallback_used", { domain: "numerology" });
+    trackEvent("local_meaning_used", { domain: "numerology" });
     setLoading(false);
   }
 

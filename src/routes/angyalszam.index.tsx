@@ -57,15 +57,15 @@ function Page() {
     try {
       const r = await call({ data: { number: clean } });
       if (r.ok && r.reading) {
-        if (r.cached) trackEvent("roxy_cache_hit", { domain: "angel" });
-        else trackEvent("roxy_cache_miss", { domain: "angel" });
+        if (r.cached) trackEvent("knowledge_cache_hit", { domain: "angel" });
+        else trackEvent("knowledge_cache_miss", { domain: "angel" });
         meaning = r.reading;
         if (r.reading.rootNumber) root = r.reading.rootNumber;
       } else {
-        trackEvent("roxy_fallback_used", { domain: "angel" });
+        trackEvent("local_meaning_used", { domain: "angel" });
       }
     } catch {
-      trackEvent("roxy_fallback_used", { domain: "angel" });
+      trackEvent("local_meaning_used", { domain: "angel" });
     }
     if (!meaning) {
       const local = angelMeaning(clean, root);

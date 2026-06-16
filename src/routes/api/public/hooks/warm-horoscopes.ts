@@ -5,8 +5,9 @@ import {
   type HoroscopePeriodHU,
 } from "@/lib/horoscopeNews";
 
-// Legacy warmup endpoint for scheduled jobs. It can trigger Roxy/AI work, so it
-// must stay protected even though it does not expose personal data.
+// Legacy warmup endpoint for scheduled jobs. It can trigger heavier
+// server-side preparation, so it must stay protected even though it does not
+// expose personal data.
 
 const MAX_LIMIT = 36;
 const DEFAULT_LIMIT = 12;

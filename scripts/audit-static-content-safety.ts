@@ -236,6 +236,34 @@ const checks: StaticSafetyCheck[] = [
       "TROPIKUS SZÜLETÉSI KÉPLET FORRÁSANYAGA",
     ],
   },
+  {
+    file: "src/lib/analytics.ts",
+    forbidden: [
+      /roxy_call_/,
+      /roxy_cache_/,
+      /roxy_fallback_/,
+      /roxy_domain_/,
+      /endpoint:/,
+    ],
+    required: [
+      "knowledge_lookup_started",
+      "knowledge_lookup_succeeded",
+      "knowledge_lookup_failed",
+      "knowledge_cache_hit",
+      "knowledge_cache_miss",
+      "local_meaning_used",
+    ],
+  },
+  {
+    file: "src/components/RitualTable.tsx",
+    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /endpoint:/],
+    required: ["knowledge_lookup_started", "knowledge_cache_hit", "local_meaning_used"],
+  },
+  {
+    file: "src/routes/mai-iranytu.tsx",
+    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /endpoint:/],
+    required: ["knowledge_cache_hit", "knowledge_cache_miss", "local_meaning_used"],
+  },
 ];
 
 const failures: string[] = [];

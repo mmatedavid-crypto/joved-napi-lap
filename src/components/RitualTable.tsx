@@ -326,27 +326,27 @@ function SzamInline() {
     trackEvent("numerology_completed", { number: n });
     saveLocal("numerology:last", { dob, name });
 
-    // Personal year is computed locally — no Roxy call needed.
+    // Personal year is computed locally.
     setRoxyYear(personalYear(dob));
 
     // Full chart (Expression / Soul Urge / Personality / Maturity) requires
-    // a birth-certificate full name. Only call Roxy when the user gave one.
+    // a birth-certificate full name. Only ask for the deeper chart when the user gave one.
     if (name.trim().length > 0) {
-      trackEvent("roxy_call_started", { kind: "numerology" });
+      trackEvent("knowledge_lookup_started", { kind: "numerology" });
       try {
         const r = await callChart({ data: { birthDate: dob, fullName: name.trim() } });
         if (r.ok) {
           setRoxy(normalizeRoxyChart(r.data));
-          trackEvent("roxy_call_succeeded", { endpoint: "numerology/chart", cached: r.cached });
-          trackEvent(r.cached ? "roxy_cache_hit" : "roxy_cache_miss", {
-            endpoint: "numerology/chart",
+          trackEvent("knowledge_lookup_succeeded", { area: "numerology/chart", cached: r.cached });
+          trackEvent(r.cached ? "knowledge_cache_hit" : "knowledge_cache_miss", {
+            area: "numerology/chart",
           });
         } else {
-          trackEvent("roxy_call_failed", { endpoint: "numerology/chart", code: r.providerCode });
-          trackEvent("roxy_fallback_used", { endpoint: "numerology/chart" });
+          trackEvent("knowledge_lookup_failed", { area: "numerology/chart", code: r.providerCode });
+          trackEvent("local_meaning_used", { area: "numerology/chart" });
         }
       } catch {
-        trackEvent("roxy_fallback_used", { endpoint: "numerology/chart" });
+        trackEvent("local_meaning_used", { area: "numerology/chart" });
       }
     }
   }
@@ -459,7 +459,7 @@ function OsszeillunkInline() {
     setRes(out);
     trackEvent("compatibility_completed", { score: out.score, rel: out.rel });
 
-    trackEvent("roxy_call_started", { kind: "compatibility" });
+    trackEvent("knowledge_lookup_started", { kind: "compatibility" });
     try {
       const r = await callCompat({
         data: {
@@ -471,22 +471,22 @@ function OsszeillunkInline() {
       });
       if (r.ok) {
         setRoxyC(normalizeRoxyCompat(r.data));
-        trackEvent("roxy_call_succeeded", {
-          endpoint: "numerology/compatibility",
+        trackEvent("knowledge_lookup_succeeded", {
+          area: "numerology/compatibility",
           cached: r.cached,
         });
-        trackEvent(r.cached ? "roxy_cache_hit" : "roxy_cache_miss", {
-          endpoint: "numerology/compatibility",
+        trackEvent(r.cached ? "knowledge_cache_hit" : "knowledge_cache_miss", {
+          area: "numerology/compatibility",
         });
       } else {
-        trackEvent("roxy_call_failed", {
-          endpoint: "numerology/compatibility",
+        trackEvent("knowledge_lookup_failed", {
+          area: "numerology/compatibility",
           code: r.providerCode,
         });
-        trackEvent("roxy_fallback_used", { endpoint: "numerology/compatibility" });
+        trackEvent("local_meaning_used", { area: "numerology/compatibility" });
       }
     } catch {
-      trackEvent("roxy_fallback_used", { endpoint: "numerology/compatibility" });
+      trackEvent("local_meaning_used", { area: "numerology/compatibility" });
     }
   }
 

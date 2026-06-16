@@ -1,9 +1,7 @@
-// Personal daily briefing rendered at the top of the homepage. All
-// interpretations come from Roxy (English) and are rewritten into warm
-// Hungarian copy by the Lovable AI Gateway via the server fn
-// `roxyPersonalDailyBriefing`. The server caches the final HU briefing for
-// 24h so repeated visits are free. Numerology (sorsszám, személyes év) stays
-// local because it is a pure calculation.
+// Personal daily briefing rendered at the top of the homepage. The server
+// returns the final Hungarian copy and caches it for 24h so repeated visits
+// are fast. Numerology (sorsszám, személyes év) stays local because it is a
+// pure calculation.
 
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -157,10 +155,12 @@ export function PersonalDailyBriefing() {
     if (!res.ok || !res.briefing) {
       setError(SAFE_DAILY_BRIEFING_ERROR);
       setLoading(false);
-      trackEvent("roxy_fallback_used", { domain: "daily_briefing" });
+      trackEvent("local_meaning_used", { domain: "daily_briefing" });
       return;
     }
-    trackEvent(res.cached ? "roxy_cache_hit" : "roxy_cache_miss", { domain: "daily_briefing" });
+    trackEvent(res.cached ? "knowledge_cache_hit" : "knowledge_cache_miss", {
+      domain: "daily_briefing",
+    });
 
     const lp = lifePath(dob);
     const lpInfo = lifePathInfo(lp);
