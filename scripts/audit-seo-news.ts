@@ -214,7 +214,6 @@ const checks: Check[] = [
       "const sourceSignals = extractRoxyHoroscopeSignals(roxy.data)",
       "function sourceOverview",
       "async function translateOverviewFaithfully",
-      'return { ...fallback, lead: faithfulLead ?? "" }',
       "sourceSignals,",
       "periodFocus",
       "Heti hangulat",
@@ -222,6 +221,7 @@ const checks: Check[] = [
       "Kapcsolatok",
       "Munka és ritmus",
       "FALLBACK_COLORS",
+      "lead: faithfulLead ?? fallback.lead",
       'providerPreference: "openai_first"',
       "lovableModel: HOROSCOPE_NEWS_MODEL",
       "allowLovableFallback: true",
@@ -233,6 +233,7 @@ const checks: Check[] = [
       "provider error",
       "a ${signName} jegy",
       "nem nagy jóslatot",
+      'lead: faithfulLead ?? ""',
     ],
   },
 ];

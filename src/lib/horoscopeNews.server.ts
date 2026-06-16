@@ -889,15 +889,18 @@ export async function getHoroscopeNewsArticle(opts: {
 
   const article =
     translated.ok && translated.data && faithfulLead
-      ? normalizeArticle({ ...translated.data, lead: faithfulLead }, {
-          period: opts.period,
-          sign,
-          signSlug: opts.signSlug,
-          dateKey,
-          sourceCached: roxy.cached,
-          translationCached: false,
-          fallbackUsed: false,
-        })
+      ? normalizeArticle(
+          { ...translated.data, lead: faithfulLead },
+          {
+            period: opts.period,
+            sign,
+            signSlug: opts.signSlug,
+            dateKey,
+            sourceCached: roxy.cached,
+            translationCached: false,
+            fallbackUsed: false,
+          },
+        )
       : null;
 
   if (!article) {
@@ -918,9 +921,11 @@ export async function getHoroscopeNewsArticle(opts: {
       fallbackUsed: true,
       sourceSignals,
     });
-    // A Roxy-forrás elérhető volt: ilyenkor soha ne mutassunk helyi,
-    // csillagjegy-alapú sablont a forrás overview fordításaként.
-    return { ...fallback, lead: faithfulLead ?? "" };
+    // A Roxy-forrás elérhető volt, de a teljes szerkesztőségi fordítás nem.
+    // Ilyenkor is kell publikus, természetes magyar lead: a fallback a Roxyból
+    // kinyert jelzéseket és a jegy saját archetípusát fogja össze, nyers forrás
+    // vagy technikai hibaüzenet nélkül.
+    return { ...fallback, lead: faithfulLead ?? fallback.lead };
   }
 
   await writeCache(
