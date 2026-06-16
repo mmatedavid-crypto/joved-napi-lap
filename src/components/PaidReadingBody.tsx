@@ -20,6 +20,8 @@ export function PaidReadingBody({
   const blocks = parsePaidReadingBody(body);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [downloadState, setDownloadState] = useState<"idle" | "ready" | "failed">("idle");
+  const [clarifyState, setClarifyState] = useState<"idle" | "copied" | "failed">("idle");
+  const selfCheck = paidReadingSelfCheck({ body, title, productName, orderReference });
 
   async function copyReading() {
     try {
@@ -55,6 +57,17 @@ export function PaidReadingBody({
       setDownloadState("failed");
     } finally {
       window.setTimeout(() => setDownloadState("idle"), 2200);
+    }
+  }
+
+  async function copyClarificationDraft() {
+    try {
+      await navigator.clipboard.writeText(selfCheck.clarificationDraft.trim());
+      setClarifyState("copied");
+    } catch {
+      setClarifyState("failed");
+    } finally {
+      window.setTimeout(() => setClarifyState("idle"), 2200);
     }
   }
 
@@ -97,6 +110,11 @@ export function PaidReadingBody({
         </div>
       </div>
       <ReadingUseGuide />
+      <ReadingSelfCheck
+        selfCheck={selfCheck}
+        clarifyState={clarifyState}
+        onCopyClarification={copyClarificationDraft}
+      />
       {blocks.map((block, index) => (
         <section key={`${block.heading ?? "block"}-${index}`} className="space-y-2">
           {block.heading && (
@@ -115,6 +133,57 @@ export function PaidReadingBody({
         </section>
       ))}
     </div>
+  );
+}
+
+type PaidReadingSelfCheck = {
+  heading: string;
+  intro: string;
+  checks: string[];
+  clarificationDraft: string;
+};
+
+function ReadingSelfCheck({
+  selfCheck,
+  clarifyState,
+  onCopyClarification,
+}: {
+  selfCheck: PaidReadingSelfCheck;
+  clarifyState: "idle" | "copied" | "failed";
+  onCopyClarification: () => void;
+}) {
+  return (
+    <aside className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/12 p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi önellenőrzés</div>
+      <h3 className="mt-2 font-display text-xl leading-snug text-ivory">{selfCheck.heading}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/60">{selfCheck.intro}</p>
+      <ul className="mt-4 grid gap-2 sm:grid-cols-3">
+        {selfCheck.checks.map((item) => (
+          <li
+            key={item}
+            className="rounded-md border border-gold/10 bg-gold/[0.035] px-3 py-3 text-xs leading-relaxed text-ivory/58"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-gold/10 pt-3">
+        <button
+          type="button"
+          onClick={onCopyClarification}
+          className="inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60 hover:text-gold/85"
+        >
+          {clarifyState === "copied"
+            ? "Vázlat kimásolva"
+            : clarifyState === "failed"
+              ? "Most nem sikerült"
+              : "Pontosítási vázlat másolása"}
+        </button>
+        <p className="text-xs leading-relaxed text-ivory/45">
+          Akkor hasznos, ha az olvasat jó irányba indult, de egy fontos rész kimaradt.
+        </p>
+      </div>
+    </aside>
   );
 }
 
@@ -148,9 +217,7 @@ function ReadingUseGuide() {
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => (
           <div key={item.label} className="rounded-md border border-gold/10 bg-black/10 px-3 py-3">
-            <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">
-              {item.label}
-            </div>
+            <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">{item.label}</div>
             <p className="mt-2 text-xs leading-relaxed text-ivory/56">{item.text}</p>
           </div>
         ))}
@@ -164,6 +231,126 @@ function ReadingUseGuide() {
       </p>
     </aside>
   );
+}
+
+function paidReadingSelfCheck({
+  body,
+  title,
+  productName,
+  orderReference,
+}: {
+  body: string;
+  title?: string;
+  productName?: string;
+  orderReference?: string;
+}): PaidReadingSelfCheck {
+  const source = `${title ?? ""} ${productName ?? ""} ${body}`.toLocaleLowerCase("hu-HU");
+  const productLabel = productName || title || "Személyes olvasat";
+  const readingType = selfCheckReadingType(source);
+  const checks = selfCheckItems(readingType);
+  const orderLine = orderReference ? `Rendelés: ${orderReference}` : "Rendelés:";
+  const clarificationDraft = [
+    "Jövőd.hu pontosítási kérés",
+    orderLine,
+    `Olvasat: ${productLabel}`,
+    "",
+    "Ami talált:",
+    "",
+    "Ami túl általános vagy pontatlan volt:",
+    "",
+    "A helyzetemből ez maradt ki:",
+    "",
+    "Ebben az irányban kérek pontosítást:",
+  ].join("\n");
+
+  return {
+    heading: selfCheckHeading(readingType),
+    intro:
+      "Egy fizetős olvasat akkor erős, ha nem csak szép mondatokat ad, hanem felismerhetően a te helyzetedhez kapcsolódik. Ezt érdemes gyorsan végignézni.",
+    checks,
+    clarificationDraft,
+  };
+}
+
+function selfCheckReadingType(
+  source: string,
+): "love" | "decision" | "dream" | "numerology" | "horoscope" | "tarot" | "general" {
+  if (/kapcsolat|szerel|randi|ex|visszatér|összeill/.test(source)) return "love";
+  if (/döntés|döntsek|választ|munka|állás|költöz/.test(source)) return "decision";
+  if (/álom|álomfejt/.test(source)) return "dream";
+  if (/számmiszt|sorsszám|életút|személyes év/.test(source)) return "numerology";
+  if (/horoszkóp|tranzit|védikus|születési képlet|30 nap/.test(source)) return "horoscope";
+  if (/tarot|lap|kelta kereszt|húzás/.test(source)) return "tarot";
+  return "general";
+}
+
+function selfCheckHeading(readingType: ReturnType<typeof selfCheckReadingType>): string {
+  switch (readingType) {
+    case "love":
+      return "Akkor jó, ha a kapcsolat tempójára is reagál";
+    case "decision":
+      return "Akkor jó, ha nem dönt helyetted";
+    case "dream":
+      return "Akkor jó, ha az álomhangulatot is érti";
+    case "numerology":
+      return "Akkor jó, ha a számokból minta lesz";
+    case "horoscope":
+      return "Akkor jó, ha nem jegyhoroszkópnak hat";
+    case "tarot":
+      return "Akkor jó, ha a lap a helyzetedben szólal meg";
+    default:
+      return "Akkor jó, ha rád szabottan használható";
+  }
+}
+
+function selfCheckItems(readingType: ReturnType<typeof selfCheckReadingType>): string[] {
+  const common = [
+    "Van benne legalább egy mondat, ami konkrétan a te kérdésedhez kapcsolódik.",
+    "Nem állít biztos jövőt, hanem irányt és mintát mutat.",
+  ];
+  switch (readingType) {
+    case "love":
+      return [
+        common[0],
+        "Külön kezeli a vonzalmat, tempót és azt, mi lenne tartósabb szándék.",
+        "Exnél vagy visszatérő történetnél nem ígér visszatérést.",
+      ];
+    case "decision":
+      return [
+        common[0],
+        "Elválasztja, mi mozdít vágyból, félelemből vagy józan belső irányból.",
+        "Nem mondja meg, mit tegyél, hanem tisztább mérlegelést ad.",
+      ];
+    case "dream":
+      return [
+        common[0],
+        "Figyelembe veszi, milyen érzéssel ébredtél.",
+        "Nem diagnosztizál, hanem önismereti jelként kezeli a szimbólumot.",
+      ];
+    case "numerology":
+      return [
+        "A születési dátum és név számai nem külön címkék, hanem egy közös mintává állnak össze.",
+        "Megmutat erősséget és árnyékoldalt is.",
+        "Nem általános személyiségleírás, hanem élethelyzeti tükör.",
+      ];
+    case "horoscope":
+      return [
+        "A jegy mintáját a megadott témáddal kapcsolja össze.",
+        "Nem használ újságos jóslatnyelvet.",
+        "Időszakot, hangsúlyt és figyelmi pontot ad, nem biztos eseményt.",
+      ];
+    case "tarot":
+      return [
+        common[0],
+        "A lap vagy lapok nem külön magyarázatként állnak, hanem történetté kapcsolódnak.",
+        "Van benne következő belső lépés, de nincs benne kényszerítő utasítás.",
+      ];
+    default:
+      return [
+        ...common,
+        "Ha valami kimaradt, pontosan meg tudod nevezni, melyik rész igényel figyelmet.",
+      ];
+  }
 }
 
 function parsePaidReadingBody(body: string): ReadingBlock[] {
