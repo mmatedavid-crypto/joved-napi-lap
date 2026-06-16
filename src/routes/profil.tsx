@@ -87,6 +87,7 @@ function Page() {
   const [insights, setInsights] = useState<ReadingMemoryInsights | null>(null);
   const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [guestImportCount, setGuestImportCount] = useState(0);
+  const [claimedGuestOrderCount, setClaimedGuestOrderCount] = useState(0);
   const [memoryClearing, setMemoryClearing] = useState(false);
   const [memoryCleared, setMemoryCleared] = useState(false);
   const [retryingOrders, setRetryingOrders] = useState<Set<string>>(() => new Set());
@@ -105,6 +106,7 @@ function Page() {
       const r = await call({});
       if (stop) return;
       const nextOrders = r.orders ?? [];
+      setClaimedGuestOrderCount(r.claimedGuestOrderCount ?? 0);
       setOrders(nextOrders);
       setOrdersLoading(false);
 
@@ -118,7 +120,12 @@ function Page() {
       await Promise.allSettled(wakeable.map((order) => wakeOrder({ data: { orderId: order.id } })));
       if (stop) return;
       const refreshed = await call({});
-      if (!stop) setOrders(refreshed.orders ?? []);
+      if (!stop) {
+        setClaimedGuestOrderCount((current) =>
+          Math.max(current, refreshed.claimedGuestOrderCount ?? 0),
+        );
+        setOrders(refreshed.orders ?? []);
+      }
     }
 
     loadOrders().catch(() => setOrdersLoading(false));
@@ -326,6 +333,13 @@ function Page() {
 
         <Section eyebrow="Előzményeid">
           {ordersLoading && <p className="text-ivory/60 text-sm">Töltés…</p>}
+          {!ordersLoading && claimedGuestOrderCount > 0 && (
+            <p className="mb-4 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3 text-sm leading-relaxed text-ivory/68">
+              Áthoztuk {claimedGuestOrderCount} korábbi vendégvásárlásodat ebbe a profilba, mert
+              ugyanazzal az email címmel jelentkeztél be. A biztonságos rendelési linkek továbbra is
+              működnek.
+            </p>
+          )}
           {!ordersLoading && orders.length === 0 && (
             <p className="text-ivory/70">
               Még nincs vásárlásod.{" "}

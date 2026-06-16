@@ -59,6 +59,13 @@ const ORDER_SELECT_BASE =
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const FEEDBACK_VALUES: OrderFeedbackValue[] = ["accurate", "partial", "missed"];
+const CLAIMABLE_GUEST_ORDER_STATUSES = [
+  "paid",
+  "processing",
+  "delivered",
+  "failed",
+  "refunded",
+] as const;
 
 type ReconciliationFallbackFields = Pick<
   OrderForPaymentRecheck,
@@ -440,6 +447,11 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
 export const getMyOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const claimedGuestOrderCount = await claimGuestOrdersForAuthenticatedUser({
+      userId: context.userId,
+      email: emailFromAuthClaims(context.claims),
+    });
+
     const orderResultWithReconciliation = await context.supabase
       .from("orders")
       .select(ORDER_SELECT_PROFILE_WITH_RECONCILIATION)
@@ -478,9 +490,61 @@ export const getMyOrders = createServerFn({ method: "GET" })
     );
 
     return {
+      claimedGuestOrderCount,
       orders: await attachOrdersFeedback(context.supabase, reconciled.map(stripPrivateOrderFields)),
     };
   });
+
+async function claimGuestOrdersForAuthenticatedUser(opts: {
+  userId: string;
+  email: string | null;
+}): Promise<number> {
+  if (!opts.email) return 0;
+  const email = normalizeClaimEmail(opts.email);
+  if (!email) return 0;
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("orders")
+    .update({
+      user_id: opts.userId,
+      guest_email: null,
+      updated_at: new Date().toISOString(),
+    })
+    .is("user_id", null)
+    .ilike("guest_email", email)
+    .in("status", [...CLAIMABLE_GUEST_ORDER_STATUSES])
+    .select("id");
+
+  if (error) {
+    console.warn("guest order claim failed:", {
+      code: error.code,
+      message: error.message,
+    });
+    return 0;
+  }
+
+  const claimedIds = (data ?? []).map((row) => row.id).filter(Boolean);
+  if (claimedIds.length) {
+    await supabaseAdmin
+      .from("order_feedback")
+      .update({ user_id: opts.userId, updated_at: new Date().toISOString() })
+      .in("order_id", claimedIds)
+      .is("user_id", null);
+  }
+  return claimedIds.length;
+}
+
+function normalizeClaimEmail(value: string | null | undefined): string | null {
+  const clean = value?.trim().toLocaleLowerCase("hu-HU");
+  return clean && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean) ? clean : null;
+}
+
+function emailFromAuthClaims(claims: unknown): string | null {
+  if (!claims || typeof claims !== "object") return null;
+  const raw = (claims as { email?: unknown }).email;
+  return typeof raw === "string" ? raw : null;
+}
 
 export const processMyOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

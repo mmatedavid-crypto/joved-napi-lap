@@ -166,6 +166,38 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "profile claims verified guest orders after login",
+    file: "src/lib/payments.functions.ts",
+    includes: [
+      "claimGuestOrdersForAuthenticatedUser",
+      "emailFromAuthClaims(context.claims)",
+      "normalizeClaimEmail",
+      "CLAIMABLE_GUEST_ORDER_STATUSES",
+      "claimedGuestOrderCount",
+      "supabaseAdmin",
+      '.is("user_id", null)',
+      '.ilike("guest_email", email)',
+      '.in("status", [...CLAIMABLE_GUEST_ORDER_STATUSES])',
+      '.from("order_feedback")',
+      '.in("order_id", claimedIds)',
+      '.is("user_id", null)',
+    ],
+    excludes: ["stripe_session_id: sessionId", "stripe_payment_intent: paymentIntent"],
+  },
+  {
+    name: "profile tells users when guest purchases were attached",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "claimedGuestOrderCount",
+      "setClaimedGuestOrderCount",
+      "r.claimedGuestOrderCount",
+      "Áthoztuk",
+      "korábbi vendégvásárlásodat ebbe a profilba",
+      "ugyanazzal az email címmel jelentkeztél be",
+      "A biztonságos rendelési linkek továbbra",
+    ],
+  },
+  {
     name: "profile lets customers retry failed paid reading processing safely",
     file: "src/routes/profil.tsx",
     includes: [
