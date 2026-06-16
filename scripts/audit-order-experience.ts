@@ -518,6 +518,28 @@ const checks: Check[] = [
     excludes: ["stripe_session_id", "response_payload", "order_id", "notes", "latestNote"],
   },
   {
+    name: "internal order feedback runbook explains safe quality triage",
+    file: "docs/order-feedback-quality-runbook.md",
+    includes: [
+      "Fizetős olvasatok minőségi visszajelzésének runbookja",
+      "ORDER_FEEDBACK_SUMMARY_SECRET",
+      "GET /api/internal/order-feedback/summary?days=30",
+      "Authorization: Bearer <ORDER_FEEDBACK_SUMMARY_SECRET>",
+      "reviewPriority",
+      "reviewRecommendation",
+      "manual_review_first",
+      "read_feedback_details",
+      "watch_next_orders",
+      "negativeDetailCount",
+      "nem adhat vissza",
+      "rendelésazonosítót",
+      "Stripe azonosítót",
+      "nyers ügyfélmegjegyzést",
+      "ne a felhasználó személyes történetét másold promptba",
+      "accurate",
+    ],
+  },
+  {
     name: "delivered email exposes recovery path",
     file: "src/lib/email-templates/order-delivered.tsx",
     includes: [
