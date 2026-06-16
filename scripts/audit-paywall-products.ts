@@ -449,6 +449,21 @@ for (const needle of [
 if (!layout.includes('{ to: "/arak", label: "Árak" }')) {
   failed.push("Layout navigation missing pricing link");
 }
+for (const needle of [
+  'to="/szemelyes-30-napos-horoszkop"',
+  'to="/eves-horoszkop"',
+  'to="/tranzitok"',
+  'to="/vedikus-asztrologia"',
+  'to="/szuletesi-keplet"',
+  "30 napos térkép",
+  "Éves horoszkóp",
+  "Tranzitelemzés",
+  "Védikus elemzés",
+]) {
+  if (!layout.includes(needle)) {
+    failed.push(`Layout footer missing paid astrology/natal internal link: ${needle}`);
+  }
+}
 if (!sitemap.includes('"/arak"')) {
   failed.push("Sitemap missing pricing route");
 }

@@ -161,6 +161,11 @@ export function Layout({ children }: { children?: ReactNode }) {
             <div className="text-ivory/90 mb-3 text-xs uppercase tracking-widest">Asztrológia & számok</div>
             <ul className="space-y-2">
               <li><Link to="/horoszkop" className="hover:text-gold">Horoszkóp</Link></li>
+              <li><Link to="/szuletesi-keplet" className="hover:text-gold">Születési képlet</Link></li>
+              <li><Link to="/szemelyes-30-napos-horoszkop" className="hover:text-gold">30 napos térkép</Link></li>
+              <li><Link to="/eves-horoszkop" className="hover:text-gold">Éves horoszkóp</Link></li>
+              <li><Link to="/tranzitok" className="hover:text-gold">Tranzitelemzés</Link></li>
+              <li><Link to="/vedikus-asztrologia" className="hover:text-gold">Védikus elemzés</Link></li>
               <li><Link to="/kinai-horoszkop" className="hover:text-gold">Kínai horoszkóp</Link></li>
               <li><Link to="/szammisztika" className="hover:text-gold">Sorsszám</Link></li>
               <li><Link to="/osszeillunk" className="hover:text-gold">Összeillünk?</Link></li>
