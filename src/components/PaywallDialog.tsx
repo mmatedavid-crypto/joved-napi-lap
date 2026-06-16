@@ -65,7 +65,8 @@ export function PaywallDialog({
 
   const canExpress = product.category === "delayed";
   const canStartPayment = paymentsAvailable();
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const normalizedEmail = normalizeCheckoutEmailInput(email);
+  const emailValid = isCheckoutEmailValid(normalizedEmail);
   const total = product.priceHuf + (express && canExpress ? EXPRESS_PRICE_HUF : 0);
   const inputSummary = summarizeInputPayload(inputPayload);
   const focusPreview = readingFocusPreview(product, inputPayload, inputSummary);
@@ -192,6 +193,7 @@ export function PaywallDialog({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setEmail(normalizedEmail)}
                 placeholder="te@pelda.hu"
                 className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
               />
@@ -436,7 +438,7 @@ export function PaywallDialog({
           <StripeEmbeddedCheckoutForm
             productSlug={productSlug}
             express={express && canExpress}
-            customerEmail={email}
+            customerEmail={normalizedEmail}
             userId={user?.id}
             inputPayload={inputPayload}
             sourceRoute={sourceRoute}
@@ -445,6 +447,14 @@ export function PaywallDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+function normalizeCheckoutEmailInput(value: string): string {
+  return value.trim().toLocaleLowerCase("hu-HU");
+}
+
+function isCheckoutEmailValid(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function checkoutDeliverySummary(
