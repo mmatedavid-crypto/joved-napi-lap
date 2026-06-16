@@ -347,13 +347,32 @@ function paidSpreadContextSections(input: Record<string, unknown>): QualityReadi
   return sections;
 }
 
-function renderReading(reading: QualityReading): PaidReadingPayload {
+function readingWithFollowupContext(
+  reading: QualityReading,
+  input?: Record<string, unknown>,
+): QualityReading {
+  const followupContext = text(input?.followupContext);
+  if (!followupContext) return reading;
+  return {
+    ...reading,
+    sections: [
+      ...reading.sections,
+      {
+        heading: "Miért ezt ajánlottuk?",
+        text: `Ez az olvasat abból a konkrét előzményből indul tovább, amit már megadtál: ${followupContext}. Így nem különálló, általános folytatásként olvasd, hanem annak mélyítéseként, ami az előző válaszban már megmozdult benned.`,
+      },
+    ],
+  };
+}
+
+function renderReading(reading: QualityReading, input?: Record<string, unknown>): PaidReadingPayload {
+  const finalReading = readingWithFollowupContext(reading, input);
   const body = [
-    ...reading.sections.map((section) => `${section.heading}\n${section.text}`),
-    `Egy mondatban\n${reading.oneSentence}`,
-    reading.safetyNote,
+    ...finalReading.sections.map((section) => `${section.heading}\n${section.text}`),
+    `Egy mondatban\n${finalReading.oneSentence}`,
+    finalReading.safetyNote,
   ].join("\n\n");
-  return { title: reading.title, body, reading };
+  return { title: finalReading.title, body, reading: finalReading };
 }
 
 function premiumTarotOneCard(
@@ -392,7 +411,7 @@ function premiumTarotOneCard(
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: `paid:${productName}` },
   };
-  return renderReading(reading);
+  return renderReading(reading, input);
 }
 
 function premiumCelticCross(input: Record<string, unknown>): PaidReadingPayload {
@@ -462,7 +481,7 @@ function premiumCelticCross(input: Record<string, unknown>): PaidReadingPayload 
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: "paid:kelta_kereszt" },
   };
-  return renderReading(reading);
+  return renderReading(reading, input);
 }
 
 function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload {
@@ -510,7 +529,7 @@ function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: "paid:daily_compass" },
   };
-  return renderReading(reading);
+  return renderReading(reading, input);
 }
 
 function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
@@ -583,7 +602,7 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   });
   base.oneSentence = `${signName} ma nem nagy bizonyosságot kér, hanem pontosabb belső időzítést.`;
   base.meta = { ...base.meta, fallbackUsed: true, readingType: "paid:horoscope" };
-  return renderReading(base);
+  return renderReading(base, input);
 }
 
 function horoscopeArticleSections(value: unknown): Array<{ heading: string; text: string }> {
@@ -628,7 +647,7 @@ function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {
     oneSentence: meaning.oneLine,
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: "paid:angel" },
-  });
+  }, input);
 }
 
 function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
@@ -672,7 +691,7 @@ function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
     oneSentence: m.oneLine,
     safetyNote: "A kristály szimbolikus önismereti eszköz, nem gyógyászati tanács.",
     meta: { fallbackUsed: true, readingType: "paid:crystal" },
-  });
+  }, input);
 }
 
 function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
@@ -708,7 +727,7 @@ function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
     oneSentence: meaning.oneLine,
     safetyNote: "Ez önismereti álomértelmezés, nem diagnózis vagy mentális egészségügyi tanács.",
     meta: { fallbackUsed: true, readingType: "paid:dream" },
-  });
+  }, input);
 }
 
 function dreamEmotionLabel(emotion: string): string {
@@ -766,7 +785,7 @@ function premiumCompatibility(input: Record<string, unknown>): PaidReadingPayloa
     });
   }
   reading.title = `Párkapcsolati dinamika · ${reading.title}`;
-  return renderReading(reading);
+  return renderReading(reading, input);
 }
 
 function premiumNumerology(input: Record<string, unknown>): PaidReadingPayload {
@@ -798,7 +817,7 @@ function premiumNumerology(input: Record<string, unknown>): PaidReadingPayload {
       text: "Válassz egyetlen területet: kapcsolat, munka vagy önbizalom. Írd le, ott milyen szerepet játszol túl gyakran. A számmisztikai olvasat akkor válik használhatóvá, ha nem címkeként viseled a számokat, hanem felismered, melyik döntésed mögött dolgoznak.",
     },
   );
-  return renderReading(reading);
+  return renderReading(reading, input);
 }
 
 export function composePaidOrderReading(
@@ -838,7 +857,7 @@ export function composePaidOrderReading(
         text: "Ne azonnali bizonyosságot keress. Egyetlen pontot válassz ki: mit kell kimondani, mit kell abbahagyni, vagy hol kell lassítani. A lapok akkor dolgoznak jól, ha nem helyetted döntenek, hanem letisztítják a következő mozdulatot.",
       },
     );
-    return renderReading(reading);
+    return renderReading(reading, input);
   }
   if (productSlug === "dontes_komplex") {
     const question = text(input.q) || text(input.question) || "Merre mozduljak?";
@@ -859,7 +878,7 @@ export function composePaidOrderReading(
         text: "Ha a kérdésre gondolva a tested összeszűkül, vagy csak azért választanál, hogy vége legyen a bizonytalanságnak, érdemes lehet még egy kört tisztázni. Nem halogatásról van szó, hanem arról, hogy a döntés ne menekülésből szülessen.",
       },
     );
-    return renderReading(reading);
+    return renderReading(reading, input);
   }
   if (productSlug === "parkapcsolat_elemzes") return premiumCompatibility(input);
   if (productSlug === "szammisztika_eletut") return premiumNumerology(input);

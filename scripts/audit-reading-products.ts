@@ -289,6 +289,15 @@ const contextChecks = [
     required: ["A fizetős elemzés mélyebb rétege", "A név rétegei", "Következő 30 nap"],
   },
   {
+    name: "context:paid_followup_reason_survives_fallback",
+    body: composePaidOrderReading("dontes_komplex", "Döntés előtt — komplex elemzés", {
+      ...demoPayloads.dontes_komplex,
+      followupContext:
+        "A kérdés, amiből továbbmegyünk: „Elfogadjam az új munkalehetőséget?”",
+    }).body,
+    required: ["Miért ezt ajánlottuk?", "A kérdés, amiből továbbmegyünk"],
+  },
+  {
     name: "context:free_ex_return",
     body: textFromReading(
       composeCompatibilityReading(
@@ -606,6 +615,9 @@ if (
   !paidReadingsSource.includes('myName: "Első név"') ||
   !paidReadingsSource.includes('emotion: "Érzés"') ||
   !paidReadingsSource.includes('followupContext: "Miért ezt ajánlottuk"') ||
+  !paidReadingsSource.includes("function readingWithFollowupContext") ||
+  !paidReadingsSource.includes("Miért ezt ajánlottuk?") ||
+  !paidReadingsSource.includes("renderReading(reading, input)") ||
   !paidReadingsSource.includes('memoryContext: "Visszatérő minta"') ||
   !paidReadingsSource.includes("function paidTarotSpreadFromPayload") ||
   !paidReadingsSource.includes("function briefPaidTarotSpread") ||
