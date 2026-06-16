@@ -210,6 +210,24 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "empty profile gives a useful first journey instead of a dead end",
+    file: "src/routes/profil.tsx",
+    includes: [
+      "ProfileStarterActions",
+      "Hogyan induljon az íved?",
+      "Gyors első jel",
+      "Kapcsolati kérdés",
+      "Döntés előtt",
+      'to: "/mai-lap"',
+      'to: "/osszeillunk"',
+      'to: "/dontes-elott"',
+      'to="/arak"',
+      "Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal",
+      "Minden fizetős olvasat és ár áttekintése",
+    ],
+    excludes: ["Még nincs vásárlásod. <Link"],
+  },
+  {
     name: "thank-you page never displays raw order status errors",
     file: "src/routes/koszonjuk.tsx",
     includes: [

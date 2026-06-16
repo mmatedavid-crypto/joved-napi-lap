@@ -287,6 +287,7 @@ function Page() {
                 Nem készítünk belőle személyiségprofilt, biztos jövőállítást vagy szakmai
                 minősítést. A memória törölhető, a rendelési előzményeid pedig külön megmaradnak.
               </p>
+              <ProfileStarterActions />
             </div>
           )}
           {memoryCleared && (
@@ -364,12 +365,13 @@ function Page() {
             </p>
           )}
           {!ordersLoading && !ordersError && orders.length === 0 && (
-            <p className="text-ivory/70">
-              Még nincs vásárlásod.{" "}
-              <Link to="/" className="text-gold hover:underline">
-                Indulj el itt.
-              </Link>
-            </p>
+            <div className="space-y-4">
+              <p className="text-ivory/70">
+                Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy olcsó,
+                személyes próbaolvasatot.
+              </p>
+              <ProfileStarterActions compact />
+            </div>
           )}
           {!ordersLoading && !ordersError && orders.length > 0 && (
             <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
@@ -470,6 +472,71 @@ function Page() {
         </button>
       </div>
     </Layout>
+  );
+}
+
+function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
+  const items = [
+    {
+      title: "Gyors első jel",
+      text: "Egy napi lap vagy mai iránytű jó belépő, ha még csak azt néznéd, megszólít-e a hang.",
+      to: "/mai-lap",
+      cta: "Napi lap",
+    },
+    {
+      title: "Kapcsolati kérdés",
+      text: "Randi, ex vagy bizonytalan kötődés esetén a kapcsolati útvonal hamarabb ad személyes fókuszt.",
+      to: "/osszeillunk",
+      cta: "Összeillünk",
+    },
+    {
+      title: "Döntés előtt",
+      text: "Ha nem jóslatot keresel, hanem tisztább belső irányt, innen érdemes indulni.",
+      to: "/dontes-elott",
+      cta: "Döntés előtt",
+    },
+  ] as const;
+
+  return (
+    <div
+      className={
+        compact
+          ? "grid gap-3 sm:grid-cols-3"
+          : "rounded-md border border-gold/15 bg-gold/[0.045] p-4"
+      }
+    >
+      {!compact && (
+        <div className="mb-3">
+          <div className="text-[10px] uppercase tracking-[0.24em] text-gold/75">
+            Hogyan induljon az íved?
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-ivory/58">
+            A profil akkor lesz igazán hasznos, ha néhány kérdés után már látjuk, milyen témákhoz
+            térsz vissza. Kezdhetsz könnyű, olcsó vagy ingyenes iránnyal.
+          </p>
+        </div>
+      )}
+      <div className={compact ? "contents" : "grid gap-3 sm:grid-cols-3"}>
+        {items.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/10 p-3 transition-colors hover:border-gold/45"
+          >
+            <div className="font-display text-lg leading-tight text-ivory">{item.title}</div>
+            <p className="mt-2 text-xs leading-relaxed text-ivory/55">{item.text}</p>
+            <div className="mt-3 text-xs text-gold">{item.cta}</div>
+          </Link>
+        ))}
+      </div>
+      {!compact && (
+        <div className="mt-3 border-t border-gold/10 pt-3">
+          <Link to="/arak" className="text-xs text-ivory/50 hover:text-gold">
+            Minden fizetős olvasat és ár áttekintése
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
