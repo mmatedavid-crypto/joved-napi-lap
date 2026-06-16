@@ -161,7 +161,7 @@ export async function generateTransitsPersonalReport(
 
   const system = [
     "Magyar tranzit-elemzést írsz a Jövőd.hu hangján: természetes, személyes, józan.",
-    "Csak a kapott Roxy-forrásból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
+    "Csak a kapott asztrológiai forrásanyagból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
     "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd a módszert.",
     "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
     "## A jelenleg ható tranzitok",
@@ -180,10 +180,10 @@ export async function generateTransitsPersonalReport(
     "FELHASZNÁLÓI ADATOK:",
     userInputSummary,
     "",
-    "ROXY NATAL CHART (nyers JSON, angol):",
+    "SZÜLETÉSI KÉPLET FORRÁSANYAGA:",
     JSON.stringify(natal).slice(0, 12_000),
     "",
-    "ROXY TRANZIT FORRÁS (nyers JSON, angol — /transits vagy /forecast/timeline 90 napra):",
+    "TRANZITFORRÁS 90 NAPRA:",
     JSON.stringify(transits).slice(0, 20_000),
     "",
     "Add vissza a magyar riportot Markdown formában. Ne tegyél hozzá címet a riport elejére — én adok hozzá külön címet.",

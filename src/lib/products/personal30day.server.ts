@@ -145,7 +145,7 @@ export async function generatePersonal30DayReport(
 
   const system = [
     "Magyar asztrológiai riportot írsz a Jövőd.hu hangján: természetes, személyes, józan.",
-    "Csak a kapott Roxy-forrásból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
+    "Csak a kapott asztrológiai forrásanyagból és a felhasználói adatokból dolgozz. Ne találj ki tranzitot, dátumot vagy biztos jövőt.",
     "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd a módszert.",
     "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
     "## A következő 30 napod fő témája",
@@ -163,10 +163,10 @@ export async function generatePersonal30DayReport(
     "FELHASZNÁLÓI ADATOK:",
     userInputSummary,
     "",
-    "ROXY NATAL CHART (nyers JSON, angol):",
+    "SZÜLETÉSI KÉPLET FORRÁSANYAGA:",
     JSON.stringify(natal).slice(0, 12_000),
     "",
-    "ROXY FORECAST TIMELINE 30 NAPRA (nyers JSON, angol):",
+    "ASZTROLÓGIAI IDŐVONAL 30 NAPRA:",
     JSON.stringify(forecast).slice(0, 16_000),
     "",
     "Add vissza a magyar riportot Markdown formában. Ne tegyél hozzá címet a riport elejére — én adok hozzá külön címet.",

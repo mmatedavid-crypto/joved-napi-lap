@@ -45,15 +45,15 @@ function aiCacheKey(...parts: Array<string | number>): string {
   return ["aitr", AI_TRANSLATION_CACHE_VERSION, ...parts].join(":");
 }
 
-// Közös fordító system prompt. KULCS: nem talál ki, csak fordít.
+// Közös szerkesztői system prompt. KULCS: nem talál ki, csak a forrásanyagból dolgozik.
 const TRANSLATOR_SYSTEM = [
-  "Te a Jövőd.hu magyar fordítója vagy.",
-  "FELADATOD: a kapott angol forrásmezőket FOLYÉKONY, természetes magyarra fordítani.",
+  "Te a Jövőd.hu magyar szimbolikus olvasatainak szerkesztője vagy.",
+  "FELADATOD: a kapott forrásmezők jelentését folyékony, természetes magyar olvasattá formálni.",
   "SOHA ne találj ki új tényt, új helyzetet, új tanácsot, új szimbólumot — csak azt írd át, amit a forrás tartalmaz.",
   "Ha egy mező a forrásban hiányzik, üres vagy nem értelmezhető, HAGYD KI a kimenetből (ne tölts fel közhellyel).",
   "Hangnem: csendes, meleg, tegező, ítélkezés nélküli — költői, de földhözragadt. NEM coachos, NEM közhelyes.",
   "TILTOTT panelmondatok és fordulatok: 'összességében', 'fontos megjegyezni', 'kommunikálj nyíltan és őszintén', 'as an AI', 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ha a forrásban ilyesmi van, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
-  "Ne használj emojit, angol endpoint- vagy mezőneveket, raw provider-szöveget, determinisztikus jövőállítást.",
+  "Ne használj emojit, angol technikai mezőneveket, gépházi szöveget vagy determinisztikus jövőállítást.",
   "Kristályoknál csak szimbolikus nyelv használható: 'hagyományosan ehhez társítják', 'ezt a minőséget jelképezi', 'önismereti jelként'. Soha ne írd, hogy gyógyít.",
   "Tömörség: minden mező 1-2 mondat, semmi felsorolás. Az 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
   "Soha ne ígérj orvosi, jogi, pénzügyi eredményt, ne diagnosztizálj, ne mondj konkrét jövő-eseményt.",
@@ -106,10 +106,10 @@ async function translateWithAI<T>(opts: {
   const { aiJSON } = await import("./ai.server");
   const user = [
     `TERÜLET: ${opts.domainHint}.`,
-    "Az alábbi nyers angol Roxy API válaszból fordítsd át a tartalmat folyékony magyarrá a megadott séma szerint.",
+    "Az alábbi forrásanyag jelentését formáld természetes magyar olvasattá a megadott séma szerint.",
     "Csak a forrásban szereplő tartalmat add vissza, semmi újat ne találj ki. Ha egy mező hiányzik, hagyd ki a kimenetből.",
     "",
-    "FORRÁS (JSON):",
+    "FORRÁSANYAG:",
     JSON.stringify(opts.source).slice(0, 8000),
   ].join("\n");
   const r = await aiJSON<T>({
@@ -1013,7 +1013,7 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
       if (spread.positions.length === 0)
         return { ok: false, cached: false, reading: null, message: "Üres válasz a forrásból." };
 
-      // 1) Per-kártya fordítás (cache-elt) párhuzamosan.
+      // 1) Per-kártya magyar olvasat (cache-elt) párhuzamosan.
       const huCards = await Promise.all(
         spread.positions.map((p) =>
           p.card ? translateOneTarotCard(p.card) : Promise.resolve(null),

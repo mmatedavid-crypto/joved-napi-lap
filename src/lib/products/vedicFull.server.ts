@@ -306,7 +306,7 @@ export async function generateVedicFullReport(
     "VÉDIKUS (SZIDERIKUS) ÉRTÉKEK — deterministikusan számolt, ezeket használd jegyként:",
     JSON.stringify(vedicSummary, null, 2),
     "",
-    "ROXY NATAL CHART (nyers JSON, angol, TROPIKUS — csak háttér-bolygó-helyzetnek):",
+    "TROPIKUS SZÜLETÉSI KÉPLET FORRÁSANYAGA — csak háttér-bolygó-helyzetnek:",
     JSON.stringify(natal).slice(0, 14_000),
     "",
     "Add vissza a magyar védikus riportot Markdown formában. Ne tegyél hozzá címet a riport elejére — én adok hozzá külön címet.",

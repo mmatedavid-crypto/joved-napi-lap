@@ -525,16 +525,16 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       const sys = [
         "Te a Jövőd.hu spirituális napló írója vagy.",
         "MINDIG magyarul írj, soha ne hagyj angol szót a kimenetben.",
-        "Te FORDÍTÓ ÉS ÖSSZEFOGLALÓ vagy, NEM költő. Csak abból dolgozz, ami a 'nyersAdatok'-ban szerepel — ne találj ki új helyzetet, új tanácsot, új szimbólumot, új érzelmet.",
+        "Te hűséges magyar szerkesztő vagy, NEM költő. Csak abból dolgozz, ami a 'forrasAdatok'-ban szerepel — ne találj ki új helyzetet, új tanácsot, új szimbólumot, új érzelmet.",
         "Ha egy nyers mező hiányzik vagy üres, HAGYD KI a kimenetből (ne tölts fel közhellyel, ne pótold magadtól).",
         "Hangnem: csendes, meleg, tegező, ítélkezés nélküli, költői de földhözragadt — NEM közhelyes és NEM coachos.",
         "TILTOTT panelmondatok és fordulatok: 'összességében', 'fontos megjegyezni', 'kommunikálj nyíltan és őszintén', 'as an AI', 'légy önmagad', 'higgy magadban', 'minden okkal történik', 'az univerzum melletted áll', 'engedd el', 'figyelj a jelekre', 'hallgass a szívedre', 'minden rendben lesz', 'minden a helyére kerül'. Ha a forrás ilyesmit sugall, fogalmazd át KONKRÉT magyar mondattá a forrás tartalmából — de csak abból.",
-        "Ne használj emojit, angol endpoint- vagy mezőneveket, raw provider-szöveget, determinisztikus jövőállítást.",
+        "Ne használj emojit, angol technikai mezőneveket, gépházi szöveget vagy determinisztikus jövőállítást.",
         "Kristályoknál csak szimbolikus nyelv használható: 'hagyományosan ehhez társítják', 'ezt a minőséget jelképezi', 'önismereti jelként'. Soha ne írd, hogy gyógyít.",
         "Soha ne ígérj orvosi, jogi vagy pénzügyi eredményt. Ne diagnosztizálj. Ne mondj konkrét jövő-eseményt, amit a forrás nem említ.",
         "Hossz: minden mező 1-2 mondat, semmi felsorolás. 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
-        "A 'cardTitle' SZÓ SZERINT a 'nyersAdatok.tarot.name' értéke. A 'cardLine' a 'nyersAdatok.tarot.huGeneral' és 'huDaily' tartalmából készül — természetes magyar újrafogalmazás, semmi új tartalom.",
-        "A horoMood/Love/Work/Warn mezők a 'nyersAdatok.horoscope' angol mezőiből készülnek — folyékony magyarra fordítva, csak azt, ami a forrásban van.",
+        "A 'cardTitle' SZÓ SZERINT a 'forrasAdatok.tarot.name' értéke. A 'cardLine' a 'forrasAdatok.tarot.huGeneral' és 'huDaily' tartalmából készül — természetes magyar újrafogalmazás, semmi új tartalom.",
+        "A horoMood/Love/Work/Warn mezők a 'forrasAdatok.horoscope' mezőiből készülnek — természetes magyar szövegként, csak azt, ami a forrásban van.",
         "Ha bizonytalan vagy egy konkrét részletben, inkább MARADJ ÁLTALÁNOSABB a forrás keretén belül, mintsem hogy kitalálj.",
         "Ha van 'felhasznaloiIv', finoman használd visszatérő mintaként: egy mondatban reflektálhatsz arra, milyen témákhoz tér vissza a kérdező. Ne nevezd memóriának, adatbázisnak vagy követésnek. Ne tegyél úgy, mintha biztosan ismernéd az életét.",
         "Csak érvényes JSON-t adj vissza a megadott séma szerint, kommentár nélkül. Magyar nyelv, természetes szórend.",
@@ -543,7 +543,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       const userPayload = {
         kerdezo: { keresztnev: data.name ?? null, csillagjegy: data.sign, datum: data.dateKey },
         felhasznaloiIv: data.memoryContext ?? null,
-        nyersAdatok: raw,
+        forrasAdatok: raw,
       };
 
       const schema = {
@@ -720,7 +720,7 @@ function buildDailySingleUserPrompt(input: {
       {
         kulcsszavak: c.keywords ?? [],
         forditott: c.reversed === true,
-        roxyAngolForras: {
+        forrasJelentes: {
           altalanos: c.meaningEn ?? null,
           szerelem: c.loveEn ?? null,
           karrier: c.careerEn ?? null,
@@ -847,10 +847,10 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           nev: c.name,
           kulcsszavak: c.keywords ?? [],
           forditott: c.reversed === true,
-          // Roxy angol forrás — ha jelen van, az AI ezt fordítsa/stilizálja,
-          // ne találjon ki új jelentést. Csak a területre releváns mezőket
-          // adjuk át, hogy a prompt rövid maradjon.
-          roxyAngolForras:
+          // Forrásjelentések: ha jelen vannak, ezekhez marad hű az olvasat.
+          // Csak a területre releváns mezőket adjuk át, hogy a prompt rövid
+          // és természetes maradjon.
+          forrasJelentes:
             c.meaningEn || c.loveEn || c.careerEn || c.financesEn || c.healthEn || c.spiritualityEn
               ? {
                   altalanos: c.meaningEn ?? null,
@@ -869,8 +869,8 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
           "Ha van konkrét kérdés vagy kategória, válaszolj rá érdemben. Ex / visszatérő történetnél érintsd, hogy visszatérés esetén mi mutat rövid fellángolást és mi mutat tartósabb szándékot, de ne mondd biztosra, hogy visszajön vagy marad. Randi/ismerkedés esetén a találkozó vagy ismerkedés tanítására és tempójára reflektálj.",
         forditottSzabaly:
           "Ha forditott=true, a lap blokkolt vagy túltolt oldalát olvasd. Nem kell kimondani, hogy fordított.",
-        roxyForrasSzabaly:
-          "Ha egy lapnál van 'roxyAngolForras', azt MINT FORDÍTANDÓ FORRÁST kezeld: a vonatkozó magyar mondatot ennek tartalmából képezd (kategória → karrier/szerelem/penz/egeszseg/spiritualis mező, ha van; ha nincs, az altalanos mező). Ne hagyd ki, és ne találj ki belőle új tényt. Ha nincs roxyAngolForras, a lap kulcsszavaiból és magyar mezőiből dolgozz.",
+        forrasJelentesSzabaly:
+          "Ha egy lapnál van 'forrasJelentes', a vonatkozó magyar mondat ennek jelentéséből készüljön (kategória → karrier/szerelem/penz/egeszseg/spiritualis mező, ha van; ha nincs, az altalanos mező). Ne hagyd ki, és ne találj ki belőle új tényt. Ha nincs forrasJelentes, a lap kulcsszavaiból és magyar mezőiből dolgozz.",
       };
 
       const requiredSections = sectionMap.map((s) => s.heading);

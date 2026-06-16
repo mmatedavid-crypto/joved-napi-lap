@@ -681,13 +681,13 @@ async function translateOverviewFaithfully(opts: {
   const { aiJSON } = await import("./ai.server");
   const result = await aiJSON<LeadTranslationAI>({
     system: [
-      "Angolról magyarra fordítasz.",
-      "A teljes forrásszöveget mondatról mondatra, azonos sorrendben fordítsd le.",
-      "Ne adj hozzá, ne hagyj ki, ne értelmezz át és ne helyettesíts semmit csillagjegy-sablonnal.",
-      "Természetes magyar mondatokat írj, tegező formában.",
+      "Te a Jövőd.hu magyar horoszkóp-rovatának szerkesztője vagy.",
+      "A teljes forrásszöveg jelentését mondatról mondatra, azonos sorrendben őrizd meg magyarul.",
+      "Ne adj hozzá, ne hagyj ki, ne értelmezz át és ne helyettesíts semmit jegysablonnal.",
+      "Természetes magyar mondatokat írj, tegező formában, szerkesztett rovatnyelven.",
       "Csak a translation mezőt tartalmazó JSON-t add vissza.",
     ].join("\n"),
-    user: `Időszak: ${PERIOD_LABEL[opts.period]}\nJegy: ${opts.signName}\nFordítandó szöveg:\n${opts.overview}`,
+    user: `Időszak: ${PERIOD_LABEL[opts.period]}\nJegy: ${opts.signName}\nForrásszöveg:\n${opts.overview}`,
     schemaName: "HoroscopeOverviewTranslationHU",
     schema: LEAD_TRANSLATION_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-overview:${opts.period}`,
@@ -847,29 +847,29 @@ export async function getHoroscopeNewsArticle(opts: {
   const { aiJSON } = await import("./ai.server");
   const translated = await aiJSON<ArticleAI>({
     system: [
-      "Te magyar szerkesztőségi fordító vagy a Jövőd.hu-n.",
-      "A RoxyAPI horoszkóp-forrását hűen, természetes magyar szerkesztőségi nyelvre fordítod.",
+      "Te a Jövőd.hu magyar horoszkóp-rovatának szerkesztője vagy.",
+      "A horoszkóp-forrás jelentését hűen, természetes magyar szerkesztőségi nyelven őrzöd meg.",
       "Ne rövidíts, ne vágj, ne értelmezz át, ne adj hozzá új állítást.",
-      "A lead kizárólag a forrás overview mezőjének teljes, mondatról mondatra hű magyar fordítása legyen.",
+      "A lead kizárólag a forrás áttekintő részének teljes, mondatról mondatra hű magyar megfelelője legyen.",
       "Tilos a leadet csillagjegy-archetípussal, általános tanáccsal vagy saját értelmezéssel helyettesíteni.",
       "Őrizd meg a forrás szerkezetét: amit a forrás külön témaként ad, legyen külön szekció.",
-      "A finance/health témákat is csak horoszkóp-rovatként fordítsd; ne adj valós orvosi vagy pénzügyi tanácsot.",
-      "Ne használj angol szót, endpointnevet, mezőnevet vagy AI-meta mondatot.",
+      "A pénz vagy egészség jellegű témákat is csak horoszkóp-rovatként kezeld; ne adj valós orvosi vagy pénzügyi tanácsot.",
+      "Ne használj angol szót, technikai mezőnevet vagy gépházi magyarázatot.",
       "Csak JSON-t adj vissza a séma szerint.",
     ].join("\n"),
     user: [
       `Időszak: ${PERIOD_LABEL[opts.period]}`,
       `Jegy: ${SIGN_HU[sign]}`,
       `Dátumkulcs: ${dateKey}`,
-      "Fordítsd magyar cikké. A title legyen keresőbarát, de ne legyen bulváros.",
-      "Forrás JSON:",
+      "Írj belőle magyar horoszkópcikket. A title legyen keresőbarát, de ne legyen bulváros.",
+      "Forrásanyag:",
       JSON.stringify(roxy.data),
     ].join("\n\n"),
     schemaName: "HoroscopeNewsArticleHU",
     schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     readingType: `horoscope-news:${opts.period}`,
     // A news-horoszkóp nem prémium mélyolvasat, de publikus SEO-belépő.
-    // Inkább várunk többet a hű, természetes fordításra, mint hogy gyenge
+    // Inkább várunk többet a hű, természetes magyar szerkesztésre, mint hogy gyenge
     // sablonszöveg kerüljön a Google és a látogató elé.
     providerPreference: "openai_first",
     lovableModel: HOROSCOPE_NEWS_MODEL,
@@ -921,10 +921,10 @@ export async function getHoroscopeNewsArticle(opts: {
       fallbackUsed: true,
       sourceSignals,
     });
-    // A Roxy-forrás elérhető volt, de a teljes szerkesztőségi fordítás nem.
-    // Ilyenkor is kell publikus, természetes magyar lead: a fallback a Roxyból
-    // kinyert jelzéseket és a jegy saját archetípusát fogja össze, nyers forrás
-    // vagy technikai hibaüzenet nélkül.
+    // A strukturált horoszkóp-forrás elérhető volt, de a teljes szerkesztett
+    // cikk nem. Ilyenkor is kell publikus, természetes magyar lead: a kinyert
+    // jelzéseket és a jegy saját archetípusát fogjuk össze, nyers forrás vagy
+    // technikai hibaüzenet nélkül.
     return { ...fallback, lead: faithfulLead ?? fallback.lead };
   }
 

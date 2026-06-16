@@ -151,6 +151,91 @@ const checks: StaticSafetyCheck[] = [
       "tartós szorongáshoz kapcsolódik",
     ],
   },
+  {
+    file: "src/lib/roxy.functions.ts",
+    forbidden: [
+      /roxyAngolForras/,
+      /Roxy angol forrás/i,
+      /FORDÍTANDÓ FORRÁST/i,
+      /raw provider-szöveget/i,
+      /endpoint- vagy mezőneveket/i,
+    ],
+    required: [
+      "forrasAdatok",
+      "forrasJelentes",
+      "forrasJelentesSzabaly",
+      "gépházi szöveget",
+      "hűséges magyar szerkesztő",
+    ],
+  },
+  {
+    file: "src/lib/roxyTranslate.functions.ts",
+    forbidden: [
+      /Roxy API/i,
+      /nyers angol Roxy/i,
+      /raw provider-szöveget/i,
+      /endpoint- vagy mezőneveket/i,
+      /fordítója vagy/i,
+    ],
+    required: [
+      "magyar szimbolikus olvasatainak szerkesztője",
+      "forrásanyag jelentését",
+      "FORRÁSANYAG",
+      "magyar olvasat",
+    ],
+  },
+  {
+    file: "src/lib/horoscopeNews.server.ts",
+    forbidden: [
+      /RoxyAPI horoszkóp-forrás/i,
+      /Angolról magyarra fordítasz/i,
+      /Fordítandó szöveg/i,
+      /endpointnevet/i,
+      /AI-meta mondatot/i,
+      /háttéradat most nem érhető el/i,
+    ],
+    required: [
+      "horoszkóp-rovatának szerkesztője",
+      "forrásszöveg jelentését",
+      "Forrásanyag",
+      "technikai mezőnevet vagy gépházi magyarázatot",
+    ],
+  },
+  {
+    file: "src/lib/products/personal30day.server.ts",
+    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY FORECAST/i, /nyers JSON, angol/i],
+    required: [
+      "asztrológiai forrásanyagból",
+      "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
+      "ASZTROLÓGIAI IDŐVONAL 30 NAPRA",
+    ],
+  },
+  {
+    file: "src/lib/products/personalYearly.server.ts",
+    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY ÉVES/i, /nyers JSON, angol/i],
+    required: [
+      "asztrológiai forrásanyagból",
+      "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
+      "ÉVES ASZTROLÓGIAI FORRÁSANYAG",
+    ],
+  },
+  {
+    file: "src/lib/products/transitsPersonal.server.ts",
+    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY TRANZIT/i, /nyers JSON, angol/i],
+    required: [
+      "asztrológiai forrásanyagból",
+      "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
+      "TRANZITFORRÁS 90 NAPRA",
+    ],
+  },
+  {
+    file: "src/lib/products/vedicFull.server.ts",
+    forbidden: [/ROXY NATAL/i, /nyers JSON, angol/i],
+    required: [
+      "VÉDIKUS (SZIDERIKUS) ÉRTÉKEK",
+      "TROPIKUS SZÜLETÉSI KÉPLET FORRÁSANYAGA",
+    ],
+  },
 ];
 
 const failures: string[] = [];
