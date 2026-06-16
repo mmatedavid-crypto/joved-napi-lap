@@ -49,6 +49,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "webhook stores stable payment failure codes",
+    file: "src/routes/api/public/payments/webhook.ts",
+    includes: [
+      "type PaymentFailureCode",
+      '"stripe_async_payment_failed"',
+      '"stripe_checkout_expired"',
+      "function paymentFailureCode",
+      "error_message: paymentFailureCode(event.type)",
+    ],
+    excludes: ['error_message: event.type'],
+  },
+  {
     name: "thank-you page can read source route",
     file: "src/lib/payments.functions.ts",
     includes: ["ORDER_SELECT_BASE", "created_at", "guest_email", "source_route"],

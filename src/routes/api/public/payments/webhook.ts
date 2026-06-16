@@ -13,6 +13,7 @@ type CheckoutSessionLike = {
   payment_intent?: string | { id?: string } | null;
 };
 type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
+type PaymentFailureCode = "stripe_async_payment_failed" | "stripe_checkout_expired";
 
 function redactStripeId(value: string | null | undefined): string {
   if (!value) return "***";
@@ -24,6 +25,12 @@ function checkoutObjectId(raw: unknown): string | null {
   if (!raw || typeof raw !== "object") return null;
   const id = (raw as { id?: unknown }).id;
   return typeof id === "string" ? id : null;
+}
+
+function paymentFailureCode(eventType: string): PaymentFailureCode {
+  return eventType === "checkout.session.expired"
+    ? "stripe_checkout_expired"
+    : "stripe_async_payment_failed";
 }
 
 function isMissingColumnError(error: unknown): boolean {
@@ -134,7 +141,7 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       const supabase = await getSupabase();
       await supabase
         .from("orders")
-        .update({ status: "failed", error_message: event.type })
+        .update({ status: "failed", error_message: paymentFailureCode(event.type) })
         .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "")
         .eq("status", "pending_payment");
       break;
