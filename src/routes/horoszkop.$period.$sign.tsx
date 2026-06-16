@@ -244,6 +244,14 @@ function HoroscopeArticlePage() {
         </p>
       ) : null}
 
+      {article.fallbackUsed && article.sourceCached ? (
+        <div className="mt-6 rounded-md border border-gold/15 bg-[oklch(0.13_0.03_292/0.58)] px-4 py-3 text-center text-sm leading-relaxed text-ivory/62">
+          A friss háttérszámítás most lassabban érkezik, ezért az utolsó ellenőrzött magyar
+          olvasatot mutatjuk ehhez az időszakhoz. Amint elkészül az új változat, ez az oldal
+          automatikusan frissül.
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap justify-center gap-2 text-xs text-ivory/55 mt-6">
         {article.moonPhase && <span>Hold: {article.moonPhase}</span>}
         {article.luckyColor && <span>Szín: {article.luckyColor}</span>}

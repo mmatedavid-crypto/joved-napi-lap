@@ -75,6 +75,17 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "horoscope article explains cached fallback without technical leakage",
+    file: "src/routes/horoszkop.$period.$sign.tsx",
+    includes: [
+      "article.fallbackUsed && article.sourceCached",
+      "A friss háttérszámítás most lassabban érkezik",
+      "az utolsó ellenőrzött magyar",
+      "automatikusan frissül",
+    ],
+    excludes: ["provider response", "raw response", "Roxy hiba"],
+  },
+  {
     name: "horoscope article cross-links same sign across all periods",
     file: "src/routes/horoszkop.$period.$sign.tsx",
     includes: [
