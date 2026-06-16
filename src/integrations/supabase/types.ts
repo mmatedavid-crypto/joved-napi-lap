@@ -215,45 +215,6 @@ export type Database = {
         }
         Relationships: []
       }
-      order_feedback: {
-        Row: {
-          created_at: string
-          feedback: "accurate" | "partial" | "missed"
-          id: string
-          note: string | null
-          order_id: string
-          product_name: string | null
-          product_slug: string | null
-          source: "thank_you" | "profile"
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          feedback: "accurate" | "partial" | "missed"
-          id?: string
-          note?: string | null
-          order_id: string
-          product_name?: string | null
-          product_slug?: string | null
-          source: "thank_you" | "profile"
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          feedback?: "accurate" | "partial" | "missed"
-          id?: string
-          note?: string | null
-          order_id?: string
-          product_name?: string | null
-          product_slug?: string | null
-          source?: "thank_you" | "profile"
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
