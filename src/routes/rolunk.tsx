@@ -13,7 +13,7 @@ export const Route = createFileRoute("/rolunk")({
           "A Jövőd.hu egy csendes magyar napi rituálé. Tarot, sorsszám, összeillés — emberi hangon.",
       },
     ],
-    links: [{ rel: "canonical", href: "/rolunk" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/rolunk` }],
   }),
   component: () => (
     <Layout>
@@ -68,9 +68,9 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Mit adunk?">
           <p>
-            Fizetős olvasataink nem sablonos válaszok. A tarot, az asztrológia és a számmisztika
-            hagyományos szimbólumait a te kérdésedhez és helyzetedhez igazítva fogalmazzuk meg. Az
-            eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
+            Fizetős olvasataink a tarot, az asztrológia és a számmisztika hagyományos
+            szimbólumaiból indulnak, majd a te kérdésedhez, adataidhoz és helyzetedhez kapcsolódnak.
+            Az eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
           </p>
           <p>
             Nem vállalunk orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadást. A Jövőd.hu-n

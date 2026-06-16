@@ -102,15 +102,15 @@ function Index() {
           <div className="grid gap-6 md:grid-cols-[1fr_1.25fr] md:items-start">
             <div>
               <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
-                Miért nem sablon?
+                Miért személyesebb?
               </div>
               <h2 className="mt-2 font-display text-3xl text-ivory">
-                A kérdésedből indul, nem egy előre írt magazinszövegből.
+                A kérdésedből, a jelekből és a visszatérő mintáidból indul.
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-ivory/62">
-                Az ingyenes olvasatok adnak egy első belső tükröt. A fizetős változat akkor jó,
-                amikor azt szeretnéd, hogy a szöveg már a konkrét helyzetedre, kérdésedre és
-                korábbi mintáidra is figyeljen.
+                Az ingyenes olvasatok adnak egy első belső tükröt. A fizetős változat akkor jó, ha
+                azt szeretnéd, hogy a tarot, a számmisztika vagy az asztrológia jelképei már a
+                konkrét helyzetedhez és korábbi kérdéseidhez kapcsolódjanak.
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -120,8 +120,8 @@ function Index() {
                   text: "Ha megírod, randi, döntés, ex vagy álom a téma, az olvasat erre reagál.",
                 },
                 {
-                  title: "Magyar hang",
-                  text: "A válasz természetes, rövid és józan magyar szövegként jelenik meg.",
+                  title: "Hagyományos jelképek",
+                  text: "A tarot, a számmisztika és az asztrológia régi szimbólumait józan, mai nyelven olvassuk.",
                 },
                 {
                   title: "Visszatérő ív",

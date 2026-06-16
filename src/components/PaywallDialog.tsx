@@ -230,8 +230,8 @@ export function PaywallDialog({
                       ))}
                     </ul>
                     <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
-                      Ez nem teljes olvasat-előzetes, hanem annak ellenőrzése, hogy a fizetett
-                      szöveg nem általános sablonból indul.
+                      Ez nem teljes olvasat-előzetes, hanem annak tiszta összefoglalása, milyen
+                      kérdésből, adatokból és szimbólumokból indul a fizetett olvasat.
                     </p>
                   </div>
                 )}
@@ -521,7 +521,7 @@ function readingFormatPromise(product: ProductDef): string {
     return "hosszabb, 10 lapos riport több szakaszban, összefüggő lezáró résszel.";
   }
   if (product.category === "delayed") {
-    return "részletesebb, több szakaszos írásos elemzés, nem automatikus sablonválasz.";
+    return "részletesebb, több szakaszos írásos elemzés összefüggő lezáró résszel.";
   }
   if (product.slug === "horoszkop_szemelyre" || product.slug === "alomfejtes_rovid") {
     return "rövid, személyes írásos olvasat 3-5 jól olvasható résszel.";
@@ -624,7 +624,7 @@ function wrongFitPromise(product: ProductDef): string[] {
 
 function qualityReviewPromise(product: ProductDef): string[] {
   const base = [
-    "minden olvasat természetes, közérthető magyar nyelven készül",
+    "minden olvasat a választott hagyomány jelképeit a megadott helyzethez köti",
     "a válasz nem tartalmazhat biztos jövőígéretet vagy ijesztgető állítást",
   ];
   if (product.category === "delayed") {
@@ -690,7 +690,7 @@ function readingFocusPreview(
     lines.push("A jegyedet és a mostani témádat rövid, személyes napi iránnyá kapcsoljuk össze.");
   } else if (product.slug === "szammisztika_eletut") {
     lines.push(
-      "A születési adatokból és a névből nem általános jellemzést, hanem személyesebb életút-mintát készítünk.",
+      "A születési adatokból és a névből személyesebb életút-mintát állítunk össze.",
     );
   }
 
