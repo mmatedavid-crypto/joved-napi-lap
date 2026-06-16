@@ -146,11 +146,11 @@ function HoroscopeArticlePending() {
   const periodRange = period ? periodDateLabel(period) : "a mostani időszak";
   const loadingSteps = [
     `${signName} ${periodLabel.toLowerCase()} időszakának fő témáit tekintjük át.`,
-    `A ${periodRange} képlet- és jegyhangulatát rendezzük egységes olvasattá.`,
+    `A ${periodRange} képlet- és jegyhangulatát egységben olvassuk.`,
     "A holdfázist, a kiemelt színt és a szerencseszámot is figyelembe vesszük.",
     "A szerelem, munka, figyelmeztetés és belső fókusz részeit külön választjuk.",
     "Nem rövid sablonüzenetet adunk: minden fontos életterület külön figyelmet kap.",
-    "A végső szöveget természetes, közérthető magyar nyelven fogalmazzuk meg.",
+    "A végső olvasat rövid, józan és személyes hangon áll össze.",
     "Ha a friss olvasat lassabban készül, az utolsó ellenőrzött változatot mutatjuk.",
   ] as const;
 
@@ -180,7 +180,7 @@ function HoroscopeArticlePending() {
         </h1>
         <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
           Nálunk nem egy rövid, általános sablonszöveg kerül eléd. A mostani időszak jegyhangulatát,
-          holdfázisát és kiemelt témáit rendezzük részletes, természetes magyar olvasattá.
+          holdfázisát és kiemelt témáit a horoszkóp hagyománya szerint, józanul olvassuk össze.
         </p>
         <ReadingLoadingState
           kind="horoscope"
@@ -199,7 +199,7 @@ function HoroscopeArticlePending() {
           </div>
           <div className="rounded-md border border-gold/10 px-3 py-2">
             <span className="block text-gold/75">3. Ellenőrzés</span>
-            <span>Természetes, átnézett magyar szöveg.</span>
+            <span>Tiszta, átnézett olvasat.</span>
           </div>
         </div>
       </div>

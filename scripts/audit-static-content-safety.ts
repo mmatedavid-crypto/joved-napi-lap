@@ -415,6 +415,10 @@ const publicTrustLeakPatterns = [
   /\bGPT\b/i,
   /\bAI hiba\b/i,
   /\bmint AI\b/i,
+  /természetes magyar olvasattá/i,
+  /közérthető magyar nyelven fogalmazzuk meg/i,
+  /magyarra fordít/i,
+  /lefordít/i,
 ];
 
 for (const file of publicTrustLeakFiles) {
