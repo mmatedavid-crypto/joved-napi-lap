@@ -59,8 +59,14 @@ export const Route = createFileRoute("/aszf")({
           hosszabb ideig tarthat; ezeknél a terméklapon jelzett tájékoztatás irányadó.
         </p>
         <p>
-          Ha technikai hiba miatt a teljesítés nem sikerül, a felhasználó a kapcsolati email címen
-          kérhet segítséget.
+          Vendégvásárlásnál a fizetés utáni rendelési linket és a vásárláshoz használt email címet
+          érdemes megőrizni. Bejelentkezett felhasználónál az elkészült olvasat a profilban is visszanézhető.
+        </p>
+        <p>
+          Ha technikai hiba miatt az olvasat nem nyílik meg, nem hozzáférhető, vagy hibásan jelenik meg,
+          a felhasználó a kapcsolati email címen kérhet segítséget. Ilyenkor a vásárlási email
+          cím és a rövid rendelésazonosító alapján ellenőrizzük a rendelést, és lehetőség szerint
+          pótoljuk a hozzáférést, javítjuk a hibás megjelenítést vagy újraküldjük az olvasatot.
         </p>
       </LegalSection>
 
@@ -108,6 +114,11 @@ export const Route = createFileRoute("/aszf")({
             {SITE_LEGAL.supportEmail}
           </a>
           .
+        </p>
+        <p>
+          Technikai teljesítési gondnál vagy rendelési kérdésnél mindig a vásárlási email címedről
+          írj, és ha látod, add meg a rövid rendelésazonosítót is. Így gyorsabban ellenőrizhető,
+          hogy a fizetés, az olvasat elkészítése vagy az emailes értesítés melyik ponton akadt el.
         </p>
       </LegalSection>
 
