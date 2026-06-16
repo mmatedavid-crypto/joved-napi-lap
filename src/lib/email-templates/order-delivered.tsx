@@ -43,7 +43,7 @@ const OrderDeliveredEmail = ({
   const openUrl = accessUrl ?? `${siteUrl}/profil`;
   const shortOrderId = orderId ? orderId.slice(0, 8) : undefined;
   const accessIntro = isGuest
-    ? "A teljes olvasatot ezen a biztonságos rendelési linken is eléred. Vendég vásárlásnál ezt a linket érdemes megtartanod."
+    ? "A teljes olvasatot ezen a biztonságos rendelési linken is eléred. Vendégvásárlásnál ezt a linket érdemes megtartanod."
     : "A teljes olvasatot ezen a biztonságos linken és a profilodban is eléred. Ha az emailt később keresed vissza, innen közvetlenül meg tudod nyitni.";
   const missingBodyText = isGuest
     ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről."
@@ -114,7 +114,7 @@ const OrderDeliveredEmail = ({
             <Text style={paragraph}>
               {isGuest ? (
                 <>
-                  Vendég vásárlásnál ez a biztonságos rendelési link a legfontosabb hozzáférés. Fiók
+                  Vendégvásárlásnál ez a biztonságos rendelési link a legfontosabb hozzáférés. Fiók
                   létrehozása nem kötelező.
                 </>
               ) : (

@@ -199,7 +199,7 @@ export function PaywallDialog({
               />
               {!user && (
                 <p className="text-xs text-ivory/45 mt-1">
-                  Vendég vásárlás — fiók nem kötelező. Fontos, hogy pontos címet adj meg, mert
+                  Vendégvásárlás — fiók nem kötelező. Fontos, hogy pontos címet adj meg, mert
                   ehhez kötjük az olvasat elküldését és visszakeresését.
                 </p>
               )}

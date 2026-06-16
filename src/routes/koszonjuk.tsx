@@ -361,7 +361,7 @@ function Page() {
                     )}
                     <p className="mt-4 text-sm text-ivory/55">
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
-                      Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
+                      Vendégvásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
                     {order.delivery_email_status === "attention_needed" && (
                       <DeliveryEmailNotice orderId={order.id} />

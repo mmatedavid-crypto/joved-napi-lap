@@ -783,7 +783,7 @@ const checks: Check[] = [
       "Mi történt röviden:",
       "Rendelés rövid azonosítója",
       "orderId.slice(0, 8)",
-      "Vendég vásárlásnál",
+      "Vendégvásárlásnál",
       "linket érdemes megtartanod",
       "biztonságos rendelési link a legfontosabb hozzáférés",
       "létrehozása nem kötelező",
@@ -814,6 +814,7 @@ const checks: Check[] = [
       "elég azt a részt vagy érzést megírni",
       "isGuest: true",
     ],
+    excludes: ["Vendég vásárlás"],
   },
   {
     name: "order processing passes guest state into delivered email",
