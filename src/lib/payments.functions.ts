@@ -153,8 +153,9 @@ interface CreateCheckoutInput {
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator((data: CreateCheckoutInput) => {
+    const customerEmail = normalizeCheckoutEmail(data.customerEmail);
     if (!PRODUCTS_BY_SLUG[data.productSlug]) throw new Error("Ismeretlen termék");
-    if (!data.customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.customerEmail)) {
+    if (!customerEmail) {
       throw new Error("Érvénytelen email cím");
     }
     if (data.userId && !/^[a-zA-Z0-9_-]+$/.test(data.userId)) {
@@ -162,6 +163,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     }
     return {
       ...data,
+      customerEmail,
       returnUrl: normalizeCheckoutReturnUrl(data.returnUrl, data.environment),
       sourceRoute: normalizeSourceRoute(data.sourceRoute),
     };
@@ -317,6 +319,11 @@ function safeCheckoutErrorCode(error: unknown): CheckoutErrorCode {
   if (message === "order_insert_failed") return "order_insert_failed";
   if (message === CHECKOUT_GENERIC_ERROR) return "checkout_start_failed";
   return "checkout_start_failed";
+}
+
+function normalizeCheckoutEmail(value: string): string | null {
+  const email = value.trim().toLocaleLowerCase("hu-HU");
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
 }
 
 function normalizeCheckoutReturnUrl(returnUrl: string, environment: StripeEnv): string {
