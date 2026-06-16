@@ -84,9 +84,27 @@ function PrivacyPage() {
           rész maradt ki vagy milyen irányban vártál volna pontosabb segítséget.
         </p>
         <p>
-          Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati,
-          hibajavítási és szolgáltatásminőségi célra használjuk. A visszajelzés nem helyettesíti a
-          panaszt vagy ügyfélszolgálati kérést; ha választ vársz, írj a kapcsolati email címre is.
+          Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati, hibajavítási
+          és szolgáltatásminőségi célra használjuk. A visszajelzés nem helyettesíti a panaszt vagy
+          ügyfélszolgálati kérést; ha választ vársz, írj a kapcsolati email címre is.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Vendégvásárlások és profil">
+        <p>
+          Vendégként is vásárolhatsz. Ilyenkor a rendelést a vásárláskor megadott email címhez és a
+          biztonságos rendelési linkhez kapcsoljuk, nem szükséges előzetesen fiókot létrehoznod.
+        </p>
+        <p>
+          Ha később ugyanazzal az igazolt email címmel jelentkezel be, a korábbi gazdátlan
+          vendégvásárlásaidat a profilodhoz kapcsolhatjuk, hogy a fizetős olvasataidat és azok
+          állapotát egy helyen visszanézhesd. Ez nem indít új fizetést, és nem érinti a Stripe által
+          kezelt bankkártyaadatokat.
+        </p>
+        <p>
+          A biztonságos rendelési link ilyenkor is működik. A kapcsolást csak azonos email cím
+          alapján végezzük, és kizárólag a rendelés teljesítéséhez, visszakereséséhez,
+          ügyfélszolgálatához és minőségi visszajelzéséhez használjuk.
         </p>
       </LegalSection>
 
