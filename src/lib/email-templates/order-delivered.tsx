@@ -148,7 +148,7 @@ const OrderDeliveredEmail = ({
             </Section>
             <Text style={supportText}>
               Ha a gomb nem nyílik meg, írj nekünk a{" "}
-              <Link href={`mailto:${SITE_LEGAL.supportEmail}`} style={link}>
+              <Link href={orderSupportMailto({ productName, shortOrderId })} style={link}>
                 {SITE_LEGAL.supportEmail}
               </Link>{" "}
               címre. A gyorsabb segítséghez ezt add meg:{" "}
@@ -232,6 +232,22 @@ function feedbackMailto(opts: {
     "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyik nem talált.",
     "",
     "Röviden ezt szeretném hozzátenni:",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function orderSupportMailto(opts: { productName: string; shortOrderId?: string }): string {
+  const orderRef = opts.shortOrderId ?? "nincs rövid azonosító";
+  const subject = `Jövőd.hu rendelési segítség · ${orderRef}`;
+  const body = [
+    "Segítséget szeretnék kérni a megrendelt olvasatom megnyitásához.",
+    "",
+    `Rendelés: ${orderRef}`,
+    `Termék: ${opts.productName}`,
+    "A vásárlási email címem:",
+    "Mi történt röviden:",
+    "",
+    "Köszönöm.",
   ].join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

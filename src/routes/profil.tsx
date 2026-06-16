@@ -502,7 +502,7 @@ function OrderStatusNote({
           </button>
           <span className="text-xs leading-relaxed text-ivory/50">
             Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
-            <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+            <a className="text-gold hover:text-gold/80" href={profileSupportMailto(shortId)}>
               {SITE_LEGAL.supportEmail}
             </a>
             {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
