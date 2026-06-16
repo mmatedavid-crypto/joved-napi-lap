@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
+import { SITE_LEGAL } from "@/lib/legal";
 import { PRODUCTS, formatHuf, type ProductCategory } from "@/lib/products";
 
 const PRICING_FAQ = [
@@ -86,6 +87,42 @@ export const Route = createFileRoute("/arak")({
             acceptedAnswer: {
               "@type": "Answer",
               text: item.answer,
+            },
+          })),
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Jövőd.hu fizetős olvasatok",
+          itemListElement: PRODUCTS.map((product, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "Product",
+              name: product.name,
+              description: product.short,
+              category:
+                product.category === "instant"
+                  ? "Azonnali digitális olvasat"
+                  : "Részletes digitális olvasat",
+              brand: {
+                "@type": "Brand",
+                name: "Jövőd.hu",
+              },
+              offers: {
+                "@type": "Offer",
+                price: product.priceHuf,
+                priceCurrency: "HUF",
+                availability: "https://schema.org/InStock",
+                url: `${SITE_LEGAL.siteUrl}${product.sourceRoute ?? "/arak"}`,
+                seller: {
+                  "@type": "Organization",
+                  name: SITE_LEGAL.operator.name,
+                },
+              },
             },
           })),
         }),
