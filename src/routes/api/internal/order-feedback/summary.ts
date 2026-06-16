@@ -7,6 +7,7 @@ type FeedbackRow = {
   product_name: string | null;
   feedback: FeedbackValue;
   source: string | null;
+  note: string | null;
   created_at: string;
 };
 
@@ -18,7 +19,10 @@ type ProductFeedbackSummary = {
   partial: number;
   missed: number;
   negative: number;
+  detailCount: number;
+  negativeDetailCount: number;
   missRate: number;
+  detailRate: number;
   needsAttention: boolean;
 };
 
@@ -26,6 +30,7 @@ const DEFAULT_DAYS = 30;
 const MAX_DAYS = 180;
 const ATTENTION_MIN_TOTAL = 3;
 const ATTENTION_MISS_RATE = 0.34;
+const LEGACY_BUTTON_NOTES = new Set(["Eltalált", "Részben talált", "Nem volt elég pontos"]);
 
 function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get("Authorization");
@@ -48,7 +53,16 @@ function emptyCounts() {
     accurate: 0,
     partial: 0,
     missed: 0,
+    detailCount: 0,
+    negativeDetailCount: 0,
   };
+}
+
+function hasWrittenDetail(row: FeedbackRow): boolean {
+  const detail = row.note?.trim();
+  if (!detail) return false;
+  if (LEGACY_BUTTON_NOTES.has(detail)) return false;
+  return detail.length >= 12;
 }
 
 function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
@@ -66,6 +80,10 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
     };
     current.total += 1;
     current[row.feedback] += 1;
+    if (hasWrittenDetail(row)) {
+      current.detailCount += 1;
+      if (row.feedback === "partial" || row.feedback === "missed") current.negativeDetailCount += 1;
+    }
     if (!current.productName && row.product_name) current.productName = row.product_name;
     byProduct.set(productSlug, current);
   }
@@ -74,6 +92,7 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
     .map((item) => {
       const negative = item.partial + item.missed;
       const missRate = item.total > 0 ? Number((negative / item.total).toFixed(2)) : 0;
+      const detailRate = item.total > 0 ? Number((item.detailCount / item.total).toFixed(2)) : 0;
       return {
         productSlug: item.productSlug,
         productName: item.productName,
@@ -82,7 +101,10 @@ function summarizeRows(rows: FeedbackRow[]): ProductFeedbackSummary[] {
         partial: item.partial,
         missed: item.missed,
         negative,
+        detailCount: item.detailCount,
+        negativeDetailCount: item.negativeDetailCount,
         missRate,
+        detailRate,
         needsAttention: item.total >= ATTENTION_MIN_TOTAL && missRate >= ATTENTION_MISS_RATE,
       };
     })
@@ -104,7 +126,7 @@ async function handleSummary(request: Request) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("order_feedback")
-    .select("product_slug, product_name, feedback, source, created_at")
+    .select("product_slug, product_name, feedback, source, note, created_at")
     .gte("created_at", since)
     .order("created_at", { ascending: false })
     .limit(1000);
@@ -129,8 +151,18 @@ async function handleSummary(request: Request) {
       partial: acc.partial + item.partial,
       missed: acc.missed + item.missed,
       negative: acc.negative + item.negative,
+      detailCount: acc.detailCount + item.detailCount,
+      negativeDetailCount: acc.negativeDetailCount + item.negativeDetailCount,
     }),
-    { total: 0, accurate: 0, partial: 0, missed: 0, negative: 0 },
+    {
+      total: 0,
+      accurate: 0,
+      partial: 0,
+      missed: 0,
+      negative: 0,
+      detailCount: 0,
+      negativeDetailCount: 0,
+    },
   );
 
   return Response.json(

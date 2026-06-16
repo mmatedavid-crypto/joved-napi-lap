@@ -616,7 +616,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     setFeedbackError("");
     try {
       const result = await submitFeedback({
-        data: { orderId: order.id, feedback: option.value, note: note?.trim() || option.label },
+        data: { orderId: order.id, feedback: option.value, note: note?.trim() },
       });
       if (!result.ok) {
         setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
@@ -658,7 +658,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
                 feedback: option.value,
                 source: "profile",
                 saved: false,
-              })
+              });
               void saveFeedback(option);
             }}
             className={`rounded-md border px-3 py-2 text-xs transition-colors ${
@@ -674,11 +674,9 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       {selectedOption && (
         <p className="mt-3 text-xs leading-relaxed text-ivory/58">
           Köszönjük, mentettük a visszajelzést.{" "}
-          {selectedOption.value === "accurate" ? (
-            "Ez segít látni, mely termékek működnek igazán jól."
-          ) : (
-            "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."
-          )}
+          {selectedOption.value === "accurate"
+            ? "Ez segít látni, mely termékek működnek igazán jól."
+            : "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."}
         </p>
       )}
       {selectedOption && selectedOption.value !== "accurate" && (

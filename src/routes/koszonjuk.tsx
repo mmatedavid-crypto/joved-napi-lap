@@ -400,13 +400,7 @@ function supportMailto(shortId?: string): string {
 
 type FeedbackValue = "accurate" | "partial" | "missed";
 
-function PaidReadingFeedback({
-  order,
-  sessionId,
-}: {
-  order: OrderView;
-  sessionId?: string;
-}) {
+function PaidReadingFeedback({ order, sessionId }: { order: OrderView; sessionId?: string }) {
   const submitFeedback = useServerFn(submitOrderFeedbackBySession);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(
     order.feedback ?? null,
@@ -440,7 +434,7 @@ function PaidReadingFeedback({
     setFeedbackError("");
     try {
       const result = await submitFeedback({
-        data: { sessionId, feedback: option.value, note: note?.trim() || option.label },
+        data: { sessionId, feedback: option.value, note: note?.trim() },
       });
       if (!result.ok) {
         setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
@@ -484,7 +478,7 @@ function PaidReadingFeedback({
                   feedback: option.value,
                   source: "thank_you",
                   saved: false,
-                })
+                });
                 void saveFeedback(option);
               }}
               className={`rounded-md border px-3 py-2 text-sm transition-colors ${
@@ -501,11 +495,9 @@ function PaidReadingFeedback({
       {selectedOption && (
         <p className="mt-3 text-sm leading-relaxed text-ivory/62">
           Köszönjük, mentettük a visszajelzést.{" "}
-          {selectedOption.value === "accurate" ? (
-            "Ez segít látni, mely termékek működnek igazán jól."
-          ) : (
-            "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."
-          )}
+          {selectedOption.value === "accurate"
+            ? "Ez segít látni, mely termékek működnek igazán jól."
+            : "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."}
         </p>
       )}
       {selectedOption && selectedOption.value !== "accurate" && (
