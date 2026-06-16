@@ -373,6 +373,8 @@ for (const forbiddenNeedle of [
   "Személyes 30 napos előrejelzés",
   "Teljes éves előrejelzés",
   "konkrét napokra figyelmeztetés",
+  "konkrét napokra szóló",
+  "natalchart",
 ]) {
   if (productsSource.includes(forbiddenNeedle)) {
     failed.push(

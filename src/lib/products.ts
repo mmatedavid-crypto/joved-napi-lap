@@ -261,7 +261,7 @@ export const PRODUCTS: ProductDef[] = [
     includes: [
       "születési képleted rövid összegzése",
       "30 napos időablak: szerelem, munka, döntések",
-      "konkrét napokra szóló figyelmi pontok és lehetőségi ablakok",
+      "időszaki figyelmi pontok és lehetőségi ablakok",
     ],
     depthPromise: [
       "a tranzitokat a saját képletedre vetíti, nem általános horoszkóp",
@@ -304,7 +304,7 @@ export const PRODUCTS: ProductDef[] = [
       "éves fő motívum és a 9 éves életciklusod helyzete",
     ],
     depthPromise: [
-      "a következő 12 hónap tranzitjait a saját natalcharthoz illeszti",
+      "a következő 12 hónap tranzitjait a saját születési képletedhez illeszti",
       "havi bontás, nem általános éves jegyhoroszkóp",
     ],
     qualityPromise: "Több oldalas, személyre szabott éves riport — nem újságos jegyhoroszkóp.",
@@ -321,7 +321,7 @@ export const PRODUCTS: ProductDef[] = [
     includes: [
       "a most aktív tranzitok személyes értelmezése",
       "feszültségi és lehetőségi pontok 90 napra",
-      "konkrét napokra szóló figyelmi és kapu-pontok",
+      "időszaki figyelmi pontok és hangsúlyváltások",
     ],
     depthPromise: [
       "a Szaturnusz/Jupiter/Mars-tranzitokat a saját bolygóid és házaid felől olvassa",
