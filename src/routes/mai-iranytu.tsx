@@ -33,6 +33,7 @@ import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 
 export const Route = createFileRoute("/mai-iranytu")({
   head: () => ({
@@ -340,6 +341,22 @@ function Page() {
                 {productCtaLabel("Kérem", "mai_iranytu_ai")}
               </button>
             </div>
+            <SmartReadingFollowup
+              intent="daily"
+              readingType="daily_compass"
+              topic="mai iránytű"
+              situation={focus.trim() || (sign ? SIGN_HU[sign as keyof typeof SIGN_HU] : undefined)}
+              question={focus.trim() || undefined}
+              sourceRoute="/mai-iranytu"
+              inputPayload={{
+                dob,
+                name,
+                sign,
+                question: focus.trim() || undefined,
+                situation: focus.trim() || undefined,
+                ...c,
+              }}
+            />
           </div>
         )}
       </div>

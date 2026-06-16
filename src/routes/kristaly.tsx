@@ -17,6 +17,7 @@ import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 
 export const Route = createFileRoute("/kristaly")({
   head: () => ({
@@ -201,6 +202,19 @@ function Page() {
                 {productCtaLabel("Személyes kristály-ajánlás", "kristaly_ai")}
               </button>
             </div>
+            <SmartReadingFollowup
+              intent="crystal"
+              readingType="crystal"
+              topic={r.name}
+              situation={crystalTopic(mode, month, sign)}
+              sourceRoute="/kristaly"
+              inputPayload={{
+                ...(mode === "month" ? { mode, month } : { mode, sign }),
+                crystal: r.name,
+                situation: crystalTopic(mode, month, sign),
+                title: r.oneLine,
+              }}
+            />
           </div>
         )}
       </div>

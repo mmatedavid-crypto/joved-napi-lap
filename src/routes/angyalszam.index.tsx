@@ -11,6 +11,7 @@ import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
+import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 
 export const Route = createFileRoute("/angyalszam/")({
   head: () => ({
@@ -175,6 +176,21 @@ function Page() {
                 {productCtaLabel("Mélyebb olvasat", "angyalszam_ai")}
               </button>
             </div>
+            <SmartReadingFollowup
+              intent="angel"
+              readingType="angel"
+              topic={m.number}
+              situation={situation.trim() || m.meaning.title}
+              question={situation.trim() || undefined}
+              sourceRoute="/angyalszam"
+              inputPayload={{
+                number: m.number,
+                root: m.root,
+                question: situation.trim() || undefined,
+                situation: situation.trim() || undefined,
+                title: m.meaning.title,
+              }}
+            />
           </div>
         )}
 

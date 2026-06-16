@@ -416,11 +416,52 @@ for (const needle of [
   "const recurringIntent",
   'intent === "daily" && loveIntent',
   'intent === "daily" && decisionIntent',
+  'intent === "angel"',
+  'intent === "crystal"',
   "Mi ismétlődik ebben a kapcsolatban?",
   "Hogyan döntsek tisztábban?",
+  "Mit jelent ez most személyesen?",
+  "Melyik minőséget érdemes most hordoznom?",
 ]) {
   if (!smartFollowup.includes(needle)) {
     failed.push(`SmartReadingFollowup missing: ${needle}`);
+  }
+}
+
+const followupRoutes = [
+  {
+    file: "src/routes/angyalszam.index.tsx",
+    needles: [
+      'intent="angel"',
+      'readingType="angel"',
+      'sourceRoute="/angyalszam"',
+      "number: m.number",
+    ],
+  },
+  {
+    file: "src/routes/kristaly.tsx",
+    needles: [
+      'intent="crystal"',
+      'readingType="crystal"',
+      'sourceRoute="/kristaly"',
+      "crystal: r.name",
+    ],
+  },
+  {
+    file: "src/routes/mai-iranytu.tsx",
+    needles: [
+      'intent="daily"',
+      'readingType="daily_compass"',
+      'sourceRoute="/mai-iranytu"',
+      "question: focus.trim() || undefined",
+    ],
+  },
+];
+
+for (const route of followupRoutes) {
+  const body = readFileSync(route.file, "utf8");
+  for (const needle of ["SmartReadingFollowup", ...route.needles]) {
+    if (!body.includes(needle)) failed.push(`${route.file} missing followup bridge: ${needle}`);
   }
 }
 

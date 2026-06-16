@@ -12,7 +12,9 @@ type FollowupIntent =
   | "compatibility"
   | "dream"
   | "numerology"
-  | "horoscope";
+  | "horoscope"
+  | "angel"
+  | "crystal";
 
 type FollowupOption = {
   slug: string;
@@ -77,7 +79,9 @@ export function SmartReadingFollowup({
 
   return (
     <section className="surface p-5 md:p-6">
-      <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">Innen hogyan tovább?</div>
+      <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+        Innen hogyan tovább?
+      </div>
       <div className="mt-2 grid gap-5 md:grid-cols-[1fr_auto] md:items-start">
         <div>
           <h2 className="font-display text-2xl text-ivory">Egy jó következő kérdés</h2>
@@ -120,7 +124,9 @@ export function SmartReadingFollowup({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="font-display text-xl leading-tight text-ivory">{option.label}</div>
+                  <div className="font-display text-xl leading-tight text-ivory">
+                    {option.label}
+                  </div>
                   <p className="mt-2 text-sm leading-relaxed text-ivory/62">{option.reason}</p>
                 </div>
                 <span className="shrink-0 text-sm tabular-nums text-gold">
@@ -155,23 +161,21 @@ function followupOptions(
     memory: ReturnType<typeof getGuestReadingContext>;
   },
 ): FollowupOption[] {
-  const text = `${context.question ?? ""} ${context.situation ?? ""} ${context.memory.themeSummary}`.toLocaleLowerCase(
-    "hu-HU",
-  );
-  const loveIntent = /(szerelem|kapcsolat|randi|ex|visszatér|ismerked|szeret|összeill)/.test(
-    text,
-  );
-  const decisionIntent = /(dönt|választ|munka|állás|költöz|maradjak|menjek|elfogadjam)/.test(
-    text,
-  );
+  const text =
+    `${context.question ?? ""} ${context.situation ?? ""} ${context.memory.themeSummary}`.toLocaleLowerCase(
+      "hu-HU",
+    );
+  const loveIntent = /(szerelem|kapcsolat|randi|ex|visszatér|ismerked|szeret|összeill)/.test(text);
+  const decisionIntent = /(dönt|választ|munka|állás|költöz|maradjak|menjek|elfogadjam)/.test(text);
   const recurringIntent = /(újra|megint|visszatérő|ismétlődik|ugyanaz)/.test(text);
   if (intent === "love" || intent === "compatibility") {
     return [
       {
         slug: "parkapcsolat_elemzes",
-        label: text.includes("ex") || text.includes("visszatér")
-          ? "Mi történne, ha újra megjelenne?"
-          : "Mi történik köztetek valójában?",
+        label:
+          text.includes("ex") || text.includes("visszatér")
+            ? "Mi történne, ha újra megjelenne?"
+            : "Mi történik köztetek valójában?",
         reason:
           "A kapcsolati olvasat nem csak százalékot ad: tempót, vonzalmat, kommunikációt és visszatérő mintát is néz.",
       },
@@ -187,7 +191,9 @@ function followupOptions(
     return [
       {
         slug: "parkapcsolat_elemzes",
-        label: recurringIntent ? "Mi ismétlődik ebben a kapcsolatban?" : "Mit mutat ez kettőtökről?",
+        label: recurringIntent
+          ? "Mi ismétlődik ebben a kapcsolatban?"
+          : "Mit mutat ez kettőtökről?",
         reason:
           "Ha a napi lap valójában kapcsolati kérdést érintett meg, jobb külön nézni a tempót, vonzalmat és visszatérő mintát.",
       },
@@ -247,6 +253,50 @@ function followupOptions(
       },
     ];
   }
+  if (intent === "angel") {
+    return [
+      {
+        slug: loveIntent
+          ? "parkapcsolat_elemzes"
+          : decisionIntent
+            ? "dontes_komplex"
+            : "angyalszam_ai",
+        label: loveIntent
+          ? "Mit mutat ez a kapcsolati jel?"
+          : decisionIntent
+            ? "Mit kezdjek ezzel a döntésben?"
+            : "Mit jelent ez most személyesen?",
+        reason: loveIntent
+          ? "Ha a szám kapcsolat közben jelent meg, érdemes külön nézni a tempót, a várakozást és a visszatérő mintát."
+          : decisionIntent
+            ? "Ha a szám döntés előtt tűnt fel, a döntési olvasat jobban szétválasztja a félelmet és a józan belső irányt."
+            : "A mélyebb angyalszám-olvasat a számot a saját helyzetedhez köti, nem csak általános jelentést ad.",
+      },
+      {
+        slug: "mai_iranytu_ai",
+        label: "Mi legyen a mai fókuszom?",
+        reason:
+          "Akkor hasznos, ha nem hosszabb magyarázat kell, hanem egy rövid, napi önismereti irány.",
+      },
+    ];
+  }
+  if (intent === "crystal") {
+    return [
+      {
+        slug: "kristaly_ai",
+        label: "Melyik minőséget érdemes most hordoznom?",
+        reason:
+          "A személyes kristály-ajánlás nem testi hatást ígér, hanem a mostani helyzetedhez választ szimbolikus fókuszt.",
+      },
+      {
+        slug: decisionIntent ? "dontes_komplex" : "mai_iranytu_ai",
+        label: decisionIntent ? "Mit mutat ez a döntésemről?" : "Hogyan vigyem ezt bele a napomba?",
+        reason: decisionIntent
+          ? "Ha a kristály egy döntés körül érintett meg, a döntési olvasat tisztábban bontja ki a visszatartó és nyitó erőket."
+          : "Ha csak egy mai irány kell, a napi iránytű rövidebb, személyesebb folytatás.",
+      },
+    ];
+  }
   if (intent === "numerology") {
     return [
       {
@@ -274,8 +324,7 @@ function followupOptions(
       {
         slug: "transits_personal",
         label: "Miért most történik ez?",
-        reason:
-          "A tranzit-elemzés a most ható időzítéseket keresi a saját képleted felől.",
+        reason: "A tranzit-elemzés a most ható időzítéseket keresi a saját képleted felől.",
       },
     ];
   }
@@ -288,8 +337,7 @@ function followupOptions(
     {
       slug: decisionIntent ? "dontes_komplex" : "harom_lap_mely",
       label: decisionIntent ? "Hogyan döntsek tisztábban?" : "Mi ennek a mélyebb mintája?",
-      reason:
-        "Akkor hasznos, ha a rövid napi üzenet után több összefüggést szeretnél látni.",
+      reason: "Akkor hasznos, ha a rövid napi üzenet után több összefüggést szeretnél látni.",
     },
   ];
 }
