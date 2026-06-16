@@ -3,8 +3,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { CARDS } from "@/data/cards";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Tarot kártya jelentések magyarul — mind a 78 lap";
 const DESCRIPTION =
   "Tarot kártya enciklopédia magyarul: Nagy Arkánum és kis Arkánum, jelentés szerelemben, döntésben, mindennapokban. Ingyenes, részletes leírás minden laphoz.";
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/tarot/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/tarot` },
     ],
-    links: [{ rel: "canonical", href: "/tarot" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/tarot` }],
     scripts: [
       {
         type: "application/ld+json",

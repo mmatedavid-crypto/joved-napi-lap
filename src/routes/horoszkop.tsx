@@ -11,6 +11,7 @@ import {
   periodDateLabel,
 } from "@/lib/horoscopeNews";
 import { getGuestReadingContext } from "@/lib/guestReadingMemory";
+import { SITE_LEGAL } from "@/lib/legal";
 import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/horoszkop")({
         content: "Friss napi, heti és havi horoszkóp magyarul mind a 12 csillagjegynek.",
       },
     ],
-    links: [{ rel: "canonical", href: "/horoszkop" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/horoszkop` }],
   }),
   component: HoroszkopIndex,
 });

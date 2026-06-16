@@ -4,8 +4,9 @@ import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
 import { LIFE_PATH_NUMBERS } from "@/data/lifePathMeanings.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Számmisztika magyarul — sorsszám, lélekszám, kifejezésszám";
 const DESCRIPTION =
   "Teljes magyar számmisztika útmutató: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év jelentése. Számítási módszerek és értelmezések.";
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/numerologia/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/numerologia` },
     ],
-    links: [{ rel: "canonical", href: "/numerologia" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/numerologia` }],
     scripts: [
       {
         type: "application/ld+json",

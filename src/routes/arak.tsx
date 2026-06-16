@@ -74,7 +74,7 @@ export const Route = createFileRoute("/arak")({
           "Jövőd.hu árak: azonnali személyes olvasatok 590 Ft-tól, részletes asztrológiai elemzések átlátható elkészülési idővel.",
       },
     ],
-    links: [{ rel: "canonical", href: "/arak" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/arak` }],
     scripts: [
       {
         type: "application/ld+json",

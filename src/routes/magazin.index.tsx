@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { getPublishedMagazinPosts, MAGAZIN_CATEGORIES } from "@/data/magazin.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/magazin/")({
   head: () => ({
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/magazin/")({
       },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/magazin" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/magazin` }],
   }),
   component: Page,
 });

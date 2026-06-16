@@ -259,6 +259,24 @@ const checks: Check[] = [
 
 const failed: string[] = [];
 
+const publicHubCanonicalChecks = [
+  ["src/routes/horoszkop.tsx", 'href: `${SITE_LEGAL.siteUrl}/horoszkop`'],
+  ["src/routes/tarot.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/tarot`'],
+  ["src/routes/numerologia.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/numerologia`'],
+  ["src/routes/magazin.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/magazin`'],
+  ["src/routes/arak.tsx", 'href: `${SITE_LEGAL.siteUrl}/arak`'],
+] as const;
+
+for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
+  const body = readFileSync(file, "utf8");
+  if (!body.includes("SITE_LEGAL.siteUrl") || !body.includes(canonicalNeedle)) {
+    failed.push(`${file}: public hub must use a production-domain canonical URL`);
+  }
+  if (body.includes('links: [{ rel: "canonical", href: "/')) {
+    failed.push(`${file}: public hub must not use a relative canonical URL`);
+  }
+}
+
 for (const check of checks) {
   const body = readFileSync(check.file, "utf8");
   const missing = check.includes.filter((needle) => !body.includes(needle));
