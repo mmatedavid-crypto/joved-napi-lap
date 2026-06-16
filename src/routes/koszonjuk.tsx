@@ -6,7 +6,11 @@ import { PaidReadingBody } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { trackEvent } from "@/lib/analytics";
 import { SITE_LEGAL } from "@/lib/legal";
-import { getOrderBySession, processOrder } from "@/lib/payments.functions";
+import {
+  getOrderBySession,
+  processOrder,
+  submitOrderFeedbackBySession,
+} from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 
 type OrderResponsePayload = {
@@ -270,7 +274,7 @@ function Page() {
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
                       Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
-                    <PaidReadingFeedback order={order} />
+                    <PaidReadingFeedback order={order} sessionId={session_id} />
                   </Section>
                 );
               })()}
@@ -393,25 +397,65 @@ function supportMailto(shortId?: string): string {
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-function PaidReadingFeedback({ order }: { order: OrderView }) {
+type FeedbackValue = "accurate" | "partial" | "missed";
+
+function PaidReadingFeedback({
+  order,
+  sessionId,
+}: {
+  order: OrderView;
+  sessionId?: string;
+}) {
+  const submitFeedback = useServerFn(submitOrderFeedbackBySession);
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(null);
+  const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
+  const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [
     {
       label: "Eltalált",
-      value: "accurate",
+      value: "accurate" as const,
       body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
     },
     {
       label: "Részben talált",
-      value: "partial",
+      value: "partial" as const,
       body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Nem volt elég pontos",
-      value: "missed",
+      value: "missed" as const,
       body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
+  const selectedOption = feedbackOptions.find((option) => option.value === selectedFeedback);
+
+  async function saveFeedback(option: (typeof feedbackOptions)[number]) {
+    if (!sessionId) return;
+    setFeedbackSaving(option.value);
+    setFeedbackError("");
+    try {
+      const result = await submitFeedback({
+        data: { sessionId, feedback: option.value, note: option.label },
+      });
+      if (!result.ok) {
+        setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+        return;
+      }
+      setSelectedFeedback(option.value);
+      trackEvent("paid_reading_feedback_clicked", {
+        productSlug: order.product_slug,
+        status: order.status,
+        feedback: option.value,
+        source: "thank_you",
+        saved: true,
+      });
+    } catch {
+      setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+    } finally {
+      setFeedbackSaving(null);
+    }
+  }
 
   return (
     <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
@@ -423,30 +467,53 @@ function PaidReadingFeedback({ order }: { order: OrderView }) {
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => {
-          const href = feedbackMailto({
-            order,
-            shortId,
-            feedback: option.label,
-            body: option.body,
-          });
           return (
-            <a
+            <button
               key={option.value}
-              href={href}
-              onClick={() =>
+              type="button"
+              disabled={feedbackSaving != null}
+              onClick={() => {
                 trackEvent("paid_reading_feedback_clicked", {
                   productSlug: order.product_slug,
                   status: order.status,
                   feedback: option.value,
+                  source: "thank_you",
+                  saved: false,
                 })
-              }
-              className="rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-sm text-ivory/75 hover:border-gold hover:text-gold"
+                void saveFeedback(option);
+              }}
+              className={`rounded-md border px-3 py-2 text-sm transition-colors ${
+                selectedFeedback === option.value
+                  ? "border-gold text-gold"
+                  : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/75 hover:border-gold hover:text-gold"
+              } disabled:cursor-wait disabled:opacity-60`}
             >
-              {option.label}
-            </a>
+              {feedbackSaving === option.value ? "Mentés…" : option.label}
+            </button>
           );
         })}
       </div>
+      {selectedOption && (
+        <p className="mt-3 text-sm leading-relaxed text-ivory/62">
+          Köszönjük, mentettük a visszajelzést.{" "}
+          {selectedOption.value === "accurate" ? (
+            "Ez segít látni, mely termékek működnek igazán jól."
+          ) : (
+            <a
+              className="text-gold hover:text-gold/80"
+              href={feedbackMailto({
+                order,
+                shortId,
+                feedback: selectedOption.label,
+                body: selectedOption.body,
+              })}
+            >
+              Ha részletesen is leírod, pontosabban tudunk segíteni.
+            </a>
+          )}
+        </p>
+      )}
+      {feedbackError && <p className="mt-3 text-sm text-amber-200/80">{feedbackError}</p>}
       <p className="mt-3 text-xs leading-relaxed text-ivory/45">
         A levélben csak a rendelés rövid azonosítója és a termék neve szerepel előre kitöltve, az
         olvasat teljes szövegét nem tesszük bele automatikusan.

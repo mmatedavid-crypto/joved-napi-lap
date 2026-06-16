@@ -11,7 +11,7 @@ import {
   getGuestReadingMemoriesForAccountImport,
 } from "@/lib/guestReadingMemory";
 import { SITE_LEGAL } from "@/lib/legal";
-import { getMyOrders, processMyOrder } from "@/lib/payments.functions";
+import { getMyOrders, processMyOrder, submitMyOrderFeedback } from "@/lib/payments.functions";
 import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 import {
   clearMyReadingMemories,
@@ -580,25 +580,58 @@ function profileSupportMailto(shortId?: string): string {
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+type FeedbackValue = "accurate" | "partial" | "missed";
+
 function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
+  const submitFeedback = useServerFn(submitMyOrderFeedback);
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(null);
+  const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
+  const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [
     {
       label: "Eltalált",
-      value: "accurate",
+      value: "accurate" as const,
       body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
     },
     {
       label: "Részben talált",
-      value: "partial",
+      value: "partial" as const,
       body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Nem volt elég pontos",
-      value: "missed",
+      value: "missed" as const,
       body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
+  const selectedOption = feedbackOptions.find((option) => option.value === selectedFeedback);
+
+  async function saveFeedback(option: (typeof feedbackOptions)[number]) {
+    setFeedbackSaving(option.value);
+    setFeedbackError("");
+    try {
+      const result = await submitFeedback({
+        data: { orderId: order.id, feedback: option.value, note: option.label },
+      });
+      if (!result.ok) {
+        setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+        return;
+      }
+      setSelectedFeedback(option.value);
+      trackEvent("paid_reading_feedback_clicked", {
+        productSlug: order.product_slug,
+        status: order.status,
+        feedback: option.value,
+        source: "profile",
+        saved: true,
+      });
+    } catch {
+      setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+    } finally {
+      setFeedbackSaving(null);
+    }
+  }
 
   return (
     <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
@@ -609,28 +642,51 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => (
-          <a
+          <button
             key={option.value}
-            href={profileFeedbackMailto({
-              order,
-              shortId,
-              feedback: option.label,
-              body: option.body,
-            })}
-            onClick={() =>
+            type="button"
+            disabled={feedbackSaving != null}
+            onClick={() => {
               trackEvent("paid_reading_feedback_clicked", {
                 productSlug: order.product_slug,
                 status: order.status,
                 feedback: option.value,
                 source: "profile",
+                saved: false,
               })
-            }
-            className="rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-xs text-ivory/70 hover:border-gold hover:text-gold"
+              void saveFeedback(option);
+            }}
+            className={`rounded-md border px-3 py-2 text-xs transition-colors ${
+              selectedFeedback === option.value
+                ? "border-gold text-gold"
+                : "border-[oklch(0.78_0.10_80/0.22)] text-ivory/70 hover:border-gold hover:text-gold"
+            } disabled:cursor-wait disabled:opacity-60`}
           >
-            {option.label}
-          </a>
+            {feedbackSaving === option.value ? "Mentés…" : option.label}
+          </button>
         ))}
       </div>
+      {selectedOption && (
+        <p className="mt-3 text-xs leading-relaxed text-ivory/58">
+          Köszönjük, mentettük a visszajelzést.{" "}
+          {selectedOption.value === "accurate" ? (
+            "Ez segít látni, mely termékek működnek igazán jól."
+          ) : (
+            <a
+              className="text-gold hover:text-gold/80"
+              href={profileFeedbackMailto({
+                order,
+                shortId,
+                feedback: selectedOption.label,
+                body: selectedOption.body,
+              })}
+            >
+              Ha részletesen is leírod, pontosabban tudunk segíteni.
+            </a>
+          )}
+        </p>
+      )}
+      {feedbackError && <p className="mt-3 text-xs text-amber-200/80">{feedbackError}</p>}
       <p className="mt-3 text-[11px] leading-relaxed text-ivory/42">
         A levélbe csak a rendelés rövid azonosítója és a termék neve kerül előre kitöltve, az
         olvasat teljes szövegét nem tesszük bele automatikusan.

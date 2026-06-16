@@ -23,6 +23,7 @@ type CheckoutErrorCode =
 type CheckoutSessionResult = { clientSecret: string } | { error: CheckoutErrorCode };
 type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
+type OrderFeedbackValue = "accurate" | "partial" | "missed";
 type PublicOrderFields = Pick<
   OrderRow,
   | "id"
@@ -57,6 +58,7 @@ const ORDER_SELECT_BASE =
   "id, product_slug, product_name, category, price_huf, express, status, response_payload, deliver_by, delivered_at, created_at, guest_email, source_route";
 const ORDER_SELECT_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
 const ORDER_SELECT_PROFILE_WITH_RECONCILIATION = `${ORDER_SELECT_BASE}, stripe_session_id, stripe_environment, stripe_payment_intent, payment_rechecked_at`;
+const FEEDBACK_VALUES: OrderFeedbackValue[] = ["accurate", "partial", "missed"];
 
 type ReconciliationFallbackFields = Pick<
   OrderForPaymentRecheck,
@@ -83,6 +85,17 @@ function redactStripeId(value: string | null | undefined): string {
   if (!value) return "***";
   if (value.length <= 12) return `${value.slice(0, 4)}***`;
   return `${value.slice(0, 8)}***${value.slice(-4)}`;
+}
+
+function normalizeOrderFeedback(value: unknown): OrderFeedbackValue {
+  if (FEEDBACK_VALUES.includes(value as OrderFeedbackValue)) return value as OrderFeedbackValue;
+  throw new Error("Érvénytelen visszajelzés");
+}
+
+function normalizeFeedbackNote(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const clean = value.replace(/\s+/g, " ").trim();
+  return clean ? clean.slice(0, 600) : null;
 }
 
 async function resolveOrCreateCustomer(
@@ -483,6 +496,87 @@ export const processMyOrder = createServerFn({ method: "POST" })
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
     const result = await processPaidOrderBySession(order.stripe_session_id);
     return safeOrderProcessingResult(result);
+  });
+
+export const submitOrderFeedbackBySession = createServerFn({ method: "POST" })
+  .inputValidator((data: { sessionId: string; feedback: string; note?: string }) => {
+    if (!data.sessionId || typeof data.sessionId !== "string") {
+      throw new Error("Hiányzó session ID");
+    }
+    return {
+      sessionId: data.sessionId,
+      feedback: normalizeOrderFeedback(data.feedback),
+      note: normalizeFeedbackNote(data.note),
+    };
+  })
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .select("id, user_id, product_slug, product_name, status")
+      .eq("stripe_session_id", data.sessionId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!order || order.status !== "delivered") {
+      return { ok: false, error: "Rendelés nem található" };
+    }
+
+    const { error: feedbackError } = await supabaseAdmin.from("order_feedback").upsert(
+      {
+        order_id: order.id,
+        user_id: order.user_id,
+        product_slug: order.product_slug,
+        product_name: order.product_name,
+        feedback: data.feedback,
+        note: data.note,
+        source: "thank_you",
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "order_id" },
+    );
+    if (feedbackError) throw feedbackError;
+    return { ok: true };
+  });
+
+export const submitMyOrderFeedback = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { orderId: string; feedback: string; note?: string }) => {
+    if (!data.orderId || typeof data.orderId !== "string") throw new Error("Hiányzó rendelés ID");
+    return {
+      orderId: data.orderId,
+      feedback: normalizeOrderFeedback(data.feedback),
+      note: normalizeFeedbackNote(data.note),
+    };
+  })
+  .handler(async ({ context, data }) => {
+    const { data: order, error } = await context.supabase
+      .from("orders")
+      .select("id, user_id, product_slug, product_name, status")
+      .eq("id", data.orderId)
+      .eq("user_id", context.userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!order || order.status !== "delivered") {
+      return { ok: false, error: "Rendelés nem található" };
+    }
+
+    const { error: feedbackError } = await context.supabase.from("order_feedback").upsert(
+      {
+        order_id: order.id,
+        user_id: context.userId,
+        product_slug: order.product_slug,
+        product_name: order.product_name,
+        feedback: data.feedback,
+        note: data.note,
+        source: "profile",
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "order_id" },
+    );
+    if (feedbackError) throw feedbackError;
+    return { ok: true };
   });
 
 async function prepareFailedOrderRetry(
