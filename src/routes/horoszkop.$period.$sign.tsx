@@ -5,6 +5,7 @@ import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { Section } from "@/components/Section";
 import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
+import { SITE_LEGAL } from "@/lib/legal";
 import {
   HOROSCOPE_PERIODS,
   PERIOD_LABEL,
@@ -20,8 +21,12 @@ import {
 import { getGuestReadingContext } from "@/lib/guestReadingMemory";
 import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
+import brandLogoAsset from "../assets/jovod-logo.png.asset.json";
+import brandShareAsset from "../assets/jovod-share.png.asset.json";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
+const BRAND_LOGO_URL = `${SITE_URL}${brandLogoAsset.url}`;
+const BRAND_OG_IMAGE_URL = `${SITE_URL}${brandShareAsset.url}`;
 
 function articleDateTime(period: HoroscopePeriodHU, dateKey: string): string {
   const dayKey = period === "havi" ? `${dateKey}-01` : dateKey;
@@ -62,8 +67,16 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: canonicalUrl },
+        { property: "og:image", content: BRAND_OG_IMAGE_URL },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1536" },
+        { property: "og:image:height", content: "1024" },
+        { property: "og:image:alt", content: `${title} · Jövőd.hu` },
+        { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
+        { name: "twitter:image", content: BRAND_OG_IMAGE_URL },
+        { name: "twitter:image:alt", content: `${title} · Jövőd.hu` },
         { name: "robots", content: loaderData.fallbackUsed ? "noindex,follow" : "index,follow" },
       ],
       links: [{ rel: "canonical", href: canonicalPath }],
@@ -87,9 +100,10 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
               url: SITE_URL,
               logo: {
                 "@type": "ImageObject",
-                url: `${SITE_URL}/__l5e/assets-v1/e7a03b1f-0f3b-4e01-88c0-c1c4bc3bc3ac/jovod-logo.png`,
+                url: BRAND_LOGO_URL,
               },
             },
+            image: BRAND_OG_IMAGE_URL,
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": canonicalUrl,
