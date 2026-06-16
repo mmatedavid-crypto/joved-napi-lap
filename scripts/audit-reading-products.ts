@@ -320,6 +320,7 @@ console.log(JSON.stringify({ paid, free: freeReadings, context: contextChecks },
 const failed = [...paid, ...freeReadings, ...contextChecks].filter((item) => !item.ok);
 const policyFailures: string[] = [];
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
+const paidReadingsSource = readFileSync("src/lib/paidReadings.ts", "utf8");
 const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");
 const orderProcessing = readFileSync("src/lib/orderProcessing.server.ts", "utf8");
 const reportQuality = readFileSync("src/lib/products/reportQuality.server.ts", "utf8");
@@ -557,6 +558,16 @@ if (
   !paidServer.includes("paidReadingMinimumSections(productSlug)") ||
   !paidServer.includes("isGoodPaidReading(ai.data, opts.productSlug, opts.inputPayload)") ||
   !paidServer.includes("inputContextAnchors(inputPayload)") ||
+  !paidServer.includes("paidReadingInputBrief(opts.inputPayload)") ||
+  !paidServer.includes("Ügyfélhelyzet röviden") ||
+  !paidServer.includes('"q"') ||
+  !paidServer.includes('"cat"') ||
+  !paidServer.includes('"sit"') ||
+  !paidServer.includes('"myName"') ||
+  !paidServer.includes('"hisName"') ||
+  !paidServer.includes('"text"') ||
+  !paidServer.includes('"emotion"') ||
+  !paidServer.includes('"memoryContext"') ||
   !paidServer.includes("countContextHits(body, anchors)") ||
   !paidServer.includes("function paidReadingMinimumContextHits") ||
   !paidServer.includes("requiredContextHits") ||
@@ -575,6 +586,17 @@ if (
   !paidServer.includes("Ne használj Markdown-jeleket vagy emojit")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
+}
+if (
+  !paidReadingsSource.includes("export function paidReadingInputBrief") ||
+  !paidReadingsSource.includes("INPUT_BRIEF_LABELS") ||
+  !paidReadingsSource.includes('q: "Kérdés"') ||
+  !paidReadingsSource.includes('sit: "Helyzet"') ||
+  !paidReadingsSource.includes('myName: "Első név"') ||
+  !paidReadingsSource.includes('emotion: "Érzés"') ||
+  !paidReadingsSource.includes('memoryContext: "Visszatérő minta"')
+) {
+  policyFailures.push("paid readings must build a short Hungarian customer context brief");
 }
 if (
   !paidServer.includes("generation: {") ||

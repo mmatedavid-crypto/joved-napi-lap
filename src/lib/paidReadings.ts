@@ -32,12 +32,71 @@ export type PaidReadingPayload = {
   };
 };
 
+const INPUT_BRIEF_LABELS: Record<string, string> = {
+  question: "Kérdés",
+  q: "Kérdés",
+  situation: "Helyzet",
+  sit: "Helyzet",
+  status: "Kapcsolati helyzet",
+  category: "Téma",
+  cat: "Téma",
+  text: "Leírás",
+  dream: "Álom",
+  emotion: "Érzés",
+  symbol: "Szimbólum",
+  number: "Szám",
+  sign: "Jegy",
+  zodiac: "Jegy",
+  name: "Név",
+  fullName: "Teljes név",
+  fullNameA: "Első név",
+  fullNameB: "Második név",
+  myName: "Első név",
+  hisName: "Második név",
+  birthDate: "Születési dátum",
+  dob: "Születési dátum",
+  birthDateA: "Első születési dátum",
+  birthDateB: "Második születési dátum",
+  myDob: "Első születési dátum",
+  hisDob: "Második születési dátum",
+  cardName: "Lap",
+  cards: "Lapok",
+  memoryContext: "Visszatérő minta",
+  articleLead: "Horoszkópcikk alaphangja",
+  topic: "Téma",
+};
+
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
+function briefValue(value: unknown): string {
+  if (typeof value === "string") return value.trim();
+  if (typeof value === "number") return String(value);
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => briefValue(item))
+      .filter(Boolean)
+      .join(", ");
+  }
+  return "";
+}
+
+export function paidReadingInputBrief(inputPayload: unknown): string {
+  const input = asRecord(inputPayload);
+  const seen = new Set<string>();
+  const lines: string[] = [];
+  for (const [key, label] of Object.entries(INPUT_BRIEF_LABELS)) {
+    const value = briefValue(input[key]);
+    if (!value || seen.has(label)) continue;
+    seen.add(label);
+    lines.push(`${label}: ${value.slice(0, 280)}`);
+  }
+  return lines.join("\n");
 }
 
 function cardByName(name: string): TarotCard {

@@ -1,4 +1,8 @@
-import { composePaidOrderReading, type PaidReadingPayload } from "./paidReadings";
+import {
+  composePaidOrderReading,
+  paidReadingInputBrief,
+  type PaidReadingPayload,
+} from "./paidReadings";
 
 const PAID_READING_SCHEMA = {
   type: "object",
@@ -93,14 +97,33 @@ function collectContextStrings(value: unknown, depth = 0): string[] {
     "situation",
     "status",
     "dream",
+    "text",
+    "emotion",
     "symbol",
     "number",
     "sign",
+    "zodiac",
     "name",
+    "preferredName",
+    "callName",
     "fullName",
+    "fullNameA",
+    "fullNameB",
+    "myName",
+    "hisName",
+    "dob",
     "birthDate",
     "birthDateA",
     "birthDateB",
+    "myDob",
+    "hisDob",
+    "q",
+    "cat",
+    "sit",
+    "category",
+    "cardName",
+    "cards",
+    "memoryContext",
     "articleLead",
     "topic",
   ]);
@@ -205,6 +228,7 @@ export async function generatePaidOrderReading(opts: {
   inputPayload: unknown;
 }): Promise<PaidReadingPayload> {
   const draft = composePaidOrderReading(opts.productSlug, opts.productName, opts.inputPayload);
+  const inputBrief = paidReadingInputBrief(opts.inputPayload);
   const { openaiModel, lovableModel } = resolvePremiumModels(opts.productSlug);
   const generatedAt = new Date().toISOString();
   try {
@@ -225,6 +249,7 @@ export async function generatePaidOrderReading(opts: {
       user: [
         `Termék: ${opts.productName}`,
         `Termék slug: ${opts.productSlug}`,
+        inputBrief ? `Ügyfélhelyzet röviden:\n${inputBrief}` : "",
         "Felhasználói input:",
         JSON.stringify(opts.inputPayload ?? {}, null, 2),
         "Biztonságos helyi prémium draft:",
@@ -329,7 +354,7 @@ function sanitizeGenerationIssue(issue: string): string {
     return issue;
   }
   if (
-    /^(too_short|too_few_sections|forbidden_text|missing_safety_frame|missing_user_context)/.test(
+    /^(too_short|too_few_sections|forbidden_text|missing_safety_frame|missing_user_context|weak_user_context)/.test(
       issue,
     )
   ) {
