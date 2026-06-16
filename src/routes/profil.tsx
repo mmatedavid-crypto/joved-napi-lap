@@ -589,6 +589,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     order.feedback ?? null,
   );
   const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
+  const [feedbackNote, setFeedbackNote] = useState("");
   const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [
     {
@@ -610,18 +611,19 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
   const selectedOption = feedbackOptions.find((option) => option.value === selectedFeedback);
 
-  async function saveFeedback(option: (typeof feedbackOptions)[number]) {
+  async function saveFeedback(option: (typeof feedbackOptions)[number], note?: string) {
     setFeedbackSaving(option.value);
     setFeedbackError("");
     try {
       const result = await submitFeedback({
-        data: { orderId: order.id, feedback: option.value, note: option.label },
+        data: { orderId: order.id, feedback: option.value, note: note?.trim() || option.label },
       });
       if (!result.ok) {
         setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
         return;
       }
       setSelectedFeedback(option.value);
+      if (note?.trim()) setFeedbackNote(note.trim());
       trackEvent("paid_reading_feedback_clicked", {
         productSlug: order.product_slug,
         status: order.status,
@@ -675,8 +677,34 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
           {selectedOption.value === "accurate" ? (
             "Ez segít látni, mely termékek működnek igazán jól."
           ) : (
+            "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."
+          )}
+        </p>
+      )}
+      {selectedOption && selectedOption.value !== "accurate" && (
+        <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-3">
+          <label className="block text-[11px] uppercase tracking-[0.16em] text-gold/70">
+            Mi maradt ki?
+          </label>
+          <textarea
+            value={feedbackNote}
+            onChange={(event) => setFeedbackNote(event.target.value)}
+            maxLength={600}
+            rows={3}
+            placeholder="Pl. túl általános volt, vagy nem vette figyelembe a kérdésem egyik részét..."
+            className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-transparent px-3 py-2 text-xs text-ivory outline-none placeholder:text-ivory/35 focus:border-gold/65"
+          />
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              disabled={feedbackSaving != null || !feedbackNote.trim()}
+              onClick={() => void saveFeedback(selectedOption, feedbackNote)}
+              className="rounded-md border border-gold/25 px-3 py-2 text-[11px] text-gold transition-colors hover:border-gold/60 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {feedbackSaving === selectedOption.value ? "Mentés..." : "Pontosítás mentése"}
+            </button>
             <a
-              className="text-gold hover:text-gold/80"
+              className="text-[11px] text-gold hover:text-gold/80"
               href={profileFeedbackMailto({
                 order,
                 shortId,
@@ -684,10 +712,10 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
                 body: selectedOption.body,
               })}
             >
-              Ha részletesen is leírod, pontosabban tudunk segíteni.
+              Inkább emailben írom le
             </a>
-          )}
-        </p>
+          </div>
+        </div>
       )}
       {feedbackError && <p className="mt-3 text-xs text-amber-200/80">{feedbackError}</p>}
       <p className="mt-3 text-[11px] leading-relaxed text-ivory/42">
