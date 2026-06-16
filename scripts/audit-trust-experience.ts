@@ -259,6 +259,8 @@ const checks: Check[] = [
       "function safeOrderStatusErrorMessage",
       "function OrderPreparationTimeline",
       "Mi történik most?",
+      "most összekapcsoljuk a vásárlásoddal",
+      "amint az egyeztetés lezárul",
       "A fizetés megérkezett, a kérdésedet és a megadott adatokat rögzítettük.",
       "Az azonnali olvasat általában pár percen belül megjelenik ezen az oldalon.",
       "ez a biztonságos rendelési link akkor is a közvetlen hozzáférésed marad",
@@ -266,7 +268,12 @@ const checks: Check[] = [
       "A rendelés nem vész el",
       "Ellenőrizd, hogy a fizetés utáni teljes linket nyitottad-e meg",
     ],
-    excludes: ['setErr(e instanceof Error ? e.message : "Hiba")'],
+    excludes: [
+      'setErr(e instanceof Error ? e.message : "Hiba")',
+      "keressük hozzá a rendelési sort",
+      "rendelésállapot beért",
+      "fizetési szolgáltató gyorsabban",
+    ],
   },
   {
     name: "unsubscribe endpoint never logs raw unsubscribe tokens",

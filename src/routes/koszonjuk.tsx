@@ -219,13 +219,12 @@ function Page() {
         {orderLookupPending && !order && !err && (
           <Section eyebrow="Fizetés egyeztetése">
             <p>
-              A fizetés utáni visszairányítás megérkezett, most keressük hozzá a rendelési sort. Ez
-              néha pár frissítési körrel később jelenik meg, főleg akkor, ha a fizetési szolgáltató
-              gyorsabban küldött vissza, mint ahogy a rendelésállapot beért.
+              A fizetés utáni visszatérés megérkezett, most összekapcsoljuk a vásárlásoddal. Ez
+              néha pár frissítési körrel később látszik ezen az oldalon.
             </p>
             <p className="mt-3 text-sm text-ivory/60">
               Az oldalt nyugodtan hagyd nyitva. Ha sikeres volt a fizetés, a rendelés nem vész el;
-              amint megtaláljuk, itt folytatjuk az olvasat elkészítésével.
+              amint az egyeztetés lezárul, itt folytatjuk az olvasat elkészítésével.
             </p>
             {pollingPaused && (
               <p className="mt-3 text-sm text-ivory/55">

@@ -156,10 +156,15 @@ const checks: Check[] = [
       "if (!r.order)",
       "setTimeout(tick, 2500)",
       "Fizetés egyeztetése",
-      "keressük hozzá a rendelési sort",
-      "gyorsabban küldött vissza",
+      "most összekapcsoljuk a vásárlásoddal",
+      "amint az egyeztetés lezárul",
       "a rendelés nem vész el",
       "frissíts rá később erre a teljes linkre",
+    ],
+    excludes: [
+      "keressük hozzá a rendelési sort",
+      "rendelésállapot beért",
+      "fizetési szolgáltató gyorsabban",
     ],
   },
   {
