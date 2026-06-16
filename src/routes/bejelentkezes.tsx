@@ -56,17 +56,22 @@ function Page() {
     setErr(null);
     setMsg(null);
     setBusy(true);
+    const normalizedEmail = normalizeAuthEmail(email);
+    setEmail(normalizedEmail);
     try {
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
-          email,
+          email: normalizedEmail,
           password: pwd,
           options: { emailRedirectTo: window.location.origin + "/profil" },
         });
         if (error) throw error;
         setMsg("Megerősítő emailt küldtünk. Kérlek nyisd meg a postaládád.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: normalizedEmail,
+          password: pwd,
+        });
         if (error) throw error;
         navigate({ to: "/profil" });
       }
@@ -120,6 +125,7 @@ function Page() {
             placeholder="email@pelda.hu"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setEmail(normalizeAuthEmail(email))}
             className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
           />
           <input
@@ -164,6 +170,10 @@ function Page() {
       </div>
     </Layout>
   );
+}
+
+function normalizeAuthEmail(value: string): string {
+  return value.trim().toLocaleLowerCase("hu-HU");
 }
 
 function safeAuthErrorMessage(error: unknown, mode: "signin" | "signup"): string {

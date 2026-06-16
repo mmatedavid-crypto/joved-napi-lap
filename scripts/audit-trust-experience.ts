@@ -160,6 +160,11 @@ const checks: Check[] = [
     name: "login page never displays raw auth provider errors",
     file: "src/routes/bejelentkezes.tsx",
     includes: [
+      "const normalizedEmail = normalizeAuthEmail(email)",
+      "email: normalizedEmail",
+      "onBlur={() => setEmail(normalizeAuthEmail(email))}",
+      "function normalizeAuthEmail",
+      'value.trim().toLocaleLowerCase("hu-HU")',
       "safeAuthErrorMessage(e, mode)",
       "function safeAuthErrorMessage",
       "invalid login",
