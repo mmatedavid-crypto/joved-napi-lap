@@ -47,9 +47,10 @@ export const DREAM_HU: Record<string, DreamMeaning> = {
   },
   death: {
     title: "Halál",
-    surface: "Szinte sosem szó szerinti — egy lezárás, átmenet, új ciklus jele.",
-    notice: "Mi az, ami most ér véget benned?",
-    oneLine: "A vég is kapu.",
+    surface:
+      "Nem jóslat és nem szó szerinti előrejelzés: álomban inkább lezárást, átmenetet vagy egy régi működésmód végét jelképezheti.",
+    notice: "Milyen régi szakasz, szerep vagy érzés kér most békésebb lezárást benned?",
+    oneLine: "Nem végzet, hanem átmenet képe.",
   },
   teeth: {
     title: "Fogak",

@@ -119,6 +119,38 @@ const checks: StaticSafetyCheck[] = [
       "önismereti jelként használjuk",
     ],
   },
+  {
+    file: "src/lib/dream.hu.ts",
+    forbidden: [/\bSzinte sosem szó szerinti\b/i, /\bA vég is kapu\b/i],
+    required: [
+      "Nem jóslat és nem szó szerinti előrejelzés",
+      "lezárást, átmenetet",
+      "Nem végzet, hanem átmenet képe",
+    ],
+  },
+  {
+    file: "src/routes/alomfejtes.tsx",
+    forbidden: [
+      /Az álom nem előrejelzés\. Egy belső kép, amit érdemes meghallgatni, de nem szó\s+ szerint venni\./i,
+    ],
+    required: [
+      "function dreamSafetyNote",
+      "result.title",
+      "halálesetet jósol",
+      "gyászhoz, krízishez vagy tartós szorongáshoz",
+      "kérj emberi vagy szakmai támogatást",
+    ],
+  },
+  {
+    file: "src/routes/alomfejtes-jelentes.tsx",
+    forbidden: [/\ba halál pedig sokszor\b/i],
+    required: [
+      "halálképek pedig nem jóslatként",
+      "Mit jelent, ha halállal álmodom?",
+      "Nem kezeljük előrejelzésként",
+      "tartós szorongáshoz kapcsolódik",
+    ],
+  },
 ];
 
 const failures: string[] = [];
@@ -160,7 +192,9 @@ for (const check of checks) {
 
   for (const forbidden of check.forbidden) {
     if (forbidden.test(body)) {
-      failures.push(`${check.file}: unsafe static self-reflection claim still present: ${forbidden}`);
+      failures.push(
+        `${check.file}: unsafe static self-reflection claim still present: ${forbidden}`,
+      );
     }
   }
 

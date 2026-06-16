@@ -241,8 +241,7 @@ function Page() {
                 {dreamContextReflection(text, emotion, result.title)}
               </Section>
               <Section eyebrow="Nem jóslat, inkább belső tükör">
-                Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó
-                szerint venni.
+                {dreamSafetyNote(result.title)}
               </Section>
               {result.oneLine && (
                 <Section eyebrow="Egy mondatban">
@@ -285,4 +284,11 @@ function dreamContextReflection(text: string, emotion: string, symbolTitle: stri
     return `${base} Bizonytalanság esetén az álom inkább kérdést hagy maga után: melyik részét próbálod gyorsan megfejteni, pedig valójában időt kérne?`;
   }
   return `${base} Ezt belső tükörként érdemes olvasni: mi volt az a részlet, amelyik ébredés után is veled maradt, és hol kapcsolódik a mostani napjaidhoz?`;
+}
+
+function dreamSafetyNote(symbolTitle: string): string {
+  if (symbolTitle.toLocaleLowerCase("hu-HU") === "halál") {
+    return "A halállal kapcsolatos álom sem halálesetet jósol. Önismereti képként inkább lezárásról, félelemről vagy változásról beszélhet. Ha az álom gyászhoz, krízishez vagy tartós szorongáshoz kapcsolódik, ne maradj egyedül vele; kérj emberi vagy szakmai támogatást.";
+  }
+  return "Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó szerint venni. Ha egy álom tartósan nyomaszt, kérj emberi vagy szakmai támogatást.";
 }

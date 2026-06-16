@@ -25,7 +25,7 @@ export const Route = createFileRoute("/alomfejtes-jelentes")({
         },
         {
           title: "Gyakori álomszimbólumok",
-          text: "A víz érzelmi mozgást, a ház belső teret, az út döntési irányt, a zuhanás kontrollvesztést, a halál pedig sokszor lezárást vagy átalakulást jelezhet önismereti szinten.",
+          text: "A víz érzelmi mozgást, a ház belső teret, az út döntési irányt, a zuhanás kontrollvesztést, a halálképek pedig nem jóslatként, hanem lezárás vagy átalakulás önismereti képeként olvashatók.",
         },
       ]}
       ctaTo="/alomfejtes"
@@ -35,6 +35,11 @@ export const Route = createFileRoute("/alomfejtes-jelentes")({
           question: "Az álomfejtés diagnózis?",
           answer:
             "Nem. Az oldal nem diagnosztizál és nem ad mentális egészségügyi tanácsot; az értelmezés önismereti irány.",
+        },
+        {
+          question: "Mit jelent, ha halállal álmodom?",
+          answer:
+            "Nem kezeljük előrejelzésként. Egy ilyen álom inkább lezárásról, félelemről vagy belső változásról szólhat. Ha gyászhoz, krízishez vagy tartós szorongáshoz kapcsolódik, érdemes emberi vagy szakmai támogatást kérni.",
         },
       ]}
     />
