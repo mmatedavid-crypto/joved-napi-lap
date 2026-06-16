@@ -179,7 +179,9 @@ function ReadingSelfCheck({
 }) {
   return (
     <aside className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/12 p-4">
-      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi önellenőrzés</div>
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">
+        Pontosítás, ha valami kimaradt
+      </div>
       <h3 className="mt-2 font-display text-xl leading-snug text-ivory">{selfCheck.heading}</h3>
       <p className="mt-2 text-sm leading-relaxed text-ivory/60">{selfCheck.intro}</p>
       <ul className="mt-4 grid gap-2 sm:grid-cols-3">
@@ -291,7 +293,7 @@ function paidReadingSelfCheck({
   return {
     heading: selfCheckHeading(readingType),
     intro:
-      "Egy fizetős olvasat akkor erős, ha nem csak szép mondatokat ad, hanem felismerhetően a te helyzetedhez kapcsolódik. Ezt érdemes gyorsan végignézni.",
+      "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Ha egy fontos rész kimaradt vagy félrement, innen gyorsan meg tudod írni, mit pontosítsunk.",
     checks,
     clarificationDraft,
   };
@@ -303,14 +305,14 @@ function paidReadingAssurance(
   if (!generation) return null;
   if (generation.qualityRejected) {
     return {
-      heading: "Az első változat nem ment át a belső ellenőrzésen",
-      text: "Ezért nem azt mutatjuk, hanem egy óvatosabban szerkesztett olvasatot. Ha így is úgy érzed, hogy egy fontos rész kimaradt a helyzetedből, a pontosítási vázlattal gyorsan jelezheted, merre kell finomítani.",
+      heading: "Ellenőrzött, óvatosan szerkesztett olvasat",
+      text: "A megjelenített szövegnek konkrétan a rendelésedhez és a megadott helyzetedhez kell kapcsolódnia. Ha mégis úgy érzed, hogy egy fontos rész kimaradt, a pontosítási vázlattal gyorsan jelezheted, merre finomítsuk.",
     };
   }
   if (generation.source === "local_premium_draft" || generation.fallbackUsed) {
     return {
-      heading: "Szerkesztett biztonsági változat",
-      text: "Az olvasat ilyenkor is a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Érdemes külön megnézni, reagál-e a konkrét kérdésedre; ha nem, rendelés alapján visszanézzük.",
+      heading: "Rendelés alapján visszanézhető olvasat",
+      text: "Az olvasat a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Ha nem reagál elég pontosan a konkrét kérdésedre, rendelés alapján visszanézzük, melyik részt kell finomítani.",
     };
   }
   return null;
