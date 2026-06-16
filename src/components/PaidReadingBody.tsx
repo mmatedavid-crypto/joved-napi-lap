@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { huTodayKey } from "@/lib/dateKeys";
 import { SITE_LEGAL } from "@/lib/legal";
 
 type ReadingBlock = {
@@ -57,7 +58,7 @@ export function PaidReadingBody({
       const url = URL.createObjectURL(file);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `jovod-olvasat-${new Date().toISOString().slice(0, 10)}.txt`;
+      link.download = `jovod-olvasat-${huTodayKey()}.txt`;
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -147,11 +148,7 @@ export function PaidReadingBody({
   );
 }
 
-function ReadingAssuranceNotice({
-  assurance,
-}: {
-  assurance: { heading: string; text: string };
-}) {
+function ReadingAssuranceNotice({ assurance }: { assurance: { heading: string; text: string } }) {
   return (
     <aside className="rounded-md border border-gold/15 bg-gold/[0.045] p-4">
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségbiztosítás</div>

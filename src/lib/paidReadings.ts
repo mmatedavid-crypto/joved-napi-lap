@@ -3,6 +3,7 @@ import { crystalMeaning, FALLBACK_BIRTHSTONE, FALLBACK_ZODIAC_CRYSTAL } from "./
 import { dreamMeaning } from "./dream.hu";
 import { dreamTextToSlug } from "./roxyNormalize";
 import { CARDS, type TarotCard } from "@/data/cards";
+import { huTodayKey } from "./dateKeys";
 import {
   calculateCompatibilityProfile,
   composeCompatibilityReading,
@@ -184,9 +185,7 @@ function briefFreeReadingSummary(input: Record<string, unknown>): string[] {
           const row = asRecord(item);
           const heading = text(row.heading);
           const sectionText = text(row.text);
-          return heading && sectionText
-            ? `${heading}: ${sectionText.slice(0, 180)}`
-            : "";
+          return heading && sectionText ? `${heading}: ${sectionText.slice(0, 180)}` : "";
         })
         .filter(Boolean)
         .slice(0, 4)
@@ -304,7 +303,9 @@ function cardsFromPayload(input: Record<string, unknown>, count = 3): TarotCard[
 
 function completeCardsFromPayload(input: Record<string, unknown>, count: number): TarotCard[] {
   const spreadCards = paidTarotSpreadFromPayload(input).map((item) => cardByName(item.cardName));
-  const selected = spreadCards.length ? spreadCards.slice(0, count) : cardsFromPayload(input, count);
+  const selected = spreadCards.length
+    ? spreadCards.slice(0, count)
+    : cardsFromPayload(input, count);
   const used = new Set(selected.map((card) => card.id));
   for (const card of CARDS) {
     if (selected.length >= count) break;
@@ -365,7 +366,10 @@ function readingWithFollowupContext(
   };
 }
 
-function renderReading(reading: QualityReading, input?: Record<string, unknown>): PaidReadingPayload {
+function renderReading(
+  reading: QualityReading,
+  input?: Record<string, unknown>,
+): PaidReadingPayload {
   const finalReading = readingWithFollowupContext(reading, input);
   const body = [
     ...finalReading.sections.map((section) => `${section.heading}\n${section.text}`),
@@ -499,9 +503,7 @@ function premiumDailyCompass(input: Record<string, unknown>): PaidReadingPayload
         heading: "Mai alaphang",
         text: `A mai napod nem nagy fordulatként, hanem finom hangolásként olvasható. ${sign ? `A ${sign} minősége most főleg ${tension} kér pontosabb figyelmet.` : "A hangsúly azon van, hol térsz vissza saját ritmusodhoz."}`,
       },
-      ...(situation
-        ? [situationReflection(situation)]
-        : []),
+      ...(situation ? [situationReflection(situation)] : []),
       {
         heading: "Személyes ritmus",
         text: personalYear
@@ -547,7 +549,7 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   const personalYear = text(input.personalYear);
   const base = composeHoroscopeReading({
     sign: signKey,
-    dateKey: text(input.dateKey) || new Date().toISOString().slice(0, 10),
+    dateKey: text(input.dateKey) || huTodayKey(),
   });
 
   base.title = name ? `${signName} horoszkóp · ${name}` : `${signName} horoszkóp · személyesen`;
@@ -560,9 +562,7 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
         ? `${name}, ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`
         : `Ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`,
     },
-    ...(situation
-      ? [situationReflection(situation)]
-      : []),
+    ...(situation ? [situationReflection(situation)] : []),
     ...(articleLead || articleSections.length || moonPhase || luckyColor || luckyNumber
       ? [
           {
@@ -623,31 +623,34 @@ function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {
   const root = typeof input.root === "number" ? input.root : undefined;
   const situation = text(input.situation) || text(input.question) || text(input.q);
   const meaning = angelMeaning(number, root);
-  return renderReading({
-    title: `${number} · ${meaning.title}`,
-    sections: [
-      { heading: "Mit hordoz ez a szám?", text: meaning.message },
-      ...(situation ? [situationReflection(situation)] : []),
-      {
-        heading: "Miért jelenhet meg most?",
-        text: `A ${number} most önismereti jelként azt kérdezheti, hol ismétled ugyanazt a belső választ. Nem bizonyíték, inkább figyelmi pont: mit veszel észre újra meg újra?`,
-      },
-      { heading: "Szerelemben", text: meaning.love },
-      { heading: "Döntés előtt", text: meaning.decision },
-      { heading: "Mire figyelj?", text: meaning.warn },
-      {
-        heading: "A szám árnyéka",
-        text: `A ${number} akkor válik félrevezetővé, ha külső megerősítésként hajszolod. Nem az a kérdés, hogy “mit akar üzenni a világ”, hanem az, hogy benned melyik téma kap most újra hangot.`,
-      },
-      {
-        heading: "Hogyan használd ma?",
-        text: "Válassz egyetlen mondatot, amit ehhez a számhoz kötsz, és figyeld meg a nap során, mikor tér vissza. Nem kell döntést kényszerítened belőle; elég, ha pontosabban veszed észre a mintát.",
-      },
-    ],
-    oneSentence: meaning.oneLine,
-    safetyNote: SAFETY_NOTE,
-    meta: { fallbackUsed: true, readingType: "paid:angel" },
-  }, input);
+  return renderReading(
+    {
+      title: `${number} · ${meaning.title}`,
+      sections: [
+        { heading: "Mit hordoz ez a szám?", text: meaning.message },
+        ...(situation ? [situationReflection(situation)] : []),
+        {
+          heading: "Miért jelenhet meg most?",
+          text: `A ${number} most önismereti jelként azt kérdezheti, hol ismétled ugyanazt a belső választ. Nem bizonyíték, inkább figyelmi pont: mit veszel észre újra meg újra?`,
+        },
+        { heading: "Szerelemben", text: meaning.love },
+        { heading: "Döntés előtt", text: meaning.decision },
+        { heading: "Mire figyelj?", text: meaning.warn },
+        {
+          heading: "A szám árnyéka",
+          text: `A ${number} akkor válik félrevezetővé, ha külső megerősítésként hajszolod. Nem az a kérdés, hogy “mit akar üzenni a világ”, hanem az, hogy benned melyik téma kap most újra hangot.`,
+        },
+        {
+          heading: "Hogyan használd ma?",
+          text: "Válassz egyetlen mondatot, amit ehhez a számhoz kötsz, és figyeld meg a nap során, mikor tér vissza. Nem kell döntést kényszerítened belőle; elég, ha pontosabban veszed észre a mintát.",
+        },
+      ],
+      oneSentence: meaning.oneLine,
+      safetyNote: SAFETY_NOTE,
+      meta: { fallbackUsed: true, readingType: "paid:angel" },
+    },
+    input,
+  );
 }
 
 function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
@@ -659,39 +662,42 @@ function premiumCrystal(input: Record<string, unknown>): PaidReadingPayload {
     (sign ? FALLBACK_ZODIAC_CRYSTAL[sign] : "") ||
     (month ? FALLBACK_BIRTHSTONE[month] : "Hegyikristály");
   const { name, m } = crystalMeaning(crystalName);
-  return renderReading({
-    title: signName
-      ? `${name} · ${signName} személyes kristály-ajánlás`
-      : `${name} · személyes kristály-ajánlás`,
-    sections: [
-      ...(signName
-        ? [
-            {
-              heading: `Miért kapcsolódhat a ${signName} minőségéhez?`,
-              text: `A ${signName} mintája felől a ${name} nem díszítő elemként érdekes, hanem önismereti jelként: azt a belső minőséget emeli ki, amelyben most a jegyed árnyaltabban tud működni.`,
-            },
-          ]
-        : []),
-      { heading: "Mit jelképez?", text: m.symbol },
-      { heading: "Milyen minőséget hordoz?", text: m.quality },
-      { heading: "Mikor érdemes figyelned rá?", text: m.when },
-      {
-        heading: "Hogyan kapcsold magadhoz?",
-        text: `A ${name} itt nem testi hatást ígérő eszköz, hanem önismereti jel. Akkor dolgozik jól szimbólumként, ha nem kívülről várod a megoldást, hanem egy belső minőséget nevezel meg vele.`,
-      },
-      {
-        heading: "A te helyzetedben",
-        text: `Ha most a ${name} került eléd, érdemes lehet azt figyelned, hol van szükséged több ${m.oneLine.toLocaleLowerCase("hu-HU")} jellegű minőségre. Nem az a cél, hogy mindent megváltoztass, hanem hogy egyetlen belső hangsúlyt tisztábban megnevezz.`,
-      },
-      {
-        heading: "Finom rituálé",
-        text: "Tartsd kézben pár percig, vagy csak képzeld magad elé, és fogalmazz meg egy rövid mondatot arról, mit szeretnél ma máshogy érzékelni. A rituálé értéke a figyelemben van, nem a tárgy erejének túlzásában.",
-      },
-    ],
-    oneSentence: m.oneLine,
-    safetyNote: "A kristály szimbolikus önismereti eszköz, nem gyógyászati tanács.",
-    meta: { fallbackUsed: true, readingType: "paid:crystal" },
-  }, input);
+  return renderReading(
+    {
+      title: signName
+        ? `${name} · ${signName} személyes kristály-ajánlás`
+        : `${name} · személyes kristály-ajánlás`,
+      sections: [
+        ...(signName
+          ? [
+              {
+                heading: `Miért kapcsolódhat a ${signName} minőségéhez?`,
+                text: `A ${signName} mintája felől a ${name} nem díszítő elemként érdekes, hanem önismereti jelként: azt a belső minőséget emeli ki, amelyben most a jegyed árnyaltabban tud működni.`,
+              },
+            ]
+          : []),
+        { heading: "Mit jelképez?", text: m.symbol },
+        { heading: "Milyen minőséget hordoz?", text: m.quality },
+        { heading: "Mikor érdemes figyelned rá?", text: m.when },
+        {
+          heading: "Hogyan kapcsold magadhoz?",
+          text: `A ${name} itt nem testi hatást ígérő eszköz, hanem önismereti jel. Akkor dolgozik jól szimbólumként, ha nem kívülről várod a megoldást, hanem egy belső minőséget nevezel meg vele.`,
+        },
+        {
+          heading: "A te helyzetedben",
+          text: `Ha most a ${name} került eléd, érdemes lehet azt figyelned, hol van szükséged több ${m.oneLine.toLocaleLowerCase("hu-HU")} jellegű minőségre. Nem az a cél, hogy mindent megváltoztass, hanem hogy egyetlen belső hangsúlyt tisztábban megnevezz.`,
+        },
+        {
+          heading: "Finom rituálé",
+          text: "Tartsd kézben pár percig, vagy csak képzeld magad elé, és fogalmazz meg egy rövid mondatot arról, mit szeretnél ma máshogy érzékelni. A rituálé értéke a figyelemben van, nem a tárgy erejének túlzásában.",
+        },
+      ],
+      oneSentence: m.oneLine,
+      safetyNote: "A kristály szimbolikus önismereti eszköz, nem gyógyászati tanács.",
+      meta: { fallbackUsed: true, readingType: "paid:crystal" },
+    },
+    input,
+  );
 }
 
 function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
@@ -700,34 +706,37 @@ function premiumDream(input: Record<string, unknown>): PaidReadingPayload {
   const slug = dreamTextToSlug(dreamText);
   const meaning = dreamMeaning(slug) ?? dreamMeaning("water")!;
   const feeling = dreamEmotionLabel(emotion);
-  return renderReading({
-    title: `${meaning.title} · álomfejtés`,
-    sections: [
-      { heading: "Az álom felszíne", text: meaning.surface },
-      {
-        heading: "Mi dolgozhat mögötte?",
-        text: dreamText
-          ? `A leírásod alapján nem egyetlen jóslatot keresünk, hanem azt, milyen érzés maradt meg az álomból. A ${feeling} különösen fontos jel: ez mutatja, hogy a szimbólum nem kívülről üzen, hanem egy belső feszültséghez vagy vágyhoz kapcsolódik.`
-          : `Az álom akkor válik beszédessé, ha nem csak a képet, hanem az ébredés utáni érzést is figyeled. Most a ${feeling} adja a legerősebb kulcsot.`,
-      },
-      { heading: "Mire kérdez rá?", text: meaning.notice },
-      {
-        heading: "Hogyan vidd magaddal?",
-        text: "Írd le egy mondatban, melyik érzés volt a legerősebb. Nem kell megfejteni mindent; elég észrevenni, melyik kép tér vissza benned napközben is.",
-      },
-      {
-        heading: "A visszatérő minta",
-        text: "Ha ez az álom vagy ehhez hasonló kép többször is megjelenik, figyeld meg, milyen élethelyzetek után erősödik fel. Sokszor nem a szimbólum a legfontosabb, hanem az, milyen belső feszültség hívja elő újra.",
-      },
-      {
-        heading: "Mit ne olvass bele?",
-        text: "Ne kezeld szó szerinti jóslatként, és ne ijeszd meg magad egyetlen képpel. Az álom inkább belső nyelv: sűrít, nagyít, összekever. A jó értelmezés nem félelmet ad, hanem pontosabb figyelmet.",
-      },
-    ],
-    oneSentence: meaning.oneLine,
-    safetyNote: "Ez önismereti álomértelmezés, nem diagnózis vagy mentális egészségügyi tanács.",
-    meta: { fallbackUsed: true, readingType: "paid:dream" },
-  }, input);
+  return renderReading(
+    {
+      title: `${meaning.title} · álomfejtés`,
+      sections: [
+        { heading: "Az álom felszíne", text: meaning.surface },
+        {
+          heading: "Mi dolgozhat mögötte?",
+          text: dreamText
+            ? `A leírásod alapján nem egyetlen jóslatot keresünk, hanem azt, milyen érzés maradt meg az álomból. A ${feeling} különösen fontos jel: ez mutatja, hogy a szimbólum nem kívülről üzen, hanem egy belső feszültséghez vagy vágyhoz kapcsolódik.`
+            : `Az álom akkor válik beszédessé, ha nem csak a képet, hanem az ébredés utáni érzést is figyeled. Most a ${feeling} adja a legerősebb kulcsot.`,
+        },
+        { heading: "Mire kérdez rá?", text: meaning.notice },
+        {
+          heading: "Hogyan vidd magaddal?",
+          text: "Írd le egy mondatban, melyik érzés volt a legerősebb. Nem kell megfejteni mindent; elég észrevenni, melyik kép tér vissza benned napközben is.",
+        },
+        {
+          heading: "A visszatérő minta",
+          text: "Ha ez az álom vagy ehhez hasonló kép többször is megjelenik, figyeld meg, milyen élethelyzetek után erősödik fel. Sokszor nem a szimbólum a legfontosabb, hanem az, milyen belső feszültség hívja elő újra.",
+        },
+        {
+          heading: "Mit ne olvass bele?",
+          text: "Ne kezeld szó szerinti jóslatként, és ne ijeszd meg magad egyetlen képpel. Az álom inkább belső nyelv: sűrít, nagyít, összekever. A jó értelmezés nem félelmet ad, hanem pontosabb figyelmet.",
+        },
+      ],
+      oneSentence: meaning.oneLine,
+      safetyNote: "Ez önismereti álomértelmezés, nem diagnózis vagy mentális egészségügyi tanács.",
+      meta: { fallbackUsed: true, readingType: "paid:dream" },
+    },
+    input,
+  );
 }
 
 function dreamEmotionLabel(emotion: string): string {

@@ -1,3 +1,5 @@
+import { huTodayKey } from "./dateKeys";
+
 const PREFIX = "jovod:";
 
 export function saveLocal<T>(key: string, value: T) {
@@ -59,6 +61,5 @@ export function loadCookie(key: string): string | null {
 }
 
 export function todayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return huTodayKey();
 }

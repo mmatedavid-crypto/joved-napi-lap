@@ -27,6 +27,7 @@ const checks: Check[] = [
     file: "src/routes/sitemap[.]xml.tsx",
     includes: [
       "SITE_LEGAL.siteUrl",
+      "huTodayKey",
       "const SITEMAP_ORIGIN = SITE_LEGAL.siteUrl",
       "...allHoroscopeArticlePaths().map",
       'changefreq: period === "napi" ? "daily" : period === "heti" ? "weekly" : "monthly"',
@@ -203,6 +204,7 @@ const checks: Check[] = [
       "LOVABLE_HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_MODEL",
       "HOROSCOPE_NEWS_TIMEOUT_MS",
+      "huTodayKey",
       "TECHNICAL_FALLBACK_RE",
       "function hasTechnicalFallbackText",
       "async function readLatestCachedArticle",

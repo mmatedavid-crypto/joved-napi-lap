@@ -8,6 +8,60 @@ type StaticSafetyCheck = {
 
 const checks: StaticSafetyCheck[] = [
   {
+    file: "src/lib/dateKeys.ts",
+    forbidden: [],
+    required: [
+      'const HU_TIME_ZONE = "Europe/Budapest"',
+      "export function huTodayKey",
+      "export function addDaysToDateKey",
+    ],
+  },
+  {
+    file: "src/lib/storage.ts",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: ['import { huTodayKey } from "./dateKeys";', "return huTodayKey();"],
+  },
+  {
+    file: "src/routes/szerencseszamok.tsx",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: ['import { huTodayKey } from "@/lib/dateKeys";', "return huTodayKey();"],
+  },
+  {
+    file: "src/data/magazin.hu.ts",
+    forbidden: [/now\.toISOString\(\)\.slice\(0, 10\)/],
+    required: ['import { huTodayKey } from "@/lib/dateKeys";', "const today = huTodayKey(now);"],
+  },
+  {
+    file: "src/lib/paidReadings.ts",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: [
+      'import { huTodayKey } from "./dateKeys";',
+      "dateKey: text(input.dateKey) || huTodayKey()",
+    ],
+  },
+  {
+    file: "src/lib/roxy.functions.ts",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: [
+      'import { huTodayKey } from "./dateKeys";',
+      "const date = data.date ?? huTodayKey();",
+      "const dateKey = data.dateKey ?? huTodayKey();",
+    ],
+  },
+  {
+    file: "src/routes/sitemap[.]xml.tsx",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: ['import { huTodayKey } from "@/lib/dateKeys";', "const today = huTodayKey();"],
+  },
+  {
+    file: "src/components/PaidReadingBody.tsx",
+    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    required: [
+      'import { huTodayKey } from "@/lib/dateKeys";',
+      "`jovod-olvasat-${huTodayKey()}.txt`",
+    ],
+  },
+  {
     file: "src/data/chineseZodiac.hu.ts",
     forbidden: [
       /\bidegrendszer\b/i,
@@ -231,20 +285,11 @@ const checks: StaticSafetyCheck[] = [
   {
     file: "src/lib/products/vedicFull.server.ts",
     forbidden: [/ROXY NATAL/i, /nyers JSON, angol/i],
-    required: [
-      "VÉDIKUS (SZIDERIKUS) ÉRTÉKEK",
-      "TROPIKUS SZÜLETÉSI KÉPLET FORRÁSANYAGA",
-    ],
+    required: ["VÉDIKUS (SZIDERIKUS) ÉRTÉKEK", "TROPIKUS SZÜLETÉSI KÉPLET FORRÁSANYAGA"],
   },
   {
     file: "src/lib/analytics.ts",
-    forbidden: [
-      /roxy_call_/,
-      /roxy_cache_/,
-      /roxy_fallback_/,
-      /roxy_domain_/,
-      /endpoint:/,
-    ],
+    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /roxy_domain_/, /endpoint:/],
     required: [
       "knowledge_lookup_started",
       "knowledge_lookup_succeeded",

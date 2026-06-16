@@ -1,6 +1,8 @@
 // Magazin/blog seed cikkek — SEO content marketing.
 // Statikus, evergreen tartalmak. Új cikkek hozzáadása itt egyszerű.
 
+import { huTodayKey } from "@/lib/dateKeys";
+
 export interface MagazinPost {
   slug: string;
   title: string;
@@ -65,8 +67,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
   {
     slug: "angyalszamok-ertelmezese",
     title: "Angyalszámok: 111, 222, 333 — mit jelentenek valójában?",
-    excerpt:
-      "Az ismétlődő számok szimbolikus értelmezése józan, önismereti hangon.",
+    excerpt: "Az ismétlődő számok szimbolikus értelmezése józan, önismereti hangon.",
     category: "numerologia",
     categoryLabel: "Számmisztika",
     publishedAt: "2026-02-20",
@@ -77,8 +78,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
   {
     slug: "merkur-retrograd",
     title: "Merkúr retrográd: mit szabad és mit nem érdemes?",
-    excerpt:
-      "A leghíresebb retrográd időszak — józan magyarázat, gyakorlati tanácsok.",
+    excerpt: "A leghíresebb retrográd időszak — józan magyarázat, gyakorlati tanácsok.",
     category: "asztrologia",
     categoryLabel: "Asztrológia",
     publishedAt: "2026-03-01",
@@ -89,8 +89,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
   {
     slug: "alomfejtes-alapok",
     title: "Álomfejtés alapok: miért álmodunk és mit kezdjünk vele?",
-    excerpt:
-      "Az álmok mint önismereti tükör — szimbolika és gyakorlati napló-módszer.",
+    excerpt: "Az álmok mint önismereti tükör — szimbolika és gyakorlati napló-módszer.",
     category: "onismeret",
     categoryLabel: "Önismeret",
     publishedAt: "2026-03-10",
@@ -101,8 +100,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
   {
     slug: "kristalyok-onismereti-eszkozkent",
     title: "Kristályok mint önismereti eszközök — józanul",
-    excerpt:
-      "Mit tudnak és mit nem a kristályok, és hogyan használhatók szimbolikus segítőként.",
+    excerpt: "Mit tudnak és mit nem a kristályok, és hogyan használhatók szimbolikus segítőként.",
     category: "ritualek",
     categoryLabel: "Rituálék",
     publishedAt: "2026-03-18",
@@ -113,8 +111,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
   {
     slug: "kinai-horoszkop-bevezetes",
     title: "Kínai horoszkóp: az állatövi év és a saját jegyed",
-    excerpt:
-      "A 12 állatövi jegy, az 5 elem és hogy mit jelent a kínai újév az asztrológiában.",
+    excerpt: "A 12 állatövi jegy, az 5 elem és hogy mit jelent a kínai újév az asztrológiában.",
     category: "asztrologia",
     categoryLabel: "Asztrológia",
     publishedAt: "2026-03-25",
@@ -185,7 +182,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
 ];
 
 export function getPublishedMagazinPosts(now = new Date()): MagazinPost[] {
-  const today = now.toISOString().slice(0, 10);
+  const today = huTodayKey(now);
   return MAGAZIN_POSTS.filter((post) => post.publishedAt <= today);
 }
 

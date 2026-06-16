@@ -4,6 +4,7 @@
 // email-template változatlanul tudja megjeleníteni.
 
 import { aiJSON } from "@/lib/ai.server";
+import { addDaysToDateKey, huTodayKey } from "@/lib/dateKeys";
 import {
   assertPaidAstrologySource,
   requireUsablePaidAstrologyReport,
@@ -74,10 +75,8 @@ async function safeCallRoxy<T = unknown>(opts: {
 export async function generatePersonal30DayReport(
   input: Personal30DayInput,
 ): Promise<{ title: string; body: string; raw?: Record<string, unknown> }> {
-  const today = new Date();
-  const startDate = today.toISOString().slice(0, 10);
-  const end = new Date(today.getTime() + 30 * 86_400_000);
-  const endDate = end.toISOString().slice(0, 10);
+  const startDate = huTodayKey();
+  const endDate = addDaysToDateKey(startDate, 30);
   const birthTime = input.birthTime || "12:00";
   const approximate = !input.birthTime;
   const areaLabel = AREA_LABEL[input.area] ?? "Általános — minden életterület";

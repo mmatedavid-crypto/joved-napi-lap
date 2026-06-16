@@ -7,6 +7,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { huTodayKey } from "./dateKeys";
 import { guardAITextObject, polishCrystalNameHU } from "./huTextGuard";
 import type { QualityReading } from "./readingQuality/styleRules";
 import {
@@ -289,7 +290,7 @@ export const roxyBiorhythmDaily = createServerFn({ method: "POST" })
     }).parse,
   )
   .handler(async ({ data }) => {
-    const date = data.date ?? new Date().toISOString().slice(0, 10);
+    const date = data.date ?? huTodayKey();
     return runRoxy({
       endpoint: "/biorhythm/daily",
       body: { birthDate: data.birthDate, date },
@@ -762,7 +763,7 @@ export const aiTarotReadingHU = createServerFn({ method: "POST" })
       const idsKey = data.cards.map((c) => `${c.id}${c.reversed ? "_r" : ""}`).join("+");
       const qKey = (data.question ?? "").toLowerCase().trim().slice(0, 120);
       const memoryKey = (data.memoryContext ?? "").toLowerCase().trim().slice(0, 160);
-      const dateKey = data.dateKey ?? new Date().toISOString().slice(0, 10);
+      const dateKey = data.dateKey ?? huTodayKey();
       const cacheKey = `aitarot:${READING_QUALITY_PROMPT_VERSION}:${data.spread}:${idsKey}:${data.category ?? ""}:${qKey}:${memoryKey}:${dateKey}`;
 
       try {

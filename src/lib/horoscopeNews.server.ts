@@ -1,4 +1,5 @@
 import { cleanHUText } from "./huTextGuard";
+import { huTodayKey } from "./dateKeys";
 import { SIGN_HU } from "./roxyNormalize";
 import {
   PERIOD_LABEL,
@@ -19,7 +20,7 @@ const TECHNICAL_FALLBACK_RE =
   /háttéradat|nem érhető el|általános magyar tartalmat|\bprovider\b|\bendpoint\b|\broxy\b|\bapi\b|\bfallback\b/i;
 
 function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
+  return huTodayKey();
 }
 
 function ttlFor(period: HoroscopePeriodHU): number {

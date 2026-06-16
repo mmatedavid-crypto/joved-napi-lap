@@ -208,9 +208,9 @@ function PrivacyPage() {
 
       <LegalSection title="Adatfeldolgozók">
         <p>
-          A működéshez tárhely-, adatbázis-, fizetési, analitikai és háttértudás-szolgáltatók
-          kapcsolódhatnak. Ezeket csak a szükséges mértékben vonjuk be, és a titkos kulcsok nem
-          kerülnek a böngészőbe.
+          A működéshez tárhely-, adatbázis-, fizetési, analitikai és tartalom-előkészítési
+          szolgáltatók kapcsolódhatnak. Ezeket csak a szükséges mértékben vonjuk be, és a személyes
+          adataidat nem tesszük nyilvánossá.
         </p>
       </LegalSection>
 

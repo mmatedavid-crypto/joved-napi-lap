@@ -7,6 +7,7 @@ import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
 import { NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
 import { getPublishedMagazinPosts } from "@/data/magazin.hu";
 import { ANGEL_NUMBER_PAGES } from "@/lib/angel.hu";
+import { huTodayKey } from "@/lib/dateKeys";
 import { SITE_LEGAL } from "@/lib/legal";
 
 function xmlEscape(value: string): string {
@@ -61,7 +62,7 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const origin = SITEMAP_ORIGIN;
-        const today = new Date().toISOString().slice(0, 10);
+        const today = huTodayKey();
         const paths = [
           ...STATIC_PATHS.map((path) => ({ path, changefreq: "weekly", priority: "0.7" })),
           ...LIFE_PATH_NUMBERS.map((n) => ({

@@ -3,6 +3,7 @@
 // havi bontás-fókusszal hívjuk a Roxy forecast/timeline-t.
 
 import { aiJSON } from "@/lib/ai.server";
+import { addDaysToDateKey, huTodayKey } from "@/lib/dateKeys";
 import {
   assertPaidAstrologySource,
   requireUsablePaidAstrologyReport,
@@ -73,10 +74,8 @@ async function safeCallRoxy<T = unknown>(opts: {
 export async function generatePersonalYearlyReport(
   input: PersonalYearlyInput,
 ): Promise<{ title: string; body: string; raw?: Record<string, unknown> }> {
-  const today = new Date();
-  const startDate = today.toISOString().slice(0, 10);
-  const end = new Date(today.getTime() + 365 * 86_400_000);
-  const endDate = end.toISOString().slice(0, 10);
+  const startDate = huTodayKey();
+  const endDate = addDaysToDateKey(startDate, 365);
   const birthTime = input.birthTime || "12:00";
   const approximate = !input.birthTime;
   const areaLabel = AREA_LABEL[input.area] ?? "Általános — minden életterület";

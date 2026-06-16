@@ -3,6 +3,7 @@
 // /forecast/timeline-re, ha a tranzit-specifikus végpont nem felel.
 
 import { aiJSON } from "@/lib/ai.server";
+import { addDaysToDateKey, huTodayKey } from "@/lib/dateKeys";
 import {
   assertPaidAstrologySource,
   requireUsablePaidAstrologyReport,
@@ -73,10 +74,8 @@ async function safeCallRoxy<T = unknown>(opts: {
 export async function generateTransitsPersonalReport(
   input: TransitsPersonalInput,
 ): Promise<{ title: string; body: string; raw?: Record<string, unknown> }> {
-  const today = new Date();
-  const startDate = today.toISOString().slice(0, 10);
-  const end = new Date(today.getTime() + 90 * 86_400_000);
-  const endDate = end.toISOString().slice(0, 10);
+  const startDate = huTodayKey();
+  const endDate = addDaysToDateKey(startDate, 90);
   const birthTime = input.birthTime || "12:00";
   const approximate = !input.birthTime;
   const areaLabel = AREA_LABEL[input.area] ?? "Általános — minden életterület";

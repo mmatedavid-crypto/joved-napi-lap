@@ -5,6 +5,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
+import { huTodayKey } from "@/lib/dateKeys";
 
 const SITE_URL = "https://jovod.hu";
 const TITLE = "Napi szerencseszámok csillagjegy szerint";
@@ -69,7 +70,7 @@ function dailyNumbers(date: string, sign: string, maximum: number) {
 }
 
 function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  return huTodayKey();
 }
 
 export const Route = createFileRoute("/szerencseszamok")({
@@ -207,16 +208,17 @@ function LuckyNumbersPage() {
               ))}
             </div>
             <p className="mt-6 font-editorial text-lg text-ivory/75">
-              Válassz közülük egyet napi fókusznak, vagy használd a teljes sort játékos lottótippként.
+              Válassz közülük egyet napi fókusznak, vagy használd a teljes sort játékos
+              lottótippként.
             </p>
           </section>
         )}
 
         <Section title="Mit jelentenek a szerencseszámok?">
           <p>
-            A számokhoz régóta társítunk szimbolikus jelentést. A napi számsor segíthet kijelölni egy
-            fókuszt, tudatosítani egy választást, vagy egyszerűen megállni egy rövid pillanatra. A
-            számok nem jósolják meg a jövőt, és nem garantálnak szerencsét.
+            A számokhoz régóta társítunk szimbolikus jelentést. A napi számsor segíthet kijelölni
+            egy fókuszt, tudatosítani egy választást, vagy egyszerűen megállni egy rövid pillanatra.
+            A számok nem jósolják meg a jövőt, és nem garantálnak szerencsét.
           </p>
           <p>
             Ha mélyebben érdekel a születési dátumod jelentése, próbáld ki a{" "}
