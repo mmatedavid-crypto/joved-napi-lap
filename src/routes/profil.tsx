@@ -54,6 +54,7 @@ type ProfileOrder = {
   source_route?: string | null;
   deliver_by?: string | null;
   delivered_at?: string | null;
+  feedback?: FeedbackValue | null;
   response_payload?: unknown;
 };
 
@@ -584,7 +585,9 @@ type FeedbackValue = "accurate" | "partial" | "missed";
 
 function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
   const submitFeedback = useServerFn(submitMyOrderFeedback);
-  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(
+    order.feedback ?? null,
+  );
   const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
   const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [

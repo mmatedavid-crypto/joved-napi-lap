@@ -30,6 +30,7 @@ type OrderView = {
   guest_email?: string | null;
   product_slug?: string | null;
   source_route?: string | null;
+  feedback?: FeedbackValue | null;
   response_payload?: unknown;
 };
 
@@ -407,7 +408,9 @@ function PaidReadingFeedback({
   sessionId?: string;
 }) {
   const submitFeedback = useServerFn(submitOrderFeedbackBySession);
-  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(
+    order.feedback ?? null,
+  );
   const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
   const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [

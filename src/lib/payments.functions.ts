@@ -341,13 +341,20 @@ export const getOrderBySession = createServerFn({ method: "POST" })
         ? addMissingReconciliationFields(fallbackOrderResult.data)
         : null;
       const order = await reconcilePendingPayment(fallbackOrder, data.sessionId);
-      return { order: order ? stripPrivateOrderFields(order) : null };
+      return {
+        order: await attachOrderFeedback(
+          supabaseAdmin,
+          order ? stripPrivateOrderFields(order) : null,
+        ),
+      };
     }
 
     if (orderResultWithReconciliation.error) throw orderResultWithReconciliation.error;
 
     const order = await reconcilePendingPayment(orderResultWithReconciliation.data, data.sessionId);
-    return { order: order ? stripPrivateOrderFields(order) : null };
+    return {
+      order: await attachOrderFeedback(supabaseAdmin, order ? stripPrivateOrderFields(order) : null),
+    };
   });
 
 async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
@@ -467,7 +474,9 @@ export const getMyOrders = createServerFn({ method: "GET" })
       }),
     );
 
-    return { orders: reconciled.map(stripPrivateOrderFields) };
+    return {
+      orders: await attachOrdersFeedback(context.supabase, reconciled.map(stripPrivateOrderFields)),
+    };
   });
 
 export const processMyOrder = createServerFn({ method: "POST" })
@@ -631,6 +640,46 @@ function stripPrivateOrderFields<T extends Record<string, unknown>>(order: T) {
     ...publicOrder,
     response_payload: sanitizePublicResponsePayload(publicOrder.response_payload),
   };
+}
+
+async function attachOrderFeedback<T extends { id?: unknown }>(
+  supabase: SupabaseClient<Database>,
+  order: T | null,
+): Promise<(T & { feedback: OrderFeedbackValue | null }) | null> {
+  if (!order || typeof order.id !== "string") return order ? { ...order, feedback: null } : null;
+  try {
+    const { data } = await supabase
+      .from("order_feedback")
+      .select("feedback")
+      .eq("order_id", order.id)
+      .maybeSingle();
+    return { ...order, feedback: (data?.feedback as OrderFeedbackValue | undefined) ?? null };
+  } catch {
+    return { ...order, feedback: null };
+  }
+}
+
+async function attachOrdersFeedback<T extends { id?: unknown }>(
+  supabase: SupabaseClient<Database>,
+  orders: T[],
+): Promise<Array<T & { feedback: OrderFeedbackValue | null }>> {
+  const ids = orders.map((order) => order.id).filter((id): id is string => typeof id === "string");
+  if (!ids.length) return orders.map((order) => ({ ...order, feedback: null }));
+  try {
+    const { data } = await supabase
+      .from("order_feedback")
+      .select("order_id, feedback")
+      .in("order_id", ids);
+    const byOrderId = new Map(
+      (data ?? []).map((row) => [row.order_id, row.feedback as OrderFeedbackValue]),
+    );
+    return orders.map((order) => ({
+      ...order,
+      feedback: typeof order.id === "string" ? (byOrderId.get(order.id) ?? null) : null,
+    }));
+  } catch {
+    return orders.map((order) => ({ ...order, feedback: null }));
+  }
 }
 
 function sanitizePublicResponsePayload(payload: unknown): unknown {
