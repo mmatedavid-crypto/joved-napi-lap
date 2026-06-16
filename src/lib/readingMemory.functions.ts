@@ -134,6 +134,20 @@ function buildContextText(memories: ReadingMemory[]): string {
   );
 }
 
+function prioritizeMemories(
+  memories: ReadingMemory[],
+  input: z.infer<typeof ContextInput>,
+): ReadingMemory[] {
+  const relevant = memories.filter((memory) => topicMatches(memory, input));
+  const source = relevant.length ? relevant : memories;
+  return source.sort((a, b) => {
+    const aTypeMatch = input.readingType && a.reading_type === input.readingType ? 1 : 0;
+    const bTypeMatch = input.readingType && b.reading_type === input.readingType ? 1 : 0;
+    if (aTypeMatch !== bTypeMatch) return bTypeMatch - aTypeMatch;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
+
 function countValues(values: string[]): [string, number][] {
   const counts = new Map<string, number>();
   for (const value of values) {
@@ -270,6 +284,7 @@ function buildContextTextWithInsights(
     `Havi minta: ${insights.monthlySummary}`,
     `Visszatérő kérdés: ${insights.recurringQuestion}`,
     `Elmozdulás: ${insights.changeSinceLast}`,
+    `Finom irány: ${insights.gentleNudge}`,
   ].join("\n");
 }
 
@@ -326,22 +341,21 @@ export const getReadingContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(ContextInput.parse)
   .handler(async ({ context, data }) => {
-    let query = context.supabase
+    const query = context.supabase
       .from("reading_memories")
       .select(
         "id, reading_type, topic, question, situation, source_route, title, summary, one_sentence, anchors, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false })
-      .limit(Math.max((data.limit ?? 8) * 2, 8));
-
-    if (data.readingType) query = query.eq("reading_type", data.readingType);
+      .limit(Math.max((data.limit ?? 8) * 4, 16));
 
     const { data: rows, error } = await query;
     if (error) throw error;
-    const memories = ((rows ?? []) as ReadingMemory[])
-      .filter((memory) => topicMatches(memory, data))
-      .slice(0, data.limit ?? 8);
+    const memories = prioritizeMemories((rows ?? []) as ReadingMemory[], data).slice(
+      0,
+      data.limit ?? 8,
+    );
     const insights = buildMemoryInsights(memories);
     return {
       ok: true,

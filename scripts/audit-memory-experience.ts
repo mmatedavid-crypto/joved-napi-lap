@@ -129,6 +129,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "account memory keeps a cross-reading returning-user arc",
+    file: "src/lib/readingMemory.functions.ts",
+    includes: [
+      "function prioritizeMemories",
+      "const relevant = memories.filter((memory) => topicMatches(memory, input))",
+      "const source = relevant.length ? relevant : memories",
+      "a.reading_type === input.readingType",
+      ".limit(Math.max((data.limit ?? 8) * 4, 16))",
+      "Finom irány: ${insights.gentleNudge}",
+    ],
+  },
+  {
     name: "guest compatibility pattern is tracked before signup",
     file: "src/lib/guestReadingMemory.ts",
     includes: [
