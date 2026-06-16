@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
-import { PaidReadingBody } from "@/components/PaidReadingBody";
+import { PaidReadingBody, type PaidReadingGenerationPublic } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { useAuth } from "@/hooks/useAuth";
 import { trackEvent } from "@/lib/analytics";
@@ -61,6 +61,7 @@ type ProfileOrder = {
 type OrderResponsePayload = {
   title?: string;
   body?: string;
+  generation?: PaidReadingGenerationPublic;
 };
 
 type RetryNotice = {
@@ -404,6 +405,7 @@ function Page() {
                               title={payload.title}
                               productName={o.product_name}
                               orderReference={shortOrderId(o.id)}
+                              generation={payload.generation}
                             />
                           </div>
                           <ProfilePaidReadingFeedback order={o} />
@@ -454,8 +456,12 @@ function getOrderPayload(payload: unknown): OrderResponsePayload | null {
   const data = payload as Record<string, unknown>;
   const title = typeof data.title === "string" ? data.title : undefined;
   const body = typeof data.body === "string" ? data.body : undefined;
+  const generation =
+    data.generation && typeof data.generation === "object"
+      ? (data.generation as PaidReadingGenerationPublic)
+      : undefined;
   if (!title && !body) return null;
-  return { title, body };
+  return { title, body, generation };
 }
 
 function OrderStatusNote({

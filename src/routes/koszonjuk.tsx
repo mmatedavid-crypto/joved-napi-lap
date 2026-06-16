@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
-import { PaidReadingBody } from "@/components/PaidReadingBody";
+import { PaidReadingBody, type PaidReadingGenerationPublic } from "@/components/PaidReadingBody";
 import { PageHeader, Section } from "@/components/Section";
 import { trackEvent } from "@/lib/analytics";
 import { SITE_LEGAL } from "@/lib/legal";
@@ -16,6 +16,7 @@ import { PRODUCTS_BY_SLUG, formatHuf } from "@/lib/products";
 type OrderResponsePayload = {
   title?: string;
   body?: string;
+  generation?: PaidReadingGenerationPublic;
   [key: string]: unknown;
 };
 
@@ -294,6 +295,7 @@ function Page() {
                         title={payload.title}
                         productName={order.product_name}
                         orderReference={shortOrderId(order.id)}
+                        generation={payload.generation}
                       />
                     ) : (
                       <>

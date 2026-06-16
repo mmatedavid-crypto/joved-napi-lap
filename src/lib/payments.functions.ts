@@ -751,7 +751,25 @@ async function attachOrdersFeedback<T extends { id?: unknown }>(
 
 function sanitizePublicResponsePayload(payload: unknown): unknown {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return payload;
-  const { raw: _raw, ...publicPayload } = payload as Record<string, unknown>;
+  const { raw: _raw, generation: rawGeneration, ...publicPayload } = payload as Record<
+    string,
+    unknown
+  >;
+  if (rawGeneration && typeof rawGeneration === "object" && !Array.isArray(rawGeneration)) {
+    const generation = rawGeneration as Record<string, unknown>;
+    publicPayload.generation = {
+      source:
+        typeof generation.source === "string" &&
+        (generation.source === "ai" || generation.source === "local_premium_draft")
+          ? generation.source
+          : undefined,
+      fallbackUsed: generation.fallbackUsed === true,
+      qualityRejected: generation.qualityRejected === true,
+      qualityIssues: Array.isArray(generation.qualityIssues)
+        ? generation.qualityIssues.filter((issue): issue is string => typeof issue === "string")
+        : undefined,
+    };
+  }
   return publicPayload;
 }
 

@@ -6,22 +6,32 @@ type ReadingBlock = {
   text: string;
 };
 
+export type PaidReadingGenerationPublic = {
+  source?: string;
+  fallbackUsed?: boolean;
+  qualityRejected?: boolean;
+  qualityIssues?: string[];
+};
+
 export function PaidReadingBody({
   body,
   title,
   productName,
   orderReference,
+  generation,
 }: {
   body: string;
   title?: string;
   productName?: string;
   orderReference?: string;
+  generation?: PaidReadingGenerationPublic;
 }) {
   const blocks = parsePaidReadingBody(body);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [downloadState, setDownloadState] = useState<"idle" | "ready" | "failed">("idle");
   const [clarifyState, setClarifyState] = useState<"idle" | "copied" | "failed">("idle");
   const selfCheck = paidReadingSelfCheck({ body, title, productName, orderReference });
+  const assurance = paidReadingAssurance(generation);
 
   async function copyReading() {
     try {
@@ -109,6 +119,7 @@ export function PaidReadingBody({
           </button>
         </div>
       </div>
+      {assurance && <ReadingAssuranceNotice assurance={assurance} />}
       <ReadingUseGuide />
       <ReadingSelfCheck
         selfCheck={selfCheck}
@@ -133,6 +144,20 @@ export function PaidReadingBody({
         </section>
       ))}
     </div>
+  );
+}
+
+function ReadingAssuranceNotice({
+  assurance,
+}: {
+  assurance: { heading: string; text: string };
+}) {
+  return (
+    <aside className="rounded-md border border-gold/15 bg-gold/[0.045] p-4">
+      <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségbiztosítás</div>
+      <h3 className="mt-2 font-display text-lg leading-snug text-ivory">{assurance.heading}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/60">{assurance.text}</p>
+    </aside>
   );
 }
 
@@ -270,6 +295,25 @@ function paidReadingSelfCheck({
     checks,
     clarificationDraft,
   };
+}
+
+function paidReadingAssurance(
+  generation?: PaidReadingGenerationPublic,
+): { heading: string; text: string } | null {
+  if (!generation) return null;
+  if (generation.qualityRejected) {
+    return {
+      heading: "Az első változat nem ment át a belső ellenőrzésen",
+      text: "Ezért nem azt mutatjuk, hanem egy biztonságos, helyi prémium olvasatot. Ha így is úgy érzed, hogy egy fontos rész kimaradt a helyzetedből, a pontosítási vázlattal gyorsan jelezheted, merre kell finomítani.",
+    };
+  }
+  if (generation.source === "local_premium_draft" || generation.fallbackUsed) {
+    return {
+      heading: "Tartalék minőségi útvonalon készült",
+      text: "Az olvasat ilyenkor is a megadott adatokból és a Jövőd.hu saját értelmezési rétegéből áll össze. Érdemes külön megnézni, reagál-e a konkrét kérdésedre; ha nem, rendelés alapján visszanézzük.",
+    };
+  }
+  return null;
 }
 
 function selfCheckReadingType(
