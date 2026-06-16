@@ -14,6 +14,7 @@ export type CompatibilityProfile = {
   relationshipNumber: number;
   score: number;
   status?: string;
+  question?: string;
   communication?: number;
   attraction?: number;
   longTerm?: number;
@@ -25,6 +26,7 @@ export function calculateCompatibilityProfile(opts: {
   fullNameA?: string;
   fullNameB?: string;
   status?: string;
+  question?: string;
   communication?: number;
   attraction?: number;
   longTerm?: number;
@@ -44,6 +46,7 @@ export function calculateCompatibilityProfile(opts: {
     relationshipNumber: rel,
     score: compatibilityScore(personA.lifePathNumber, personB.lifePathNumber),
     status: opts.status,
+    question: opts.question,
     communication: opts.communication,
     attraction: opts.attraction,
     longTerm: opts.longTerm,
@@ -69,6 +72,9 @@ export function composeCompatibilityReading(profile: CompatibilityProfile): Qual
       },
       { heading: "A kapcsolat alapmintája", text: `${rel.meaning} ${nameLine}` },
       { heading: "A helyzet szerint", text: statusText(profile.status, profile.score) },
+      ...(profile.question
+        ? [{ heading: "A kérdésed felől", text: questionText(profile.question, profile.status) }]
+        : []),
       { heading: "Miért erős köztetek?", text: pair.works },
       { heading: "Hol akadhattok el?", text: pair.tension },
       {
@@ -106,6 +112,7 @@ export function composeCompatibilityReading(profile: CompatibilityProfile): Qual
     String(profile.personA.lifePathNumber),
     String(profile.personB.lifePathNumber),
     profile.status ?? "",
+    profile.question ?? "",
   ]);
   reading.meta = { ...reading.meta, qualityIssues: guard.issues };
   return reading;
@@ -130,6 +137,25 @@ export function statusText(status: string | undefined, score: number): string {
     return "Hosszú távú vagy házassági helyzetben a kapcsolat nem attól erős, hogy nincs feszültség, hanem attól, hogy van-e közös tartás, amikor a romantikus könnyedség kevesebb. Itt a stabilitás, felelősség és szabadság aránya a kulcs.";
   }
   return "A megadott kapcsolati helyzet alapján ezt nem általános összeillésként érdemes olvasni, hanem annak jelzéseként, hogy ebben az életszakaszban milyen tempót, közelséget és biztonságot tudtok egymásnak adni.";
+}
+
+function questionText(question: string, status: string | undefined): string {
+  const clean = question.trim().replace(/\s+/g, " ");
+  const normalized = `${status ?? ""} ${clean}`.toLocaleLowerCase("hu-HU");
+  const quoted = `A „${clean}” kérdésre ez az összeillés nem biztos jóslatként válaszol.`;
+  if (/vissza|visszatér|ex|újra/.test(normalized)) {
+    return `${quoted} Inkább azt mutatja, hogy a visszatérés értéke nem önmagában a megjelenésben van, hanem abban, hogy a régi minta mellett látszik-e több felelősség, következetesség és tisztább szándék. Ha csak a hiány hozza vissza, rövid hullám maradhat; ha a tempó is változik, abból már érdemesebb olvasni.`;
+  }
+  if (/marad|tartós|hosszú|komoly/.test(normalized)) {
+    return `${quoted} A tartósság itt nem egyetlen nagy érzelem kérdése, hanem azé, hogy a vonzalom mellé megérkezik-e a kiszámítható figyelem, a hétköznapi jelenlét és a konfliktusok utáni visszarendeződés.`;
+  }
+  if (/szeret|érez|gondol|komolyan/.test(normalized)) {
+    return `${quoted} Érzések helyett biztos bizonyítékot nem ad, de a mintát megmutatja: ahol valódi szándék van, ott a vonzalom mellett idővel több tisztaság, ritmus és konkrét figyelem is megjelenik.`;
+  }
+  if (/ír|keres|jelentkez|csend/.test(normalized)) {
+    return `${quoted} A csendet nem érdemes automatikus válasznak venni. Itt inkább az számít, hogy a hallgatás után jön-e tisztább közeledés, vagy ugyanazt a bizonytalanságot indítja újra.`;
+  }
+  return `${quoted} A számaitok inkább azt mutatják, milyen tempóban közeledtek, hol akad el a biztonság, és milyen kapcsolati minőség tudna ebből hosszabb távon épülni.`;
 }
 
 function oneSentenceForStatus(status: string | undefined): string {

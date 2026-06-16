@@ -191,6 +191,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       fullNameA: z.string().min(1).max(120).optional(),
       fullNameB: z.string().min(1).max(120).optional(),
       status: z.string().max(80).optional(),
+      question: z.string().max(240).optional(),
       memoryContext: z.string().max(1600).optional(),
     }).parse,
   )
@@ -201,8 +202,9 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
       fullNameA: data.fullNameA,
       fullNameB: data.fullNameB,
       status: data.status,
+      question: data.question,
     });
-    const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}:${(data.memoryContext ?? "").toLowerCase().trim().slice(0, 160)}`;
+    const compatCacheKey = `reading_ai:${READING_QUALITY_PROMPT_VERSION}:compat:${data.birthDateA}:${data.birthDateB}:${(data.fullNameA ?? "").toLowerCase().trim()}:${(data.fullNameB ?? "").toLowerCase().trim()}:${(data.status ?? "").toLowerCase().trim()}:${(data.question ?? "").toLowerCase().trim()}:${(data.memoryContext ?? "").toLowerCase().trim().slice(0, 160)}`;
     const compatHit = await readCachedReading(compatCacheKey);
     if (compatHit) {
       return {
@@ -263,6 +265,7 @@ export const qualityCompatibilityReading = createServerFn({ method: "POST" })
         String(profile.personA.lifePathNumber),
         String(profile.personB.lifePathNumber),
         data.status ?? "",
+        data.question ?? "",
       ],
       fallback,
     });

@@ -74,6 +74,7 @@ function Page() {
   const [na, setNa] = useState("");
   const [nb, setNb] = useState("");
   const [status, setStatus] = useState(STATUS[0]);
+  const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<CompatibilityProfile | null>(null);
   const [reading, setReading] = useState<QualityReading | null>(null);
@@ -91,7 +92,7 @@ function Page() {
     setComparisonContext(browserPattern.contextText);
     const guestMemory = getGuestReadingContext({
       readingType: "compatibility",
-      topic: status,
+      topic: q || status,
       situation: status,
       limit: 6,
     });
@@ -105,7 +106,7 @@ function Page() {
     if (user) {
       try {
         const memory = await loadMemory({
-          data: { readingType: "compatibility", topic: status, situation: status, limit: 5 },
+          data: { readingType: "compatibility", topic: q || status, situation: status, limit: 5 },
         });
         memoryContext = [memory.contextText, memory.themeSummary, browserPattern.contextText]
           .filter(Boolean)
@@ -122,6 +123,7 @@ function Page() {
           fullNameA: na.trim() || undefined,
           fullNameB: nb.trim() || undefined,
           status,
+          question: q.trim() || undefined,
           memoryContext: memoryContext || undefined,
         },
       });
@@ -131,6 +133,7 @@ function Page() {
         recordGuestReadingMemory({
           readingType: "compatibility",
           topic: `${na || "én"} + ${nb || "ő"} · ${status}`,
+          question: q.trim() || undefined,
           situation: status,
           sourceRoute: "/osszeillunk",
           title: r.reading.title,
@@ -138,6 +141,7 @@ function Page() {
           oneSentence: r.reading.oneSentence,
           anchors: [
             status,
+            q.trim(),
             `${r.profile.personA.lifePathNumber}`,
             `${r.profile.personB.lifePathNumber}`,
             `${r.profile.relationshipNumber}`,
@@ -148,10 +152,12 @@ function Page() {
           saveMemory({
             data: {
               readingType: "compatibility",
-              topic: status,
-              question: browserPattern.isComparing
-                ? "Több emberrel nézett összeillési mintázat"
-                : undefined,
+              topic: q || status,
+              question:
+                q.trim() ||
+                (browserPattern.isComparing
+                  ? "Több emberrel nézett összeillési mintázat"
+                  : undefined),
               situation: status,
               sourceRoute: "/osszeillunk",
               title: r.reading.title,
@@ -159,6 +165,7 @@ function Page() {
               oneSentence: r.reading.oneSentence,
               anchors: [
                 status,
+                q.trim(),
                 `${r.profile.personA.lifePathNumber}`,
                 `${r.profile.personB.lifePathNumber}`,
                 `${r.profile.relationshipNumber}`,
@@ -183,6 +190,7 @@ function Page() {
       fullNameA: na,
       fullNameB: nb,
       status,
+      question: q.trim() || undefined,
     });
     const fallbackReading = composeCompatibilityReading(fallbackProfile);
     const memorySentence = compatibilityMemorySentence({
@@ -196,6 +204,7 @@ function Page() {
     recordGuestReadingMemory({
       readingType: "compatibility",
       topic: `${na || "én"} + ${nb || "ő"} · ${status}`,
+      question: q.trim() || undefined,
       situation: status,
       sourceRoute: "/osszeillunk",
       title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
@@ -203,6 +212,7 @@ function Page() {
       oneSentence: memorySentence,
       anchors: [
         status,
+        q.trim(),
         `${fallbackProfile.personA.lifePathNumber}`,
         `${fallbackProfile.personB.lifePathNumber}`,
         `${fallbackProfile.relationshipNumber}`,
@@ -213,7 +223,8 @@ function Page() {
       saveMemory({
         data: {
           readingType: "compatibility",
-          topic: status,
+          topic: q || status,
+          question: q.trim() || undefined,
           situation: status,
           sourceRoute: "/osszeillunk",
           title: `${fallbackProfile.score}% · ${fallbackProfile.relationshipNumber}-es kapcsolatminta`,
@@ -221,6 +232,7 @@ function Page() {
           oneSentence: memorySentence,
           anchors: [
             status,
+            q.trim(),
             `${fallbackProfile.personA.lifePathNumber}`,
             `${fallbackProfile.personB.lifePathNumber}`,
             `${fallbackProfile.relationshipNumber}`,
@@ -290,6 +302,20 @@ function Page() {
               ))}
             </select>
           </div>
+          <div>
+            <label htmlFor="compat-question" className="block text-sm text-ivory/80 mb-2">
+              Konkrét kérdés (opcionális)
+            </label>
+            <textarea
+              id="compat-question"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              rows={3}
+              maxLength={240}
+              placeholder="Pl. Visszajön-e tartósan, vagy csak rövid időre térne vissza?"
+              className={inp}
+            />
+          </div>
           <button className="btn-gold" disabled={!a || !b || loading}>
             {loading ? "Egy pillanat…" : "Megnézem az összeillést"}
           </button>
@@ -299,7 +325,11 @@ function Page() {
           <ReadingLoadingState kind="compatibility" title="Az összeillés készül" />
         )}
 
-        <GuestMemoryInsightPanel readingType="compatibility" topic={status} situation={status} />
+        <GuestMemoryInsightPanel
+          readingType="compatibility"
+          topic={q || status}
+          situation={status}
+        />
 
         {profile && reading && (
           <div className="space-y-4">
@@ -349,12 +379,14 @@ function Page() {
             <SmartReadingFollowup
               intent="compatibility"
               readingType="compatibility"
-              topic={status}
+              topic={q || status}
               situation={status}
               question={
-                status === "ex / visszatérő történet"
+                q.trim() ||
+                (status === "ex / visszatérő történet"
                   ? "Visszatérhet-e ez a kapcsolat más mintával, vagy csak rövid fellángolás lenne?"
                   : "Milyen dinamika van köztünk, és mire kell figyelnünk?"
+                )
               }
               sourceRoute="/osszeillunk"
               inputPayload={{
@@ -363,6 +395,7 @@ function Page() {
                 myDob: a,
                 hisDob: b,
                 sit: status,
+                q,
                 score: profile.score,
                 relationshipNumber: profile.relationshipNumber,
               }}

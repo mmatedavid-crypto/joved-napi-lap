@@ -193,6 +193,7 @@ const freeReadings = [
         fullNameA: "Kovács Anna",
         fullNameB: "Nagy Péter",
         status: "ex / visszatérő történet",
+        question: "Visszajön-e tartósan, vagy csak rövid időre térne vissza?",
       }),
     ),
   },
@@ -284,10 +285,11 @@ const contextChecks = [
           fullNameA: "Kovács Anna",
           fullNameB: "Nagy Péter",
           status: "ex / visszatérő történet",
+          question: "Visszajön-e tartósan, vagy csak rövid időre térne vissza?",
         }),
       ),
     ),
-    required: ["visszatér", "rövid", "tartós"],
+    required: ["A kérdésed felől", "visszajön", "rövid", "tartós"],
   },
 ].map((item) => {
   const lower = item.body.toLocaleLowerCase("hu-HU");
@@ -337,6 +339,9 @@ for (const needle of [
   "Te / első személy sorsszáma",
   "A másik fél sorsszáma",
   'partnerName: nb || "a másik fél"',
+  'id="compat-question"',
+  "question: q.trim() || undefined",
+  "Visszajön-e tartósan",
 ]) {
   if (!compatibilityRoute.includes(needle)) {
     policyFailures.push(`compatibility route must use inclusive person labels: ${needle}`);

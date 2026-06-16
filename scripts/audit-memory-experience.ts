@@ -192,8 +192,15 @@ const checks: Check[] = [
     includes: [
       "GuestMemoryInsightPanel",
       'readingType="compatibility"',
-      "topic={status}",
+      "topic={q || status}",
+      "topic: q || status",
       "situation={status}",
+      'id="compat-question"',
+      "question: q.trim() || undefined",
+      "question: q.trim() ||",
+      "question={",
+      "q.trim() ||",
+      "q,",
     ],
   },
   {
