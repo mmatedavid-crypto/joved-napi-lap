@@ -52,16 +52,19 @@ const OrderDeliveredEmail = ({
     {
       label: "Eltalált",
       feedback: "Eltalált",
+      feedbackValue: "accurate",
       body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
     },
     {
       label: "Részben talált",
       feedback: "Részben talált",
+      feedbackValue: "partial",
       body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Nem volt elég pontos",
       feedback: "Nem volt elég pontos",
+      feedbackValue: "missed",
       body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ];
@@ -133,18 +136,28 @@ const OrderDeliveredEmail = ({
                 {feedbackOptions.map((option) => (
                   <Link
                     key={option.label}
-                    href={feedbackMailto({
-                      productName,
-                      shortOrderId,
-                      feedback: option.feedback,
-                      body: option.body,
-                    })}
+                    href={feedbackAccessUrl(openUrl, option.feedbackValue)}
                     style={feedbackButton}
                   >
                     {option.label}
                   </Link>
                 ))}
               </Section>
+              <Text style={feedbackFinePrint}>
+                Ha rögtön leírnád, mi maradt ki,{" "}
+                <Link
+                  href={feedbackMailto({
+                    productName,
+                    shortOrderId,
+                    feedback: "Pontosítást kérek",
+                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+                  })}
+                  style={link}
+                >
+                  emailben is elküldheted
+                </Link>
+                .
+              </Text>
             </Section>
             <Text style={supportText}>
               Ha a gomb nem nyílik meg, írj nekünk a{" "}
@@ -234,6 +247,17 @@ function feedbackMailto(opts: {
     "Röviden ezt szeretném hozzátenni:",
   ].join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function feedbackAccessUrl(accessUrl: string, feedback: string): string {
+  try {
+    const url = new URL(accessUrl);
+    url.searchParams.set("feedback", feedback);
+    return url.toString();
+  } catch {
+    const separator = accessUrl.includes("?") ? "&" : "?";
+    return `${accessUrl}${separator}feedback=${encodeURIComponent(feedback)}`;
+  }
 }
 
 function orderSupportMailto(opts: { productName: string; shortOrderId?: string }): string {
@@ -328,6 +352,12 @@ const feedbackText = {
   fontSize: "13px",
   lineHeight: "1.55",
   margin: "0 0 12px 0",
+};
+const feedbackFinePrint = {
+  color: "#5b5368",
+  fontSize: "12px",
+  lineHeight: "1.5",
+  margin: "12px 0 0 0",
 };
 const feedbackButton = {
   border: "1px solid #c9a85d",

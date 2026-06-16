@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { PaidReadingBody, type PaidReadingGenerationPublic } from "@/components/PaidReadingBody";
@@ -35,6 +35,30 @@ type OrderView = {
   response_payload?: unknown;
 };
 
+type FeedbackValue = "accurate" | "partial" | "missed";
+
+const FEEDBACK_OPTIONS = [
+  {
+    label: "Eltalált",
+    value: "accurate" as const,
+    body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
+  },
+  {
+    label: "Részben talált",
+    value: "partial" as const,
+    body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
+  },
+  {
+    label: "Nem volt elég pontos",
+    value: "missed" as const,
+    body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+  },
+] as const;
+
+function normalizeFeedbackSearch(value: unknown): FeedbackValue | undefined {
+  return value === "accurate" || value === "partial" || value === "missed" ? value : undefined;
+}
+
 function maskEmail(email: string): string {
   const [local, domain] = email.split("@");
   if (!local || !domain) return "a vásárlási email címed";
@@ -47,8 +71,11 @@ function shortOrderId(id: string | undefined | null): string | undefined {
 }
 
 export const Route = createFileRoute("/koszonjuk")({
-  validateSearch: (s: Record<string, unknown>): { session_id?: string } => ({
+  validateSearch: (
+    s: Record<string, unknown>,
+  ): { session_id?: string; feedback?: FeedbackValue } => ({
     session_id: typeof s.session_id === "string" ? s.session_id : undefined,
+    feedback: normalizeFeedbackSearch(s.feedback),
   }),
   head: () => ({
     meta: [{ title: "Köszönjük! | Jövőd.hu" }, { name: "robots", content: "noindex,nofollow" }],
@@ -58,7 +85,7 @@ export const Route = createFileRoute("/koszonjuk")({
 });
 
 function Page() {
-  const { session_id } = Route.useSearch();
+  const { session_id, feedback } = Route.useSearch();
   const fetchOrder = useServerFn(getOrderBySession);
   const runProcess = useServerFn(processOrder);
   const [order, setOrder] = useState<OrderView | null>(null);
@@ -312,7 +339,11 @@ function Page() {
                       Az elkészült olvasatot emailben is elküldjük a vásárláshoz használt címre.
                       Vendég vásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
-                    <PaidReadingFeedback order={order} sessionId={session_id} />
+                    <PaidReadingFeedback
+                      order={order}
+                      sessionId={session_id}
+                      emailFeedback={feedback}
+                    />
                   </Section>
                 );
               })()}
@@ -454,63 +485,72 @@ function supportMailto(shortId?: string): string {
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-type FeedbackValue = "accurate" | "partial" | "missed";
-
-function PaidReadingFeedback({ order, sessionId }: { order: OrderView; sessionId?: string }) {
+function PaidReadingFeedback({
+  order,
+  sessionId,
+  emailFeedback,
+}: {
+  order: OrderView;
+  sessionId?: string;
+  emailFeedback?: FeedbackValue;
+}) {
   const submitFeedback = useServerFn(submitOrderFeedbackBySession);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackValue | null>(
     order.feedback ?? null,
   );
+  const emailFeedbackHandled = useRef(false);
   const [feedbackSaving, setFeedbackSaving] = useState<FeedbackValue | null>(null);
   const [feedbackNote, setFeedbackNote] = useState("");
   const [feedbackError, setFeedbackError] = useState("");
-  const feedbackOptions = [
-    {
-      label: "Eltalált",
-      value: "accurate" as const,
-      body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
-    },
-    {
-      label: "Részben talált",
-      value: "partial" as const,
-      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
-    },
-    {
-      label: "Nem volt elég pontos",
-      value: "missed" as const,
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
-    },
-  ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
-  const selectedOption = feedbackOptions.find((option) => option.value === selectedFeedback);
+  const selectedOption = FEEDBACK_OPTIONS.find((option) => option.value === selectedFeedback);
 
-  async function saveFeedback(option: (typeof feedbackOptions)[number], note?: string) {
-    if (!sessionId) return;
-    setFeedbackSaving(option.value);
-    setFeedbackError("");
-    try {
-      const result = await submitFeedback({
-        data: { sessionId, feedback: option.value, note: note?.trim() },
-      });
-      if (!result.ok) {
+  const saveFeedback = useCallback(
+    async (option: (typeof FEEDBACK_OPTIONS)[number], note?: string) => {
+      if (!sessionId) return;
+      setFeedbackSaving(option.value);
+      setFeedbackError("");
+      try {
+        const result = await submitFeedback({
+          data: { sessionId, feedback: option.value, note: note?.trim() },
+        });
+        if (!result.ok) {
+          setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+          return;
+        }
+        setSelectedFeedback(option.value);
+        if (note?.trim()) setFeedbackNote(note.trim());
+        trackEvent("paid_reading_feedback_clicked", {
+          productSlug: order.product_slug,
+          status: order.status,
+          feedback: option.value,
+          source: "thank_you",
+          saved: true,
+        });
+      } catch {
         setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
-        return;
+      } finally {
+        setFeedbackSaving(null);
       }
-      setSelectedFeedback(option.value);
-      if (note?.trim()) setFeedbackNote(note.trim());
-      trackEvent("paid_reading_feedback_clicked", {
-        productSlug: order.product_slug,
-        status: order.status,
-        feedback: option.value,
-        source: "thank_you",
-        saved: true,
-      });
-    } catch {
-      setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
-    } finally {
-      setFeedbackSaving(null);
+    },
+    [order.product_slug, order.status, sessionId, submitFeedback],
+  );
+
+  useEffect(() => {
+    if (
+      !emailFeedback ||
+      !sessionId ||
+      emailFeedbackHandled.current ||
+      selectedFeedback === emailFeedback ||
+      feedbackSaving
+    ) {
+      return;
     }
-  }
+    const option = FEEDBACK_OPTIONS.find((candidate) => candidate.value === emailFeedback);
+    if (!option) return;
+    emailFeedbackHandled.current = true;
+    void saveFeedback(option);
+  }, [emailFeedback, feedbackSaving, saveFeedback, selectedFeedback, sessionId]);
 
   return (
     <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
@@ -521,7 +561,7 @@ function PaidReadingFeedback({ order, sessionId }: { order: OrderView; sessionId
         továbbmenni.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
-        {feedbackOptions.map((option) => {
+        {FEEDBACK_OPTIONS.map((option) => {
           return (
             <button
               key={option.value}
