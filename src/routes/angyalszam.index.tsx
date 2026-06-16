@@ -207,6 +207,7 @@ function Page() {
             ? {
                 number: m.number,
                 root: m.root,
+                question: situation.trim() || undefined,
                 situation: situation.trim() || undefined,
                 title: m.meaning.title,
               }

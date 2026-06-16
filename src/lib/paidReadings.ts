@@ -90,7 +90,7 @@ function signTension(value: string): string {
 
 function situationReflection(situation: string): { heading: string; text: string } {
   const lower = situation.toLocaleLowerCase("hu-HU");
-  if (/(szerelem|kapcsolat|randi|ex|visszatér|ismerked)/.test(lower)) {
+  if (/(szerelem|kapcsolat|randi|ex|visszatér|ismerked|szakítás)/.test(lower)) {
     return {
       heading: "Kapcsolati fókusz",
       text: `A „${situation}” témájában most nem az a legerősebb kérdés, hogy a másik mit lép. Inkább az, milyen tempóban maradsz önazonos: hol keresel valódi kölcsönösséget, és hol próbálsz egy bizonytalan jelből túl nagy választ kiolvasni.`,
@@ -396,11 +396,13 @@ function horoscopeArticleSections(value: unknown): Array<{ heading: string; text
 function premiumAngel(input: Record<string, unknown>): PaidReadingPayload {
   const number = text(input.number) || "111";
   const root = typeof input.root === "number" ? input.root : undefined;
+  const situation = text(input.situation) || text(input.question) || text(input.q);
   const meaning = angelMeaning(number, root);
   return renderReading({
     title: `${number} · ${meaning.title}`,
     sections: [
       { heading: "Mit hordoz ez a szám?", text: meaning.message },
+      ...(situation ? [situationReflection(situation)] : []),
       {
         heading: "Miért jelenhet meg most?",
         text: `A ${number} most önismereti jelként azt kérdezheti, hol ismétled ugyanazt a belső választ. Nem bizonyíték, inkább figyelmi pont: mit veszel észre újra meg újra?`,

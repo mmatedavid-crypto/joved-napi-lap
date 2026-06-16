@@ -348,7 +348,7 @@ function memoryQuestion(payload: unknown): string | null {
 function memorySituation(payload: unknown): string | null {
   if (!payload || typeof payload !== "object") return null;
   const data = payload as Record<string, unknown>;
-  const value = data.sit ?? data.status ?? data.cat ?? data.category;
+  const value = data.sit ?? data.status ?? data.cat ?? data.category ?? data.situation;
   return typeof value === "string" && value.trim() ? value.trim().slice(0, 160) : null;
 }
 
@@ -356,7 +356,17 @@ function memoryAnchors(productSlug: string, payload: unknown): string[] {
   const anchors = [productSlug];
   if (payload && typeof payload === "object") {
     const data = payload as Record<string, unknown>;
-    for (const key of ["sit", "status", "cat", "category", "sign", "number", "crystal", "title"]) {
+    for (const key of [
+      "sit",
+      "status",
+      "cat",
+      "category",
+      "situation",
+      "sign",
+      "number",
+      "crystal",
+      "title",
+    ]) {
       const value = data[key];
       if (typeof value === "string" && value.trim()) anchors.push(value.trim().slice(0, 80));
     }

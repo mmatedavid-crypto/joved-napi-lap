@@ -348,7 +348,14 @@ function Page() {
         onOpenChange={setPaywall}
         productSlug="mai_iranytu_ai"
         sourceRoute="/mai-iranytu"
-        inputPayload={{ dob, name, sign, situation: focus.trim() || undefined, ...(c ?? {}) }}
+        inputPayload={{
+          dob,
+          name,
+          sign,
+          question: focus.trim() || undefined,
+          situation: focus.trim() || undefined,
+          ...(c ?? {}),
+        }}
       />
     </Layout>
   );

@@ -71,6 +71,9 @@ const checks: Check[] = [
     includes: [
       "source_route, response_payload",
       "source_route: order.source_route",
+      "memorySituation(order.input_payload)",
+      "data.category ?? data.situation",
+      '"situation"',
       "ORDER_PROCESSING_RETRY_AFTER_MS",
       "PROCESSING_RETRY_AFTER_MS",
     ],

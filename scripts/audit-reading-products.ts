@@ -24,6 +24,12 @@ const demoPayloads: Record<string, Record<string, unknown>> = {
     situation: "Bizonytalan vagyok egy új randi miatt",
   },
   angyalszam_ai: { number: "1111", root: 11 },
+  angyalszam_ai_context: {
+    number: "1111",
+    root: 11,
+    question: "Szakítás után láttam, miközben üzenetre vártam",
+    situation: "Szakítás után láttam, miközben üzenetre vártam",
+  },
   kristaly_ai: { mode: "month", month: 2, crystal: "Ametiszt" },
   alomfejtes_rovid: {
     text: "Egy régi házban jártam, víz folyt a lépcsőkön, és kerestem egy szobát.",
@@ -83,6 +89,13 @@ const extraPaidChecks: Array<{
     productName: "Kristály ajánlás — személyesen",
     payload: { mode: "zodiac", sign: "cancer" },
     expect: ["Holdkő", "Rák"],
+  },
+  {
+    name: "angyalszam_ai:context",
+    slug: "angyalszam_ai",
+    productName: "Angyalszám — mélyebb olvasat",
+    payload: demoPayloads.angyalszam_ai_context,
+    expect: ["Kapcsolati fókusz", "Szakítás után láttam"],
   },
   {
     name: "harom_lap_mely:partial_payload",
