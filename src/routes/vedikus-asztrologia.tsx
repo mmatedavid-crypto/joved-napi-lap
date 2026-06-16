@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { HUDateInput } from "@/components/HUDateInput";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { SITE_LEGAL } from "@/lib/legal";
 import { productCtaLabel } from "@/lib/products";
 
 type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
@@ -11,7 +12,7 @@ type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
 const AREA_OPTIONS: { value: AreaKey; label: string; hint: string }[] = [
   { value: "szerelem", label: "Szerelem / párkapcsolat (kama)", hint: "Kapcsolatok, vonzódás" },
   { value: "munka", label: "Munka / karrier (artha)", hint: "Hivatás, váltás, projekt" },
-  { value: "penz", label: "Pénz / döntések (artha)", hint: "Anyagi biztonság, befektetés" },
+  { value: "penz", label: "Pénz / döntések (artha)", hint: "Anyagi biztonság, értékrend" },
   { value: "altalanos", label: "Általános (dharma–moksha egyensúly)", hint: "Teljes életkép" },
 ];
 
@@ -24,8 +25,9 @@ export const Route = createFileRoute("/vedikus-asztrologia")({
         content:
           "Védikus (sziderikus) asztrológiai elemzés magyarul: Lagna, Hold-rashi, nakshatra, dharma, artha, kama, moksha. 1990 Ft.",
       },
+      { name: "robots", content: "index,follow" },
     ],
-    links: [{ rel: "canonical", href: "/vedikus-asztrologia" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/vedikus-asztrologia` }],
   }),
   component: Page,
 });

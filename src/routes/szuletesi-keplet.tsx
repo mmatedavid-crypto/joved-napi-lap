@@ -6,6 +6,7 @@ import { PageHeader, Section } from "@/components/Section";
 import { HUDateInput } from "@/components/HUDateInput";
 import { roxyLocationSearch } from "@/lib/roxy.functions";
 import { aiNatalChartHU, type NatalChartHU } from "@/lib/roxyTranslate.functions";
+import { SITE_LEGAL } from "@/lib/legal";
 
 export const Route = createFileRoute("/szuletesi-keplet")({
   head: () => ({
@@ -16,13 +17,14 @@ export const Route = createFileRoute("/szuletesi-keplet")({
         content:
           "Készítsd el a születési képletedet: Nap, Hold, Aszcendens és a fő bolygók magyar olvasata. Csendes, alapos, ítélkezés nélküli.",
       },
+      { name: "robots", content: "index,follow" },
       { property: "og:title", content: "Születési képlet magyarul — Jövőd.hu" },
       {
         property: "og:description",
         content: "Nap, Hold, Aszcendens és bolygók magyar olvasata a születési adataidból.",
       },
     ],
-    links: [{ rel: "canonical", href: "/szuletesi-keplet" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/szuletesi-keplet` }],
   }),
   component: Page,
 });

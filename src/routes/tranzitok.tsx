@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { HUDateInput } from "@/components/HUDateInput";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { SITE_LEGAL } from "@/lib/legal";
 import { productCtaLabel } from "@/lib/products";
 
 type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
@@ -11,7 +12,7 @@ type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
 const AREA_OPTIONS: { value: AreaKey; label: string; hint: string }[] = [
   { value: "szerelem", label: "Szerelem / párkapcsolat", hint: "Randi, ex, hosszú táv" },
   { value: "munka", label: "Munka / karrier", hint: "Váltás, projekt, főnök" },
-  { value: "penz", label: "Pénz / döntések", hint: "Költés, befektetés, váltás" },
+  { value: "penz", label: "Pénz / döntések", hint: "Anyagi rend, értékek, váltás" },
   { value: "altalanos", label: "Általános", hint: "Minden életterület egyformán" },
 ];
 
@@ -24,9 +25,9 @@ export const Route = createFileRoute("/tranzitok")({
         content:
           "A jelenleg ható tranzitok személyes elemzése a saját születési képletedre, 90 napos időablakra. 3990 Ft.",
       },
-      { name: "robots", content: "noindex,follow" },
+      { name: "robots", content: "index,follow" },
     ],
-    links: [{ rel: "canonical", href: "/tranzitok" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/tranzitok` }],
   }),
   component: Page,
 });

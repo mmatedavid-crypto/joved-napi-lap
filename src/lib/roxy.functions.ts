@@ -30,7 +30,8 @@ export type RoxyEnvelope = {
   message?: string;
 };
 
-const FAIL_MESSAGE = "Most nem sikerült lekérni a háttértudást. Próbáld újra később.";
+const FAIL_MESSAGE =
+  "Most nem állt össze elég tisztán az olvasat. Próbáld újra később.";
 
 async function runRoxy(opts: {
   endpoint: string;

@@ -47,6 +47,13 @@ const delayedAstrologyRouteSources = delayedAstrologyRouteFiles.map((file) => ({
   file,
   source: readFileSync(file, "utf8"),
 }));
+const indexedAstrologyLandingPaths = new Map<string, string>([
+  ["src/routes/szemelyes-30-napos-horoszkop.tsx", "/szemelyes-30-napos-horoszkop"],
+  ["src/routes/eves-horoszkop.tsx", "/eves-horoszkop"],
+  ["src/routes/vedikus-asztrologia.tsx", "/vedikus-asztrologia"],
+  ["src/routes/tranzitok.tsx", "/tranzitok"],
+]);
+const natalChartRouteSource = readFileSync("src/routes/szuletesi-keplet.tsx", "utf8");
 for (const needle of [
   "Miben lesz személyesebb?",
   "Ebből indulunk ki",
@@ -386,6 +393,20 @@ for (const slug of ["personal_30_day", "vedic_full", "personal_yearly", "transit
 }
 
 for (const { file, source } of delayedAstrologyRouteSources) {
+  const indexedPath = indexedAstrologyLandingPaths.get(file);
+  const expectedCanonical = `href: \`\${SITE_LEGAL.siteUrl}${indexedPath}\``;
+  if (source.includes('content: "noindex,follow"')) {
+    failed.push(`${file}: paid astrology landing must be indexable`);
+  }
+  if (!source.includes('{ name: "robots", content: "index,follow" }')) {
+    failed.push(`${file}: paid astrology landing must explicitly allow indexing`);
+  }
+  if (!source.includes("SITE_LEGAL.siteUrl") || !source.includes(expectedCanonical)) {
+    failed.push(`${file}: paid astrology landing must use the production canonical URL`);
+  }
+  if (/\bbefektetés\b/i.test(source)) {
+    failed.push(`${file}: paid astrology route must avoid investment wording`);
+  }
   if (source.includes("Fizetés után pár percen belül kézhez kapod a riportot")) {
     failed.push(`${file}: delayed astrology route must not promise delivery within minutes`);
   }
@@ -430,6 +451,15 @@ if (!layout.includes('{ to: "/arak", label: "Árak" }')) {
 }
 if (!sitemap.includes('"/arak"')) {
   failed.push("Sitemap missing pricing route");
+}
+if (natalChartRouteSource.includes('content: "noindex,follow"')) {
+  failed.push("Natal chart route must be indexable");
+}
+if (
+  !natalChartRouteSource.includes('{ name: "robots", content: "index,follow" }') ||
+  !natalChartRouteSource.includes('href: `${SITE_LEGAL.siteUrl}/szuletesi-keplet`')
+) {
+  failed.push("Natal chart route must use explicit indexing and a production canonical URL");
 }
 
 for (const needle of [

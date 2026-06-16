@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/Section";
 import { HUDateInput } from "@/components/HUDateInput";
 import { PaywallDialog } from "@/components/PaywallDialog";
+import { SITE_LEGAL } from "@/lib/legal";
 import { productCtaLabel } from "@/lib/products";
 
 type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
@@ -11,7 +12,7 @@ type AreaKey = "szerelem" | "munka" | "penz" | "altalanos";
 const AREA_OPTIONS: { value: AreaKey; label: string; hint: string }[] = [
   { value: "szerelem", label: "Szerelem / párkapcsolat", hint: "Randi, ex, hosszú táv" },
   { value: "munka", label: "Munka / karrier", hint: "Váltás, projekt, főnök" },
-  { value: "penz", label: "Pénz / döntések", hint: "Költés, befektetés, váltás" },
+  { value: "penz", label: "Pénz / döntések", hint: "Anyagi rend, értékek, váltás" },
   { value: "altalanos", label: "Általános", hint: "Minden életterület egyformán" },
 ];
 
@@ -24,9 +25,9 @@ export const Route = createFileRoute("/szemelyes-30-napos-horoszkop")({
         content:
           "Személyes 30 napos asztrológiai térkép a saját születési képletedből: szerelem, munka, döntések. 1490 Ft.",
       },
-      { name: "robots", content: "noindex,follow" },
+      { name: "robots", content: "index,follow" },
     ],
-    links: [{ rel: "canonical", href: "/szemelyes-30-napos-horoszkop" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/szemelyes-30-napos-horoszkop` }],
   }),
   component: Page,
 });

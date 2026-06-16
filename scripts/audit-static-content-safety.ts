@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 
 type StaticSafetyCheck = {
   file: string;
@@ -359,6 +359,22 @@ const publicUiFiles = [
   "src/components/ui/breadcrumb.tsx",
 ];
 
+function walkPublicUiSources(dir: string): string[] {
+  const entries = readdirSync(dir);
+  const files: string[] = [];
+  for (const entry of entries) {
+    const path = `${dir}/${entry}`;
+    const stat = statSync(path);
+    if (stat.isDirectory()) {
+      if (["api", "dev.roxy", "lovable"].some((part) => path.includes(`/${part}`))) continue;
+      files.push(...walkPublicUiSources(path));
+      continue;
+    }
+    if (/\.(tsx|ts)$/.test(entry)) files.push(path);
+  }
+  return files;
+}
+
 for (const file of publicUiFiles) {
   const body = readFileSync(file, "utf8");
   for (const forbidden of [
@@ -378,6 +394,34 @@ for (const file of publicUiFiles) {
   ]) {
     if (forbidden.test(body)) {
       failures.push(`${file}: public UI accessibility text must be Hungarian: ${forbidden}`);
+    }
+  }
+}
+
+const publicTrustLeakFiles = [
+  ...walkPublicUiSources("src/routes").filter(
+    (file) => !file.includes("/api/") && !file.includes("/lovable/") && !file.endsWith("dev.roxy.tsx"),
+  ),
+  ...walkPublicUiSources("src/components"),
+  "src/lib/products.ts",
+];
+const publicTrustLeakPatterns = [
+  /\bháttéradat\b/i,
+  /\bháttértudás\b/i,
+  /\bprovider response\b/i,
+  /\bprovider error\b/i,
+  /\bRoxy API\b/i,
+  /\bOpenAI\b/i,
+  /\bGPT\b/i,
+  /\bAI hiba\b/i,
+  /\bmint AI\b/i,
+];
+
+for (const file of publicTrustLeakFiles) {
+  const body = readFileSync(file, "utf8");
+  for (const forbidden of publicTrustLeakPatterns) {
+    if (forbidden.test(body)) {
+      failures.push(`${file}: public trust copy must not expose internal/provider wording: ${forbidden}`);
     }
   }
 }
