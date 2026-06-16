@@ -18,6 +18,12 @@ const PUBLIC_EMAIL_WEBHOOK_ERROR =
 const PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR = "Nincs jogosultság az email esemény feldolgozásához.";
 const PUBLIC_EMAIL_WEBHOOK_PAYLOAD_ERROR = "Az email esemény adatai hiányosak vagy hibásak.";
 
+type SuppressionLogErrorCode =
+  | "email_bounced"
+  | "email_complained"
+  | "email_unsubscribed"
+  | "email_suppressed";
+
 function publicEmailWebhookError(message: string, status: number): Response {
   return Response.json({ error: message }, { status });
 }
@@ -45,16 +51,16 @@ function mapReasonToStatus(reason: string): "bounced" | "complained" | "suppress
   }
 }
 
-function mapReasonToMessage(reason: string): string {
+function mapReasonToLogCode(reason: string): SuppressionLogErrorCode {
   switch (reason) {
     case "bounce":
-      return "Permanent bounce — email address is invalid or rejected";
+      return "email_bounced";
     case "complaint":
-      return "Spam complaint — recipient marked email as spam";
+      return "email_complained";
     case "unsubscribe":
-      return "Recipient unsubscribed";
+      return "email_unsubscribed";
     default:
-      return "Email suppressed";
+      return "email_suppressed";
   }
 }
 
@@ -128,7 +134,7 @@ export const Route = createFileRoute("/lovable/email/suppression")({
 
         // 2. Append a new log entry for the suppression event (never update existing rows)
         const sendLogStatus = mapReasonToStatus(payload.reason);
-        const sendLogMessage = mapReasonToMessage(payload.reason);
+        const sendLogMessage = mapReasonToLogCode(payload.reason);
 
         const { error: insertError } = await supabase.from("email_send_log").insert({
           message_id: payload.message_id ?? null,

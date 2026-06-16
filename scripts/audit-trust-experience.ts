@@ -201,6 +201,27 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "Lovable suppression webhook stores stable email log error codes",
+    file: "src/routes/lovable/email/suppression.ts",
+    includes: [
+      "type SuppressionLogErrorCode",
+      "function mapReasonToLogCode",
+      '"email_bounced"',
+      '"email_complained"',
+      '"email_unsubscribed"',
+      '"email_suppressed"',
+      "const sendLogMessage = mapReasonToLogCode(payload.reason)",
+      "error_message: sendLogMessage",
+    ],
+    excludes: [
+      "Permanent bounce",
+      "Spam complaint",
+      "Recipient unsubscribed",
+      "Email suppressed",
+      "function mapReasonToMessage",
+    ],
+  },
+  {
     name: "Lovable transactional preview returns localized public errors",
     file: "src/routes/lovable/email/transactional/preview.ts",
     includes: [
