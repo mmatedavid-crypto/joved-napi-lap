@@ -360,16 +360,16 @@ const ApiPublicHooksWarmHoroscopesRoute =
     path: '/api/public/hooks/warm-horoscopes',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiInternalHoroscopeNewsPrewarmRoute =
-  ApiInternalHoroscopeNewsPrewarmRouteImport.update({
-    id: '/api/internal/horoscope-news/prewarm',
-    path: '/api/internal/horoscope-news/prewarm',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiInternalOrderFeedbackSummaryRoute =
   ApiInternalOrderFeedbackSummaryRouteImport.update({
     id: '/api/internal/order-feedback/summary',
     path: '/api/internal/order-feedback/summary',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiInternalHoroscopeNewsPrewarmRoute =
+  ApiInternalHoroscopeNewsPrewarmRouteImport.update({
+    id: '/api/internal/horoscope-news/prewarm',
+    path: '/api/internal/horoscope-news/prewarm',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -1205,18 +1205,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksWarmHoroscopesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/internal/horoscope-news/prewarm': {
-      id: '/api/internal/horoscope-news/prewarm'
-      path: '/api/internal/horoscope-news/prewarm'
-      fullPath: '/api/internal/horoscope-news/prewarm'
-      preLoaderRoute: typeof ApiInternalHoroscopeNewsPrewarmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/internal/order-feedback/summary': {
       id: '/api/internal/order-feedback/summary'
       path: '/api/internal/order-feedback/summary'
       fullPath: '/api/internal/order-feedback/summary'
       preLoaderRoute: typeof ApiInternalOrderFeedbackSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/internal/horoscope-news/prewarm': {
+      id: '/api/internal/horoscope-news/prewarm'
+      path: '/api/internal/horoscope-news/prewarm'
+      fullPath: '/api/internal/horoscope-news/prewarm'
+      preLoaderRoute: typeof ApiInternalHoroscopeNewsPrewarmRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -1297,13 +1297,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
