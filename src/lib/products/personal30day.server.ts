@@ -4,7 +4,10 @@
 // email-template változatlanul tudja megjeleníteni.
 
 import { aiJSON } from "@/lib/ai.server";
-import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
+import {
+  assertPaidAstrologySource,
+  requireUsablePaidAstrologyReport,
+} from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -121,6 +124,12 @@ export async function generatePersonal30DayReport(
     ttlSeconds: 60 * 60 * 12,
   });
 
+  assertPaidAstrologySource({
+    productSlug: "personal_30_day",
+    available: { natal: Boolean(natal), forecast: Boolean(forecast) },
+    required: ["natal", "forecast"],
+  });
+
   const userInputSummary = [
     `Név: ${input.name?.trim() || "—"}`,
     `Születési dátum: ${input.birthDate}`,
@@ -178,22 +187,16 @@ export async function generatePersonal30DayReport(
   });
 
   const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
-  const reportMd = aiMarkdown
-    ? usablePaidAstrologyReport(aiMarkdown, {
-          productSlug: "personal_30_day",
-          minChars: 1200,
-          requiredHeadings: [
-            "## A következő 30 napod fő témája",
-            "## Születési képleted röviden",
-            "## Mire figyelj",
-            "## Záró üzenet",
-          ],
-        })
-    : "";
-  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
-  const fallbackBody = reportMd
-    ? reportMd
-    : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
+  const reportMd = requireUsablePaidAstrologyReport(aiMarkdown, {
+    productSlug: "personal_30_day",
+    minChars: 1200,
+    requiredHeadings: [
+      "## A következő 30 napod fő témája",
+      "## Születési képleted röviden",
+      "## Mire figyelj",
+      "## Záró üzenet",
+    ],
+  });
 
   const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
   const title = `A következő 30 napod térképe`;
@@ -203,7 +206,7 @@ export async function generatePersonal30DayReport(
     `${greeting}ez a riport a saját születési képletedre épül, és a következő 30 napra (${startDate} → ${endDate}) szól.`,
     `Életterület fókusz: **${areaLabel}**.`,
     "",
-    fallbackBody,
+    reportMd,
     "",
     "---",
     `_${LEGAL_FOOTER}_`,
@@ -217,41 +220,8 @@ export async function generatePersonal30DayReport(
       natal_available: Boolean(natal),
       forecast_available: Boolean(forecast),
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
-      report_quality_fallback: reportQualityFallback,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed),
+      report_quality_fallback: false,
     },
   };
-}
-
-function buildFallbackReport(opts: {
-  input: Personal30DayInput;
-  areaLabel: string;
-  startDate: string;
-  endDate: string;
-  location: LocationHit | null;
-}): string {
-  const { input, areaLabel, startDate, endDate, location } = opts;
-  return [
-    "## A következő 30 napod fő témája",
-    "A forrásból most nem érkezett részletes tranzit-adat, ezért nem fogalmazunk meg konkrét jóslatot. Ami most a te kezedben lehet: hogyan figyelsz oda a választott életterületre a következő 30 napban.",
-    "",
-    "## Születési képleted röviden",
-    `Születési dátum: ${input.birthDate}${input.birthTime ? `, idő: ${input.birthTime}` : " (idő nincs megadva, közelítő elemzés)"}, hely: ${input.birthPlace}${location ? ` (feloldva)` : " (helyszín nem feloldható volt)"}.`,
-    "A forrás most nem ad külön jelzést a részletes házakra és bolygóhelyzetekre — kérünk, próbáld újra később, és pótoljuk.",
-    "",
-    "## Legfontosabb időablakok",
-    `Időszak: ${startDate} → ${endDate}. A forrás erről most nem ad külön jelzést.`,
-    "",
-    "## Szerelem / kapcsolatok",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Munka / pénz / döntések",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Mire figyelj",
-    `A választott életterületed ebben az időszakban: **${areaLabel}**.`,
-    "",
-    "## Záró üzenet",
-    "Az asztrológia nem dönt helyetted. Tükör, ami abban segít, hogy észrevedd a visszatérő mintát.",
-  ].join("\n");
 }

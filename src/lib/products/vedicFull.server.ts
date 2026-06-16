@@ -9,7 +9,10 @@
 // fordítja le és rendezi védikus szerkezetbe — nem talál ki dashákat.
 
 import { aiJSON } from "@/lib/ai.server";
-import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
+import {
+  assertPaidAstrologySource,
+  requireUsablePaidAstrologyReport,
+} from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -253,6 +256,17 @@ export async function generateVedicFullReport(
     ayanamsa: lahiriAyanamsa(birthYear).toFixed(3) + "° (Lahiri)",
   };
 
+  assertPaidAstrologySource({
+    productSlug: "vedic_full",
+    available: {
+      natal: Boolean(natal),
+      sun: Boolean(vedicSummary.rashi_napjegy),
+      moon: Boolean(vedicSummary.rashi_holdjegy),
+      nakshatra: Boolean(vedicSummary.nakshatra),
+    },
+    required: ["natal", "sun", "moon", "nakshatra"],
+  });
+
   const userInputSummary = [
     `Név: ${input.name?.trim() || "—"}`,
     `Születési dátum: ${input.birthDate}`,
@@ -313,22 +327,16 @@ export async function generateVedicFullReport(
   });
 
   const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
-  const reportMd = aiMarkdown
-    ? usablePaidAstrologyReport(aiMarkdown, {
-          productSlug: "vedic_full",
-          minChars: 1800,
-          requiredHeadings: [
-            "## Bevezető — mit ad a védikus olvasat",
-            "## A védikus képleted alapjai (Lagna, Rashi, Hold-rashi, Nakshatra)",
-            "## A választott életterületed mélyebben",
-            "## Záró üzenet",
-          ],
-        })
-    : "";
-  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
-  const fallbackBody = reportMd
-    ? reportMd
-    : buildFallbackReport({ input, areaLabel, vedicSummary, location });
+  const reportMd = requireUsablePaidAstrologyReport(aiMarkdown, {
+    productSlug: "vedic_full",
+    minChars: 1800,
+    requiredHeadings: [
+      "## Bevezető — mit ad a védikus olvasat",
+      "## A védikus képleted alapjai (Lagna, Rashi, Hold-rashi, Nakshatra)",
+      "## A választott életterületed mélyebben",
+      "## Záró üzenet",
+    ],
+  });
 
   const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
   const title = `Védikus asztrológia – teljes elemzésed`;
@@ -338,7 +346,7 @@ export async function generateVedicFullReport(
     `${greeting}ez a riport a saját születési képletedre épül, védikus (sziderikus) szemszögből.`,
     `Életterület fókusz: **${areaLabel}**.`,
     "",
-    fallbackBody,
+    reportMd,
     "",
     "---",
     `_${LEGAL_FOOTER}_`,
@@ -352,58 +360,8 @@ export async function generateVedicFullReport(
       natal_available: Boolean(natal),
       vedic_summary_available: Boolean(vedicSummary),
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
-      report_quality_fallback: reportQualityFallback,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed),
+      report_quality_fallback: false,
     },
   };
-}
-
-function buildFallbackReport(opts: {
-  input: VedicFullInput;
-  areaLabel: string;
-  vedicSummary: Record<string, unknown>;
-  location: LocationHit | null;
-}): string {
-  const { input, areaLabel, vedicSummary, location } = opts;
-  const v = vedicSummary as {
-    rashi_napjegy: string | null;
-    rashi_holdjegy: string | null;
-    lagna_aszcendens: string | null;
-    nakshatra: { name: string; pada: number } | null;
-  };
-  return [
-    "## Bevezető — mit ad a védikus olvasat",
-    "A védikus (sziderikus) szemlélet a Hold-jegyre és a nakshatrára épít. A forrás most nem ad bőséges anyagot, ezért csak a számítható alapokat osztjuk meg.",
-    "",
-    "## A védikus képleted alapjai (Lagna, Rashi, Hold-rashi, Nakshatra)",
-    `Születési dátum: ${input.birthDate}${input.birthTime ? `, idő: ${input.birthTime}` : " (idő nincs megadva, közelítő elemzés)"}, hely: ${input.birthPlace}${location ? ` (feloldva)` : " (helyszín nem feloldható volt)"}.`,
-    `Nap-rashi: ${v.rashi_napjegy ?? "nem számolható"}.`,
-    `Hold-rashi: ${v.rashi_holdjegy ?? "nem számolható"}.`,
-    `Lagna (aszcendens): ${v.lagna_aszcendens ?? "nem számolható (idő nélkül nem pontos)"}.`,
-    `Nakshatra: ${v.nakshatra ? `${v.nakshatra.name} (pada ${v.nakshatra.pada})` : "nem számolható"}.`,
-    "",
-    "## A Hold-jegy és a nakshatra üzenete",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Dharma — élethivatás iránya",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Artha — munka, anyagi biztonság",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Kama — szerelem, vágyak, kapcsolatok",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Moksha — belső út, elengedés",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## A választott életterületed mélyebben",
-    `A választott életterületed ebben az elemzésben: **${areaLabel}**.`,
-    "",
-    "## Mire figyelj — karmikus mintázat",
-    "A karma itt nem büntetés, hanem visszatérő minta. Kérlek, próbáld újra később, ha most nem érkezett teljes forrás.",
-    "",
-    "## Záró üzenet",
-    "A védikus asztrológia tükör. A választás mindig nálad marad.",
-  ].join("\n");
 }

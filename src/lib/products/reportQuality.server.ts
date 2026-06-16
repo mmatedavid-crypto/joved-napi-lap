@@ -55,6 +55,10 @@ export function inspectPaidAstrologyReport(
   );
   if (englishHits.length >= 4) issues.push("too_much_raw_english");
 
+  const noSourceSignals =
+    text.match(/nincs (külön )?jelzés|nem érkezett részletes|nem ad külön jelzést/gi) ?? [];
+  if (noSourceSignals.length >= 3) issues.push("repetitive_missing_source_copy");
+
   const hungarianSignal = ["hogy", "mert", "érdemes", "figyelj", "kapcsolat", "döntés"].filter(
     (word) => text.toLocaleLowerCase("hu-HU").includes(word),
   );
@@ -82,4 +86,55 @@ export function usablePaidAstrologyReport(
     });
   }
   return "";
+}
+
+export class PaidAstrologyReportUnavailableError extends Error {
+  constructor(
+    message: string,
+    public readonly productSlug: string,
+    public readonly issues: string[],
+  ) {
+    super(message);
+    this.name = "PaidAstrologyReportUnavailableError";
+  }
+}
+
+export function assertPaidAstrologySource(opts: {
+  productSlug: string;
+  available: Record<string, boolean>;
+  required: string[];
+}): void {
+  const missing = opts.required.filter((key) => !opts.available[key]);
+  if (!missing.length) return;
+
+  console.warn("[paid_astrology_source_unavailable]", {
+    productSlug: opts.productSlug,
+    missing,
+  });
+  throw new PaidAstrologyReportUnavailableError(
+    "paid_astrology_source_unavailable",
+    opts.productSlug,
+    missing.map((key) => `missing_source:${key}`),
+  );
+}
+
+export function requireUsablePaidAstrologyReport(
+  markdown: string,
+  opts: {
+    productSlug: string;
+    requiredHeadings: string[];
+    minChars: number;
+  },
+): string {
+  const report = usablePaidAstrologyReport(markdown, opts);
+  if (report) return report;
+
+  const issues = markdown.trim()
+    ? inspectPaidAstrologyReport(markdown, opts).issues
+    : ["missing_ai_report"];
+  throw new PaidAstrologyReportUnavailableError(
+    "paid_astrology_report_unusable",
+    opts.productSlug,
+    issues,
+  );
 }

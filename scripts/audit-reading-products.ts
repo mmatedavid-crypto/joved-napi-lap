@@ -263,11 +263,11 @@ const contextChecks = [
   },
   {
     name: "context:paid_horoscope_gemini_specific",
-    body: composePaidOrderReading(
-      "horoszkop_szemelyre",
-      "Horoszkóp — személyre szabott",
-      { name: "Lilla", sign: "Ikrek", situation: "Túl sok üzenet és döntés jön egyszerre" },
-    ).body,
+    body: composePaidOrderReading("horoszkop_szemelyre", "Horoszkóp — személyre szabott", {
+      name: "Lilla",
+      sign: "Ikrek",
+      situation: "Túl sok üzenet és döntés jön egyszerre",
+    }).body,
     required: ["Ikrek", "sok gondolat", "Döntési fókusz", "Túl sok üzenet"],
   },
   {
@@ -335,7 +335,7 @@ for (const needle of [
   "Mire kérsz ma finomabb fókuszt?",
   "A napi lap ugyanaz marad",
   "A te fókuszodban",
-  "dailyFocus.trim() || \"Mire figyeljek ma?\"",
+  'dailyFocus.trim() || "Mire figyeljek ma?"',
   "situation: dailyFocus.trim() || undefined",
   "Mai fókusz:",
 ]) {
@@ -458,11 +458,7 @@ const delegatedReports = [
 
 for (const report of delegatedReports) {
   const body = readFileSync(report.file, "utf8");
-  for (const needle of [
-    `args.productSlug === "${report.slug}"`,
-    report.route,
-    report.fn,
-  ]) {
+  for (const needle of [`args.productSlug === "${report.slug}"`, report.route, report.fn]) {
     if (!orderProcessing.includes(needle)) {
       policyFailures.push(`${report.slug}: order processing must delegate to ${report.fn}`);
     }
@@ -474,19 +470,18 @@ for (const report of delegatedReports) {
     "aiJSON",
     report.schema,
     report.heading,
-    "buildFallbackReport",
     "LEGAL_FOOTER",
     "Nem orvosi, jogi, pénzügyi",
-    "usablePaidAstrologyReport",
+    "assertPaidAstrologySource",
+    "requireUsablePaidAstrologyReport",
     `productSlug: "${report.slug}"`,
     "requiredHeadings",
     "minChars",
     "const aiMarkdown",
-    "const reportQualityFallback = Boolean(aiMarkdown && !reportMd)",
-    "report_quality_fallback: reportQualityFallback",
+    "report_quality_fallback: false",
     "location_resolved: Boolean(location)",
     "natal_available: Boolean(natal)",
-    "Boolean(ai.meta?.fallbackUsed || reportQualityFallback)",
+    "Boolean(ai.meta?.fallbackUsed)",
   ]) {
     if (!body.includes(needle)) {
       policyFailures.push(`${report.slug}: report generator missing ${needle}`);
@@ -494,6 +489,7 @@ for (const report of delegatedReports) {
   }
 
   for (const forbiddenNeedle of [
+    "buildFallbackReport",
     "location: locRaw ?? null",
     "natal: natal ?? null",
     "forecast: forecast ?? null",
@@ -502,13 +498,17 @@ for (const report of delegatedReports) {
     "vedic_summary: vedicSummary",
   ]) {
     if (body.includes(forbiddenNeedle)) {
-      policyFailures.push(`${report.slug}: raw provider payload must not be stored in response_payload`);
+      policyFailures.push(
+        `${report.slug}: raw provider payload must not be stored in response_payload`,
+      );
     }
   }
 
   for (const forbiddenNeedle of ["Ami biztosan", "biztosan a te kezedben"]) {
     if (body.includes(forbiddenNeedle)) {
-      policyFailures.push(`${report.slug}: fallback report must avoid deterministic certainty wording`);
+      policyFailures.push(
+        `${report.slug}: fallback report must avoid deterministic certainty wording`,
+      );
     }
   }
 }
@@ -516,10 +516,16 @@ for (const report of delegatedReports) {
 for (const needle of [
   "inspectPaidAstrologyReport",
   "usablePaidAstrologyReport",
+  "PaidAstrologyReportUnavailableError",
+  "assertPaidAstrologySource",
+  "requireUsablePaidAstrologyReport",
+  "[paid_astrology_source_unavailable]",
+  "paid_astrology_report_unusable",
   "too_short",
   "missing_heading",
   "forbidden_claim_or_phrase",
   "too_much_raw_english",
+  "repetitive_missing_source_copy",
   "weak_hungarian_signal",
   "[paid_astrology_report_rejected]",
 ]) {

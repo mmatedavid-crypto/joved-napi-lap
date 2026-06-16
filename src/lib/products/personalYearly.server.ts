@@ -3,7 +3,10 @@
 // havi bontás-fókusszal hívjuk a Roxy forecast/timeline-t.
 
 import { aiJSON } from "@/lib/ai.server";
-import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
+import {
+  assertPaidAstrologySource,
+  requireUsablePaidAstrologyReport,
+} from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -139,6 +142,12 @@ export async function generatePersonalYearlyReport(
     });
   }
 
+  assertPaidAstrologySource({
+    productSlug: "personal_yearly",
+    available: { natal: Boolean(natal), yearly: Boolean(yearly) },
+    required: ["natal", "yearly"],
+  });
+
   const userInputSummary = [
     `Név: ${input.name?.trim() || "—"}`,
     `Születési dátum: ${input.birthDate}`,
@@ -198,22 +207,16 @@ export async function generatePersonalYearlyReport(
   });
 
   const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
-  const reportMd = aiMarkdown
-    ? usablePaidAstrologyReport(aiMarkdown, {
-          productSlug: "personal_yearly",
-          minChars: 1800,
-          requiredHeadings: [
-            "## Az éved fő motívuma",
-            "## Születési képleted röviden",
-            "## Havi bontás (12 hónap)",
-            "## Záró üzenet",
-          ],
-        })
-    : "";
-  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
-  const fallbackBody = reportMd
-    ? reportMd
-    : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
+  const reportMd = requireUsablePaidAstrologyReport(aiMarkdown, {
+    productSlug: "personal_yearly",
+    minChars: 1800,
+    requiredHeadings: [
+      "## Az éved fő motívuma",
+      "## Születési képleted röviden",
+      "## Havi bontás (12 hónap)",
+      "## Záró üzenet",
+    ],
+  });
 
   const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
   const title = `Személyes éves horoszkópod`;
@@ -223,7 +226,7 @@ export async function generatePersonalYearlyReport(
     `${greeting}ez az éves riport a saját születési képletedre épül, és a következő 12 hónapra (${startDate} → ${endDate}) szól.`,
     `Életterület fókusz: **${areaLabel}**.`,
     "",
-    fallbackBody,
+    reportMd,
     "",
     "---",
     `_${LEGAL_FOOTER}_`,
@@ -237,43 +240,8 @@ export async function generatePersonalYearlyReport(
       natal_available: Boolean(natal),
       yearly_available: Boolean(yearly),
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
-      report_quality_fallback: reportQualityFallback,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed),
+      report_quality_fallback: false,
     },
   };
-}
-
-function buildFallbackReport(opts: {
-  input: PersonalYearlyInput;
-  areaLabel: string;
-  startDate: string;
-  endDate: string;
-  location: LocationHit | null;
-}): string {
-  const { input, areaLabel, startDate, endDate, location } = opts;
-  return [
-    "## Az éved fő motívuma",
-    "A forrásból most nem érkezett részletes éves adat, ezért nem fogalmazunk meg konkrét jóslatot.",
-    "",
-    "## Születési képleted röviden",
-    `Születési dátum: ${input.birthDate}${input.birthTime ? `, idő: ${input.birthTime}` : " (idő nincs megadva, közelítő elemzés)"}, hely: ${input.birthPlace}${location ? ` (feloldva)` : " (helyszín nem feloldható volt)"}.`,
-    "",
-    "## Havi bontás (12 hónap)",
-    `Időszak: ${startDate} → ${endDate}. A forrás most nem ad külön jelzést.`,
-    "",
-    "## Kiemelt időablakok",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Szerelem / kapcsolatok az évedben",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Munka / pénz / döntések az évedben",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Mire figyelj a következő 12 hónapban",
-    `A választott életterületed: **${areaLabel}**.`,
-    "",
-    "## Záró üzenet",
-    "Az asztrológia nem dönt helyetted. Tükör, ami abban segít, hogy észrevedd a visszatérő mintát.",
-  ].join("\n");
 }

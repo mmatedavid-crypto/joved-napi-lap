@@ -3,7 +3,10 @@
 // /forecast/timeline-re, ha a tranzit-specifikus végpont nem felel.
 
 import { aiJSON } from "@/lib/ai.server";
-import { usablePaidAstrologyReport } from "@/lib/products/reportQuality.server";
+import {
+  assertPaidAstrologySource,
+  requireUsablePaidAstrologyReport,
+} from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
@@ -137,6 +140,12 @@ export async function generateTransitsPersonalReport(
     });
   }
 
+  assertPaidAstrologySource({
+    productSlug: "transits_personal",
+    available: { natal: Boolean(natal), transits: Boolean(transits) },
+    required: ["natal", "transits"],
+  });
+
   const userInputSummary = [
     `Név: ${input.name?.trim() || "—"}`,
     `Születési dátum: ${input.birthDate}`,
@@ -195,22 +204,16 @@ export async function generateTransitsPersonalReport(
   });
 
   const aiMarkdown = ai.ok && ai.data?.markdown ? ai.data.markdown : "";
-  const reportMd = aiMarkdown
-    ? usablePaidAstrologyReport(aiMarkdown, {
-          productSlug: "transits_personal",
-          minChars: 1400,
-          requiredHeadings: [
-            "## A jelenleg ható tranzitok",
-            "## Bolygó-bolygó kapcsolatok",
-            "## Hatás a választott életterületre",
-            "## Záró üzenet",
-          ],
-        })
-    : "";
-  const reportQualityFallback = Boolean(aiMarkdown && !reportMd);
-  const fallbackBody = reportMd
-    ? reportMd
-    : buildFallbackReport({ input, areaLabel, startDate, endDate, location });
+  const reportMd = requireUsablePaidAstrologyReport(aiMarkdown, {
+    productSlug: "transits_personal",
+    minChars: 1400,
+    requiredHeadings: [
+      "## A jelenleg ható tranzitok",
+      "## Bolygó-bolygó kapcsolatok",
+      "## Hatás a választott életterületre",
+      "## Záró üzenet",
+    ],
+  });
 
   const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
   const title = `Személyes tranzit-elemzésed`;
@@ -220,7 +223,7 @@ export async function generateTransitsPersonalReport(
     `${greeting}ez a tranzit-elemzés a saját születési képletedre épül, és a következő 90 napra (${startDate} → ${endDate}) szól.`,
     `Életterület fókusz: **${areaLabel}**.`,
     "",
-    fallbackBody,
+    reportMd,
     "",
     "---",
     `_${LEGAL_FOOTER}_`,
@@ -234,40 +237,8 @@ export async function generateTransitsPersonalReport(
       natal_available: Boolean(natal),
       transits_available: Boolean(transits),
       ai_model: ai.meta?.model ?? null,
-      ai_fallback: Boolean(ai.meta?.fallbackUsed || reportQualityFallback),
-      report_quality_fallback: reportQualityFallback,
+      ai_fallback: Boolean(ai.meta?.fallbackUsed),
+      report_quality_fallback: false,
     },
   };
-}
-
-function buildFallbackReport(opts: {
-  input: TransitsPersonalInput;
-  areaLabel: string;
-  startDate: string;
-  endDate: string;
-  location: LocationHit | null;
-}): string {
-  const { input, areaLabel, startDate, endDate, location } = opts;
-  return [
-    "## A jelenleg ható tranzitok",
-    "A forrásból most nem érkezett részletes tranzit-adat, ezért nem fogalmazunk meg konkrét jóslatot.",
-    "",
-    "## Bolygó-bolygó kapcsolatok",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Feszültségi pontok (90 napon belül)",
-    `Időszak: ${startDate} → ${endDate}. A forrás erről most nem ad külön jelzést.`,
-    "",
-    "## Kapu-pontok és lehetőségek",
-    "A forrás erről most nem ad külön jelzést.",
-    "",
-    "## Hatás a választott életterületre",
-    `Életterület fókusz: **${areaLabel}**.`,
-    "",
-    "## Mire figyelj és mit időzíts",
-    `Születési adatok: ${input.birthDate}${input.birthTime ? `, ${input.birthTime}` : ""}, ${input.birthPlace}${location ? ` (feloldva)` : ""}.`,
-    "",
-    "## Záró üzenet",
-    "A tranzitok nem dolgoznak helyetted. Csak a tempót mutatják meg, amiben te döntesz.",
-  ].join("\n");
 }
