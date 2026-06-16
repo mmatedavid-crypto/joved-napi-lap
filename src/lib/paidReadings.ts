@@ -141,6 +141,59 @@ function briefFreeSynthesis(input: Record<string, unknown>): string[] {
   return lines;
 }
 
+function briefCompatibilitySnapshot(input: Record<string, unknown>): string[] {
+  const snapshot = asRecord(input.compatibilitySnapshot);
+  if (!Object.keys(snapshot).length) return [];
+  const personA = asRecord(snapshot.personA);
+  const personB = asRecord(snapshot.personB);
+  const parts = [
+    briefValue(snapshot.score) ? `összeillés: ${briefValue(snapshot.score)}%` : "",
+    briefValue(snapshot.relationshipNumber)
+      ? `kapcsolatszám: ${briefValue(snapshot.relationshipNumber)}`
+      : "",
+    briefValue(personA.lifePathNumber)
+      ? `első sorsszám: ${briefValue(personA.lifePathNumber)}`
+      : "",
+    briefValue(personB.lifePathNumber)
+      ? `második sorsszám: ${briefValue(personB.lifePathNumber)}`
+      : "",
+    briefValue(personA.expressionNumber)
+      ? `első kifejeződés: ${briefValue(personA.expressionNumber)}`
+      : "",
+    briefValue(personB.expressionNumber)
+      ? `második kifejeződés: ${briefValue(personB.expressionNumber)}`
+      : "",
+    briefValue(snapshot.status) ? `helyzet: ${briefValue(snapshot.status)}` : "",
+    briefValue(snapshot.question) ? `kérdés: ${briefValue(snapshot.question)}` : "",
+  ].filter(Boolean);
+  return parts.length ? [`Összeillési számolás: ${parts.join("; ")}`] : [];
+}
+
+function briefFreeReadingSummary(input: Record<string, unknown>): string[] {
+  const summary = asRecord(input.freeReadingSummary);
+  const lines = [
+    ["Ingyenes olvasat címe", text(summary.title)],
+    ["Ingyenes olvasat egy mondata", text(summary.oneSentence)],
+  ]
+    .filter(([, value]) => value)
+    .map(([label, value]) => `${label}: ${String(value).slice(0, 240)}`);
+  const sections = Array.isArray(summary.sections)
+    ? summary.sections
+        .map((item) => {
+          const row = asRecord(item);
+          const heading = text(row.heading);
+          const sectionText = text(row.text);
+          return heading && sectionText
+            ? `${heading}: ${sectionText.slice(0, 180)}`
+            : "";
+        })
+        .filter(Boolean)
+        .slice(0, 4)
+    : [];
+  if (sections.length) lines.push(`Ingyenes olvasat fókuszai: ${sections.join(" | ")}`);
+  return lines;
+}
+
 export function paidReadingInputBrief(inputPayload: unknown): string {
   const input = asRecord(inputPayload);
   const seen = new Set<string>();
@@ -151,7 +204,12 @@ export function paidReadingInputBrief(inputPayload: unknown): string {
     seen.add(label);
     lines.push(`${label}: ${value.slice(0, 280)}`);
   }
-  lines.push(...briefPaidTarotSpread(input), ...briefFreeSynthesis(input));
+  lines.push(
+    ...briefPaidTarotSpread(input),
+    ...briefFreeSynthesis(input),
+    ...briefCompatibilitySnapshot(input),
+    ...briefFreeReadingSummary(input),
+  );
   return lines.join("\n");
 }
 
@@ -675,19 +733,35 @@ function premiumCompatibility(input: Record<string, unknown>): PaidReadingPayloa
   const fullNameA = text(input.myName) || text(input.fullNameA) || undefined;
   const fullNameB = text(input.hisName) || text(input.fullNameB) || undefined;
   const status = text(input.sit) || text(input.status) || "kapcsolati dinamika";
+  const question = text(input.q) || text(input.question) || undefined;
   const profile = calculateCompatibilityProfile({
     birthDateA,
     birthDateB,
     fullNameA,
     fullNameB,
     status,
+    question,
   });
   const reading = composeCompatibilityReading(profile);
   const memoryContext = text(input.memoryContext);
+  const comparisonContext = text(input.comparisonContext);
+  const freeSummary = asRecord(input.freeReadingSummary);
   if (memoryContext) {
     reading.sections.splice(2, 0, {
       heading: "A visszatérő mintád",
       text: "A korábbi kérdéseid alapján itt nem csak kettőtök százaléka számít, hanem az is, milyen kapcsolati mintát keresel újra: biztonságot, lezárást, visszatérést vagy tisztább választ. Ezt most finoman érdemes különválasztani attól, hogy ez az egy ember mit mutat.",
+    });
+  }
+  if (comparisonContext) {
+    reading.sections.splice(3, 0, {
+      heading: "Ha több embert is összehasonlítasz",
+      text: "Ez a fizetős elemzés külön kezeli azt is, ha mostanában több kapcsolatot nézel egymás mellé. Ilyenkor nem az a legfontosabb, ki kap magasabb százalékot, hanem hogy milyen érzést keresel ismétlődően: biztonságot, izgalmat, lezárást vagy bizonyosságot.",
+    });
+  }
+  if (text(freeSummary.oneSentence)) {
+    reading.sections.push({
+      heading: "Az első olvasatból továbbvíve",
+      text: `Az ingyenes olvasat fő mondata ez volt: „${text(freeSummary.oneSentence)}” A mélyebb elemzés ezt nem ismétli, hanem azt nézi, hol jelenik meg ugyanez a dinamika a hétköznapi közeledésben, a csendekben és a visszatérő reakciókban.`,
     });
   }
   reading.title = `Párkapcsolati dinamika · ${reading.title}`;

@@ -356,6 +356,11 @@ for (const needle of [
   'id="compat-question"',
   "question: q.trim() || undefined",
   "Visszajön-e tartósan",
+  "function compatibilityPaidPayload",
+  "compatibilitySnapshot",
+  "freeReadingSummary",
+  "comparisonContext",
+  "personalityNumber",
 ]) {
   if (!compatibilityRoute.includes(needle)) {
     policyFailures.push(`compatibility route must use inclusive person labels: ${needle}`);
@@ -569,6 +574,9 @@ if (
   !paidServer.includes('"emotion"') ||
   !paidServer.includes('"cardSpread"') ||
   !paidServer.includes('"freeSynthesis"') ||
+  !paidServer.includes('"compatibilitySnapshot"') ||
+  !paidServer.includes('"freeReadingSummary"') ||
+  !paidServer.includes('"comparisonContext"') ||
   !paidServer.includes('"memoryContext"') ||
   !paidServer.includes("countContextHits(body, anchors)") ||
   !paidServer.includes("function paidReadingMinimumContextHits") ||
@@ -602,7 +610,13 @@ if (
   !paidReadingsSource.includes("function briefFreeSynthesis") ||
   !paidReadingsSource.includes("Kártyakirakás:") ||
   !paidReadingsSource.includes("A kirakás pontos lenyomata") ||
-  !paidReadingsSource.includes("A rövid olvasatból továbbmélyítve")
+  !paidReadingsSource.includes("A rövid olvasatból továbbmélyítve") ||
+  !paidReadingsSource.includes("function briefCompatibilitySnapshot") ||
+  !paidReadingsSource.includes("function briefFreeReadingSummary") ||
+  !paidReadingsSource.includes("Összeillési számolás:") ||
+  !paidReadingsSource.includes("Az első olvasatból továbbvíve") ||
+  !paidReadingsSource.includes("Ha több embert is összehasonlítasz") ||
+  !paidReadingsSource.includes("question,")
 ) {
   policyFailures.push("paid readings must build a short Hungarian customer context brief");
 }

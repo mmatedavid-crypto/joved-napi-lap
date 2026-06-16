@@ -64,6 +64,57 @@ function compatibilityMemorySentence(input: {
   return `A kapcsolat ${input.relationshipNumber}-es mintája ${input.score}%-os közös tempót jelez, de a számnál fontosabb, hogyan bánik veletek ez a ritmus.`;
 }
 
+function compatibilityPaidPayload(input: {
+  profile: CompatibilityProfile;
+  reading: QualityReading;
+  myName: string;
+  hisName: string;
+  myDob: string;
+  hisDob: string;
+  status: string;
+  question: string;
+  comparisonContext: string;
+}) {
+  const { profile, reading } = input;
+  return {
+    myName: input.myName,
+    hisName: input.hisName,
+    myDob: input.myDob,
+    hisDob: input.hisDob,
+    sit: input.status,
+    q: input.question,
+    score: profile.score,
+    relationshipNumber: profile.relationshipNumber,
+    compatibilitySnapshot: {
+      personA: {
+        lifePathNumber: profile.personA.lifePathNumber,
+        expressionNumber: profile.personA.expressionNumber,
+        soulUrgeNumber: profile.personA.soulUrgeNumber,
+        personalityNumber: profile.personA.personalityNumber,
+      },
+      personB: {
+        lifePathNumber: profile.personB.lifePathNumber,
+        expressionNumber: profile.personB.expressionNumber,
+        soulUrgeNumber: profile.personB.soulUrgeNumber,
+        personalityNumber: profile.personB.personalityNumber,
+      },
+      score: profile.score,
+      relationshipNumber: profile.relationshipNumber,
+      status: input.status,
+      question: input.question,
+    },
+    freeReadingSummary: {
+      title: reading.title,
+      oneSentence: reading.oneSentence,
+      sections: reading.sections.slice(0, 6).map((section) => ({
+        heading: section.heading,
+        text: section.text,
+      })),
+    },
+    comparisonContext: input.comparisonContext || undefined,
+  };
+}
+
 function Page() {
   const { user } = useAuth();
   const callQuality = useServerFn(qualityCompatibilityReading);
@@ -389,16 +440,17 @@ function Page() {
                 )
               }
               sourceRoute="/osszeillunk"
-              inputPayload={{
+              inputPayload={compatibilityPaidPayload({
+                profile,
+                reading,
                 myName: na,
                 hisName: nb,
                 myDob: a,
                 hisDob: b,
-                sit: status,
-                q,
-                score: profile.score,
-                relationshipNumber: profile.relationshipNumber,
-              }}
+                status,
+                question: q,
+                comparisonContext,
+              })}
             />
           </div>
         )}
