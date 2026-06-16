@@ -197,7 +197,8 @@ for (const needle of [
   'return "order_insert_failed"',
   'return "checkout_start_failed"',
 ]) {
-  if (!paymentsServer.includes(needle)) failed.push(`payments.functions checkout missing: ${needle}`);
+  if (!paymentsServer.includes(needle))
+    failed.push(`payments.functions checkout missing: ${needle}`);
 }
 for (const forbidden of [
   "return { error: safeCheckoutErrorMessage(error) }",
@@ -255,10 +256,12 @@ for (const needle of [
   "const delayedPriceRange = productRange(delayed)",
   "function productRange(products: typeof PRODUCTS)",
   "Pár percen belül",
-  "A terméknél jelzett időn belül",
+  "Normál esetben 24 órán belül, expresszel 6 órán belül",
   "Kézhez kapod",
   "biztonságos rendelési linken",
   "minőségi visszajelzést is tudsz küldeni",
+  "normál esetben 24",
+  "expressz gyorsítással 6 órán belül",
   "const PRICING_FAQ",
   '"@type": "FAQPage"',
   "Gyakori kérdések",
@@ -285,7 +288,9 @@ for (const forbiddenNeedle of [
   "A 30 napos előrejelzés",
 ]) {
   if (pricingRoute.includes(forbiddenNeedle)) {
-    failed.push(`Pricing route must avoid deterministic paid astrology wording: ${forbiddenNeedle}`);
+    failed.push(
+      `Pricing route must avoid deterministic paid astrology wording: ${forbiddenNeedle}`,
+    );
   }
 }
 
@@ -295,7 +300,20 @@ for (const forbiddenNeedle of [
   "konkrét napokra figyelmeztetés",
 ]) {
   if (productsSource.includes(forbiddenNeedle)) {
-    failed.push(`Product catalog must avoid deterministic paid astrology wording: ${forbiddenNeedle}`);
+    failed.push(
+      `Product catalog must avoid deterministic paid astrology wording: ${forbiddenNeedle}`,
+    );
+  }
+}
+
+for (const slug of ["personal_30_day", "vedic_full", "personal_yearly", "transits_personal"]) {
+  const pattern = new RegExp(
+    `slug: "${slug}"[\\s\\S]*?category: "delayed"[\\s\\S]*?standardHours: 24`,
+  );
+  if (!pattern.test(productsSource)) {
+    failed.push(
+      `${slug}: delayed astrology product must use a realistic 24 hour standard delivery window`,
+    );
   }
 }
 

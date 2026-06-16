@@ -270,7 +270,7 @@ export const PRODUCTS: ProductDef[] = [
     qualityPromise: "Több oldalas, személyre szabott időszaki térkép a következő 30 napra.",
     priceHuf: 1490,
     category: "delayed",
-    standardHours: 1,
+    standardHours: 24,
     sourceRoute: "/szemelyes-30-napos-horoszkop",
   },
   {
@@ -290,7 +290,7 @@ export const PRODUCTS: ProductDef[] = [
     qualityPromise: "Komplex, grafikus, többoldalas védikus riport. Nem napi horoszkóp.",
     priceHuf: 1990,
     category: "delayed",
-    standardHours: 2,
+    standardHours: 24,
     sourceRoute: "/vedikus-asztrologia",
   },
   {
@@ -310,7 +310,7 @@ export const PRODUCTS: ProductDef[] = [
     qualityPromise: "Több oldalas, személyre szabott éves riport — nem újságos jegyhoroszkóp.",
     priceHuf: 4990,
     category: "delayed",
-    standardHours: 2,
+    standardHours: 24,
     sourceRoute: "/eves-horoszkop",
   },
   {
@@ -330,7 +330,7 @@ export const PRODUCTS: ProductDef[] = [
     qualityPromise: "Komoly asztrológiai tranzit-elemzés magyarul, józan hanggal.",
     priceHuf: 3990,
     category: "delayed",
-    standardHours: 2,
+    standardHours: 24,
     sourceRoute: "/tranzitok",
   },
 ];

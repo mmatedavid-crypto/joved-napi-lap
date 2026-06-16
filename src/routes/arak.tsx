@@ -194,15 +194,15 @@ function PricingPage() {
             <ReadingTypeCard
               title="Részletes asztrológiai riport"
               price={delayedPriceRange}
-              delivery="A terméknél jelzett időn belül"
+              delivery="Normál esetben 24 órán belül, expresszel 6 órán belül"
               bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
               result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
             />
           </div>
           <p className="mt-4 text-sm leading-relaxed text-ivory/58">
             Mindkét típus elérhető a biztonságos rendelési linken; bejelentkezve a profilban is
-            visszanézhető. Vendégként az emailt és a rendelési linket érdemes megtartanod.
-            Elkészült olvasatnál minőségi visszajelzést is tudsz küldeni, ha valamit pontosítanál.
+            visszanézhető. Vendégként az emailt és a rendelési linket érdemes megtartanod. Elkészült
+            olvasatnál minőségi visszajelzést is tudsz küldeni, ha valamit pontosítanál.
           </p>
         </section>
 
@@ -222,8 +222,8 @@ function PricingPage() {
               Ft-tól indulnak.
             </p>
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
-               Az asztrológiai riportok a saját születési adataidból készülnek; a várható
-               elkészülési időt minden terméknél külön feltüntetjük.
+              Az asztrológiai riportok a saját születési adataidból készülnek; normál esetben 24
+              órán belül érkeznek, expressz gyorsítással 6 órán belül.
             </p>
           </div>
         </section>
@@ -321,7 +321,9 @@ function PricingGroup({
     <section className="mt-10">
       <div className="mb-4">
         <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
-          {category === "instant" ? "Fizetés után néhány percen belül" : "A jelzett elkészülési idővel"}
+          {category === "instant"
+            ? "Fizetés után néhány percen belül"
+            : "A jelzett elkészülési idővel"}
         </div>
         <h2 className="mt-2 font-display text-3xl text-ivory">{title}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">{lead}</p>
