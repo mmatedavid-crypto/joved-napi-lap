@@ -25,7 +25,7 @@ export const Route = createFileRoute("/kristaly")({
       {
         name: "description",
         content:
-          "Születési kristály és horoszkóp kristály magyarul. Mit jelképez, milyen minőséget hoz elő — önismereti jelként.",
+          "Születési kristály és horoszkóp kristály magyarul. Mit jelképez, milyen minőséget hordoz — önismereti jelként.",
       },
       { property: "og:title", content: "Kristály jelentése | Jövőd.hu" },
       {
@@ -185,7 +185,7 @@ function Page() {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {r.symbol && <Section eyebrow="Mit jelképez?">{r.symbol}</Section>}
-              {r.quality && <Section eyebrow="Milyen minőséget hoz elő?">{r.quality}</Section>}
+              {r.quality && <Section eyebrow="Milyen minőséget hordoz?">{r.quality}</Section>}
               {r.when && <Section eyebrow="Mikor érdemes figyelni rá?">{r.when}</Section>}
               {r.oneLine && (
                 <Section eyebrow="Egy mondatban">

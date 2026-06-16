@@ -2,14 +2,14 @@
 
 export type CrystalMeaning = {
   symbol: string; // mit jelképez
-  quality: string; // milyen minőséget hoz elő
+  quality: string; // milyen minőséget jelképez
   when: string; // mikor érdemes figyelni rá
   oneLine: string;
 };
 
 const FALLBACK: CrystalMeaning = {
   symbol: "A belső csend és a tisztulás jelképe.",
-  quality: "Letisztult figyelmet és nyugalmat hoz elő.",
+  quality: "Önismereti jelként a letisztult figyelmet és a belső nyugalmat jelképezi.",
   when: "Amikor sok az inger körülötted, és nehéz lecsendesedni.",
   oneLine: "Tisztaság a zaj közepén.",
 };
@@ -17,7 +17,7 @@ const FALLBACK: CrystalMeaning = {
 export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   Ametiszt: {
     symbol: "A tisztánlátás és a belső béke köve.",
-    quality: "Csendet és átlátást hoz elő, amikor kavargó a fejed.",
+    quality: "Hagyományosan a csendesebb figyelemmel és az átlátással társítják.",
     when: "Amikor egy döntés előtt lecsendesednél.",
     oneLine: "A nyugalom kapuja.",
   },
@@ -53,7 +53,7 @@ export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   },
   Holdkő: {
     symbol: "Az intuíció és a női ciklusok jelképe.",
-    quality: "Finomítja a megérzéseidet.",
+    quality: "Önismereti jelként a finomabb megérzésekre irányíthatja a figyelmet.",
     when: "Amikor a fejed és a szíved mást mond.",
     oneLine: "Hallgass a belső holdadra.",
   },
@@ -71,7 +71,7 @@ export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   },
   Tigrisszem: {
     symbol: "A földelt bátorság köve.",
-    quality: "Higgadtságot és önbizalmat hoz.",
+    quality: "A higgadtabb jelenlétet és a földeltebb önbizalmat jelképezi.",
     when: "Amikor szétszórt vagy egy nagy feladat előtt.",
     oneLine: "Maradj nyugodtan jelen.",
   },
@@ -83,7 +83,7 @@ export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   },
   Szelenit: {
     symbol: "A finom fény és a belső tisztulás köve.",
-    quality: "Lágy, megnyugtató jelenlétet hoz.",
+    quality: "A lágyabb, megnyugtatóbb jelenlét minőségét jelképezi.",
     when: "Esti lecsendesedéshez.",
     oneLine: "Hagyd, hogy a nap leüljön.",
   },
@@ -95,7 +95,7 @@ export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   },
   Smaragd: {
     symbol: "A szív érésének köve.",
-    quality: "A hűséget és a türelmet erősíti.",
+    quality: "Hagyományosan a hűség és a türelem érlelődő minőségéhez társítják.",
     when: "Hosszan érlelt kapcsolatok idején.",
     oneLine: "Ami valódi, az kibontakozik.",
   },
@@ -113,25 +113,25 @@ export const CRYSTAL_HU: Record<string, CrystalMeaning> = {
   },
   Opál: {
     symbol: "Az érzékenység és a látás jelképe.",
-    quality: "Megmutatja a finom árnyalatokat.",
+    quality: "A finom árnyalatok észrevételének önismereti jelképe.",
     when: "Amikor csak a felszínt látnád.",
     oneLine: "Nézz finomabban.",
   },
   Zafír: {
     symbol: "A bölcsesség köve.",
-    quality: "Tiszta gondolkodást, fókuszt ad.",
+    quality: "A tisztább gondolkodás és a rendezettebb fókusz jelképe.",
     when: "Komoly döntés előtt.",
     oneLine: "Gondold végig még egyszer.",
   },
   Rubin: {
     symbol: "A szív és a bátorság köve.",
-    quality: "Megerősíti a belső igent.",
+    quality: "A belső igen bátrabb felismerésének jelképe.",
     when: "Amikor választanod kell.",
     oneLine: "A szív tud választani.",
   },
   Topáz: {
     symbol: "A világosság és a remény jelképe.",
-    quality: "Felemelő, derűs minőséget hoz.",
+    quality: "A derűsebb, világosabb rálátás minőségét jelképezi.",
     when: "Egy nehéz időszak után.",
     oneLine: "A fény visszatér.",
   },

@@ -73,6 +73,38 @@ const checks: StaticSafetyCheck[] = [
       "Az átharapás célja a tisztázás",
     ],
   },
+  {
+    file: "src/lib/crystal.hu.ts",
+    forbidden: [
+      /\bgyógyít/i,
+      /\bgyógyító/i,
+      /\bFinomítja\b/i,
+      /\bMegerősíti\b/i,
+      /\bfókuszt ad\b/i,
+      /\bönbizalmat hoz\b/i,
+      /\bjelenlétet hoz\b/i,
+      /\bminőséget hoz\b/i,
+      /\bho(t|z) elő\b/i,
+      /\berősíti\b/i,
+    ],
+    required: [
+      "milyen minőséget jelképez",
+      "Önismereti jelként",
+      "Hagyományosan",
+      "jelképezi",
+      "társítják",
+    ],
+  },
+  {
+    file: "src/routes/kristaly.tsx",
+    forbidden: [/\bminőséget hoz elő\b/i, /\bgyógyít/i, /\bgyógyító/i],
+    required: [
+      "milyen minőséget hordoz",
+      'Section eyebrow="Milyen minőséget hordoz?"',
+      "A kristályok hagyományosan szimbólumok",
+      "önismereti jelként használjuk",
+    ],
+  },
 ];
 
 const failures: string[] = [];
