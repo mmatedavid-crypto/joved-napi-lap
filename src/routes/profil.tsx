@@ -784,6 +784,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
                 shortId,
                 feedback: selectedOption.label,
                 body: selectedOption.body,
+                note: feedbackNote,
               })}
             >
               Inkább emailben írom le
@@ -805,8 +806,10 @@ function profileFeedbackMailto(opts: {
   shortId: string;
   feedback: string;
   body: string;
+  note?: string;
 }): string {
   const subject = `Jövőd.hu visszajelzés · ${opts.shortId}`;
+  const note = typeof opts.note === "string" ? opts.note.trim().slice(0, 600) : "";
   const body = [
     opts.body,
     "",
@@ -817,6 +820,7 @@ function profileFeedbackMailto(opts: {
     "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyik nem talált.",
     "",
     "Röviden ezt szeretném hozzátenni:",
+    note || "",
   ].join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
