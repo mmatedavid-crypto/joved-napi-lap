@@ -133,7 +133,7 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/data/cards.ts",
-    forbidden: [/\bbiztosan\b/i, /\bgyógyít/i, /\bgyógyítható\b/i],
+    forbidden: [/\bbiztosan\b/i, /\bgyógyít/i, /\bgyógyítható\b/i, /\bbefektetés\b/i],
     required: ["bukkanhat fel", "finoman feldolgozható"],
   },
   {

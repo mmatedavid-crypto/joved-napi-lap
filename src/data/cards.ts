@@ -133,7 +133,8 @@ export const CARDS: TarotCard[] = [
     id: "igazsag",
     name: "Az Igazság",
     keywords: ["egyensúly", "felelősség", "tisztánlátás"],
-    general: "Egy helyzet most a saját mérlegére tesz. Az őszinteség most ár, de befektetés is.",
+    general:
+      "Egy helyzet most a saját mérlegére tesz. Az őszinteségnek ára lehet, de később megtartó alapot adhat.",
     love: "Egy ki nem mondott dolog most kérdez vissza. Érdemes lehet nevén nevezni.",
     decision: "Nem érzelmi, hanem tényszerű döntés ideje. Nézd meg, mi van a papíron.",
     warning: "A saját részedet ne hárítsd át a másikra.",
@@ -452,7 +453,7 @@ export const CARDS: TarotCard[] = [
   {
     id: "ermek-7",
     name: "Érmék Hetese",
-    keywords: ["türelem", "értékelés", "befektetés"],
+    keywords: ["türelem", "értékelés", "hosszú távú érték"],
     general: "Megálltál, hogy megnézd, mi termett — érdemes most kiértékelni, mielőtt mész tovább.",
     love: "A kapcsolat hosszú távú értékét érdemes mérlegre tenni, nem érzelmi pillanatfelvétel alapján.",
     decision: "Ne fordíts hátat a már elvetett magoknak túl korán.",
