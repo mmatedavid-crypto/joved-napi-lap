@@ -135,8 +135,14 @@ export const Route = createFileRoute("/arak")({
 function PricingPage() {
   const instant = PRODUCTS.filter((product) => product.category === "instant");
   const delayed = PRODUCTS.filter((product) => product.category === "delayed");
+  const entry = PRODUCTS.filter((product) => product.category === "instant" && product.priceHuf < 900);
+  const focused = PRODUCTS.filter(
+    (product) => product.category === "instant" && product.priceHuf >= 900,
+  );
   const instantPriceRange = productRange(instant);
   const delayedPriceRange = productRange(delayed);
+  const entryPriceRange = productRange(entry);
+  const focusedPriceRange = productRange(focused);
 
   return (
     <Layout>
@@ -164,6 +170,43 @@ function PricingPage() {
             title="Pontosítási út"
             text="Ha nem elég pontos, rendelés alapján visszanézzük, és konkrét kérdésekkel segítünk jelezni, mi nem talált."
           />
+        </section>
+
+        <section className="mt-10 rounded-md border border-gold/15 bg-[oklch(0.78_0.10_80/0.045)] p-5 md:p-7">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+            Mennyi elég most?
+          </div>
+          <h2 className="mt-2 font-display text-3xl text-ivory">
+            Nem mindig a legnagyobb olvasat a jó első lépés
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
+            Ha csak egy mai érzést vagy rövid jelet szeretnél tisztábban látni, elég lehet egy
+            belépő olvasat. Ha viszont ugyanaz a kapcsolat, döntés vagy élethelyzet tér vissza, a
+            mélyebb azonnali elemzés ad több kapaszkodót.
+          </p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            <BudgetFitCard
+              title="Belépő olvasat"
+              price={entryPriceRange}
+              text="Egy napi lap, angyalszám, kristály vagy álomszimbólum személyesebb értelmezéséhez."
+              cta="Olcsó próbaolvasat"
+              href="/mai-lap"
+            />
+            <BudgetFitCard
+              title="Mélyebb azonnali elemzés"
+              price={focusedPriceRange}
+              text="Három laphoz, döntéshez, kapcsolathoz vagy számmisztikához, amikor már nem elég egy rövid jel."
+              cta="Helyzethez választok"
+              href="#azonnali-olvasatok"
+            />
+            <BudgetFitCard
+              title="Asztrológiai riport"
+              price={delayedPriceRange}
+              text="Akkor érdemes, ha születési adatokból kérsz 30 napos, éves, tranzit- vagy védikus képet."
+              cta="30 napos térkép"
+              href="/szemelyes-30-napos-horoszkop"
+            />
+          </div>
         </section>
 
         <section className="mt-10">
@@ -306,6 +349,36 @@ function TrustPoint({ title, text }: { title: string; text: string }) {
   );
 }
 
+function BudgetFitCard({
+  title,
+  price,
+  text,
+  cta,
+  href,
+}: {
+  title: string;
+  price: string;
+  text: string;
+  cta: string;
+  href: string;
+}) {
+  return (
+    <article className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-display text-xl leading-tight text-ivory">{title}</h3>
+        <span className="shrink-0 text-sm tabular-nums text-gold">{price}</span>
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/62">{text}</p>
+      <a
+        href={href}
+        className="mt-4 inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60"
+      >
+        {cta}
+      </a>
+    </article>
+  );
+}
+
 function ReadingTypeCard({
   title,
   price,
@@ -355,7 +428,10 @@ function PricingGroup({
   category: ProductCategory;
 }) {
   return (
-    <section className="mt-10">
+    <section
+      id={category === "instant" ? "azonnali-olvasatok" : "asztrologiai-riportok"}
+      className="mt-10"
+    >
       <div className="mb-4">
         <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
           {category === "instant"
