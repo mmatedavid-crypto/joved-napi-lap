@@ -15,6 +15,7 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { SITE_LEGAL } from "@/lib/legal";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/kristaly")({
         content: "Mai kristályod — születési hónap vagy csillagjegy alapján.",
       },
     ],
-    links: [{ rel: "canonical", href: "/kristaly" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/kristaly` }],
   }),
   component: Page,
 });

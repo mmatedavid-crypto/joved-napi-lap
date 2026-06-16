@@ -7,6 +7,7 @@ import { aiDreamHU, type DreamHU } from "@/lib/roxyTranslate.functions";
 import { dreamTextToSlug } from "@/lib/roxyNormalize";
 import { dreamMeaning, DREAM_SLUG_OPTIONS } from "@/lib/dream.hu";
 import { trackEvent } from "@/lib/analytics";
+import { SITE_LEGAL } from "@/lib/legal";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/alomfejtes")({
       { property: "og:title", content: "Álomfejtés | Jövőd.hu" },
       { property: "og:description", content: "Mit jelent az álmod? Belső tükör, nem jóslat." },
     ],
-    links: [{ rel: "canonical", href: "/alomfejtes" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/alomfejtes` }],
   }),
   component: Page,
 });

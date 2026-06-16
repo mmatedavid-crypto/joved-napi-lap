@@ -10,6 +10,7 @@ import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
+import { SITE_LEGAL } from "@/lib/legal";
 import { saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/harom-lap")({
           "Klasszikus három lapos tarot húzás magyarul. Múlt, jelen, jövő — egy összefüggő történet.",
       },
     ],
-    links: [{ rel: "canonical", href: "/harom-lap" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/harom-lap` }],
   }),
   component: HaromLap,
 });

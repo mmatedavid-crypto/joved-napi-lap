@@ -17,6 +17,7 @@ import {
 } from "@/lib/roxyTranslate.functions";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { productCtaLabel } from "@/lib/products";
+import { SITE_LEGAL } from "@/lib/legal";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/mai-lap")({
         content: "Húzz egy napi tarot lapot. Rövid, elegáns magyar üzenet a mai napodra.",
       },
     ],
-    links: [{ rel: "canonical", href: "/mai-lap" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/mai-lap` }],
   }),
   component: MaiLap,
 });

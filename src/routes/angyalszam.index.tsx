@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { productCtaLabel } from "@/lib/products";
+import { SITE_LEGAL } from "@/lib/legal";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/angyalszam/")({
         content: "Mit üzen az angyalszámod? 111, 222, 333, 777, 1111 jelentése.",
       },
     ],
-    links: [{ rel: "canonical", href: "/angyalszam" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/angyalszam` }],
   }),
   component: Page,
 });

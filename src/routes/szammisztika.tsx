@@ -13,6 +13,7 @@ import {
 } from "@/lib/readingQuality/numerologyEngine";
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
+import { SITE_LEGAL } from "@/lib/legal";
 import { ReadingLoadingState } from "@/components/ReadingLoadingState";
 import { GuestMemoryInsightPanel } from "@/components/GuestMemoryInsightPanel";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/szammisztika")({
         content: "Számold ki a sorsszámod és a személyes éved. Mit mond rólad a születési dátumod?",
       },
     ],
-    links: [{ rel: "canonical", href: "/szammisztika" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/szammisztika` }],
   }),
   component: Page,
 });

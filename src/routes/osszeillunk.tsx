@@ -12,6 +12,7 @@ import {
 } from "@/lib/readingQuality/compatibilityEngine";
 import { type QualityReading } from "@/lib/readingQuality/styleRules";
 import { trackEvent } from "@/lib/analytics";
+import { SITE_LEGAL } from "@/lib/legal";
 import { getReadingContext, saveReadingMemory } from "@/lib/readingMemory.functions";
 import { getGuestReadingContext, recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { recordCompatibilityCheck } from "@/lib/relationshipPattern";
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/osszeillunk")({
           "Számmisztikai összeillés két születési dátum alapján. Milyen minőségeket hoztok ki egymásból?",
       },
     ],
-    links: [{ rel: "canonical", href: "/osszeillunk" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/osszeillunk` }],
   }),
   component: Page,
 });

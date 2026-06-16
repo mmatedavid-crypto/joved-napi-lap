@@ -265,6 +265,16 @@ const publicHubCanonicalChecks = [
   ["src/routes/numerologia.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/numerologia`'],
   ["src/routes/magazin.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/magazin`'],
   ["src/routes/arak.tsx", 'href: `${SITE_LEGAL.siteUrl}/arak`'],
+  ["src/routes/mai-lap.tsx", 'href: `${SITE_LEGAL.siteUrl}/mai-lap`'],
+  ["src/routes/harom-lap.tsx", 'href: `${SITE_LEGAL.siteUrl}/harom-lap`'],
+  ["src/routes/dontes-elott.tsx", 'href: `${SITE_LEGAL.siteUrl}/dontes-elott`'],
+  ["src/routes/osszeillunk.tsx", 'href: `${SITE_LEGAL.siteUrl}/osszeillunk`'],
+  ["src/routes/randi-elott.tsx", 'href: `${SITE_LEGAL.siteUrl}/randi-elott`'],
+  ["src/routes/szammisztika.tsx", 'href: `${SITE_LEGAL.siteUrl}/szammisztika`'],
+  ["src/routes/alomfejtes.tsx", 'href: `${SITE_LEGAL.siteUrl}/alomfejtes`'],
+  ["src/routes/angyalszam.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/angyalszam`'],
+  ["src/routes/kristaly.tsx", 'href: `${SITE_LEGAL.siteUrl}/kristaly`'],
+  ["src/routes/mai-iranytu.tsx", 'href: `${SITE_LEGAL.siteUrl}/mai-iranytu`'],
 ] as const;
 
 for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {

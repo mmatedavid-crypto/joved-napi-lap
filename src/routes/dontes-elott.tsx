@@ -12,6 +12,7 @@ import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { normalizeRoxyIching } from "@/lib/roxyNormalize";
 import { CARDS, type TarotCard } from "@/data/cards";
 import { hexHU } from "@/lib/iching.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 import { trackEvent } from "@/lib/analytics";
 import { todayKey } from "@/lib/storage";
 import { saveReadingMemory } from "@/lib/readingMemory.functions";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/dontes-elott")({
         content: "Húzz egy lapot, mielőtt döntesz. Egy vagy három lapos tarot a tisztánlátáshoz.",
       },
     ],
-    links: [{ rel: "canonical", href: "/dontes-elott" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/dontes-elott` }],
   }),
   component: Page,
 });

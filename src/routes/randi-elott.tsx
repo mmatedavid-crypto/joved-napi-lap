@@ -10,6 +10,7 @@ import { SmartReadingFollowup } from "@/components/SmartReadingFollowup";
 import { HUDateInput } from "@/components/HUDateInput";
 import { aiTarotDrawHU, type TarotSlot } from "@/lib/roxyTranslate.functions";
 import { CARDS, type TarotCard } from "@/data/cards";
+import { SITE_LEGAL } from "@/lib/legal";
 import { saveReadingMemory } from "@/lib/readingMemory.functions";
 import { recordGuestReadingMemory } from "@/lib/guestReadingMemory";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/randi-elott")({
           "Egy lap a kapcsolatról, mielőtt írsz vagy találkoztok. Finom, elegáns magyar olvasat.",
       },
     ],
-    links: [{ rel: "canonical", href: "/randi-elott" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/randi-elott` }],
   }),
   component: Page,
 });
