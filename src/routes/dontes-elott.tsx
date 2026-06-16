@@ -302,12 +302,12 @@ function Page() {
               kind="tarot"
               title="A pakli most keveredik"
               steps={[
-                "Vegyél egy mély levegőt, és engedd el a gondolataidat.",
-                "Képzeld el, hogy körülvesz egy lágy, aranyszínű fény.",
-                "Most nem a fejeddel, hanem a szíveddel érzel — hagyd, hogy az vezessen.",
-                "Gondolj arra, amire választ keresel. Nem kell szavakat találni, elég az érzés.",
-                "A lapok már úton vannak feléd… figyeld a belső rezgést.",
-                "A pakli most eldönti, melyik kép tartozik a mai pillanathoz.",
+                "Tartsd magad előtt a döntést, de ne kényszeríts még végső választ.",
+                "A lapok azt keresik, mi húz előre, és mi tart vissza.",
+                "Külön figyeljük a vágyat, a félelmet és a józan belső irányt.",
+                "Nem az a cél, hogy a lap döntsön helyetted, hanem hogy tisztább legyen a mérleg.",
+                "A húzás most azt keresi, melyik szempont kér több figyelmet.",
+                "A pakli azt a képet emeli ki, amelyik ehhez a döntési pillanathoz tartozik.",
               ]}
             />
             <div className="text-center">

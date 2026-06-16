@@ -407,6 +407,17 @@ for (const needle of [
 }
 
 for (const needle of [
+  "Tartsd magad előtt a kérdést",
+  "Nem külön lapmagyarázat készül",
+  "mi ismétlődik, mi nyílik",
+  "használható belső térképet",
+]) {
+  if (!threeCardRoute.includes(needle)) {
+    policyFailures.push(`free three-card loading copy must stay grounded: ${needle}`);
+  }
+}
+
+for (const needle of [
   "function loveQuestionSynthesis",
   "loveSituationHint",
   "A kérdésedre figyelve",
@@ -422,6 +433,17 @@ for (const needle of [
 }
 
 for (const needle of [
+  "Tartsd magad előtt azt a találkozást vagy üzenetet",
+  "helyzet érzelmi mintáját",
+  "hol van valódi közeledés",
+  "köztetek lévő dinamikát",
+]) {
+  if (!loveRoute.includes(needle)) {
+    policyFailures.push(`love tarot loading copy must stay relationship-specific: ${needle}`);
+  }
+}
+
+for (const needle of [
   "function decisionTarotSynthesis",
   "decisionCategoryHint",
   "A döntési helyzeted",
@@ -433,6 +455,37 @@ for (const needle of [
 ]) {
   if (!decisionRoute.includes(needle)) {
     policyFailures.push(`decision tarot route must answer user situation/question: ${needle}`);
+  }
+}
+
+for (const needle of [
+  "Tartsd magad előtt a döntést",
+  "mi húz előre, és mi tart vissza",
+  "vágyat, a félelmet és a józan belső irányt",
+  "Nem az a cél, hogy a lap döntsön helyetted",
+]) {
+  if (!decisionRoute.includes(needle)) {
+    policyFailures.push(`decision tarot loading copy must stay decision-specific: ${needle}`);
+  }
+}
+
+for (const forbiddenNeedle of [
+  "aranyszínű fény",
+  "szíveddel érzel",
+  "belső rezgés",
+  "A lapok már úton vannak",
+  "engedd el a gondolataidat",
+]) {
+  for (const [routeName, source] of [
+    ["three-card", threeCardRoute],
+    ["love", loveRoute],
+    ["decision", decisionRoute],
+  ] as const) {
+    if (source.includes(forbiddenNeedle)) {
+      policyFailures.push(
+        `${routeName} loading copy must avoid generic mystical filler: ${forbiddenNeedle}`,
+      );
+    }
   }
 }
 

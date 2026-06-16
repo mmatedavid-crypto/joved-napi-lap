@@ -252,12 +252,12 @@ function HaromLap() {
               kind="tarot"
               title="A pakli most keveredik"
               steps={[
-                "Vegyél egy mély levegőt, és engedd el a gondolataidat.",
-                "Képzeld el, hogy körülvesz egy lágy, aranyszínű fény.",
-                "Most nem a fejeddel, hanem a szíveddel érzel — hagyd, hogy az vezessen.",
-                "Gondolj arra, amire választ keresel. Nem kell szavakat találni, elég az érzés.",
-                "A lapok már úton vannak feléd… figyeld a belső rezgést.",
-                "A pakli most eldönti, melyik három kép tartozik a mai pillanathoz.",
+                "Tartsd magad előtt a kérdést, amelyhez a három lapot kéred.",
+                "Az első lap a kiinduló mintát, a második a jelen feszültségét, a harmadik az irányt keresi.",
+                "Nem külön lapmagyarázat készül, hanem egy összefüggő történet.",
+                "A húzás azt figyeli, mi ismétlődik, mi nyílik, és mire érdemes ránézned.",
+                "Nem biztos jövőt keresünk, hanem használható belső térképet.",
+                "A pakli azt a három képet emeli ki, amelyik ehhez a kérdéshez tartozik.",
               ]}
             />
             <div className="text-center">

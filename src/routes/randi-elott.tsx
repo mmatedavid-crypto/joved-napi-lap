@@ -245,12 +245,12 @@ function Page() {
               kind="tarot"
               title="A pakli most keveredik"
               steps={[
-                "Vegyél egy mély levegőt, és engedd el a gondolataidat.",
-                "Képzeld el, hogy körülvesz egy lágy, aranyszínű fény.",
-                "Most nem a fejeddel, hanem a szíveddel érzel — hagyd, hogy az vezessen.",
-                "Gondolj arra, amire választ keresel. Nem kell szavakat találni, elég az érzés.",
-                "A lapok már úton vannak feléd… figyeld a belső rezgést.",
-                "A pakli most eldönti, melyik kép tartozik a mai pillanathoz.",
+                "Tartsd magad előtt azt a találkozást vagy üzenetet, amiről kérdezel.",
+                "A lapok nem ígéretet keresnek, hanem a helyzet érzelmi mintáját.",
+                "Külön figyeljük a te tempódat, a köztetek lévő teret és a másik oldal jelzéseit.",
+                "Nem kell túlmagyaráznod magadban; elég, ha pontosan megnevezed a helyzetet.",
+                "A húzás most azt keresi, hol van valódi közeledés, és hol csak bizonytalanság.",
+                "A pakli azt a képet emeli ki, amelyik ehhez a kapcsolati pillanathoz tartozik.",
               ]}
             />
             <div className="text-center">
@@ -387,7 +387,7 @@ function sitReflection(sit: string, type: 1 | 3, hisName: string): string {
         : `A találkozás már megtörtént — a lap arra felel, mi a legfontosabb üzenete annak, ami történt.`;
     case "most ismerkedünk":
       return type === 3
-        ? `Egy frissen induló szál — a lapok megmutatják a te alaphangod, a köztetek lévő rezgést, és ${him} valódi szándékát.`
+        ? `Egy frissen induló szál — a lapok megmutatják a te alaphangod, a köztetek lévő dinamikát, és ${him} valódi szándékát.`
         : `Egy frissen induló szál — a lap a most legfontosabb felismerést hozza el.`;
     case "nem ír vissza":
       return type === 3
