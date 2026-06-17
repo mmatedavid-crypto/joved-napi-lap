@@ -1,6 +1,6 @@
-// Pure mapping helpers. Client-safe (no secrets, no DB). Translates raw Roxy
-// payloads into Jövőd's Hungarian structures. We DO NOT show raw Roxy text
-// to the user — these mappers extract numbers/flags only.
+// Pure mapping helpers. Client-safe (no secrets, no DB). They normalize
+// source payloads into Jövőd's Hungarian structures. We do not show source
+// prose to the user here; these mappers extract numbers/flags only.
 
 // Major Arcana canonical order 0..21 maps to our local card ids.
 export const MAJOR_ARCANA_ID_BY_INDEX = [
@@ -28,7 +28,7 @@ export const MAJOR_ARCANA_ID_BY_INDEX = [
   "vilag",
 ] as const;
 
-// Common English → local id fallbacks if Roxy returns names instead of indices.
+// Common source-name -> local id fallbacks if names arrive instead of indices.
 const ENGLISH_NAME_TO_ID: Record<string, string> = {
   "the fool": "bolond",
   "the magician": "mago",
@@ -168,16 +168,14 @@ export function normalizeRoxyCompat(raw: unknown): RoxyCompat {
 
 export type RoxyDrawnCard = {
   roxyId: string; // e.g. "the-fool", "ace-of-cups"
-  roxyName: string; // english name
+  roxyName: string; // source name
   arcana: "major" | "minor" | "unknown";
   suit?: string;
   number?: number;
   reversed: boolean;
   localId: string | null; // mapped to our card id when Major Arcana
-  // Rich English source fields straight from Roxy. We keep them so the AI
-  // magyarító doesn't have to "invent" Hungarian text — it just translates
-  // and stylizes from concrete source material. Roxy has no `hu` lang, so
-  // we always translate; but the input is now real, not a guess from keywords.
+  // Rich source meaning fields. We keep them so the AI works from concrete
+  // source material instead of inventing local template text.
   position?: number;
   keywordsEn?: string[];
   meaningEn?: string;
@@ -362,8 +360,8 @@ export function normalizeRoxyDraw(raw: unknown): RoxyDrawnCard[] {
   return [];
 }
 
-// /tarot/daily → { date, seed, card, dailyMessage }. We keep dailyMessage
-// separate so callers can pipe it into the magyarító AI as source text.
+// /tarot/daily -> { date, seed, card, dailyMessage }. We keep dailyMessage
+// separate so callers can use it as source text for the Hungarian reading.
 export type RoxyTarotDailyPayload = {
   card: RoxyDrawnCard | null;
   dailyMessageEn?: string;

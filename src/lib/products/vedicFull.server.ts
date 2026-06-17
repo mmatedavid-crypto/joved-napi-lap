@@ -1,12 +1,12 @@
-// SERVER-ONLY. A "Védikus asztrológia – teljes elemzés" termék Roxy + AI flow-ja.
+// SERVER-ONLY. A "Védikus asztrológia – teljes elemzés" termék forráshű szerkesztői flow-ja.
 // Webhook hívja `processPaidOrderBySession` ágból. Kimenete a megszokott
 // PaidOrderReading shape ({ title, body }), így a köszönő oldal és az
 // email-template változatlanul tudja megjeleníteni.
 //
-// Forrás: Roxy /astrology/natal-chart (tropikus). Mi deterministikusan
+// Forrás: tropikus születési képlet-adatok. Mi deterministikusan
 // alkalmazunk Lahiri ayanamsa korrekciót (~24.18°) a védikus (sziderikus)
-// Hold-, Nap- és Aszcendens-jegy + nakshatra megállapításához. Az AI ezt
-// fordítja le és rendezi védikus szerkezetbe — nem talál ki dashákat.
+// Hold-, Nap- és Aszcendens-jegy + nakshatra megállapításához. Az AI ebből
+// rendez védikus szerkezetű magyar olvasatot, nem talál ki dashákat.
 
 import { aiJSON } from "@/lib/ai.server";
 import {

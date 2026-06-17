@@ -579,7 +579,7 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
       const ai = await aiJSON<PersonalBriefingHU>({
         system: sys,
         user:
-          "Készíts ebből a nyers, vegyes angol forrásból egy mai magyar olvasatot a felhasználónak.\n\n" +
+          "Készíts ebből a jelképi forrásanyagból egy mai magyar olvasatot a felhasználónak.\n\n" +
           JSON.stringify(userPayload),
         schemaName: "PersonalBriefingHU",
         schema,

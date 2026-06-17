@@ -1,8 +1,8 @@
-// Szigorú magyar integráló réteg a Roxy nyers angol válaszai fölött. Minden fn:
-//   1) lekéri a megfelelő Roxy endpointot (cache-elve a roxy.server-en),
-//   2) átadja a NYERS angol payload-ot a Lovable AI Gateway-nek,
-//   3) az AI-t SZIGORÚAN FORDÍTÓ/ÖSSZEFOGLALÓ módban használja: nem talál ki
-//      új tartalmat, csak a kapott angol mezőket teszi folyékony magyarrá,
+// Szigorú magyar szerkesztői réteg a jelképi forrásanyag fölött. Minden fn:
+//   1) lekéri a megfelelő tudástári adatot (cache-elve a roxy.server-en),
+//   2) átadja a forrásmezőket a Lovable AI Gateway-nek,
+//   3) az AI-t forráshű szerkesztői módban használja: nem talál ki új tartalmat,
+//      csak a kapott jelentésmezőkből formál természetes magyar olvasatot,
 //      kihagyva a hiányzó mezőket. A magyar eredményt cache-eli az api_cache-be.
 
 import { createServerFn } from "@tanstack/react-start";
@@ -57,7 +57,7 @@ const TRANSLATOR_SYSTEM = [
   "Kristályoknál csak szimbolikus nyelv használható: 'hagyományosan ehhez társítják', 'ezt a minőséget jelképezi', 'önismereti jelként'. Soha ne írd, hogy gyógyít.",
   "Tömörség: minden mező 1-2 mondat, semmi felsorolás. Az 'oneLine' EGY mondat, max 18 szó, ne kezdődjön 'Ma' szóval.",
   "Soha ne ígérj orvosi, jogi, pénzügyi eredményt, ne diagnosztizálj, ne mondj konkrét jövő-eseményt.",
-  "Magyar nyelv: természetes magyar szórend, ne tükörfordíts, ne hagyj angol szót a kimenetben.",
+  "Magyar nyelv: természetes magyar szórend, ne legyen angolos a mondat, ne hagyj angol szót a kimenetben.",
   "Csak érvényes JSON-t adj vissza a séma szerint, kommentár nélkül.",
 ].join(" ");
 
@@ -557,9 +557,9 @@ function guardNumerologyHU(value: unknown): NumerologyHU | null {
 }
 
 // ─── Tarot ────────────────────────────────────────────────────────────────
-// Roxy /tarot/daily és /tarot/draw nyers angol mezőit fordítjuk magyarra
-// kártya-szinten. Per-kártya cache → ugyanazt a lapot soha nem fordítjuk
-// kétszer. Az UI a Roxy localId-ból építi a magyar nevet + képet.
+// Tarot napi és több lapos húzás jelképi forrásmezőiből készül a magyar
+// kártya-szintű olvasat. Per-kártya cache: ugyanazt a lapot nem szerkesztjük
+// újra feleslegesen. Az UI a localId-ból építi a magyar nevet + képet.
 
 export type TarotCardHU = {
   cardName: string;
@@ -608,7 +608,7 @@ async function translateOneTarotCard(card: RoxyDrawnCard): Promise<TarotCardHU |
   const cached = guardTarotCardHU(await readCache(key), card.reversed);
   if (cached) return cached;
 
-  // Ha a Roxy nem küldött forrásszöveget, nincs mit fordítani.
+  // Ha nincs jelképi forrásszöveg, nincs miből forráshű olvasatot készíteni.
   const hasSource =
     card.meaningEn ||
     card.loveEn ||
@@ -653,7 +653,7 @@ async function translateCards(cards: RoxyDrawnCard[]): Promise<TarotSlot[]> {
     .filter((s): s is TarotSlot => s !== null);
 }
 
-// "Mai lap" — Roxy /tarot/daily + per-kártya magyarítás.
+// "Mai lap" — napi tarot forrásanyag + kártya-szintű magyar olvasat.
 export const aiTarotDailyHU = createServerFn({ method: "POST" })
   .inputValidator(z.object({ dateKey: z.string().min(8).max(20) }).parse)
   .handler(
@@ -683,13 +683,13 @@ export const aiTarotDailyHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           slot: null,
-          message: "A magyarítás most nem sikerült.",
+          message: "A magyar olvasat most nem készült el.",
         };
       return { ok: true, cached: r.cached, slot: slots[0] };
     },
   );
 
-// Általános húzás (1..5 lap) — Roxy /tarot/draw + per-kártya magyarítás.
+// Általános húzás (1..5 lap) — tarot forrásanyag + kártya-szintű magyar olvasat.
 export const aiTarotDrawHU = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
@@ -729,15 +729,14 @@ export const aiTarotDrawHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           slots: [],
-          message: "A magyarítás most nem sikerült.",
+          message: "A magyar olvasat most nem készült el.",
         };
       return { ok: true, cached: r.cached, slots };
     },
   );
 
 // ─── Hold-fázis ───────────────────────────────────────────────────────────
-// Roxy GET /astrology/moon-phase/current → angol forrás (phase, illumination,
-// signName/sunSign, energy, advice, stb.) → 1-2 mondatos magyar összefoglaló.
+// Holdfázis-forrásanyagból 1-2 mondatos magyar összefoglaló készül.
 // Cache: 6 óra (a fázis percről percre alig változik, de szín/hold-jegy igen).
 
 export type MoonPhaseHU = {
@@ -894,10 +893,10 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A magyarítás most nem sikerült.",
+          message: "A magyar olvasat most nem készült el.",
         };
 
-      // Interpretációt is fordítjuk (vagy generáljuk a lap-meaning-ből, ha hiányzik).
+      // Az értelmezést is forráshű magyar olvasattá rendezzük, ha külön mező érkezett.
       const t = await translateWithAI<{
         answer: "igen" | "nem" | "talán";
         strength?: "gyenge" | "mérsékelt" | "erős";
@@ -938,10 +937,10 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
   );
 
 // ─── Tarot spread (three-card / love / career / celtic-cross) ─────────────
-// Roxy POST /tarot/spreads/{kind} → { spread, question, seed, positions, summary }
+// Tarot terítés forrásanyaga: { spread, question, seed, positions, summary }
 // Position: { position, name, interpretation, card }
-// Magyar kimenet: a Roxy által adott „name" (pozíciónév) magyarra fordítva,
-// kártya hu adata, pozíció-interpretáció fordítva, plusz egy közös oneLine.
+// Magyar kimenet: a pozíciónév magyar szerkesztői megfelelője, kártya hu adata,
+// pozíció-olvasat, plusz egy közös oneLine.
 
 export type TarotSpreadKind = "three-card" | "love" | "career" | "celtic-cross";
 
@@ -1039,7 +1038,7 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
           summary: spread.summaryEn ?? null,
         },
         domainHint:
-          "Tarot terítés pozíciónevei és pozíció-interpretációi. A 'positionNames' tartalmazza a pozíciók magyar nevét UGYANABBAN a sorrendben (pl. 'Múlt', 'Jelen', 'Jövő'; vagy 'A szíved', 'A partnered', stb.). Az 'interpretations' a forrás 'interpretation' mezőit fordítja magyarra, 2-3 mondatban, semmit ne találj ki. Az 'oneLine' egyetlen mondat összefoglaló a 'summary' mezőből, max 18 szó.",
+          "Tarot terítés pozíciónevei és pozíció-olvasatai. A 'positionNames' tartalmazza a pozíciók magyar nevét UGYANABBAN a sorrendben (pl. 'Múlt', 'Jelen', 'Jövő'; vagy 'A szíved', 'A partnered', stb.). Az 'interpretations' a forrás 'interpretation' mezőinek jelentését adja vissza magyarul, 2-3 mondatban, semmit ne találj ki. Az 'oneLine' egyetlen mondat összefoglaló a 'summary' mezőből, max 18 szó.",
         schemaName: "TarotSpreadMetaHU",
         schema: SPREAD_META_SCHEMA,
       });
@@ -1069,7 +1068,7 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A magyarítás most nem sikerült.",
+          message: "A magyar olvasat most nem készült el.",
         };
 
       return {

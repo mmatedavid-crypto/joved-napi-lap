@@ -305,14 +305,18 @@ const checks: StaticSafetyCheck[] = [
     forbidden: [
       /Roxy API/i,
       /nyers angol Roxy/i,
+      /nyers angol válasz/i,
+      /SZIGORÚAN FORDÍTÓ/i,
+      /fordítjuk magyarra/i,
+      /magyarítás/i,
       /raw provider-szöveget/i,
       /endpoint- vagy mezőneveket/i,
       /fordítója vagy/i,
     ],
     required: [
       "magyar szimbolikus olvasatainak szerkesztője",
-      "forrásanyag jelentését",
-      "FORRÁSANYAG",
+      "jelképi forrásanyag",
+      "forrásmezők jelentését",
       "magyar olvasat",
     ],
   },
@@ -471,6 +475,40 @@ for (const file of publicTrustLeakFiles) {
   for (const forbidden of publicTrustLeakPatterns) {
     if (forbidden.test(body)) {
       failures.push(`${file}: public trust copy must not expose internal/provider wording: ${forbidden}`);
+    }
+  }
+}
+
+const symbolicSourceNarrativeFiles = [
+  "src/lib/roxyTranslate.functions.ts",
+  "src/lib/roxyNormalize.ts",
+  "src/lib/roxyCardMap.ts",
+  "src/lib/roxy.functions.ts",
+  "src/lib/products/vedicFull.server.ts",
+  "scripts/bake-lifepath.ts",
+];
+const symbolicSourceNarrativeForbidden = [
+  /Roxy API/i,
+  /Source: Roxy/i,
+  /nyers angol/i,
+  /raw provider/i,
+  /provider-szöveg/i,
+  /endpoint- vagy/i,
+  /Roxy-forrás/i,
+  /Angolról magyarra/i,
+  /fordítjuk magyarra/i,
+  /fordítva magyarra/i,
+  /magyarítás/i,
+  /magyarító/i,
+  /tükörfordíts/i,
+  /AI fordít/i,
+];
+
+for (const file of symbolicSourceNarrativeFiles) {
+  const body = readFileSync(file, "utf8");
+  for (const forbidden of symbolicSourceNarrativeForbidden) {
+    if (forbidden.test(body)) {
+      failures.push(`${file}: internal symbolic-source narrative must avoid provider/translation framing: ${forbidden}`);
     }
   }
 }

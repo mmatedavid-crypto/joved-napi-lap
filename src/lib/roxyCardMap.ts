@@ -1,6 +1,6 @@
-// Client-safe mapping helpers: Roxy drawn cards → local TarotCard for display,
-// and → AI prompt input that uses ONLY Roxy English source fields (no helyi
-// magyar jelentés-szöveg kerül az AI-ba, így nem találhat ki sablonokat).
+// Client-safe mapping helpers: drawn source cards -> local TarotCard for display,
+// and -> AI prompt input that uses only source meaning fields. Local Hungarian
+// template text stays out of the prompt, so the result remains forráshű.
 import { CARDS, type TarotCard } from "@/data/cards";
 import type { RoxyDrawnCard } from "./roxyNormalize";
 
@@ -24,9 +24,9 @@ export function mapRoxyToLocal(roxy: RoxyDrawnCard[]): LocalDrawn[] {
   return roxy.map((r) => ({ card: findLocal(r), reversed: r.reversed, roxy: r }));
 }
 
-// AI prompt input minden kártyához. SZÁNDÉKOSAN nem adjuk át a helyi
-// general/love/decision/warning/daily mezőket — csak a Roxy által adott
-// angol forrásszövegeket. Így az AI fordít/stilizál, nem talál ki.
+// AI prompt input minden kártyához. Szándékosan nem adjuk át a helyi
+// general/love/decision/warning/daily mezőket; csak a kapott jelképi
+// forrásmezőket, hogy ne sablonból készüljön az olvasat.
 export function toAIInput(d: LocalDrawn) {
   return {
     id: d.card.id,
