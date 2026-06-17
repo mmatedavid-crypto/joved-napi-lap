@@ -84,6 +84,21 @@ const checks: Check[] = [
     includes: ["Innen folytathatod", "Vissza az olvasathoz"],
   },
   {
+    name: "thank-you page shows safe captured order summary",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "OrderCapturedSummary",
+      "Ezt rögzítettük",
+      "biztonságos rendelési link + vásárlási email",
+      "biztonságos rendelési link + profil",
+      "az előző olvasati útvonaladhoz kapcsolva",
+      "A személyes kérdést és a megadott adatokat nem ismételjük ki ezen az oldalon",
+      "de a rendelés",
+      "elkészítéséhez rögzítettük őket",
+    ],
+    excludes: ["input_payload", "JSON.stringify(order", "JSON.stringify(payload"],
+  },
+  {
     name: "thank-you page exposes support contact",
     file: "src/routes/koszonjuk.tsx",
     includes: [

@@ -314,6 +314,8 @@ function Page() {
               )}
             </Section>
 
+            <OrderCapturedSummary order={order} />
+
             {order.status !== "delivered" && order.status !== "failed" && (
               <Section eyebrow="Készítjük">
                 <p>{orderPreparationLead(order)}</p>
@@ -430,6 +432,53 @@ function Page() {
         )}
       </div>
     </Layout>
+  );
+}
+
+function OrderCapturedSummary({ order }: { order: OrderView }) {
+  const product = PRODUCTS_BY_SLUG[order.product_slug ?? ""];
+  const access =
+    order.guest_email != null
+      ? "biztonságos rendelési link + vásárlási email"
+      : "biztonságos rendelési link + profil";
+  const delivery =
+    order.status === "delivered"
+      ? "elkészült"
+      : order.category === "delayed"
+        ? order.express
+          ? "részletes olvasat express határidővel"
+          : "részletes olvasat vállalt határidővel"
+        : "azonnali olvasat, általában pár percen belül";
+  const source =
+    product?.sourceRoute || order.source_route
+      ? "az előző olvasati útvonaladhoz kapcsolva"
+      : "a rendelésedhez kapcsolva";
+
+  return (
+    <Section eyebrow="Ezt rögzítettük">
+      <dl className="grid gap-3 text-sm leading-relaxed sm:grid-cols-2">
+        <div className="rounded-md border border-gold/10 bg-black/10 px-3 py-2">
+          <dt className="text-[10px] uppercase tracking-[0.2em] text-gold/65">Olvasat</dt>
+          <dd className="mt-1 text-ivory/68">{order.product_name}</dd>
+        </div>
+        <div className="rounded-md border border-gold/10 bg-black/10 px-3 py-2">
+          <dt className="text-[10px] uppercase tracking-[0.2em] text-gold/65">Elérés</dt>
+          <dd className="mt-1 text-ivory/68">{access}</dd>
+        </div>
+        <div className="rounded-md border border-gold/10 bg-black/10 px-3 py-2">
+          <dt className="text-[10px] uppercase tracking-[0.2em] text-gold/65">Elkészülés</dt>
+          <dd className="mt-1 text-ivory/68">{delivery}</dd>
+        </div>
+        <div className="rounded-md border border-gold/10 bg-black/10 px-3 py-2">
+          <dt className="text-[10px] uppercase tracking-[0.2em] text-gold/65">Kapcsolódás</dt>
+          <dd className="mt-1 text-ivory/68">{source}</dd>
+        </div>
+      </dl>
+      <p className="mt-3 text-xs leading-relaxed text-ivory/45">
+        A személyes kérdést és a megadott adatokat nem ismételjük ki ezen az oldalon, de a rendelés
+        elkészítéséhez rögzítettük őket.
+      </p>
+    </Section>
   );
 }
 
