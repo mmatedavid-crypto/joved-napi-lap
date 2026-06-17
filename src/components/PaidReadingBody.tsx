@@ -228,6 +228,10 @@ function ReadingUseGuide() {
       text: "Nézd meg, melyik téma tért vissza azóta. Ebből születik a következő jó kérdés.",
     },
     {
+      label: "Egy mondatban",
+      text: "Írd le magadnak: „Most azt viszem tovább, hogy…”. Ez lesz a következő kérdés magja.",
+    },
+    {
       label: "Ha nem pontos",
       text: "Írd meg, melyik rész nem talált, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
     },
@@ -240,7 +244,7 @@ function ReadingUseGuide() {
         Ez nem vizsga és nem végleges ítélet. Akkor használható jól, ha a legpontosabb részt
         visszaviszed a saját helyzetedbe.
       </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {items.map((item) => (
           <div key={item.label} className="rounded-md border border-gold/10 bg-black/10 px-3 py-3">
             <div className="text-[11px] uppercase tracking-[0.16em] text-gold/70">{item.label}</div>
@@ -249,6 +253,7 @@ function ReadingUseGuide() {
         ))}
       </div>
       <p className="mt-4 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/48">
+        Nem kell mindent ma eldöntened; elég, ha egy mondatot továbbviszel.{" "}
         Ha az olvasat valamelyik része félrement, írhatsz nekünk a{" "}
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
@@ -633,6 +638,7 @@ function formatDownloadedReading(
     "- Most: keresd azt a mondatot, amelyiknél megállsz egy pillanatra.",
     "- Pár nap múlva: nézd meg, melyik rész kért figyelmet cselekvés helyett.",
     "- 7 nap múlva: figyeld meg, melyik téma tért vissza; ebből születhet a következő jó kérdés.",
+    "- Egy mondatban: írd le, mit viszel tovább; ebből lesz a következő kérdés magja.",
     "",
     "Ez az olvasat régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
