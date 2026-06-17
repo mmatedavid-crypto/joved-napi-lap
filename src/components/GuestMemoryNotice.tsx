@@ -92,6 +92,11 @@ export function GuestMemoryNotice() {
             készítünk belőle biztos jövőállítást. A személyesítés nem kötelező: kikapcsolhatod, és
             a törlés nem érinti a rendeléseidet.
           </p>
+          <ul className="grid gap-1.5 rounded-md border border-gold/10 bg-black/10 px-3 py-2 text-xs leading-relaxed text-ivory/58 sm:grid-cols-3">
+            <li>Megjegyzi, milyen témákhoz térsz vissza.</li>
+            <li>Finomabb folytatást ad a következő olvasatnál.</li>
+            <li>Bármikor törölhető vagy kikapcsolható.</li>
+          </ul>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             {needsDecision ? (
               <>
