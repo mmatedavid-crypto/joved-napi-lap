@@ -463,6 +463,14 @@ function PricingGroup({
                 </li>
               ))}
             </ul>
+            <div className="mt-3 rounded-md border border-gold/10 bg-black/10 px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-gold/65">
+                Akkor jó, ha
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-ivory/56">
+                {productFitHint(product)}
+              </p>
+            </div>
             <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/50">
               {product.qualityPromise}
             </p>
@@ -479,4 +487,44 @@ function PricingGroup({
       </div>
     </section>
   );
+}
+
+function productFitHint(product: (typeof PRODUCTS)[number]): string {
+  switch (product.slug) {
+    case "napi_lap_ai":
+    case "extra_huzas":
+      return "egy rövid mai jel megállított, és szeretnéd a saját helyzetedre visszafordítani.";
+    case "mai_iranytu_ai":
+      return "nem nagy riport kell, hanem egy személyes napi fókusz szerelem, munka vagy belső ritmus felől.";
+    case "angyalszam_ai":
+      return "egy szám újra felbukkant, és nem általános jelentést, hanem helyzethez kötött olvasatot kérsz.";
+    case "kristaly_ai":
+      return "szimbolikus támpontot keresel egy érzéshez vagy időszakhoz, testi hatásígéret nélkül.";
+    case "alomfejtes_rovid":
+      return "egy álom képe vagy hangulata veled maradt, és önismereti jelként néznél rá.";
+    case "horoszkop_szemelyre":
+      return "az általános jegyszöveg helyett a mostani témádra kérsz rövid napi fókuszt.";
+    case "harom_lap_mely":
+      return "egy kérdés mögött már történetet érzel, és nem három külön lapmagyarázatot szeretnél.";
+    case "kelta_kereszt":
+      return "összetett helyzetet nézel, ahol több réteg, félelem és lehetőség keveredik.";
+    case "dontes_komplex":
+      return "nem kész választ vársz, hanem tisztábban szeretnéd látni, mi húz és mi tart vissza.";
+    case "parkapcsolat_elemzes":
+      return "randi, ex, visszatérő kötődés vagy bizonytalan dinamika kér figyelmet.";
+    case "szammisztika_eletut":
+      return "a sorsszámodnál mélyebbre mennél: név, személyes év és visszatérő működés együtt érdekel.";
+    case "personal_30_day":
+      return "a következő hetek ívét néznéd a saját születési képletedhez kapcsolva.";
+    case "personal_yearly":
+      return "nem napi választ keresel, hanem egy hosszabb időszak fő témáit szeretnéd látni.";
+    case "transits_personal":
+      return "arra vagy kíváncsi, miért most erősödik fel egy téma az életedben.";
+    case "vedic_full":
+      return "sziderikus szemléletben, mélyebb születési képleti rétegekkel néznél rá magadra.";
+    default:
+      return product.category === "instant"
+        ? "egy konkrét kérdésre vagy érzésre kérsz rövid, személyes olvasatot."
+        : "születési adatokból épülő, hosszabb írásos elemzést szeretnél.";
+  }
 }
