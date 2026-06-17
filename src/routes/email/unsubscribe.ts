@@ -16,7 +16,8 @@ function redactToken(token: string | null | undefined): string {
 
 const PUBLIC_UNSUBSCRIBE_ERROR =
   "A leiratkozási kérést most nem tudtuk feldolgozni. Kérlek próbáld újra később.";
-const MISSING_UNSUBSCRIBE_TOKEN = "Hiányzó leiratkozási azonosító.";
+const MISSING_UNSUBSCRIBE_TOKEN =
+  "A leiratkozási linkből hiányzik a biztonságos ellenőrző rész. Nyisd meg az emailben kapott teljes linket, vagy írj nekünk segítségért.";
 const INVALID_UNSUBSCRIBE_LINK = "Ez a leiratkozási link érvénytelen vagy lejárt.";
 
 function unsubscribeError(message: string, status: number): Response {

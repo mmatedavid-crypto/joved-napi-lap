@@ -364,10 +364,12 @@ const checks: Check[] = [
       "INVALID_UNSUBSCRIBE_LINK",
       "function unsubscribeError",
       "A leiratkozási kérést most nem tudtuk feldolgozni",
-      "Hiányzó leiratkozási azonosító.",
+      "A leiratkozási linkből hiányzik a biztonságos ellenőrző rész",
+      "Nyisd meg az emailben kapott teljes linket",
       "Ez a leiratkozási link érvénytelen vagy lejárt.",
     ],
     excludes: [
+      "Hiányzó leiratkozási azonosító.",
       'Response.json({ error: "Server configuration error" }',
       'Response.json({ error: "Token is required" }',
       'Response.json({ error: "Invalid or expired token" }',
