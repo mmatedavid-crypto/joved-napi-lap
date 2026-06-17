@@ -81,6 +81,11 @@ export function SmartReadingFollowup({
       ? { memoryContext: memory.contextText || memory.themeSummary }
       : {}),
   };
+  const carryoverItems = [
+    question ? `Kérdés: ${shortenContext(question, 120)}` : "",
+    situation ? `Helyzet: ${shortenContext(situation, 120)}` : "",
+    memoryLine ? "Korábbi mintáid finom jelzésként számítanak" : "",
+  ].filter(Boolean);
 
   return (
     <section className="surface p-5 md:p-6">
@@ -102,6 +107,25 @@ export function SmartReadingFollowup({
             <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.055] px-3 py-2 text-sm leading-relaxed text-ivory/68">
               {memoryLine}
             </p>
+          )}
+          {carryoverItems.length > 0 && (
+            <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-3">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-gold/70">
+                Ezt visszük tovább
+              </div>
+              <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-ivory/64">
+                {carryoverItems.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/70" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs leading-relaxed text-ivory/45">
+                A fizetős folytatás nem idegenként indul; ebből a fonalból készül a mélyebb
+                olvasat.
+              </p>
+            </div>
           )}
         </div>
         <Link
