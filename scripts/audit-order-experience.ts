@@ -453,7 +453,7 @@ const checks: Check[] = [
       "Termék:",
       "Rendelés:",
       "Letöltve:",
-      "szimbolikus, önismereti digitális tartalom",
+      "régi jelképrendszerekből készült önismereti olvasat",
       "SITE_LEGAL.supportEmail",
       "link.download",
       "jovod-olvasat-",

@@ -55,10 +55,14 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/components/PaidReadingBody.tsx",
-    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
+    forbidden: [
+      /new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/,
+      /szimbolikus, önismereti digitális tartalom/i,
+    ],
     required: [
       'import { huTodayKey } from "@/lib/dateKeys";',
       "`jovod-olvasat-${huTodayKey()}.txt`",
+      "régi jelképrendszerekből készült önismereti olvasat",
     ],
   },
   {

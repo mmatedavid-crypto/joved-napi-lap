@@ -629,7 +629,7 @@ function formatDownloadedReading(
     "",
     body.trim(),
     "",
-    "Ez az olvasat szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
+    "Ez az olvasat régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
   ]
     .filter((line): line is string => line !== null)
