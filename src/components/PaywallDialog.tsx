@@ -414,6 +414,17 @@ export function PaywallDialog({
               </label>
             )}
 
+            <div className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-gold/70">
+                Olvasat határai
+              </div>
+              <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-ivory/56">
+                <li>Nem mond biztos jövőt, visszatérést vagy másik ember döntését kész tényként.</li>
+                <li>Nem választ helyetted; a mintát, tempót és belső fókuszt segít tisztábban látni.</li>
+                <li>Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.</li>
+              </ul>
+            </div>
+
             <label className="flex items-start gap-3 p-3 rounded-md border border-[oklch(0.78_0.10_80/0.18)] cursor-pointer text-sm text-ivory/75">
               <input
                 type="checkbox"
