@@ -137,10 +137,12 @@ async function buildShareImage(card: TarotCard, oneLine?: string, eyebrow?: stri
 export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [statusKind, setStatusKind] = useState<"success" | "error" | null>(null);
 
   async function handle() {
     setBusy(true);
     setStatus(null);
+    setStatusKind(null);
     try {
       const blob = await buildShareImage(card, oneLine, eyebrow);
       const file = new File([blob], `jovod-${card.id}.png`, { type: "image/png" });
@@ -160,38 +162,57 @@ export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
         a.remove();
         URL.revokeObjectURL(url);
         setStatus("Letöltve");
+        setStatusKind("success");
       }
     } catch {
-      setStatus("Most nem sikerült.");
+      setStatus("Most nem sikerült menteni. Próbáld újra, vagy készíts képernyőképet az olvasatról.");
+      setStatusKind("error");
     } finally {
       setBusy(false);
-      setTimeout(() => setStatus(null), 2500);
+      setTimeout(() => {
+        setStatus(null);
+        setStatusKind(null);
+      }, 3500);
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handle}
-      disabled={busy}
-      className="btn-ghost-gold inline-flex items-center gap-2"
-    >
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
+    <span className="inline-flex flex-col items-start gap-1">
+      <button
+        type="button"
+        onClick={handle}
+        disabled={busy}
+        className="btn-ghost-gold inline-flex items-center gap-2"
       >
-        <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
-        <path d="M16 6l-4-4-4 4" />
-        <path d="M12 2v14" />
-      </svg>
-      {busy ? "Készítem…" : (status ?? "Megosztás / mentés")}
-    </button>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
+          <path d="M16 6l-4-4-4 4" />
+          <path d="M12 2v14" />
+        </svg>
+        {busy ? "Készítem…" : "Megosztás / mentés"}
+      </button>
+      {status && (
+        <span
+          aria-live="polite"
+          className={
+            statusKind === "error"
+              ? "max-w-xs text-xs leading-relaxed text-ivory/55"
+              : "text-xs text-gold/75"
+          }
+        >
+          {status}
+        </span>
+      )}
+    </span>
   );
 }

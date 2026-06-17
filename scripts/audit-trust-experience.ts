@@ -620,6 +620,18 @@ const checks: Check[] = [
     includes: ["const spreadX = (t - 0.5) * 70"],
     excludes: ["const spreadX = (t - 0.5) * 92"],
   },
+  {
+    name: "share card failure gives a useful save fallback",
+    file: "src/components/ShareCardButton.tsx",
+    includes: [
+      "statusKind",
+      "aria-live=\"polite\"",
+      "Most nem sikerült menteni",
+      "készíts képernyőképet az olvasatról",
+      "Megosztás / mentés",
+    ],
+    excludes: ['setStatus("Most nem sikerült.")', "busy ? \"Készítem…\" : (status ??"],
+  },
 ];
 
 const failed: string[] = [];
