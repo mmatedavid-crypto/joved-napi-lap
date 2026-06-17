@@ -536,10 +536,22 @@ const checks: Check[] = [
     file: "src/routes/api/public/payments/webhook.ts",
     includes: [
       "function redactStripeId",
+      "function redactOrderId",
       "session_id_redacted: redactStripeId(sessionId)",
+      "order_id_redacted: redactOrderId(existing.id)",
+      'error_code: "paid_order_processing_failed"',
+      'error_code: "paid_order_processing_exception"',
+      'error_code: "payment_webhook_failed"',
       "checkout.session.completed for unknown session",
     ],
-    excludes: ['console.error("checkout.session.completed for unknown session:", sessionId)'],
+    excludes: [
+      'console.error("checkout.session.completed for unknown session:", sessionId)',
+      'console.log("Order already delivered:", existing.id)',
+      'console.log("Order is not processable from webhook:", existing.id, existing.status)',
+      'console.error("processPaidOrderBySession failed:", result.error)',
+      'console.error("processPaidOrderBySession failed:", e)',
+      'console.error("Webhook error:", e)',
+    ],
   },
   {
     name: "homepage daily briefing never displays raw provider or AI errors",

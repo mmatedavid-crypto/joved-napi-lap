@@ -18,6 +18,12 @@ const PROCESSING_RETRY_AFTER_MS = Number(
   process.env.ORDER_PROCESSING_RETRY_AFTER_MS ?? 3 * 60 * 1000,
 );
 
+function redactOrderId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 4)}***`;
+  return `${value.slice(0, 8)}***${value.slice(-4)}`;
+}
+
 export async function processPaidOrderBySession(sessionId: string): Promise<ProcessOrderResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: order } = await supabaseAdmin
@@ -87,8 +93,11 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
             order_id: order.id,
           } as never,
         });
-      } catch (memoryError) {
-        console.warn("paid reading memory save failed:", memoryError);
+      } catch {
+        console.warn("paid reading memory save failed", {
+          order_id_redacted: redactOrderId(order.id),
+          error_code: "paid_memory_save_failed",
+        });
       }
     }
 
@@ -102,12 +111,11 @@ export async function processPaidOrderBySession(sessionId: string): Promise<Proc
     });
 
     return { ok: true, response: reading };
-  } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : String(e);
+  } catch {
     console.error("paid order processing failed", {
-      order_id: order.id,
+      order_id_redacted: redactOrderId(order.id),
       product_slug: order.product_slug,
-      error: message,
+      error_code: ORDER_GENERATION_FAILED_CODE,
     });
     await supabaseAdmin
       .from("orders")
@@ -211,7 +219,10 @@ async function claimOrderForProcessing(order: {
     .maybeSingle();
 
   if (error) {
-    console.warn("order processing claim failed:", error.message);
+    console.warn("order processing claim failed", {
+      order_id_redacted: redactOrderId(order.id),
+      error_code: "order_processing_claim_failed",
+    });
     return false;
   }
 
@@ -253,7 +264,10 @@ async function queueDeliveredEmail(order: {
 
     if (stateError) {
       if (!isMissingColumnError(stateError)) {
-        console.warn("order delivery email state unavailable:", stateError.message);
+        console.warn("order delivery email state unavailable", {
+          order_id_redacted: redactOrderId(order.id),
+          error_code: "delivery_email_state_unavailable",
+        });
         return;
       }
       canPersistDeliveryEmailState = false;
@@ -311,9 +325,11 @@ async function queueDeliveredEmail(order: {
           .eq("id", order.id);
       }
     }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.warn("order delivered email queue failed:", message);
+  } catch {
+    console.warn("order delivered email queue failed:", {
+      order_id_redacted: redactOrderId(order.id),
+      error_code: "delivery_email_exception",
+    });
     try {
       await supabaseAdmin
         .from("orders")
@@ -322,8 +338,11 @@ async function queueDeliveredEmail(order: {
           delivery_email_error: "delivery_email_exception",
         })
         .eq("id", order.id);
-    } catch (updateError) {
-      console.warn("order delivery email error state failed:", updateError);
+    } catch {
+      console.warn("order delivery email error state failed", {
+        order_id_redacted: redactOrderId(order.id),
+        error_code: "delivery_email_error_state_failed",
+      });
     }
   }
 }

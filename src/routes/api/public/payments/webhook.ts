@@ -21,6 +21,12 @@ function redactStripeId(value: string | null | undefined): string {
   return `${value.slice(0, 8)}***${value.slice(-4)}`;
 }
 
+function redactOrderId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 4)}***`;
+  return `${value.slice(0, 8)}***${value.slice(-4)}`;
+}
+
 function checkoutObjectId(raw: unknown): string | null {
   if (!raw || typeof raw !== "object") return null;
   const id = (raw as { id?: unknown }).id;
@@ -64,7 +70,9 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     return;
   }
   if (existing.status === "delivered") {
-    console.log("Order already delivered:", existing.id);
+    console.log("Order already delivered", {
+      order_id_redacted: redactOrderId(existing.id),
+    });
     return;
   }
   if (
@@ -72,7 +80,10 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     existing.status !== "paid" &&
     existing.status !== "processing"
   ) {
-    console.log("Order is not processable from webhook:", existing.id, existing.status);
+    console.log("Order is not processable from webhook", {
+      order_id_redacted: redactOrderId(existing.id),
+      status: existing.status,
+    });
     return;
   }
 
@@ -123,9 +134,17 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   try {
     const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
     const result = await processPaidOrderBySession(sessionId);
-    if (!result.ok) console.error("processPaidOrderBySession failed:", result.error);
-  } catch (e) {
-    console.error("processPaidOrderBySession failed:", e);
+    if (!result.ok) {
+      console.error("processPaidOrderBySession failed", {
+        session_id_redacted: redactStripeId(sessionId),
+        error_code: "paid_order_processing_failed",
+      });
+    }
+  } catch {
+    console.error("processPaidOrderBySession failed", {
+      session_id_redacted: redactStripeId(sessionId),
+      error_code: "paid_order_processing_exception",
+    });
   }
 }
 
@@ -162,8 +181,11 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
         try {
           await handleWebhook(request, rawEnv);
           return Response.json({ received: true });
-        } catch (e) {
-          console.error("Webhook error:", e);
+        } catch {
+          console.error("Webhook error", {
+            environment: rawEnv,
+            error_code: "payment_webhook_failed",
+          });
           return new Response("Webhook error", { status: 400 });
         }
       },
