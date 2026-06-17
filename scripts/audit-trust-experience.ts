@@ -216,6 +216,12 @@ const checks: Check[] = [
     file: "src/routes/bejelentkezes.tsx",
     includes: [
       "Miért érdemes belépni?",
+      "Vendégvásárlás után",
+      "ugyanazzal az igazolt email címmel",
+      "korábbi vendégvásárlásaidat át tudjuk hozni ebbe a profilba",
+      "új fizetés nélkül",
+      "A fizetés utáni biztonságos rendelési link ilyenkor is működik",
+      "kényelmesebb helyre gyűjti az elkészült olvasatokat és állapotokat",
       "korábbi fizetős olvasataidat",
       "rendelési állapotaidat",
       "személyes memória",

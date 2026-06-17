@@ -101,6 +101,20 @@ function Page() {
           </ul>
         </section>
 
+        <section className="rounded-md border border-gold/15 bg-gold/[0.055] p-5">
+          <div className="text-[10px] uppercase tracking-[0.24em] text-gold/75">
+            Vendégvásárlás után
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-ivory/64">
+            Ha korábban vendégként vásároltál, ugyanazzal az igazolt email címmel jelentkezz be vagy
+            regisztrálj. Így a korábbi vendégvásárlásaidat át tudjuk hozni ebbe a profilba, új fizetés nélkül.
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-ivory/46">
+            A fizetés utáni biztonságos rendelési link ilyenkor is működik; a profil csak egy
+            kényelmesebb helyre gyűjti az elkészült olvasatokat és állapotokat.
+          </p>
+        </section>
+
         <div className="surface p-6 space-y-3">
           <button onClick={() => oauth("google")} disabled={busy} className="w-full btn-gold">
             Folytatás Google-lel
