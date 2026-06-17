@@ -153,6 +153,9 @@ for (const needle of [
   "kérem a digitális tartalom teljesítésének megkezdését",
   "elkészült digitális olvasatnál az elállási jog korlátozott",
   "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.",
+  "Régi jelképrendszerekből készült önismereti olvasat",
+  "Nem orvosi, jogi vagy",
+  "pénzügyi tanácsadás",
   "const formatPromise = readingFormatPromise(product)",
   "function readingFormatPromise(product: ProductDef)",
   "Forma:",
@@ -383,6 +386,9 @@ if (productsSource.includes("A legmélyebb tarot-riport: lassabb")) {
 }
 if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos riportot")) {
   failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
+}
+if (paywall.includes("Szimbolikus, önismereti digitális tartalom")) {
+  failed.push("Paywall CTA trust note must use tradition-based wording, not cold digital-content copy");
 }
 if (
   !productsSource.includes("A legmélyebb azonnali tarot-olvasat") ||

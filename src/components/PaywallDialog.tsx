@@ -451,7 +451,8 @@ export function PaywallDialog({
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
             <p className="text-[10px] text-ivory/40 text-center">
-              Szimbolikus, önismereti digitális tartalom. Nem orvosi, jogi vagy pénzügyi tanácsadás.
+              Régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi vagy
+              pénzügyi tanácsadás.
             </p>
           </div>
         ) : (
