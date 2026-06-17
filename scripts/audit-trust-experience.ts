@@ -700,6 +700,33 @@ const checks: Check[] = [
     ],
     excludes: ["Próbáld újra egy pillanat múlva"],
   },
+  {
+    name: "yes-no widget failures never expose server messages",
+    file: "src/components/YesNoWidget.tsx",
+    includes: [
+      "SAFE_YES_NO_ERROR",
+      "A válasz most nem állt össze elég tisztán",
+      "Nem mentettünk félkész olvasatot",
+      "fogalmazd újra a kérdést",
+      "setErr(SAFE_YES_NO_ERROR)",
+      "} catch {",
+    ],
+    excludes: ["setErr(r.message", "Most nem érkezett válasz"],
+  },
+  {
+    name: "yes-no server failures use stable public copy",
+    file: "src/lib/roxyTranslate.functions.ts",
+    includes: [
+      "PUBLIC_YES_NO_ERROR",
+      "A válasz most nem állt össze elég tisztán",
+      "message: PUBLIC_YES_NO_ERROR",
+    ],
+    excludes: [
+      "Üres válasz a forrásból",
+      "Most nem érkezett válasz",
+      'message: "A magyar olvasat most nem készült el."',
+    ],
+  },
 ];
 
 const failed: string[] = [];

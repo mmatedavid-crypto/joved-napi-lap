@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { aiTarotYesNoHU, type TarotYesNoHU } from "@/lib/roxyTranslate.functions";
 
+const SAFE_YES_NO_ERROR =
+  "A válasz most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; fogalmazd újra a kérdést, vagy húzz nyugodtan még egyszer.";
+
 // Egyszerű igen/nem/talán mini-widget a főoldalra. A szerveroldali olvasat
 // kész, magyar szöveget ad vissza.
 export function YesNoWidget() {
@@ -24,10 +27,12 @@ export function YesNoWidget() {
       const seed = `yesno:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
       const r = await ask({ data: { question, seed } });
       if (!r.ok || !r.reading) {
-        setErr(r.message ?? "Most nem érkezett válasz.");
+        setErr(SAFE_YES_NO_ERROR);
         return;
       }
       setReading(r.reading);
+    } catch {
+      setErr(SAFE_YES_NO_ERROR);
     } finally {
       setBusy(false);
     }

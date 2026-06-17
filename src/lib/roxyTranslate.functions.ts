@@ -40,6 +40,12 @@ const AI_TRANSLATION_CACHE_VERSION = "hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 const STATIC_AI_TRANSLATION_TTL_SECONDS: number | null = null;
 const PUBLIC_AI_TRANSLATION_ERROR = "A magyar olvasat most nem készült el. Próbáld újra később.";
+const PUBLIC_TAROT_DRAW_ERROR =
+  "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.";
+const PUBLIC_TAROT_SPREAD_ERROR =
+  "A terítés most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.";
+const PUBLIC_YES_NO_ERROR =
+  "A válasz most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; fogalmazd újra a kérdést, vagy húzz nyugodtan még egyszer.";
 
 function aiCacheKey(...parts: Array<string | number>): string {
   return ["aitr", AI_TRANSLATION_CACHE_VERSION, ...parts].join(":");
@@ -673,17 +679,17 @@ export const aiTarotDailyHU = createServerFn({ method: "POST" })
         ttlSeconds: DAY_SECONDS,
       });
       if (!r.ok || !r.data)
-        return { ok: false, cached: false, slot: null, message: "Most nem értem el a napi lapot." };
+        return { ok: false, cached: false, slot: null, message: PUBLIC_TAROT_DRAW_ERROR };
       const payload = normalizeRoxyTarotDaily(r.data);
       if (!payload.card)
-        return { ok: false, cached: false, slot: null, message: "Üres válasz a forrásból." };
+        return { ok: false, cached: false, slot: null, message: PUBLIC_TAROT_DRAW_ERROR };
       const slots = await translateCards([payload.card]);
       if (slots.length === 0)
         return {
           ok: false,
           cached: false,
           slot: null,
-          message: "A magyar olvasat most nem készült el.",
+          message: PUBLIC_TAROT_DRAW_ERROR,
         };
       return { ok: true, cached: r.cached, slot: slots[0] };
     },
@@ -719,17 +725,17 @@ export const aiTarotDrawHU = createServerFn({ method: "POST" })
         ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
       });
       if (!r.ok || !r.data)
-        return { ok: false, cached: false, slots: [], message: "Most nem érkezett meg a húzás." };
+        return { ok: false, cached: false, slots: [], message: PUBLIC_TAROT_DRAW_ERROR };
       const cards = normalizeRoxyDraw(r.data);
       if (cards.length === 0)
-        return { ok: false, cached: false, slots: [], message: "Üres válasz a forrásból." };
+        return { ok: false, cached: false, slots: [], message: PUBLIC_TAROT_DRAW_ERROR };
       const slots = await translateCards(cards);
       if (slots.length === 0)
         return {
           ok: false,
           cached: false,
           slots: [],
-          message: "A magyar olvasat most nem készült el.",
+          message: PUBLIC_TAROT_DRAW_ERROR,
         };
       return { ok: true, cached: r.cached, slots };
     },
@@ -880,12 +886,12 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
         ttlSeconds: data.seed ? DAY_SECONDS * 7 : null,
       });
       if (!r.ok || !r.data)
-        return { ok: false, cached: false, reading: null, message: "Most nem érkezett válasz." };
+        return { ok: false, cached: false, reading: null, message: PUBLIC_YES_NO_ERROR };
 
       const payload = normalizeRoxyYesNo(r.data);
       const answerHu = mapYesNoAnswer(payload.answer);
       if (!payload.card || !answerHu)
-        return { ok: false, cached: false, reading: null, message: "Üres válasz a forrásból." };
+        return { ok: false, cached: false, reading: null, message: PUBLIC_YES_NO_ERROR };
 
       const huCard = await translateOneTarotCard(payload.card);
       if (!huCard)
@@ -893,7 +899,7 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A magyar olvasat most nem készült el.",
+          message: PUBLIC_YES_NO_ERROR,
         };
 
       // Az értelmezést is forráshű magyar olvasattá rendezzük, ha külön mező érkezett.
@@ -1005,12 +1011,12 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem érkezett meg a terítés.",
+          message: PUBLIC_TAROT_SPREAD_ERROR,
         };
 
       const spread = normalizeRoxySpread(r.data);
       if (spread.positions.length === 0)
-        return { ok: false, cached: false, reading: null, message: "Üres válasz a forrásból." };
+        return { ok: false, cached: false, reading: null, message: PUBLIC_TAROT_SPREAD_ERROR };
 
       // 1) Per-kártya magyar olvasat (cache-elt) párhuzamosan.
       const huCards = await Promise.all(
@@ -1068,7 +1074,7 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A magyar olvasat most nem készült el.",
+          message: PUBLIC_TAROT_SPREAD_ERROR,
         };
 
       return {
