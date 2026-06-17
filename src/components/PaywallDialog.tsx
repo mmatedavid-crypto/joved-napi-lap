@@ -550,7 +550,7 @@ function choiceFitPromise(product: ProductDef): string[] {
     return [
       "nem egyetlen igen-nem kérdésed van, hanem több egymásba kapaszkodó szál",
       "szeretnéd látni, mi tart vissza, mi mozgat belül és merre nyílhat tovább a helyzet",
-      "ráérsz megvárni a részletesebb, hosszabb írásos riportot",
+      "azonnali választ szeretnél, de nagyobb szerkezetben, több tarot-pozícióval",
     ];
   }
   if (product.slug === "parkapcsolat_elemzes") {

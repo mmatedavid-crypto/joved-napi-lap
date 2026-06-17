@@ -377,6 +377,19 @@ for (const needle of [
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
 }
 
+if (productsSource.includes("A legmélyebb tarot-riport: lassabb")) {
+  failed.push("Kelta kereszt is instant; product copy must not imply delayed delivery");
+}
+if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos riportot")) {
+  failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
+}
+if (
+  !productsSource.includes("A legmélyebb azonnali tarot-olvasat") ||
+  !paywall.includes("azonnali választ szeretnél, de nagyobb szerkezetben")
+) {
+  failed.push("Kelta kereszt copy must present it as a deeper instant tarot reading");
+}
+
 for (const forbiddenNeedle of [
   "30 napos előrejelzést kérek",
   "Ha tudni akarod, mire figyelj",

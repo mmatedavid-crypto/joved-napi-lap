@@ -190,7 +190,7 @@ export const PRODUCTS: ProductDef[] = [
       "a tíz pozícióból mélyebb mintát és belső ellentmondást rajzol ki",
       "komplex helyzeteknél nem gyors választ, hanem átláthatóbb képet ad",
     ],
-    qualityPromise: "A legmélyebb tarot-riport: lassabb, részletesebb, összefüggő elemzés.",
+    qualityPromise: "A legmélyebb azonnali tarot-olvasat: részletesebb, összefüggő elemzés.",
     priceHuf: 990,
     category: "instant",
     sourceRoute: "/harom-lap",
