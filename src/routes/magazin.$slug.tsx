@@ -30,28 +30,53 @@ export const Route = createFileRoute("/magazin/$slug")({
   },
   notFoundComponent: () => (
     <Layout>
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl text-ivory">Ez a cikk nem található</h1>
-        <p className="mt-4 text-ivory/70">
-          Térj vissza a{" "}
-          <Link to="/magazin" className="text-gold underline">
-            magazin főoldalra
-          </Link>
-          .
-        </p>
-      </div>
+      <ArticleFallback
+        eyebrow="Magazin"
+        title="Ez a cikk nem található"
+        text="Lehet, hogy frissítettük a cikk címét vagy még nincs publikálva. A magazin főoldalán megtalálod a többi tarot, számmisztika és asztrológia témájú írást."
+      />
     </Layout>
   ),
   errorComponent: () => (
     <Layout>
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl text-ivory">Hiba történt</h1>
-        <p className="mt-4 text-ivory/70">Kérlek próbáld újra később.</p>
-      </div>
+      <ArticleFallback
+        eyebrow="Magazin"
+        title="Most nem töltött be a cikk"
+        text="Valami megakadt a cikk megnyitásakor, de a magazin többi oldala továbbra is elérhető. Nyisd meg a magazin főoldalt, vagy térj vissza a kezdőoldalra."
+      />
     </Layout>
   ),
   component: Page,
 });
+
+function ArticleFallback({
+  eyebrow,
+  title,
+  text,
+}: {
+  eyebrow: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+      <div className="text-[11px] uppercase tracking-widest text-gold/70">{eyebrow}</div>
+      <h1 className="mt-3 font-display text-3xl text-ivory">{title}</h1>
+      <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ivory/70">{text}</p>
+      <div className="mt-7 flex flex-wrap justify-center gap-3">
+        <Link to="/magazin" className="btn-gold">
+          Magazin főoldal
+        </Link>
+        <Link
+          to="/"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/25 px-5 text-sm text-gold transition-colors hover:border-gold/60"
+        >
+          Vissza a főoldalra
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 function Page() {
   const { post } = Route.useLoaderData();

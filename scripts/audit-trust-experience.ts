@@ -589,6 +589,20 @@ const checks: Check[] = [
     excludes: ['message: t.error ?? "Magyarítási hiba."', "message: t.error"],
   },
   {
+    name: "magazine article fallback keeps readers in the content journey",
+    file: "src/routes/magazin.$slug.tsx",
+    includes: [
+      "ArticleFallback",
+      "Ez a cikk nem található",
+      "Most nem töltött be a cikk",
+      "A magazin főoldalán megtalálod",
+      "Valami megakadt a cikk megnyitásakor",
+      "Magazin főoldal",
+      "Vissza a főoldalra",
+    ],
+    excludes: ["Kérlek próbáld újra később"],
+  },
+  {
     name: "homepage tarot spread avoids horizontal viewport overflow",
     file: "src/components/SpreadDeck.tsx",
     includes: ["const spreadX = (t - 0.5) * 70"],
