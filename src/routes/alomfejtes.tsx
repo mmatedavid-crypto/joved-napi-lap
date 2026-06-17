@@ -291,5 +291,5 @@ function dreamSafetyNote(symbolTitle: string): string {
   if (symbolTitle.toLocaleLowerCase("hu-HU") === "halál") {
     return "A halállal kapcsolatos álom sem halálesetet jósol. Önismereti képként inkább lezárásról, félelemről vagy változásról beszélhet. Ha az álom gyászhoz, krízishez vagy tartós szorongáshoz kapcsolódik, ne maradj egyedül vele; kérj emberi vagy szakmai támogatást.";
   }
-  return "Az álom nem előrejelzés. Egy belső kép, amit érdemes meghallgatni, de nem szó szerint venni. Ha egy álom tartósan nyomaszt, kérj emberi vagy szakmai támogatást.";
+  return "Az álom nem szó szerinti jövőjel. A hagyományos álomfejtés inkább belső képként olvassa: milyen érzés, lezárás vagy vágy kér most figyelmet. Ha egy álom tartósan nyomaszt, kérj emberi vagy szakmai támogatást.";
 }
