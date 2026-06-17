@@ -458,6 +458,8 @@ const publicTrustLeakPatterns = [
   /\bGPT\b/i,
   /\bAI hiba\b/i,
   /\bmint AI\b/i,
+  /tartalom-előkészítési/i,
+  /külső infrastruktúra/i,
   /természetes magyar olvasattá/i,
   /közérthető magyar nyelven fogalmazzuk meg/i,
   /magyarra fordít/i,

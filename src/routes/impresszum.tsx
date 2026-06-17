@@ -65,8 +65,8 @@ export const Route = createFileRoute("/impresszum")({
 
       <LegalSection title="Tárhely és technikai működés">
         <p>
-          A weboldal digitális szolgáltatásként működik. A szolgáltatás működéséhez külső
-          infrastruktúra- és fizetési szolgáltatók is kapcsolódhatnak.
+          A weboldal digitális szolgáltatásként működik. A rendelés, fizetés, tárhely és emailes
+          kézbesítés működéséhez megbízható technikai szolgáltatók kapcsolódhatnak.
         </p>
       </LegalSection>
 
