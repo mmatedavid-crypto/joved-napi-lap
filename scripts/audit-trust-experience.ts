@@ -361,6 +361,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "unsubscribe page error state offers support instead of a dead end",
+    file: "src/routes/unsubscribe.tsx",
+    includes: [
+      "SITE_LEGAL.supportEmail",
+      "A leiratkozási kérést most nem tudtuk végigellenőrizni",
+      "Frissíts rá pár perc múlva",
+      "Jövőd.hu leiratkozási segítség",
+      "mailto:${SITE_LEGAL.supportEmail}",
+    ],
+    excludes: ["Valami megakadt. Kérlek próbáld újra később."],
+  },
+  {
     name: "Lovable suppression webhook returns localized public errors",
     file: "src/routes/lovable/email/suppression.ts",
     includes: [

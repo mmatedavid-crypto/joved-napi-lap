@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { SITE_LEGAL } from "@/lib/legal";
 
 type Status = "loading" | "valid" | "already" | "invalid" | "done" | "error";
 
@@ -65,7 +66,19 @@ function UnsubscribePage() {
               kézbesítési vagy ügyfélszolgálati értesítés még érkezhet.
             </p>
           )}
-          {status === "error" && <p>Valami megakadt. Kérlek próbáld újra később.</p>}
+          {status === "error" && (
+            <p>
+              A leiratkozási kérést most nem tudtuk végigellenőrizni. Frissíts rá pár perc múlva,
+              vagy írj nekünk erről az email címről:{" "}
+              <a
+                className="text-primary underline underline-offset-4"
+                href={`mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent("Jövőd.hu leiratkozási segítség")}`}
+              >
+                {SITE_LEGAL.supportEmail}
+              </a>
+              .
+            </p>
+          )}
           {status === "valid" && (
             <>
               <p>
