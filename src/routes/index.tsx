@@ -125,7 +125,7 @@ function Index() {
                 },
                 {
                   title: "Visszatérő ív",
-                  text: "Ha engeded a memóriát, az oldal észreveszi, milyen kérdéshez térsz vissza.",
+                  text: "Ha engeded a memóriát, az oldal észreveszi, milyen kérdéshez térsz vissza. Opcionális, törölhető, és csak finomabb folytatást ad.",
                 },
                 {
                   title: "Minőségi korlát",

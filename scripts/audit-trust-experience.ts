@@ -35,6 +35,8 @@ const checks: Check[] = [
       "Hagyományos jelképek",
       "régi szimbólumait józan, mai nyelven olvassuk",
       "Visszatérő ív",
+      "Opcionális, törölhető",
+      "csak finomabb folytatást ad",
       "Minőségi korlát",
       "Kipróbálom ingyen",
       "Személyes olvasatok",
