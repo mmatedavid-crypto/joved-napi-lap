@@ -799,7 +799,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
       <p className="mt-2 text-xs leading-relaxed text-ivory/58">
         Ha az olvasat nem volt elég pontos, jelezd nyugodtan. Rendelés alapján visszanézzük, és
-        konkrét pontosítási kéréssel segítünk javítani.
+        rövid pontosítási vázlattal segítünk megírni, mi maradt ki vagy hol csúszott félre.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => (

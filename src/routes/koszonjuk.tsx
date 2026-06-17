@@ -598,8 +598,8 @@ function PaidReadingFeedback({
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
       <p className="mt-2 text-sm leading-relaxed text-ivory/62">
         Fontos, hogy ne csak elkészüljön az olvasat, hanem valóban használható legyen. Ha valami nem
-        talált, írj nekünk: rendelés alapján visszanézzük, és konkrét pontosítási kéréssel segítünk
-        továbbmenni.
+        talált, írj nekünk: rendelés alapján visszanézzük, és egy rövid pontosítási vázlattal
+        segítünk megírni, mi maradt ki vagy hol csúszott félre.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {FEEDBACK_OPTIONS.map((option) => {

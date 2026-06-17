@@ -184,8 +184,8 @@ export function PaywallDialog({
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ivory/66">
                 Ha az elkészült olvasat részben talál, vagy fontos helyzet kimarad belőle,
-                rendelés alapján visszanézzük, és konkrét pontosítási kéréssel segítünk jelezni,
-                melyik rész igényel finomítást.
+                rendelés alapján visszanézzük. Adunk egy rövid pontosítási vázlatot is, hogy
+                egyszerűen meg tudd írni, melyik rész csúszott félre és mi maradt ki.
               </p>
             </div>
 

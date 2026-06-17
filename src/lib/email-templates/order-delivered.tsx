@@ -130,7 +130,8 @@ const OrderDeliveredEmail = ({
               <Text style={feedbackTitle}>Minőségi visszajelzés</Text>
               <Text style={feedbackText}>
                 Segít, ha jelzed, mennyire talált el az olvasat. Ha nem volt elég pontos, rendelés
-                alapján visszanézzük, és konkrét pontosítási kéréssel segítünk továbbmenni.
+                alapján visszanézzük, és rövid pontosítási vázlattal segítünk megírni, mi maradt ki
+                vagy hol csúszott félre.
               </Text>
               <Section>
                 {feedbackOptions.map((option) => (
