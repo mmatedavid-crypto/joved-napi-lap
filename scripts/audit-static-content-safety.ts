@@ -480,6 +480,7 @@ for (const file of publicTrustLeakFiles) {
 }
 
 const symbolicSourceNarrativeFiles = [
+  "src/lib/angel.hu.ts",
   "src/lib/roxyTranslate.functions.ts",
   "src/lib/roxyNormalize.ts",
   "src/lib/roxyCardMap.ts",
@@ -489,6 +490,8 @@ const symbolicSourceNarrativeFiles = [
 ];
 const symbolicSourceNarrativeForbidden = [
   /Roxy API/i,
+  /Roxy lookup/i,
+  /Roxy English/i,
   /Source: Roxy/i,
   /nyers angol/i,
   /raw provider/i,

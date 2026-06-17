@@ -1,6 +1,7 @@
 // Local Hungarian copy for angel numbers, keyed by reduced root (1..9) plus
-// master numbers (11, 22, 33). Roxy lookup is used only to confirm the
-// root number — we never display Roxy English narrative.
+// master numbers (11, 22, 33). A confirmed root number may arrive from a
+// symbolic calculation, but the displayed meaning always comes from this
+// Hungarian tradition-aware text.
 
 export type AngelMeaning = {
   title: string;
@@ -124,8 +125,8 @@ export function reduceAngel(num: string): number {
   return s;
 }
 
-export function angelMeaning(num: string, rootFromRoxy?: number): AngelMeaning {
-  const root = rootFromRoxy && ANGEL_HU[rootFromRoxy] ? rootFromRoxy : reduceAngel(num);
+export function angelMeaning(num: string, confirmedRoot?: number): AngelMeaning {
+  const root = confirmedRoot && ANGEL_HU[confirmedRoot] ? confirmedRoot : reduceAngel(num);
   return ANGEL_HU[root] ?? ANGEL_HU[1];
 }
 
