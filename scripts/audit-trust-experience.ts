@@ -614,8 +614,18 @@ const checks: Check[] = [
   {
     name: "natal chart translation returns stable public failure copy",
     file: "src/lib/roxyTranslate.functions.ts",
-    includes: ["A születési képlet magyar olvasata most nem készült el.", "reading: null"],
-    excludes: ['message: t.error ?? "Magyarítási hiba."', "message: t.error"],
+    includes: [
+      "PUBLIC_NATAL_ERROR",
+      "A születési képlet olvasata most nem állt össze elég tisztán",
+      "message: PUBLIC_NATAL_ERROR",
+      "reading: null",
+    ],
+    excludes: [
+      "A születési képletet most nem érem el",
+      "A születési képlet magyar olvasata most nem készült el",
+      'message: t.error ?? "Magyarítási hiba."',
+      "message: t.error",
+    ],
   },
   {
     name: "magazine article fallback keeps readers in the content journey",
@@ -725,6 +735,32 @@ const checks: Check[] = [
       "Üres válasz a forrásból",
       "Most nem érkezett válasz",
       'message: "A magyar olvasat most nem készült el."',
+    ],
+  },
+  {
+    name: "symbolic reading server failures avoid data-access wording",
+    file: "src/lib/roxyTranslate.functions.ts",
+    includes: [
+      "PUBLIC_HOROSCOPE_ERROR",
+      "PUBLIC_CRYSTAL_ERROR",
+      "PUBLIC_ANGEL_ERROR",
+      "PUBLIC_DREAM_ERROR",
+      "PUBLIC_NUMEROLOGY_ERROR",
+      "PUBLIC_MOON_ERROR",
+      "A mai horoszkóp most nem állt össze elég tisztán",
+      "A kristályjel most nem állt össze elég tisztán",
+      "Az angyalszám olvasata most nem állt össze elég tisztán",
+      "Az álomjel most nem állt össze elég tisztán",
+      "A számmisztikai olvasat most nem állt össze elég tisztán",
+      "A holdfázis üzenete most nem állt össze elég tisztán",
+    ],
+    excludes: [
+      "Most nem értem el a horoszkóp adatot",
+      "Most nem értem el a kristály adatot",
+      "Most nem értem el az angyalszám adatot",
+      "Most nem értem el az álom adatot",
+      "Most nem értem el a számmisztika adatot",
+      "Most nem érem el a holdfázist",
     ],
   },
 ];

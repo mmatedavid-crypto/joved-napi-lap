@@ -1,7 +1,7 @@
 // Szigorú magyar szerkesztői réteg a jelképi forrásanyag fölött. Minden fn:
-//   1) lekéri a megfelelő tudástári adatot (cache-elve a roxy.server-en),
-//   2) átadja a forrásmezőket a Lovable AI Gateway-nek,
-//   3) az AI-t forráshű szerkesztői módban használja: nem talál ki új tartalmat,
+//   1) összegyűjti a megfelelő jelképi forrásmezőket,
+//   2) magyar szerkesztői olvasattá rendezi őket,
+//   3) forráshű módban dolgozik: nem talál ki új tartalmat,
 //      csak a kapott jelentésmezőkből formál természetes magyar olvasatot,
 //      kihagyva a hiányzó mezőket. A magyar eredményt cache-eli az api_cache-be.
 
@@ -40,6 +40,20 @@ const AI_TRANSLATION_CACHE_VERSION = "hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 const STATIC_AI_TRANSLATION_TTL_SECONDS: number | null = null;
 const PUBLIC_AI_TRANSLATION_ERROR = "A magyar olvasat most nem készült el. Próbáld újra később.";
+const PUBLIC_HOROSCOPE_ERROR =
+  "A mai horoszkóp most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_CRYSTAL_ERROR =
+  "A kristályjel most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_ANGEL_ERROR =
+  "Az angyalszám olvasata most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_DREAM_ERROR =
+  "Az álomjel most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_NUMEROLOGY_ERROR =
+  "A számmisztikai olvasat most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_MOON_ERROR =
+  "A holdfázis üzenete most nem állt össze elég tisztán. Próbáld újra később.";
+const PUBLIC_NATAL_ERROR =
+  "A születési képlet olvasata most nem állt össze elég tisztán. Próbáld újra később.";
 const PUBLIC_TAROT_DRAW_ERROR =
   "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.";
 const PUBLIC_TAROT_SPREAD_ERROR =
@@ -167,7 +181,7 @@ export const aiHoroscopeHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem értem el a horoszkóp adatot.",
+          message: PUBLIC_HOROSCOPE_ERROR,
         };
 
       const schema = {
@@ -257,7 +271,7 @@ export const aiCrystalHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem értem el a kristály adatot.",
+          message: PUBLIC_CRYSTAL_ERROR,
         };
 
       const schema = {
@@ -331,7 +345,7 @@ export const aiAngelHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem értem el az angyalszám adatot.",
+          message: PUBLIC_ANGEL_ERROR,
         };
 
       const schema = {
@@ -406,7 +420,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem értem el az álom adatot.",
+          message: PUBLIC_DREAM_ERROR,
         };
 
       const schema = {
@@ -510,7 +524,7 @@ export const aiNumerologyHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem értem el a számmisztika adatot.",
+          message: PUBLIC_NUMEROLOGY_ERROR,
         };
 
       const schema = {
@@ -804,7 +818,7 @@ export const aiMoonPhaseHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "Most nem érem el a holdfázist.",
+          message: PUBLIC_MOON_ERROR,
         };
 
       const t = await translateWithAI<MoonPhaseHU>({
@@ -1192,7 +1206,7 @@ export const aiNatalChartHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A születési képletet most nem érem el.",
+          message: PUBLIC_NATAL_ERROR,
         };
 
       const t = await translateWithAI<NatalChartHU>({
@@ -1207,7 +1221,7 @@ export const aiNatalChartHU = createServerFn({ method: "POST" })
           ok: false,
           cached: false,
           reading: null,
-          message: "A születési képlet magyar olvasata most nem készült el.",
+          message: PUBLIC_NATAL_ERROR,
         };
 
       await writeCache(cacheKey, "/ai/natal-chart", t.data, 60 * 60 * 24 * 30);
