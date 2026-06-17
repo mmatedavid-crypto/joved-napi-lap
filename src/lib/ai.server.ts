@@ -209,8 +209,8 @@ async function lovableJSON<T>(opts: {
   }
   if (!res.ok) {
     try {
-      const t = await res.text();
-      console.warn("[lovable_ai]", { model, status: res.status, body: t.slice(0, 400) });
+      await res.body?.cancel();
+      console.warn("[lovable_ai]", { model, status: res.status, error: "http_error" });
     } catch {
       /* ignore */
     }

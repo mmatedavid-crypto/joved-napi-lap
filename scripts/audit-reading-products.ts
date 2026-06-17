@@ -714,6 +714,13 @@ if (
 ) {
   policyFailures.push("shared AI helper must return provider/model/latency metadata");
 }
+if (
+  aiServer.includes("body: t.slice") ||
+  aiServer.includes("res.text()") ||
+  aiServer.includes("raw response")
+) {
+  policyFailures.push("shared AI helper must not log raw response bodies");
+}
 if (policyFailures.length) {
   console.error("\nFailed paid AI policy audit:");
   for (const item of policyFailures) console.error(`- ${item}`);
