@@ -145,6 +145,7 @@ const checks: Check[] = [
       "a rendelésed nem tűnt el",
       "Frissíts rá később erre az oldalra",
       "rövid rendelésazonosítót",
+      '<SupportContact className="mt-3" orderId={order.id} />',
     ],
   },
   {

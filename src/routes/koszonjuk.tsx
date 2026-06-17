@@ -479,6 +479,7 @@ function OrderPollingPaused({ order }: { order: OrderView }) {
         Frissíts rá később erre az oldalra. Ha sürgős, írj nekünk a vásárlási email címedről, és add
         meg a rövid rendelésazonosítót: {shortOrderId(order.id) ?? "a köszönőoldalon látható kód"}.
       </p>
+      <SupportContact className="mt-3" orderId={order.id} />
     </div>
   );
 }
