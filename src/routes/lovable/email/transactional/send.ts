@@ -36,6 +36,12 @@ function redactEmail(email: string | null | undefined): string {
   return `${localPart[0]}***@${domain}`;
 }
 
+function redactStableMessageId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 3)}***`;
+  return `${value.slice(0, 6)}***${value.slice(-4)}`;
+}
+
 // Generate a cryptographically random 32-byte hex token
 function generateToken(): string {
   const bytes = new Uint8Array(32);
@@ -125,7 +131,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
         if (suppressionError) {
           console.error("Suppression check failed — refusing to send", {
-            error: suppressionError,
+            error_code: "suppression_check_failed",
             recipient_redacted: redactEmail(effectiveRecipient),
           });
           return publicEmailSendError(PUBLIC_EMAIL_SEND_ERROR, 500);
@@ -161,8 +167,9 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
           if (tokenLookupError) {
             console.error("Token lookup failed", {
-              error: tokenLookupError,
+              error_code: "unsubscribe_token_lookup_failed",
               email_redacted: redactEmail(normalizedEmail),
+              message_id_redacted: redactStableMessageId(messageId),
             });
             await supabase.from("email_send_log").insert({
               message_id: messageId,
@@ -189,7 +196,9 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
             if (tokenError) {
               console.error("Failed to create unsubscribe token", {
-                error: tokenError,
+                error_code: "unsubscribe_token_create_failed",
+                email_redacted: redactEmail(normalizedEmail),
+                message_id_redacted: redactStableMessageId(messageId),
               });
               await supabase.from("email_send_log").insert({
                 message_id: messageId,
@@ -211,8 +220,9 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
             if (reReadError || !storedToken) {
               console.error("Failed to read back unsubscribe token after upsert", {
-                error: reReadError,
+                error_code: "unsubscribe_token_confirm_failed",
                 email_redacted: redactEmail(normalizedEmail),
+                message_id_redacted: redactStableMessageId(messageId),
               });
               await supabase.from("email_send_log").insert({
                 message_id: messageId,
@@ -283,9 +293,10 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
 
         if (enqueueError) {
           console.error("Failed to enqueue email", {
-            error: enqueueError,
+            error_code: "email_enqueue_failed",
             templateName,
             recipient_redacted: redactEmail(effectiveRecipient),
+            message_id_redacted: redactStableMessageId(messageId),
           });
 
           await supabase.from("email_send_log").insert({
@@ -302,6 +313,7 @@ export const Route = createFileRoute("/lovable/email/transactional/send")({
         console.log("Transactional email enqueued", {
           templateName,
           recipient_redacted: redactEmail(effectiveRecipient),
+          message_id_redacted: redactStableMessageId(messageId),
         });
 
         return Response.json({ success: true, queued: true });

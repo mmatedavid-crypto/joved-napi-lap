@@ -22,6 +22,12 @@ function redactEmail(email: string | null | undefined): string {
   return `${localPart[0]}***@${domain}`;
 }
 
+function redactStableMessageId(value: string | null | undefined): string {
+  if (!value) return "***";
+  if (value.length <= 12) return `${value.slice(0, 3)}***`;
+  return `${value.slice(0, 6)}***${value.slice(-4)}`;
+}
+
 function generateToken(): string {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
@@ -85,7 +91,7 @@ export async function enqueueTransactionalEmail(
       .insert({ email: normalized, token: unsubscribeToken });
     if (tokErr) {
       console.error("Failed to create unsubscribe token for transactional email", {
-        error: tokErr,
+        error_code: "unsubscribe_token_unavailable",
         recipient_redacted: redactEmail(normalized),
         templateName: input.templateName,
       });
@@ -133,10 +139,10 @@ export async function enqueueTransactionalEmail(
 
   if (enqErr) {
     console.error("Failed to enqueue transactional email", {
-      error: enqErr,
+      error_code: "email_queue_unavailable",
       recipient_redacted: redactEmail(recipient),
       templateName: input.templateName,
-      messageId,
+      message_id_redacted: redactStableMessageId(messageId),
     });
     await supabaseAdmin.from("email_send_log").insert({
       message_id: messageId,
