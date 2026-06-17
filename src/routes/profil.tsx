@@ -966,6 +966,14 @@ function memoryNextStepItems(
     if (!suggestions.some((existing) => existing.to === item.to)) suggestions.push(item);
   };
 
+  if (/több ember|több összeill|választási minta|több kapcsolat/.test(text)) {
+    push({
+      label: "Kapcsolati mintázat tisztázása",
+      reason:
+        "ha nem csak egy ember érdekel, hanem az, milyen biztonságot vagy visszajelzést keresel újra több kapcsolatban",
+      to: "/osszeillunk",
+    });
+  }
   if (/kapcsolat|összeill|compatibility|love|randi|ex|visszatér/.test(text)) {
     push({
       label: "Kapcsolati dinamika",
