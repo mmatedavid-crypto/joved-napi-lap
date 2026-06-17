@@ -82,6 +82,12 @@ export function PaywallDialog({
   const accessSummary = deliveryAccessText(isLoggedIn);
   const formatPromise = readingFormatPromise(product);
   const priceFit = priceFitNudge(product);
+  const checkoutBlocker = checkoutBlockerText({
+    email: normalizedEmail,
+    emailValid,
+    termsAccepted,
+    canStartPayment,
+  });
   const supportMailto = paywallSupportMailto({
     product,
     sourceRoute,
@@ -450,6 +456,11 @@ export function PaywallDialog({
             >
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
+            {checkoutBlocker && (
+              <p className="text-center text-xs leading-relaxed text-ivory/50">
+                {checkoutBlocker}
+              </p>
+            )}
             <p className="text-[10px] text-ivory/40 text-center">
               Régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi vagy
               pénzügyi tanácsadás.
@@ -476,6 +487,32 @@ function normalizeCheckoutEmailInput(value: string): string {
 
 function isCheckoutEmailValid(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function checkoutBlockerText({
+  email,
+  emailValid,
+  termsAccepted,
+  canStartPayment,
+}: {
+  email: string;
+  emailValid: boolean;
+  termsAccepted: boolean;
+  canStartPayment: boolean;
+}): string | null {
+  if (!canStartPayment) {
+    return "A fizetés indításához most technikai segítség kell; írj nekünk, és kézzel is utánanézünk a rendelésnek.";
+  }
+  if (!email) {
+    return "A fizetéshez először add meg azt az email címet, ahol később is eléred az olvasatot.";
+  }
+  if (!emailValid) {
+    return "A fizetéshez javítsd az email címet; erre küldjük az olvasathoz tartozó értesítést.";
+  }
+  if (!termsAccepted) {
+    return "A fizetés előtt fogadd el a feltételeket; utána indítható a bankkártyás fizetés.";
+  }
+  return null;
 }
 
 function checkoutDeliverySummary(
