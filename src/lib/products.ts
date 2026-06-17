@@ -352,7 +352,19 @@ export function productPriceLabel(slug: string): string {
   return product ? formatHuf(product.priceHuf) : "";
 }
 
+export function productDeliveryShortLabel(slug: string): string {
+  const product = PRODUCTS_BY_SLUG[slug];
+  if (!product) return "";
+  if (product.category === "instant") return "pár perc";
+  return `${product.standardHours ?? 24} órán belül`;
+}
+
 export function productCtaLabel(label: string, slug: string): string {
   const price = productPriceLabel(slug);
-  return price ? `${label} · ${price}` : label;
+  const delivery = productDeliveryShortLabel(slug);
+  return price && delivery
+    ? `${label} · ${price} · ${delivery}`
+    : price
+      ? `${label} · ${price}`
+      : label;
 }

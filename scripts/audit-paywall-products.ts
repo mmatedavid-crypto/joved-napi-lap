@@ -419,6 +419,18 @@ if (
   failed.push("Kelta kereszt copy must present it as a deeper instant tarot reading");
 }
 
+for (const needle of [
+  "export function productDeliveryShortLabel",
+  'if (product.category === "instant") return "pár perc"',
+  'return `${product.standardHours ?? 24} órán belül`',
+  "const delivery = productDeliveryShortLabel(slug)",
+  '`${label} · ${price} · ${delivery}`',
+]) {
+  if (!productsSource.includes(needle)) {
+    failed.push(`Product CTA labels must include price and delivery timing: ${needle}`);
+  }
+}
+
 for (const forbiddenNeedle of [
   "30 napos előrejelzést kérek",
   "Ha tudni akarod, mire figyelj",
