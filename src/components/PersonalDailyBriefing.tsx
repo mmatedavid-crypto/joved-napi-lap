@@ -25,7 +25,7 @@ import { productCtaLabel } from "@/lib/products";
 type Profile = { name?: string; dob?: string; sign?: string };
 
 const SAFE_DAILY_BRIEFING_ERROR =
-  "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.";
+  "A mai személyes összefoglaló most nem állt össze elég tisztán. A lapod megmaradt, fizetés nem indult, és félkész olvasatot nem mentettünk.";
 
 type StoredBriefing = PersonalBriefingHU & {
   generatedFor: string;
@@ -317,8 +317,20 @@ export function PersonalDailyBriefing() {
               <ReadingLoadingState kind="daily" title="A napi képleted készül" />
             )}
             {error && (
-              <div className="text-sm text-ivory/70 font-editorial border-l-2 border-gold/40 pl-3">
-                {error}
+              <div className="text-sm text-ivory/75 font-editorial border-l-2 border-gold/40 pl-3 space-y-3">
+                <p>{error}</p>
+                <div className="flex flex-wrap gap-3">
+                  <button className="btn-ghost-gold text-xs" disabled={loading || !dob}>
+                    Újrapróbálom az összefoglalót
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs text-gold hover:underline"
+                    onClick={() => setPaywallOpen(true)}
+                  >
+                    Inkább kérek személyes olvasatot erre a lapra
+                  </button>
+                </div>
               </div>
             )}
           </form>

@@ -393,7 +393,7 @@ export type PersonalBriefingHU = {
 };
 
 const PERSONAL_DAILY_BRIEFING_ERROR =
-  "Most nem tudtam összeállítani a mai olvasatot. Próbáld meg pár perc múlva.";
+  "A mai személyes összefoglaló most nem állt össze elég tisztán. A lapod megmaradt, fizetés nem indult, és félkész olvasatot nem mentettünk.";
 
 export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
   .inputValidator(

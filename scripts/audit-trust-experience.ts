@@ -44,6 +44,20 @@ const checks: Check[] = [
     excludes: ["biztosan", "garantáltan", "mindenképpen"],
   },
   {
+    name: "homepage personal briefing failure keeps trust and next action",
+    file: "src/components/PersonalDailyBriefing.tsx",
+    includes: [
+      "A mai személyes összefoglaló most nem állt össze elég tisztán",
+      "A lapod megmaradt",
+      "fizetés nem indult",
+      "félkész olvasatot nem mentettünk",
+      "Újrapróbálom az összefoglalót",
+      "Inkább kérek személyes olvasatot erre a lapra",
+      "setPaywallOpen(true)",
+    ],
+    excludes: ["Most nem tudtam összeállítani a mai olvasatot"],
+  },
+  {
     name: "root head does not force homepage canonical onto every route",
     file: "src/routes/__root.tsx",
     includes: ["BRAND_OG_IMAGE_URL", 'rel: "manifest"', "Organization", "WebSite"],
@@ -531,7 +545,9 @@ const checks: Check[] = [
     includes: [
       "SAFE_DAILY_BRIEFING_ERROR",
       "setError(SAFE_DAILY_BRIEFING_ERROR)",
-      "Most nem tudtam összeállítani a mai olvasatot",
+      "A mai személyes összefoglaló most nem állt össze elég tisztán",
+      "A lapod megmaradt",
+      "fizetés nem indult",
     ],
     excludes: ["setError(\n        res.message ??", "setError(res.message"],
   },
@@ -541,7 +557,8 @@ const checks: Check[] = [
     includes: [
       "PERSONAL_DAILY_BRIEFING_ERROR",
       "message: PERSONAL_DAILY_BRIEFING_ERROR",
-      "Most nem tudtam összeállítani a mai olvasatot",
+      "A mai személyes összefoglaló most nem állt össze elég tisztán",
+      "félkész olvasatot nem mentettünk",
     ],
     excludes: ['message: ai.error ?? "AI hiba"', 'message: "AI hiba"'],
   },
