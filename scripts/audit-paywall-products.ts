@@ -71,6 +71,7 @@ for (const needle of [
   "rendelés alapján visszanézzük",
   "konkrét pontosítási kéréssel segítünk jelezni",
   "melyik rész igényel finomítást",
+  "Részletek: miből készül az olvasat, hogyan kapod meg",
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
   "focusPreview.map",
   "function readingFocusPreview(",

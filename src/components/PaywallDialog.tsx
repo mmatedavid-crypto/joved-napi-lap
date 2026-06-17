@@ -218,7 +218,7 @@ export function PaywallDialog({
 
             <Collapsible>
               <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-black/10 px-4 py-3 text-left text-sm text-ivory/80 hover:text-ivory">
-                <span>Részletek: mit kapsz, hogyan megy a vásárlás</span>
+                <span>Részletek: miből készül az olvasat, hogyan kapod meg</span>
                 <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3 space-y-4">
