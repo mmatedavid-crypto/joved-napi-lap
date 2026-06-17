@@ -162,7 +162,7 @@ function Page() {
         </form>
 
         <p className="text-center text-xs text-ivory/40">
-          Vendégként is használhatod:{" "}
+          Vendégként is működik; belépve csak egyben látod az olvasataidat és a visszatérő ívedet.{" "}
           <Link to="/" className="hover:text-gold">
             vissza a főoldalra
           </Link>

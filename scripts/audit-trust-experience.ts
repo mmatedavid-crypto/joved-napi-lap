@@ -222,6 +222,8 @@ const checks: Check[] = [
       "visszatérő témáidra",
       "ingyenes",
       "nem indít új fizetést",
+      "Vendégként is működik",
+      "egyben látod az olvasataidat és a visszatérő ívedet",
     ],
     excludes: ["kötelező", "bankkártya szükséges"],
   },
