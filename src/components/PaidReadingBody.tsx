@@ -629,6 +629,11 @@ function formatDownloadedReading(
     "",
     body.trim(),
     "",
+    "Hogyan olvasd vissza:",
+    "- Most: keresd azt a mondatot, amelyiknél megállsz egy pillanatra.",
+    "- Pár nap múlva: nézd meg, melyik rész kért figyelmet cselekvés helyett.",
+    "- 7 nap múlva: figyeld meg, melyik téma tért vissza; ebből születhet a következő jó kérdés.",
+    "",
     "Ez az olvasat régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
   ]
