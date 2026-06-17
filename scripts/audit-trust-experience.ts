@@ -234,6 +234,32 @@ const checks: Check[] = [
     excludes: ["kötelező", "bankkártya szükséges"],
   },
   {
+    name: "checkout start failures reassure customers and give a manual support path",
+    file: "src/components/StripeEmbeddedCheckout.tsx",
+    includes: [
+      "Nem indult el a fizetés",
+      "Kártyaadat ilyenkor nem jut el hozzánk",
+      "próbáld újra pár perc múlva",
+      "vásárlási email címedről",
+      "a választott olvasatot és a hozzáférést kézzel is segítünk rendezni",
+      "checkoutSupportMailto",
+      "Jövőd.hu fizetési segítség",
+      "Újrapróbálom",
+    ],
+    excludes: ["Nem jött vissza checkout azonosító"],
+  },
+  {
+    name: "paywall blocker avoids a technical dead end when checkout cannot start",
+    file: "src/components/PaywallDialog.tsx",
+    includes: [
+      "A fizetés indításához most segítség kell",
+      "Kártyaadat ilyenkor nem jut el hozzánk",
+      "vásárlási email címedről",
+      "kézzel is segítünk elindítani a rendelést",
+    ],
+    excludes: ["technikai segítség kell", "kézzel is utánanézünk a rendelésnek"],
+  },
+  {
     name: "profile load failures are visible and safe",
     file: "src/routes/profil.tsx",
     includes: [

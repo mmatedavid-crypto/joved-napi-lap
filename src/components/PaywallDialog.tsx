@@ -512,7 +512,7 @@ function checkoutBlockerText({
   canStartPayment: boolean;
 }): string | null {
   if (!canStartPayment) {
-    return "A fizetés indításához most technikai segítség kell; írj nekünk, és kézzel is utánanézünk a rendelésnek.";
+    return "A fizetés indításához most segítség kell. Kártyaadat ilyenkor nem jut el hozzánk; írj nekünk a vásárlási email címedről, és kézzel is segítünk elindítani a rendelést.";
   }
   if (!email) {
     return "A fizetéshez először add meg azt az email címet, ahol később is eléred az olvasatot.";

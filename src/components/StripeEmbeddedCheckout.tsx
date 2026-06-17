@@ -69,7 +69,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
             });
 
             if ("error" in result) throw new CheckoutStartError(result.error);
-            if (!result.clientSecret) throw new Error("Nem jött vissza checkout azonosító");
+            if (!result.clientSecret) throw new CheckoutStartError("checkout_start_failed");
             trackEvent("checkout_succeeded", { productSlug, express, sourceRoute, environment });
             return result.clientSecret;
           } catch (error) {
@@ -98,10 +98,10 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
           <div className="font-display text-xl">Nem indult el a fizetés</div>
           <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ivory/65">
             {checkoutError ??
-              "A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később."}
+              "A fizetés előkészítése most nem elérhető. Kártyaadat ilyenkor nem jut el hozzánk; próbáld újra, vagy írj nekünk a vásárlási email címedről."}
           </p>
           <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
-            Ha már próbáltad újra, írj nekünk a vásárlási email címedről:{" "}
+            Ha már próbáltad újra, a választott olvasatot és a hozzáférést kézzel is segítünk rendezni:{" "}
             <a
               className="text-gold hover:text-gold/80"
               href={checkoutSupportMailto({ productSlug, sourceRoute })}
@@ -217,5 +217,5 @@ function checkoutErrorMessageByCode(code: CheckoutErrorCode): string {
   if (code === "invalid_return_url") {
     return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Frissítsd az oldalt, majd próbáld újra.";
   }
-  return "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
+  return "Most nem sikerült elindítani a fizetést. Kártyaadat ilyenkor nem jut el hozzánk; próbáld újra pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
 }
