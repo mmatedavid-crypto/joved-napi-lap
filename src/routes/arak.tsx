@@ -64,6 +64,25 @@ const CHOICE_GUIDE = [
   },
 ] as const;
 
+const NOT_FOR_GUIDE = [
+  {
+    title: "Ha biztos eseményválaszt vársz",
+    text: "Nem mondjuk ki kész tényként, hogy valaki visszajön-e, mit dönt-e a másik ember, vagy pontosan mi fog történni.",
+  },
+  {
+    title: "Ha döntést kell helyetted meghozni",
+    text: "Az olvasat irányt, mintát és belső fókuszt adhat, de nem választ helyetted munkában, kapcsolatban vagy pénzügyi helyzetben.",
+  },
+  {
+    title: "Ha krízisben vagy szakmai segítség kell",
+    text: "Orvosi, jogi, pénzügyi, pszichológiai vagy sürgős krízishelyzetben emberi és szakmai támogatást keress elsőként.",
+  },
+  {
+    title: "Ha hosszú riportot vársz pár perc alatt",
+    text: "Az azonnali olvasatok rövidebbek. Születési képletre épülő, többoldalas riportnál a feltüntetett elkészülési idővel számolj.",
+  },
+] as const;
+
 export const Route = createFileRoute("/arak")({
   head: () => ({
     meta: [
@@ -258,6 +277,29 @@ function PricingPage() {
           products={instant}
           category="instant"
         />
+
+        <section className="mt-10 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-5 md:p-7">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+            Elvárások tisztázása
+          </div>
+          <h2 className="mt-2 font-display text-3xl text-ivory">Mikor ne ezt válaszd?</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
+            A Jövőd.hu olvasatai régi jelképrendszerekből induló önismereti szövegek. Akkor
+            működnek jól, ha egy helyzetre szeretnél ránézni, nem akkor, ha kész tényt vagy
+            kockázatos döntést vársz tőlük.
+          </p>
+          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {NOT_FOR_GUIDE.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-md border border-[oklch(0.78_0.10_80/0.12)] bg-[oklch(0.13_0.03_292/0.48)] p-4"
+              >
+                <h3 className="font-display text-xl leading-tight text-ivory">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ivory/62">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <section className="mt-10 rounded-md border border-gold/15 bg-black/10 p-5 md:p-7">
           <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
