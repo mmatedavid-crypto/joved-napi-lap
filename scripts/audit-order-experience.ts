@@ -398,6 +398,13 @@ const checks: Check[] = [
     name: "profile explains paid order status",
     file: "src/routes/profil.tsx",
     includes: [
+      "OrderOverviewNotice",
+      "Rendelési állapot összefoglaló",
+      "készül vagy egyeztetés alatt",
+      "kész olvasat",
+      "másolhatod, letöltheted és visszajelzést küldhetsz",
+      "figyelmet kér",
+      "újrapróbálhatod a feldolgozást",
       "OrderStatusNote",
       "A fizetés állapotát még egyeztetjük",
       "csak a fizetési visszajelzésre várunk",

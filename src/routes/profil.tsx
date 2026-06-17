@@ -365,94 +365,97 @@ function Page() {
             </div>
           )}
           {!ordersLoading && !ordersError && orders.length > 0 && (
-            <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
-              {orders.map((o) => {
-                const payload = getOrderPayload(o.response_payload);
-                const canOpen = o.status === "delivered" && payload?.body;
-                const continuePath =
-                  o.source_route ?? PRODUCTS_BY_SLUG[o.product_slug]?.sourceRoute;
-                return (
-                  <li key={o.id} className="py-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-ivory">{o.product_name}</div>
-                        <div className="text-xs text-ivory/55 mt-0.5">
-                          {new Date(o.created_at).toLocaleString("hu-HU")} ·{" "}
-                          {STATUS_HU[o.status] ?? o.status}
-                          {o.express ? " · express" : ""}
-                        </div>
-                        <div className="mt-1 text-[11px] tracking-[0.14em] text-ivory/38">
-                          Rendelés: {shortOrderId(o.id)}
-                        </div>
-                        {o.deliver_by && o.status !== "delivered" && o.status !== "failed" && (
-                          <div className="mt-1 text-xs text-ivory/45">
-                            Várható elkészülés: {new Date(o.deliver_by).toLocaleString("hu-HU")}
+            <>
+              <OrderOverviewNotice orders={orders} />
+              <ul className="divide-y divide-[oklch(0.78_0.10_80/0.15)]">
+                {orders.map((o) => {
+                  const payload = getOrderPayload(o.response_payload);
+                  const canOpen = o.status === "delivered" && payload?.body;
+                  const continuePath =
+                    o.source_route ?? PRODUCTS_BY_SLUG[o.product_slug]?.sourceRoute;
+                  return (
+                    <li key={o.id} className="py-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-ivory">{o.product_name}</div>
+                          <div className="text-xs text-ivory/55 mt-0.5">
+                            {new Date(o.created_at).toLocaleString("hu-HU")} ·{" "}
+                            {STATUS_HU[o.status] ?? o.status}
+                            {o.express ? " · express" : ""}
                           </div>
-                        )}
-                        {o.delivered_at && o.status === "delivered" && (
-                          <div className="mt-1 text-xs text-ivory/45">
-                            Elkészült: {new Date(o.delivered_at).toLocaleString("hu-HU")}
+                          <div className="mt-1 text-[11px] tracking-[0.14em] text-ivory/38">
+                            Rendelés: {shortOrderId(o.id)}
                           </div>
-                        )}
-                      </div>
-                      <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
-                    </div>
-
-                    <OrderStatusNote
-                      order={o}
-                      retrying={retryingOrders.has(o.id)}
-                      onRetry={() => retryOrder(o.id)}
-                    />
-                    {o.status === "delivered" &&
-                      o.delivery_email_status === "attention_needed" && (
-                        <ProfileDeliveryEmailNotice orderId={o.id} />
-                      )}
-                    <OrderRetryNotice notice={retryNotices[o.id]} />
-
-                    {canOpen && (
-                      <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
-                        <summary className="cursor-pointer list-none text-sm text-gold transition-colors group-open:text-gold/90">
-                          Olvasat megnyitása
-                        </summary>
-                        <div className="mt-4 border-t border-gold/10 pt-4">
-                          {payload.title && (
-                            <h3 className="font-display text-xl text-ivory">{payload.title}</h3>
+                          {o.deliver_by && o.status !== "delivered" && o.status !== "failed" && (
+                            <div className="mt-1 text-xs text-ivory/45">
+                              Várható elkészülés: {new Date(o.deliver_by).toLocaleString("hu-HU")}
+                            </div>
                           )}
-                          <div className="mt-3">
-                            <PaidReadingBody
-                              body={payload.body ?? ""}
-                              title={payload.title}
-                              productName={o.product_name}
-                              orderReference={shortOrderId(o.id)}
-                              generation={payload.generation}
-                            />
-                          </div>
-                          <ProfilePaidReadingFeedback order={o} />
+                          {o.delivered_at && o.status === "delivered" && (
+                            <div className="mt-1 text-xs text-ivory/45">
+                              Elkészült: {new Date(o.delivered_at).toLocaleString("hu-HU")}
+                            </div>
+                          )}
                         </div>
-                      </details>
-                    )}
-
-                    {o.status === "delivered" && !payload?.body && (
-                      <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
-                        <p className="text-sm text-ivory/62">
-                          Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni.
-                        </p>
-                        <ProfileSupportContact className="mt-2" orderId={o.id} />
+                        <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
                       </div>
-                    )}
 
-                    {continuePath && (
-                      <Link
-                        to={continuePath}
-                        className="mt-3 inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-xs text-ivory/65 hover:border-gold/60 hover:text-gold"
-                      >
-                        Új kérdést nézek ehhez
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+                      <OrderStatusNote
+                        order={o}
+                        retrying={retryingOrders.has(o.id)}
+                        onRetry={() => retryOrder(o.id)}
+                      />
+                      {o.status === "delivered" &&
+                        o.delivery_email_status === "attention_needed" && (
+                          <ProfileDeliveryEmailNotice orderId={o.id} />
+                        )}
+                      <OrderRetryNotice notice={retryNotices[o.id]} />
+
+                      {canOpen && (
+                        <details className="group mt-3 rounded-md border border-gold/15 bg-black/15 px-4 py-3">
+                          <summary className="cursor-pointer list-none text-sm text-gold transition-colors group-open:text-gold/90">
+                            Olvasat megnyitása
+                          </summary>
+                          <div className="mt-4 border-t border-gold/10 pt-4">
+                            {payload.title && (
+                              <h3 className="font-display text-xl text-ivory">{payload.title}</h3>
+                            )}
+                            <div className="mt-3">
+                              <PaidReadingBody
+                                body={payload.body ?? ""}
+                                title={payload.title}
+                                productName={o.product_name}
+                                orderReference={shortOrderId(o.id)}
+                                generation={payload.generation}
+                              />
+                            </div>
+                            <ProfilePaidReadingFeedback order={o} />
+                          </div>
+                        </details>
+                      )}
+
+                      {o.status === "delivered" && !payload?.body && (
+                        <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
+                          <p className="text-sm text-ivory/62">
+                            Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni.
+                          </p>
+                          <ProfileSupportContact className="mt-2" orderId={o.id} />
+                        </div>
+                      )}
+
+                      {continuePath && (
+                        <Link
+                          to={continuePath}
+                          className="mt-3 inline-flex items-center justify-center rounded-md border border-[oklch(0.78_0.10_80/0.22)] px-3 py-2 text-xs text-ivory/65 hover:border-gold/60 hover:text-gold"
+                        >
+                          Új kérdést nézek ehhez
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
           )}
         </Section>
 
@@ -552,6 +555,47 @@ function getOrderPayload(payload: unknown): OrderResponsePayload | null {
       : undefined;
   if (!title && !body) return null;
   return { title, body, generation };
+}
+
+function OrderOverviewNotice({ orders }: { orders: ProfileOrder[] }) {
+  const delivered = orders.filter((order) => order.status === "delivered").length;
+  const active = orders.filter(
+    (order) =>
+      order.status === "paid" || order.status === "processing" || order.status === "pending_payment",
+  ).length;
+  const failed = orders.filter((order) => order.status === "failed").length;
+
+  if (delivered === 0 && active === 0 && failed === 0) return null;
+
+  return (
+    <div className="mb-3 rounded-md border border-gold/15 bg-gold/[0.055] px-4 py-3">
+      <div className="text-[11px] uppercase tracking-[0.18em] text-gold/70">
+        Rendelési állapot összefoglaló
+      </div>
+      <div className="mt-2 grid gap-2 text-xs leading-relaxed text-ivory/60 sm:grid-cols-3">
+        {active > 0 && (
+          <div>
+            <span className="font-medium text-ivory/78">
+              {active} készül vagy egyeztetés alatt.
+            </span>{" "}
+            Tartsd meg a linket; ha elkészül, itt is megjelenik.
+          </div>
+        )}
+        {delivered > 0 && (
+          <div>
+            <span className="font-medium text-ivory/78">{delivered} kész olvasat.</span> A
+            megnyitás után másolhatod, letöltheted és visszajelzést küldhetsz.
+          </div>
+        )}
+        {failed > 0 && (
+          <div>
+            <span className="font-medium text-ivory/78">{failed} figyelmet kér.</span> Az érintett
+            rendelésnél újrapróbálhatod a feldolgozást vagy írhatsz nekünk.
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function OrderStatusNote({
