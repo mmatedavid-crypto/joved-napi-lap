@@ -326,6 +326,8 @@ for (const needle of [
   "const CHOICE_GUIDE",
   "Melyiket válasszam?",
   "A kérdésedhez válassz",
+  "Ha ugyanaz a téma tér vissza",
+  "továbbviszi az előző kérdésed ívét",
   "Csak kipróbálnám",
   "Kapcsolat vagy ex jár a fejemben",
   "Kapcsolati olvasat",

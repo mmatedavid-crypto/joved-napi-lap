@@ -217,7 +217,8 @@ function PricingPage() {
             <h2 className="mt-2 font-display text-3xl text-ivory">A kérdésedhez válassz</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
               Nem mindenkinek ugyanaz az olvasat kell. Itt a leggyorsabb út, ha még nem tudod, hol
-              kezdd.
+              kezdd. Ha ugyanaz a téma tér vissza, általában nem újabb gyors húzás kell, hanem
+              olyan olvasat, amely továbbviszi az előző kérdésed ívét.
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
