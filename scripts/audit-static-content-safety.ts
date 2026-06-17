@@ -444,6 +444,7 @@ const publicTrustLeakFiles = [
     (file) => !file.includes("/api/") && !file.includes("/lovable/") && !file.endsWith("dev.roxy.tsx"),
   ),
   ...walkPublicUiSources("src/components"),
+  ...walkPublicUiSources("src/lib/email-templates"),
   "src/lib/error-page.ts",
   "src/lib/products.ts",
 ];

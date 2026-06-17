@@ -35,16 +35,16 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
           korlátozott lehet.
         </p>
         <p>
-          Ez nem érinti azt az esetet, amikor technikai hiba miatt az olvasat nem jelenik meg, nem
-          hozzáférhető, vagy nyilvánvalóan hibásan töltődik be. Ilyenkor a rendelést ellenőrizzük,
-          és a hozzáférést pótoljuk.
+          Ez nem érinti azt az esetet, amikor hozzáférési vagy teljesítési gond miatt az olvasat
+          nem jelenik meg, nem hozzáférhető, vagy nyilvánvalóan hibásan töltődik be. Ilyenkor a
+          rendelést ellenőrizzük, és a hozzáférést pótoljuk.
         </p>
       </LegalSection>
 
-      <LegalSection title="Hibás teljesítés vagy technikai gond">
+      <LegalSection title="Hibás teljesítés vagy hozzáférési gond">
         <p>
           Ha a fizetés sikeres volt, de az olvasat nem jelent meg, nem nyílt meg, vagy nyilvánvaló
-          technikai hiba történt, írj erre a címre:{" "}
+          hozzáférési gond történt, írj erre a címre:{" "}
           <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
             {SITE_LEGAL.supportEmail}
           </a>
@@ -64,7 +64,7 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
       <LegalSection title="Fontos korlát">
         <p>
           Az olvasatok szimbolikus, önismereti és szórakoztató tartalmak. Az, hogy egy olvasat
-          érzelmileg mennyire találónak érződik, önmagában nem minősül technikai hibának.
+          érzelmileg mennyire találónak érződik, önmagában nem minősül hozzáférési hibának.
         </p>
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>

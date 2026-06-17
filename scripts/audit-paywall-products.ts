@@ -487,7 +487,7 @@ for (const needle of [
   "kifejezetten kéri, hogy a digitális tartalom",
   "az elállási jog a vonatkozó szabályok szerint",
   "korlátozott lehet",
-  "technikai hiba miatt az olvasat nem jelenik meg",
+  "hozzáférési vagy teljesítési gond miatt az olvasat",
   "a hozzáférést pótoljuk",
 ]) {
   if (!withdrawalRoute.includes(needle)) failed.push(`Withdrawal route missing: ${needle}`);

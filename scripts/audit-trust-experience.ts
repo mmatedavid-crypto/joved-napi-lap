@@ -515,7 +515,7 @@ const checks: Check[] = [
     name: "withdrawal page gives clear recovery steps for paid delivery issues",
     file: "src/routes/elallasi-tajekoztato.tsx",
     includes: [
-      "Hibás teljesítés vagy technikai gond",
+      "Hibás teljesítés vagy hozzáférési gond",
       "vásárláshoz használt email címet",
       "rövid rendelésazonosítót",
       "melyik olvasatnál akadt el",
