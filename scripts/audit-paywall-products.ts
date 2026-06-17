@@ -36,6 +36,7 @@ const layout = readFileSync("src/components/Layout.tsx", "utf8");
 const homeRoute = readFileSync("src/routes/index.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
+const stylesSource = readFileSync("src/styles.css", "utf8");
 const threeCardRouteText = threeCardRoute.replace(/\s+/g, " ");
 const delayedAstrologyRouteFiles = [
   "src/routes/szemelyes-30-napos-horoszkop.tsx",
@@ -186,6 +187,13 @@ for (const needle of [
   'add("Lap", payload.cardName',
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
+}
+
+for (const utility of ["btn-gold", "btn-ghost-gold"]) {
+  const block = stylesSource.match(new RegExp(`@utility ${utility} \\{[\\s\\S]*?\\n\\}`))?.[0] ?? "";
+  for (const needle of ["text-align: center;", "line-height: 1.25;", "white-space: normal;", "overflow-wrap: anywhere;"]) {
+    if (!block.includes(needle)) failed.push(`styles.css ${utility} missing mobile CTA wrapping guard: ${needle}`);
+  }
 }
 
 const checkout = readFileSync("src/components/StripeEmbeddedCheckout.tsx", "utf8");

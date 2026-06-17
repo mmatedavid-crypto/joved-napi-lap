@@ -139,6 +139,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
   transition:
     transform 0.2s ease,
     box-shadow 0.3s ease;
@@ -159,6 +163,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
   transition: all 0.25s ease;
 }
 .btn-ghost-gold:hover {
