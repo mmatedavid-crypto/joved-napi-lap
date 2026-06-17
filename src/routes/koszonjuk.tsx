@@ -386,7 +386,7 @@ function Page() {
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
                   Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük
-                  az olvasatot, vagy visszatérítjük.
+                  az olvasatot, vagy jogos esetben visszatérítési egyeztetést indítunk.
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
                   <button

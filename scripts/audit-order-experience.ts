@@ -4,6 +4,8 @@ type Check = {
   name: string;
   file: string;
   includes: string[];
+  excludes?: string[];
+  enforceExcludes?: boolean;
 };
 
 const checks: Check[] = [
@@ -264,8 +266,11 @@ const checks: Check[] = [
       "akkor engedjük, ha a fizetés igazoltan sikeres",
       "Ha az újrapróbálás sem rendezi",
       "A rendelés nem vész el",
+      "jogos esetben visszatérítési egyeztetést indítunk",
       "shortOrderId(order.id)",
     ],
+    excludes: ["az olvasatot, vagy visszatérítjük"],
+    enforceExcludes: true,
   },
   {
     name: "profile order wakeup is server-side and strips private payment fields",
@@ -411,9 +416,11 @@ const checks: Check[] = [
       "Az olvasat készül",
       "A feldolgozás elakadt",
       "kézzel elkészítjük az",
-      "visszatérítjük",
+      "jogos esetben visszatérítési egyeztetést indítunk",
       "SITE_LEGAL.supportEmail",
     ],
+    excludes: ["az olvasatot, vagy visszatérítjük"],
+    enforceExcludes: true,
   },
   {
     name: "profile distinguishes instant and detailed paid preparation",
@@ -963,6 +970,10 @@ for (const check of checks) {
   const body = readFileSync(check.file, "utf8");
   const missing = check.includes.filter((needle) => !body.includes(needle));
   if (missing.length) failed.push(`${check.name}: missing ${missing.join(", ")}`);
+  const forbidden = check.enforceExcludes
+    ? (check.excludes?.filter((needle) => body.includes(needle)) ?? [])
+    : [];
+  if (forbidden.length) failed.push(`${check.name}: forbidden ${forbidden.join(", ")}`);
 }
 
 if (failed.length) {

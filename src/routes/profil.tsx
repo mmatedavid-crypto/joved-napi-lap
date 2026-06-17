@@ -644,7 +644,7 @@ function OrderStatusNote({
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-ivory/52">
           Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük az
-          olvasatot, vagy visszatérítjük.
+          olvasatot, vagy jogos esetben visszatérítési egyeztetést indítunk.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button
