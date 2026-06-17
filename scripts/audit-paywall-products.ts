@@ -372,7 +372,8 @@ for (const needle of [
   "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését",
   "az elállási jog korlátozott lehet",
   "Ezek jóslatok?",
-  "nem ígér biztos jövőt",
+  "régi jelképrendszerekből indul",
+  "önismereti olvasatként kezeljük",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
 }

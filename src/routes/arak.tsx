@@ -33,7 +33,7 @@ const PRICING_FAQ = [
   {
     question: "Ezek jóslatok?",
     answer:
-      "Nem. A Jövőd.hu szimbolikus, önismereti digitális tartalmat ad. Nem orvosi, jogi, pénzügyi vagy krízistanácsadás, és nem ígér biztos jövőt.",
+      "A tarot, a számmisztika és az asztrológia régi jelképrendszerekből indul. Mi ezeket nem biztos jövőként, hanem önismereti olvasatként kezeljük: segíthetnek tisztábban ránézni egy helyzetre, de nem helyettesítenek orvosi, jogi, pénzügyi vagy krízishelyzeti segítséget.",
   },
 ] as const;
 

@@ -263,6 +263,19 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/routes/arak.tsx",
+    forbidden: [
+      /Nem\. A Jövőd\.hu szimbolikus/i,
+      /szimbolikus, önismereti digitális tartalmat ad/i,
+    ],
+    required: [
+      "A tarot, a számmisztika és az asztrológia régi jelképrendszerekből indul.",
+      "önismereti olvasatként kezeljük",
+      "tisztábban ránézni egy helyzetre",
+      "nem helyettesítenek orvosi, jogi, pénzügyi vagy krízishelyzeti segítséget",
+    ],
+  },
+  {
     file: "src/lib/roxy.functions.ts",
     forbidden: [
       /roxyAngolForras/,
