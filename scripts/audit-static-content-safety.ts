@@ -271,8 +271,12 @@ const checks: StaticSafetyCheck[] = [
     forbidden: [
       /Nem\. A Jövőd\.hu szimbolikus/i,
       /szimbolikus, önismereti digitális tartalmat ad/i,
+      /Azonnali digitális olvasat/i,
+      /Részletes digitális olvasat/i,
     ],
     required: [
+      "Azonnali önismereti olvasat",
+      "Részletes önismereti olvasat",
       "A tarot, a számmisztika és az asztrológia régi jelképrendszerekből indul.",
       "önismereti olvasatként kezeljük",
       "tisztábban ránézni egy helyzetre",

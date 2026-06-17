@@ -106,8 +106,8 @@ export const Route = createFileRoute("/arak")({
               description: product.short,
               category:
                 product.category === "instant"
-                  ? "Azonnali digitális olvasat"
-                  : "Részletes digitális olvasat",
+                  ? "Azonnali önismereti olvasat"
+                  : "Részletes önismereti olvasat",
               brand: {
                 "@type": "Brand",
                 name: "Jövőd.hu",

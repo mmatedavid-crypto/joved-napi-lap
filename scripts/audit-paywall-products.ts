@@ -358,6 +358,8 @@ for (const needle of [
   'PRODUCTS.map((product, index)',
   '"@type": "Product"',
   'product.category === "instant"',
+  "Azonnali önismereti olvasat",
+  "Részletes önismereti olvasat",
   '"@type": "Offer"',
   "price: product.priceHuf",
   'priceCurrency: "HUF"',
