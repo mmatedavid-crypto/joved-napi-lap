@@ -29,7 +29,7 @@ import {
 } from "@/lib/roxyNormalize";
 import { todayKey } from "@/lib/storage";
 
-export const Route = createFileRoute("/dev/roxy")({
+export const Route = createFileRoute("/dev/tudastar")({
   beforeLoad: () => {
     if (import.meta.env.PROD) throw notFound();
   },

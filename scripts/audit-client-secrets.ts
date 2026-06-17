@@ -34,9 +34,9 @@ const ALLOWED_SERVER_IMPORT_SOURCES = [
 
 const DEV_ROUTE_GUARDS = [
   {
-    file: "src/routes/dev.roxy.tsx",
+    file: "src/routes/dev.tudastar.tsx",
     includes: [
-      'createFileRoute("/dev/roxy")',
+      'createFileRoute("/dev/tudastar")',
       "beforeLoad",
       "import.meta.env.PROD",
       "throw notFound()",

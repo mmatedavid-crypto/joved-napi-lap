@@ -56,7 +56,7 @@ import { Route as MagazinSlugRouteImport } from './routes/magazin.$slug'
 import { Route as KinaiHoroszkopAnimalRouteImport } from './routes/kinai-horoszkop.$animal'
 import { Route as JikingSlugRouteImport } from './routes/jiking.$slug'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as DevRoxyRouteImport } from './routes/dev.roxy'
+import { Route as DevTudastarRouteImport } from './routes/dev.tudastar'
 import { Route as DevMemoryRouteImport } from './routes/dev.memory'
 import { Route as AngyalszamSzamRouteImport } from './routes/angyalszam.$szam'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
@@ -305,9 +305,9 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DevRoxyRoute = DevRoxyRouteImport.update({
-  id: '/dev/roxy',
-  path: '/dev/roxy',
+const DevTudastarRoute = DevTudastarRouteImport.update({
+  id: '/dev/tudastar',
+  path: '/dev/tudastar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevMemoryRoute = DevMemoryRouteImport.update({
@@ -410,7 +410,7 @@ export interface FileRoutesByFullPath {
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
-  '/dev/roxy': typeof DevRoxyRoute
+  '/dev/tudastar': typeof DevTudastarRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
@@ -471,7 +471,7 @@ export interface FileRoutesByTo {
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
-  '/dev/roxy': typeof DevRoxyRoute
+  '/dev/tudastar': typeof DevTudastarRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
@@ -533,7 +533,7 @@ export interface FileRoutesById {
   '/vedikus-asztrologia': typeof VedikusAsztrologiaRoute
   '/angyalszam/$szam': typeof AngyalszamSzamRoute
   '/dev/memory': typeof DevMemoryRoute
-  '/dev/roxy': typeof DevRoxyRoute
+  '/dev/tudastar': typeof DevTudastarRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/jiking/$slug': typeof JikingSlugRoute
   '/kinai-horoszkop/$animal': typeof KinaiHoroszkopAnimalRoute
@@ -596,7 +596,7 @@ export interface FileRouteTypes {
     | '/vedikus-asztrologia'
     | '/angyalszam/$szam'
     | '/dev/memory'
-    | '/dev/roxy'
+    | '/dev/tudastar'
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
@@ -657,7 +657,7 @@ export interface FileRouteTypes {
     | '/vedikus-asztrologia'
     | '/angyalszam/$szam'
     | '/dev/memory'
-    | '/dev/roxy'
+    | '/dev/tudastar'
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
@@ -718,7 +718,7 @@ export interface FileRouteTypes {
     | '/vedikus-asztrologia'
     | '/angyalszam/$szam'
     | '/dev/memory'
-    | '/dev/roxy'
+    | '/dev/tudastar'
     | '/email/unsubscribe'
     | '/jiking/$slug'
     | '/kinai-horoszkop/$animal'
@@ -780,7 +780,7 @@ export interface RootRouteChildren {
   VedikusAsztrologiaRoute: typeof VedikusAsztrologiaRoute
   AngyalszamSzamRoute: typeof AngyalszamSzamRoute
   DevMemoryRoute: typeof DevMemoryRoute
-  DevRoxyRoute: typeof DevRoxyRoute
+  DevTudastarRoute: typeof DevTudastarRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   JikingSlugRoute: typeof JikingSlugRoute
   KinaiHoroszkopAnimalRoute: typeof KinaiHoroszkopAnimalRoute
@@ -1135,11 +1135,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dev/roxy': {
-      id: '/dev/roxy'
-      path: '/dev/roxy'
-      fullPath: '/dev/roxy'
-      preLoaderRoute: typeof DevRoxyRouteImport
+    '/dev/tudastar': {
+      id: '/dev/tudastar'
+      path: '/dev/tudastar'
+      fullPath: '/dev/tudastar'
+      preLoaderRoute: typeof DevTudastarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dev/memory': {
@@ -1271,7 +1271,7 @@ const rootRouteChildren: RootRouteChildren = {
   VedikusAsztrologiaRoute: VedikusAsztrologiaRoute,
   AngyalszamSzamRoute: AngyalszamSzamRoute,
   DevMemoryRoute: DevMemoryRoute,
-  DevRoxyRoute: DevRoxyRoute,
+  DevTudastarRoute: DevTudastarRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   JikingSlugRoute: JikingSlugRoute,
   KinaiHoroszkopAnimalRoute: KinaiHoroszkopAnimalRoute,

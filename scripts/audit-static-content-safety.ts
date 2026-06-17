@@ -411,7 +411,7 @@ function walkPublicUiSources(dir: string): string[] {
     const path = `${dir}/${entry}`;
     const stat = statSync(path);
     if (stat.isDirectory()) {
-      if (["api", "dev.roxy", "lovable"].some((part) => path.includes(`/${part}`))) continue;
+      if (["api", "dev.tudastar", "lovable"].some((part) => path.includes(`/${part}`))) continue;
       files.push(...walkPublicUiSources(path));
       continue;
     }
@@ -445,7 +445,7 @@ for (const file of publicUiFiles) {
 
 const publicTrustLeakFiles = [
   ...walkPublicUiSources("src/routes").filter(
-    (file) => !file.includes("/api/") && !file.includes("/lovable/") && !file.endsWith("dev.roxy.tsx"),
+    (file) => !file.includes("/api/") && !file.includes("/lovable/") && !file.endsWith("dev.tudastar.tsx"),
   ),
   ...walkPublicUiSources("src/components"),
   ...walkPublicUiSources("src/lib/email-templates"),

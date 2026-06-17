@@ -1,10 +1,10 @@
-// One-off script: fetch life-path interpretations from Roxy for representative
-// birth dates, translate to Hungarian via Lovable AI, and write
+// One-off script: fetch representative life-path source material for birth
+// dates, render it as Hungarian symbolic copy, and write
 // src/data/lifePathMeanings.hu.ts.
 //
 // Run: bun run scripts/bake-lifepath.ts
 //
-// Requires env: ROXY_API_KEY, LOVABLE_API_KEY.
+// Requires the configured source and rendering service keys.
 
 import { writeFileSync } from "node:fs";
 
@@ -37,8 +37,9 @@ function reduce(n: number, keepMaster = true): number {
   return n;
 }
 
-// Roxy uses per-component reduction: reduce(year) + reduce(month) + reduce(day),
-// keeping master numbers (11, 22, 33) at each step and in the final sum.
+// The source material uses per-component reduction: reduce(year) + reduce(month)
+// + reduce(day), keeping master numbers (11, 22, 33) at each step and in the
+// final sum.
 function roxyLifePath(y: number, m: number, d: number): number {
   const ry = reduce(y);
   const rm = reduce(m);
@@ -65,7 +66,7 @@ async function callRoxy(date: { year: number; month: number; day: number }) {
     },
     body: JSON.stringify(date),
   });
-  if (!res.ok) throw new Error(`Roxy ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new Error(`source material request failed: ${res.status}`);
   return res.json();
 }
 
@@ -99,7 +100,7 @@ ${JSON.stringify(raw).slice(0, 4000)}`;
       max_tokens: 2000,
     }),
   });
-  if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new Error(`Hungarian rendering request failed: ${res.status}`);
   const json = (await res.json()) as { choices: { message: { content: string } }[] };
   let content = json.choices[0].message.content.trim();
   // strip markdown fences if any
@@ -111,14 +112,14 @@ ${JSON.stringify(raw).slice(0, 4000)}`;
   try {
     return JSON.parse(content);
   } catch (e) {
-    console.error("Failed to parse AI output (first 500 chars):", content.slice(0, 500));
+    console.error("Failed to parse Hungarian rendering output (first 500 chars):", content.slice(0, 500));
     console.error("Last 200 chars:", content.slice(-200));
     throw e;
   }
 }
 
 function extractLifePath(raw: unknown): number | null {
-  // Roxy returns { life_path: { number, ... } } or { lifePath: N } etc.
+  // Source payloads can return { life_path: { number, ... } } or { lifePath: N } etc.
   const r = raw as Record<string, unknown>;
   const candidates: unknown[] = [
     (r?.life_path as Record<string, unknown>)?.number,
@@ -142,8 +143,8 @@ async function main() {
   const out: Record<string, unknown> = {};
   const need = new Set(TARGETS);
 
-  // Probe many dates; for each, ask Roxy what LP it computes, keep the first
-  // sample we see for each target life path number.
+  // Probe many dates; for each, ask the source material what life-path number
+  // it computes, then keep the first sample for each target number.
   outer: for (let y = 1970; y <= 2005 && need.size > 0; y++) {
     for (let m = 1; m <= 12 && need.size > 0; m++) {
       for (let d = 1; d <= 28 && need.size > 0; d += 3) {
@@ -152,7 +153,7 @@ async function main() {
         try {
           raw = await callRoxy(date);
         } catch (e) {
-          console.error("Roxy call failed", e);
+          console.error("Source material lookup failed", e);
           continue;
         }
         const lp = extractLifePath(raw);
