@@ -24,6 +24,19 @@ type SuppressionLogErrorCode =
   | "email_unsubscribed"
   | "email_suppressed";
 
+function redactEmail(email: string | null | undefined): string {
+  if (!email) return "***";
+  const [localPart, domain] = email.split("@");
+  if (!localPart || !domain) return "***";
+  return `${localPart[0]}***@${domain}`;
+}
+
+function redactMessageId(messageId: string | null | undefined): string {
+  if (!messageId) return "***";
+  if (messageId.length <= 10) return `${messageId.slice(0, 2)}***`;
+  return `${messageId.slice(0, 4)}***${messageId.slice(-4)}`;
+}
+
 function publicEmailWebhookError(message: string, status: number): Response {
   return Response.json({ error: message }, { status });
 }
@@ -73,7 +86,9 @@ export const Route = createFileRoute("/lovable/email/suppression")({
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
         if (!apiKey || !supabaseUrl || !supabaseServiceKey) {
-          console.error("Missing required environment variables");
+          console.error("Email suppression webhook configuration failed", {
+            error_code: "email_webhook_configuration_missing",
+          });
           return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
 
@@ -90,24 +105,33 @@ export const Route = createFileRoute("/lovable/email/suppression")({
           if (error instanceof WebhookError) {
             switch (error.code) {
               case "invalid_signature":
-                console.error("Invalid webhook signature");
+                console.error("Email suppression webhook rejected", {
+                  error_code: "email_webhook_invalid_signature",
+                });
                 return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
               case "stale_timestamp":
-                console.error("Stale webhook timestamp");
+                console.error("Email suppression webhook rejected", {
+                  error_code: "email_webhook_stale_timestamp",
+                });
                 return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
               case "invalid_payload":
               case "invalid_json":
-                console.error("Invalid payload", { code: error.code });
+                console.error("Email suppression webhook payload rejected", {
+                  error_code: "email_webhook_invalid_payload",
+                  verification_code: error.code,
+                });
                 return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_PAYLOAD_ERROR, 400);
               default:
-                console.error("Webhook verification failed", {
-                  code: error.code,
-                  message: error.message,
+                console.error("Email suppression webhook verification failed", {
+                  error_code: "email_webhook_verification_failed",
+                  verification_code: error.code,
                 });
                 return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_AUTH_ERROR, 401);
             }
           }
-          console.error("Unexpected error during verification", { error });
+          console.error("Email suppression webhook verification failed", {
+            error_code: "email_webhook_verification_exception",
+          });
           return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
 
@@ -126,8 +150,9 @@ export const Route = createFileRoute("/lovable/email/suppression")({
 
         if (suppressError) {
           console.error("Failed to upsert suppressed email", {
-            error: suppressError,
-            email_redacted: normalizedEmail[0] + "***@" + normalizedEmail.split("@")[1],
+            error_code: "email_suppression_upsert_failed",
+            email_redacted: redactEmail(normalizedEmail),
+            reason: payload.reason,
           });
           return publicEmailWebhookError(PUBLIC_EMAIL_WEBHOOK_ERROR, 500);
         }
@@ -148,12 +173,15 @@ export const Route = createFileRoute("/lovable/email/suppression")({
         if (insertError) {
           // Non-fatal — log and continue. The suppression was already recorded.
           console.warn("Failed to insert email_send_log", {
-            error: insertError,
+            error_code: "email_send_log_insert_failed",
+            email_redacted: redactEmail(normalizedEmail),
+            reason: payload.reason,
+            message_id_redacted: redactMessageId(payload.message_id),
           });
         }
 
         console.log("Suppression processed", {
-          email_redacted: normalizedEmail[0] + "***@" + normalizedEmail.split("@")[1],
+          email_redacted: redactEmail(normalizedEmail),
           reason: payload.reason,
           is_retry: payload.is_retry,
           retry_count: payload.retry_count,
