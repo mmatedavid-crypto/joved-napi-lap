@@ -22,7 +22,7 @@ export function renderErrorPage(): string {
     <div class="card">
       <div class="eyebrow">Jövőd.hu</div>
       <h1>Most nem töltött be az oldal</h1>
-      <p>Valami technikai hiba történt nálunk. A rendelésed vagy olvasatod ettől nem vész el; próbáld frissíteni az oldalt, vagy térj vissza a főoldalra.</p>
+      <p>Valami megakadt az oldal betöltésénél. A rendelésed vagy olvasatod ettől nem vész el; próbáld frissíteni az oldalt, vagy térj vissza a főoldalra.</p>
       <div class="actions">
         <button class="primary" onclick="location.reload()">Újrapróbálom</button>
         <a class="secondary" href="/">Vissza a főoldalra</a>
