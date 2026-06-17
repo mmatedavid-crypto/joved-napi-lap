@@ -1,9 +1,7 @@
-// Roxy server functions. Browser only sees RPC stubs — ROXY_API_KEY stays
-// on the server (see src/lib/roxy.server.ts). Every fn returns a uniform
-// envelope so the UI can fall back to local Jövőd content if Roxy fails.
-//
-// Endpoints below are derived from the authoritative
-// https://roxyapi.com/AGENTS.md reference. Comments cite the exact path.
+// Server-side symbolic lookup functions. Browser code only sees RPC stubs, and
+// secrets stay on the server (see src/lib/roxy.server.ts). Every fn returns a
+// uniform envelope so the UI can fall back to local Jövőd content if lookup
+// data is unavailable.
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
@@ -104,9 +102,9 @@ export const roxyTarotDraw = createServerFn({ method: "POST" })
     }),
   );
 
-// "Mai lap" — Roxy /tarot/daily dedicated endpoint. Response shape is
-// { date, seed, card, dailyMessage } — we keep the dailyMessage so the
-// UI / AI translator can use it as source text.
+// "Mai lap" — dedicated daily tarot lookup. Response shape is
+// { date, seed, card, dailyMessage } — we keep the dailyMessage as part of the
+// symbolic source material used by the Hungarian reading.
 export const roxyTarotDaily = createServerFn({ method: "POST" })
   .inputValidator(z.object({ dateKey: z.string().min(8).max(20) }).parse)
   .handler(async ({ data }) =>
@@ -372,10 +370,10 @@ export const roxyLocationSearch = createServerFn({ method: "POST" })
     }),
   );
 
-// ─── Personal Daily Briefing (AI-enriched, Hungarian) ────────────────────
+// ─── Personal Daily Briefing (Hungarian) ─────────────────────────────────
 // Combines tarot/daily, horoscope/daily, biorhythm/daily, angel-numbers
-// and crystals/birthstone, then runs the meaningful English fields through
-// Lovable AI to produce a single warm Hungarian briefing. Cached per
+// and crystals/birthstone, then composes a single warm Hungarian briefing from
+// the meaningful symbolic fields. Cached per
 // (sign, dob, dateKey, name, card, local memory context) for 24h in api_cache
 // so repeated visits are free.
 
@@ -461,11 +459,11 @@ export const roxyPersonalDailyBriefing = createServerFn({ method: "POST" })
         /* ignore */
       }
 
-      // 2. Pull raw Roxy data in parallel.
+      // 2. Gather symbolic source data in parallel.
       const digits = data.dateKey.replace(/-/g, "");
       const month = Number(data.dateKey.slice(5, 7));
-      // Tarot card: ONLY use what the user personally drew. We never auto-pull
-      // a random card from Roxy for the briefing — that would feel impersonal.
+      // Tarot card: ONLY use what the user personally drew. We never add a
+      // random card for the briefing, because that would feel impersonal.
       const [horoR, bioR, angelR, crysR] = await Promise.allSettled([
         callRoxy({
           endpoint: `/astrology/horoscope/${data.sign}/daily`,
@@ -681,9 +679,8 @@ const TarotCardInput = z.object({
   name: z.string().min(1).max(80),
   keywords: z.array(z.string().min(1).max(40)).max(8).optional(),
   reversed: z.boolean().optional(),
-  // Roxy-sourced English fields. The AI uses these as source material to
-  // translate/stylize into Hungarian. We INTENTIONALLY no longer accept any
-  // helyi magyar jelentés-szöveget — minden tartalmi forrás Roxy.
+  // Symbolic source fields. The Hungarian reading uses these meanings as
+  // anchors and does not accept caller-supplied local interpretation text.
   meaningEn: z.string().max(2000).optional(),
   loveEn: z.string().max(2000).optional(),
   careerEn: z.string().max(2000).optional(),

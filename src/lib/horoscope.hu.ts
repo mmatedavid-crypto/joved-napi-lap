@@ -1,6 +1,6 @@
-// Local Hungarian fallback + enrichment templates for daily horoscope.
-// We never show raw Roxy English. Roxy values (energyRating, luckyNumber,
-// luckyColor, moonPhase) only influence the wording via small phrase maps.
+// Hungarian fallback + enrichment templates for daily horoscope.
+// Traditional astrological symbols and daily timing details shape the wording
+// through small phrase maps, while the visible copy stays fully Hungarian.
 
 import { SIGN_HU } from "./roxyNormalize";
 

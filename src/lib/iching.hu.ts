@@ -1,5 +1,5 @@
-// Lightweight Hungarian I-Ching narrative. We use the hexagram number from
-// Roxy and render Jövőd's own short text — never the English raw.
+// Lightweight Hungarian I-Ching narrative. The hexagram number anchors a short
+// Jövőd text rooted in the traditional symbolic reading of the sign.
 
 export type HexHU = {
   name: string; // hungarian short title
