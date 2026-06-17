@@ -377,8 +377,9 @@ export function PaywallDialog({
                   </div>
                   {!canStartPayment && (
                     <div className="rounded-md border border-gold/20 bg-black/20 px-3 py-2 text-ivory/68">
-                      A fizetés előkészítése most nem elérhető. Kérlek próbáld újra később, vagy írj
-                      nekünk, és segítünk a rendelésben.
+                      A fizetés előkészítése most nem elérhető. Kártyaadat ilyenkor nem jut el
+                      hozzánk; írj nekünk a vásárlási email címedről, és kézzel is segítünk
+                      elindítani a rendelést.
                     </div>
                   )}
                   <div>
