@@ -104,7 +104,7 @@ export function PersonalDailyBriefing() {
     try {
       const r = await callDaily({ data: { dateKey: todayKey() } });
       if (!r.ok || !r.slot) {
-        setDrawError("A húzás most nem érkezett meg. Próbáld újra egy pillanat múlva.");
+        setDrawError("A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
         return;
       }
       const lc = localCardFromSlot(r.slot);

@@ -632,6 +632,57 @@ const checks: Check[] = [
     ],
     excludes: ['setStatus("Most nem sikerült.")', "busy ? \"Készítem…\" : (status ??"],
   },
+  {
+    name: "free draw failures do not feel like lost readings",
+    file: "src/routes/mai-lap.tsx",
+    includes: [
+      "A húzás most nem érkezett meg",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
+    ],
+    excludes: ["Próbáld újra egy pillanat múlva"],
+  },
+  {
+    name: "relationship draw failures do not feel like lost readings",
+    file: "src/routes/randi-elott.tsx",
+    includes: [
+      "A húzás most nem érkezett meg",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
+    ],
+    excludes: ["Próbáld újra."],
+  },
+  {
+    name: "decision draw failures do not feel like lost readings",
+    file: "src/routes/dontes-elott.tsx",
+    includes: [
+      "A húzás most nem érkezett meg",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
+    ],
+    excludes: ["Próbáld újra."],
+  },
+  {
+    name: "three-card draw failures do not feel like lost readings",
+    file: "src/routes/harom-lap.tsx",
+    includes: [
+      "A húzás most nem érkezett meg",
+      "A húzás nem teljes",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
+    ],
+    excludes: ["Próbáld újra egy pillanat múlva", "próbáld újra."],
+  },
+  {
+    name: "homepage daily draw failures do not feel like lost readings",
+    file: "src/components/PersonalDailyBriefing.tsx",
+    includes: [
+      "A húzás most nem érkezett meg",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
+    ],
+    excludes: ["Próbáld újra egy pillanat múlva"],
+  },
 ];
 
 const failed: string[] = [];
