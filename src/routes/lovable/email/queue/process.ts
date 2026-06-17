@@ -72,6 +72,19 @@ function emailQueueErrorCode(error: unknown): EmailQueueErrorCode {
   return 'email_send_failed'
 }
 
+function redactQueueMessageId(value: number | string | null | undefined): string {
+  if (value == null) return '***'
+  const raw = String(value)
+  if (raw.length <= 6) return `${raw.slice(0, 2)}***`
+  return `${raw.slice(0, 3)}***${raw.slice(-2)}`
+}
+
+function redactStableMessageId(value: string | null | undefined): string {
+  if (!value) return '***'
+  if (value.length <= 12) return `${value.slice(0, 3)}***`
+  return `${value.slice(0, 6)}***${value.slice(-4)}`
+}
+
 async function moveToDlq(
   supabase: SupabaseClient<Database>,
   queue: string,
@@ -93,7 +106,12 @@ async function moveToDlq(
     payload: payload as Json,
   })
   if (error) {
-    console.error('Failed to move message to DLQ', { queue, msg_id: msg.msg_id, reason, error })
+    console.error('Failed to move message to DLQ', {
+      queue,
+      queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
+      reason,
+      error_code: 'move_to_dlq_failed',
+    })
   }
 }
 
@@ -159,7 +177,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
           })
 
           if (readError) {
-            console.error('Failed to read email batch', { queue, error: readError })
+            console.error('Failed to read email batch', { queue, error_code: 'read_email_batch_failed' })
             continue
           }
 
@@ -189,7 +207,7 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
             if (failedRowsError) {
               console.error('Failed to load failed-attempt counters', {
                 queue,
-                error: failedRowsError,
+                error_code: 'failed_attempt_counter_lookup_failed',
               })
             } else {
               for (const row of failedRows ?? []) {
@@ -221,9 +239,9 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
               if (ageMs > maxAgeMs) {
                 console.warn('Email expired (TTL exceeded)', {
                   queue,
-                  msg_id: msg.msg_id,
-                  queued_at: queuedAt,
+                  queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
                   ttl_minutes: ttlMinutes[queue],
+                  age_ms: ageMs,
                 })
                 await moveToDlq(supabase, queue, msg, 'email_send_ttl_exceeded')
                 continue
@@ -248,15 +266,19 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
               if (alreadySent) {
                 console.warn('Skipping duplicate send (already sent)', {
                   queue,
-                  msg_id: msg.msg_id,
-                  message_id: payload.message_id,
+                  queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
+                  message_id_redacted: redactStableMessageId(payload.message_id),
                 })
                 const { error: dupDelError } = await supabase.rpc('delete_email', {
                   queue_name: queue,
                   message_id: msg.msg_id,
                 })
                 if (dupDelError) {
-                  console.error('Failed to delete duplicate message from queue', { queue, msg_id: msg.msg_id, error: dupDelError })
+                  console.error('Failed to delete duplicate message from queue', {
+                    queue,
+                    queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
+                    error_code: 'delete_duplicate_email_failed',
+                  })
                 }
                 continue
               }
@@ -295,17 +317,21 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
                 message_id: msg.msg_id,
               })
               if (delError) {
-                console.error('Failed to delete sent message from queue', { queue, msg_id: msg.msg_id, error: delError })
+                console.error('Failed to delete sent message from queue', {
+                  queue,
+                  queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
+                  error_code: 'delete_sent_email_failed',
+                })
               }
               totalProcessed++
             } catch (error) {
-              const errorMsg = error instanceof Error ? error.message : String(error)
               console.error('Email send failed', {
                 queue,
-                msg_id: msg.msg_id,
+                queue_msg_id_redacted: redactQueueMessageId(msg.msg_id),
+                message_id_redacted: redactStableMessageId(payload.message_id),
                 read_ct: msg.read_ct,
                 failed_attempts: failedAttempts,
-                error: errorMsg,
+                error_code: emailQueueErrorCode(error),
               })
 
               if (isRateLimited(error)) {
