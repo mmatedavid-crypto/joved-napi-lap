@@ -454,6 +454,9 @@ function PricingGroup({
                 {formatHuf(product.priceHuf)}
               </div>
             </div>
+            <div className="mt-3 inline-flex rounded-full border border-gold/18 px-2 py-1 text-[11px] text-gold/72">
+              {productDeliveryBadge(product)}
+            </div>
             <p className="mt-2 text-sm leading-relaxed text-ivory/62">{product.short}</p>
             <ul className="mt-3 space-y-1.5 text-sm text-ivory/70">
               {product.includes.slice(0, 3).map((item) => (
@@ -527,4 +530,10 @@ function productFitHint(product: (typeof PRODUCTS)[number]): string {
         ? "egy konkrét kérdésre vagy érzésre kérsz rövid, személyes olvasatot."
         : "születési adatokból épülő, hosszabb írásos elemzést szeretnél.";
   }
+}
+
+function productDeliveryBadge(product: (typeof PRODUCTS)[number]): string {
+  if (product.category === "instant") return "Pár percen belül elkészül";
+  const hours = product.standardHours ?? 24;
+  return `${hours} órán belül készül el`;
 }
