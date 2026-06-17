@@ -81,6 +81,7 @@ export function PaywallDialog({
   const deliverySummary = checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn);
   const accessSummary = deliveryAccessText(isLoggedIn);
   const formatPromise = readingFormatPromise(product);
+  const priceFit = priceFitNudge(product);
   const supportMailto = paywallSupportMailto({
     product,
     sourceRoute,
@@ -110,6 +111,11 @@ export function PaywallDialog({
             <div className="text-center">
               <div className="font-display text-4xl text-gold-gradient">{formatHuf(total)}</div>
               <div className="text-xs text-ivory/55 mt-1">{deliverySummary}</div>
+              {priceFit && (
+                <p className="mx-auto mt-2 max-w-sm rounded-md border border-gold/15 bg-black/12 px-3 py-2 text-xs leading-relaxed text-ivory/58">
+                  {priceFit}
+                </p>
+              )}
               {product.category === "delayed" && (
                 <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
                   A részletes elemzést gondosabb szövegezéssel készítjük. Elkészüléskor ezen a
@@ -527,6 +533,16 @@ function readingFormatPromise(product: ProductDef): string {
     return "rövid, személyes írásos olvasat 3-5 jól olvasható résszel.";
   }
   return "azonnali, rövid írásos olvasat néhány fókuszált bekezdésben.";
+}
+
+function priceFitNudge(product: ProductDef): string | null {
+  if (product.category === "delayed") {
+    return "Ezt akkor válaszd, ha tényleg többoldalas, születési adatokra épülő időszaki elemzést szeretnél. Ha csak kipróbálnád a hangot, elég lehet egy olcsóbb azonnali olvasat.";
+  }
+  if (product.priceHuf >= 900) {
+    return "Ez mélyebb azonnali olvasat. Ha most csak rövid próbát szeretnél, a belépő olvasatok olcsóbbak; ha viszont visszatérő kérdésed van, ez ad több kapaszkodót.";
+  }
+  return null;
 }
 
 function choiceFitPromise(product: ProductDef): string[] {
