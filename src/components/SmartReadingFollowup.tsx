@@ -139,6 +139,7 @@ export function SmartReadingFollowup({
         {options.map((option) => {
           const product = PRODUCTS_BY_SLUG[option.slug];
           if (!product) return null;
+          const meta = followupOptionMeta(product);
           return (
             <button
               key={option.slug}
@@ -166,7 +167,12 @@ export function SmartReadingFollowup({
                   {formatHuf(product.priceHuf)}
                 </span>
               </div>
-              <div className="mt-3 text-xs text-ivory/45">{product.short}</div>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-gold/20 px-2 py-1 text-[11px] text-gold/76">
+                  {meta}
+                </span>
+                <span className="text-xs text-ivory/45">{product.short}</span>
+              </div>
             </button>
           );
         })}
@@ -190,6 +196,12 @@ function shortenContext(value: string, max = 180): string {
   const clean = value.trim().replace(/\s+/g, " ");
   if (clean.length <= max) return clean;
   return `${clean.slice(0, max - 1).trim()}…`;
+}
+
+function followupOptionMeta(product: (typeof PRODUCTS_BY_SLUG)[string]): string {
+  if (product.category === "instant") return "Azonnali olvasat";
+  const hours = product.standardHours ?? 24;
+  return `${hours} órán belül · részletes elemzés`;
 }
 
 function followupIntro({
