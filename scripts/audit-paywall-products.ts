@@ -326,8 +326,22 @@ for (const [file, body] of [
   ["src/lib/stripe.ts", stripeClient],
   ["src/components/PaymentTestModeBanner.tsx", paymentBanner],
 ] as const) {
-  if (/Payments fül|Stripe verifikáció|fizetés még nincs élesítve/i.test(body)) {
+  if (
+    /Payments fül|Stripe verifikáció|fizetés még nincs élesítve|Fejlesztői környezet|publikus kulcs|Tesztkártya|4242 4242/i.test(
+      body,
+    )
+  ) {
     failed.push(`${file} must not expose Lovable/admin payment setup wording`);
+  }
+}
+for (const required of [
+  "A fizetés ezen a környezeten most nem indítható",
+  "Kártyaadat ilyenkor nem jut el hozzánk",
+  "Próba fizetési mód",
+  "itt nem indul valódi terhelés",
+]) {
+  if (!paymentBanner.includes(required)) {
+    failed.push(`PaymentTestModeBanner must use customer-safe payment mode wording: ${required}`);
   }
 }
 
