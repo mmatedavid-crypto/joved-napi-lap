@@ -200,7 +200,7 @@ function HaromLap() {
       <PageHeader
         eyebrow="Három lap"
         title="Múlt · Jelen · Jövő"
-        lead="Három lap, egy ív. Nem külön-külön, hanem együtt mond valamit."
+        lead="Három lap, egy ív a tarot hagyományából. Nem biztos jövőt mond, hanem a helyzeted múltját, jelenét és lehetséges irányát segít tisztábban látni."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20 space-y-8">
         {!slots && !drawing && (

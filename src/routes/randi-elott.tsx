@@ -169,7 +169,7 @@ function Page() {
       <PageHeader
         eyebrow="Szerelmi tarot"
         title="Egy lap a kapcsolatról"
-        lead="Egy kis tisztánlátás, mielőtt írsz, találkozol, vagy döntesz."
+        lead="Kapcsolati fókusz a tarot hagyományából, mielőtt írsz, találkozol vagy döntesz. Nem bizonyíték a másik szándékára, hanem józan tükör a tempóra."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
         {!slots && !drawing && (

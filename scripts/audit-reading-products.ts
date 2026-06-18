@@ -421,6 +421,9 @@ for (const needle of [
 }
 
 for (const needle of [
+  "Három lap, egy ív a tarot hagyományából",
+  "Nem biztos jövőt mond",
+  "lehetséges irányát segít tisztábban látni",
   "Tartsd magad előtt a kérdést",
   "Nem külön lapmagyarázat készül",
   "mi ismétlődik, mi nyílik",
@@ -432,6 +435,9 @@ for (const needle of [
 }
 
 for (const needle of [
+  "Kapcsolati fókusz a tarot hagyományából",
+  "Nem bizonyíték a másik szándékára",
+  "józan tükör a tempóra",
   "function loveQuestionSynthesis",
   "loveSituationHint",
   "A kérdésedre figyelve",
@@ -458,6 +464,9 @@ for (const needle of [
 }
 
 for (const needle of [
+  "Egy csendes tarot-fókusz",
+  "Nem dönt helyetted",
+  "különválasztani a vágyat, a félelmet és a józan belső irányt",
   "function decisionTarotSynthesis",
   "decisionCategoryHint",
   "A döntési helyzeted",

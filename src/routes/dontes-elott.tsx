@@ -223,7 +223,7 @@ function Page() {
       <PageHeader
         eyebrow="Döntés előtt"
         title="Húzz egy lapot, mielőtt döntesz"
-        lead="Egy csendes pillanat, mielőtt cselekszel."
+        lead="Egy csendes tarot-fókusz, mielőtt cselekszel. Nem dönt helyetted, hanem segít különválasztani a vágyat, a félelmet és a józan belső irányt."
       />
       <div className="mx-auto max-w-4xl px-4 md:px-6 pb-20 space-y-8">
         {!slots && !hex && !drawing && (

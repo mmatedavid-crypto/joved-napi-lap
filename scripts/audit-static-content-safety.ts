@@ -548,9 +548,13 @@ for (const file of publicUiFiles) {
 
 const publicTrustLeakFiles = [
   ...walkPublicUiSources("src/routes").filter(
-    (file) => !file.includes("/api/") && !file.includes("/lovable/") && !file.endsWith("dev.tudastar.tsx"),
+    (file) =>
+      !file.includes("/api/") &&
+      !file.includes("/lovable/") &&
+      !file.endsWith("dev.tudastar.tsx") &&
+      !file.endsWith("robots[.]txt.tsx"),
   ),
-  ...walkPublicUiSources("src/components"),
+  ...walkPublicUiSources("src/components").filter((file) => !file.includes("/ui/")),
   ...walkPublicUiSources("src/lib/email-templates"),
   "src/lib/error-page.ts",
   "src/lib/products.ts",
@@ -560,6 +564,8 @@ const publicTrustLeakPatterns = [
   /\bháttértudás\b/i,
   /\bprovider response\b/i,
   /\bprovider error\b/i,
+  /\bAPI\b/i,
+  /\bapit\b/i,
   /\bRoxy API\b/i,
   /\bOpenAI\b/i,
   /\bGPT\b/i,
@@ -571,6 +577,7 @@ const publicTrustLeakPatterns = [
   /közérthető magyar nyelven fogalmazzuk meg/i,
   /magyarra fordít/i,
   /lefordít/i,
+  /fordítjuk/i,
 ];
 
 for (const file of publicTrustLeakFiles) {
