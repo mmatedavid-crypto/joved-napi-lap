@@ -612,20 +612,27 @@ async function claimGuestOrdersForAuthenticatedUser(opts: {
     .select("id");
 
   if (error) {
-    console.warn("guest order claim failed:", {
-      code: error.code,
-      message: error.message,
+    console.warn("guest order claim failed", {
+      error_code: "guest_order_claim_failed",
+      database_code: stableErrorCode(error),
     });
     return 0;
   }
 
   const claimedIds = (data ?? []).map((row) => row.id).filter(Boolean);
   if (claimedIds.length) {
-    await supabaseAdmin
+    const { error: feedbackClaimError } = await supabaseAdmin
       .from("order_feedback")
       .update({ user_id: opts.userId, updated_at: new Date().toISOString() })
       .in("order_id", claimedIds)
       .is("user_id", null);
+    if (feedbackClaimError) {
+      console.warn("guest order feedback claim failed", {
+        error_code: "guest_order_feedback_claim_failed",
+        database_code: stableErrorCode(feedbackClaimError),
+        claimed_order_count: claimedIds.length,
+      });
+    }
   }
   return claimedIds.length;
 }
