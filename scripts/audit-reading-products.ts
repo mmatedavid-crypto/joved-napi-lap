@@ -337,6 +337,7 @@ const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const loveRoute = readFileSync("src/routes/randi-elott.tsx", "utf8");
 const decisionRoute = readFileSync("src/routes/dontes-elott.tsx", "utf8");
 const dailyCardRoute = readFileSync("src/routes/mai-lap.tsx", "utf8");
+const dailyCompassRoute = readFileSync("src/routes/mai-iranytu.tsx", "utf8");
 const compatibilityRoute = readFileSync("src/routes/osszeillunk.tsx", "utf8");
 
 for (const needle of [
@@ -353,6 +354,17 @@ for (const needle of [
 ]) {
   if (!dailyCardRoute.includes(needle)) {
     policyFailures.push(`daily card route must preserve user focus reflection: ${needle}`);
+  }
+}
+
+for (const needle of [
+  "Tarot, számminta, holdjel és kristály hagyományos jeleiből induló napi fókusz",
+  "Nem jóslat, hanem józan önismereti irány",
+  "sourceRoute=\"/mai-iranytu\"",
+  "productSlug=\"mai_iranytu_ai\"",
+]) {
+  if (!dailyCompassRoute.includes(needle)) {
+    policyFailures.push(`daily compass route must keep tradition-based trust framing: ${needle}`);
   }
 }
 

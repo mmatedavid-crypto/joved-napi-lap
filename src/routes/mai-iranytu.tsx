@@ -242,7 +242,7 @@ function Page() {
       <PageHeader
         eyebrow="Mai iránytű"
         title="A mai napod röviden"
-        lead="Egy összefogott napi rituálé. Add meg, amit szeretnél — a többit kihagyjuk."
+        lead="Tarot, számminta, holdjel és kristály hagyományos jeleiből induló napi fókusz. Nem jóslat, hanem józan önismereti irány."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={build} className="surface p-6 space-y-4">
