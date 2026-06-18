@@ -25,7 +25,8 @@ export const Route = createFileRoute("/szammisztika")({
       { title: "Sorsszám — számmisztika magyarul | Jövőd.hu" },
       {
         name: "description",
-        content: "Számold ki a sorsszámod és a személyes éved. Mit mond rólad a születési dátumod?",
+        content:
+          "Számold ki a sorsszámod és a személyes éved a számmisztika régi jelképrendszere szerint, józan önismereti olvasatként.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/szammisztika` }],
@@ -121,7 +122,7 @@ function Page() {
       <PageHeader
         eyebrow="Számmisztika"
         title="A sorsszámod"
-        lead="Egy szám, ami a születésed napjából érkezik veled."
+        lead="A számmisztika régi jelképrendszere a születési dátum mintáiból indul. Nem végleges sorsállítás, hanem önismereti nézőpont."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={calc} className="surface p-6 space-y-5">

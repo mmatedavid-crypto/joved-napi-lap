@@ -151,6 +151,33 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/routes/szammisztika.tsx",
+    forbidden: [
+      /\bMit mond rólad a születési dátumod\b/i,
+      /\bAPI\b/i,
+      /\blefordít/i,
+    ],
+    required: [
+      "számmisztika régi jelképrendszere",
+      "születési dátum mintáiból indul",
+      "önismereti nézőpont",
+    ],
+  },
+  {
+    file: "src/routes/horoszkop.tsx",
+    forbidden: [
+      /\bFriss csillagjegy-rovat magyarul\b/i,
+      /\bFriss, szerkesztett horoszkóp-rovat\b/i,
+      /\bAPI\b/i,
+      /\blefordít/i,
+    ],
+    required: [
+      "asztrológiai hagyomány jelképeiből",
+      "asztrológiai hagyomány régi jelképrendszeréből",
+      "jegyed hagyományos motívumait",
+    ],
+  },
+  {
     file: "src/data/lifePathMeanings.hu.ts",
     forbidden: [
       /\bgyógyít/i,

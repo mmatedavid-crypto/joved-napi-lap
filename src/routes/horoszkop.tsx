@@ -22,12 +22,13 @@ export const Route = createFileRoute("/horoszkop")({
       {
         name: "description",
         content:
-          "Napi, heti és havi horoszkóp magyarul mind a 12 csillagjegynek. Friss, szerkesztett horoszkóp-rovat a Jövőd.hu-n.",
+          "Napi, heti és havi horoszkóp magyarul mind a 12 csillagjegynek: az asztrológiai hagyomány jelképeiből, józan önismereti keretben.",
       },
       { property: "og:title", content: "Horoszkóp | Jövőd.hu" },
       {
         property: "og:description",
-        content: "Friss napi, heti és havi horoszkóp magyarul mind a 12 csillagjegynek.",
+        content:
+          "Napi, heti és havi horoszkóp magyarul, az asztrológiai hagyomány jelképeiből indulva.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/horoszkop` }],
@@ -70,7 +71,7 @@ function HoroszkopIndex() {
       <PageHeader
         eyebrow="Horoszkóp"
         title="Napi, heti és havi horoszkóp"
-        lead="Friss csillagjegy-rovat magyarul. Válassz időszakot és jegyet."
+        lead="Az asztrológiai hagyomány régi jelképrendszeréből induló, józan magyar olvasat. Válassz időszakot és jegyet."
       />
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20 space-y-8">
         <section className="surface p-5 md:p-6">
@@ -84,7 +85,7 @@ function HoroszkopIndex() {
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
                 Ha nem általános jegyszöveget szeretnél, kérhetsz egy rövid, személyre szabott napi
-                horoszkópot a jegyedhez és a mostani kérdésedhez igazítva.
+                horoszkópot: a jegyed hagyományos motívumait a mostani kérdésed felől olvassuk.
               </p>
             </div>
             <button className="btn-gold" onClick={openPersonalHoroscopePaywall}>
