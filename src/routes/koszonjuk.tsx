@@ -285,7 +285,8 @@ function Page() {
               <Section eyebrow="Hozzáférés">
                 <p>
                   Vendégként vásároltál. Az olvasatod ehhez az oldalhoz és a vásárlási email
-                  címedhez kapcsolódik, ezért érdemes ezt a linket megtartanod.
+                  címedhez kapcsolódik, ezért érdemes ezt a teljes, biztonságos rendelési linket
+                  megtartanod.
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
                   Amikor elkészül, emailben is elküldjük. Ha később nem találod, a vásárlási email

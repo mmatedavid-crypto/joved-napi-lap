@@ -152,6 +152,18 @@ const checks: Check[] = [
     ],
   },
   {
+    name: "thank-you page tells guest customers to save the full secure order link",
+    file: "src/routes/koszonjuk.tsx",
+    includes: [
+      "Vendégként vásároltál",
+      "ehhez az oldalhoz és a vásárlási email",
+      "ezt a teljes, biztonságos rendelési linket",
+      "megtartanod",
+      "Rögzített cím: {maskEmail(order.guest_email)}",
+    ],
+    excludes: ["ezért érdemes ezt a linket megtartanod"],
+  },
+  {
     name: "thank-you page reassures when long polling stops",
     file: "src/routes/koszonjuk.tsx",
     includes: [
