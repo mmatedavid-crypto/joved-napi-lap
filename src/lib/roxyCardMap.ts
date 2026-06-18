@@ -1,6 +1,6 @@
 // Client-safe mapping helpers: drawn source cards -> local TarotCard for display,
-// and -> AI prompt input that uses only source meaning fields. Local Hungarian
-// template text stays out of the prompt, so the result remains forráshű.
+// plus a source-only editor input. Local Hungarian template text stays out,
+// so the result remains forráshű.
 import { CARDS, type TarotCard } from "@/data/cards";
 import type { RoxyDrawnCard } from "./roxyNormalize";
 
@@ -16,7 +16,7 @@ function findLocal(roxy: RoxyDrawnCard): TarotCard {
     if (hit) return hit;
   }
   // Utolsó esély: ha valami miatt nem mappelt, A Bolond legyen a vizuális fallback
-  // (a render nem fog AI-ba szivárogni, csak képet ad).
+  // (a render nem szivárog be a szerkesztői szövegbe, csak képet ad).
   return CARDS[0];
 }
 
@@ -24,7 +24,7 @@ export function mapRoxyToLocal(roxy: RoxyDrawnCard[]): LocalDrawn[] {
   return roxy.map((r) => ({ card: findLocal(r), reversed: r.reversed, roxy: r }));
 }
 
-// AI prompt input minden kártyához. Szándékosan nem adjuk át a helyi
+// Szerkesztői bemenet minden kártyához. Szándékosan nem adjuk át a helyi
 // general/love/decision/warning/daily mezőket; csak a kapott jelképi
 // forrásmezőket, hogy ne sablonból készüljön az olvasat.
 export function toAIInput(d: LocalDrawn) {

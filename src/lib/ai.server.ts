@@ -1,10 +1,10 @@
-// SERVER-ONLY. AI helper. Reads OPENAI_API_KEY or LOVABLE_API_KEY from env.
-// Used to rewrite raw source data into warm, Hungarian Jövőd.hu copy.
+// SERVER-ONLY. Szerkesztői szövegező segédréteg, kizárólag szerveroldalon.
+// Rendezett jelképi és rendelési mezőkből készít meleg, magyar Jövőd.hu szöveget.
 
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
-// A prémium szövegező réteg külső API-n GPT 5.2-t használhat. A konkrét
-// gateway-modell env-ből felülírható, de az alapértelmezett referencia 5.2.
+// A prémium szövegező réteg erősebb alapértelmezett modellt használhat.
+// A konkrét futtatási modell env-ből felülírható, de az alapértelmezett referencia 5.2.
 const LOVABLE_MODEL = process.env.LOVABLE_AI_MODEL ?? "openai/gpt-5.2";
 const LOVABLE_FALLBACK_MODEL = process.env.LOVABLE_AI_FALLBACK_MODEL ?? "google/gemini-2.5-flash";
 const OPENAI_MODEL = process.env.OPENAI_READING_MODEL ?? "gpt-5.2";
@@ -76,8 +76,7 @@ export async function aiJSON<T>(opts: {
     }
   }
 
-  // Lovable AI Gateway. Ez marad az elsődleges
-  // útvonal azoknál az olvasatoknál, ahol nincs külön prémium preferencia.
+  // Alap szerkesztői útvonal azoknál az olvasatoknál, ahol nincs külön prémium preferencia.
   const lovableKey = process.env.LOVABLE_API_KEY;
   if (lovableKey) {
     const primaryModel = lovableModel;

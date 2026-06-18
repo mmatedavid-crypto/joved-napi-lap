@@ -603,13 +603,13 @@ for (const needle of [
 }
 
 if (!paidServer.includes('providerPreference: "openai_first"')) {
-  policyFailures.push("paid readings must prefer the strongest OpenAI/GPT route");
+  policyFailures.push("paid readings must prefer the strongest premium editorial route");
 }
 if (!paidServer.includes("allowLovableFallback: false")) {
   policyFailures.push("paid readings must not fall back to a weaker gateway model");
 }
 if (!paidServer.includes('"gpt-5.2"') || !aiServer.includes('"gpt-5.2"')) {
-  policyFailures.push("paid reading model defaults must reference GPT-5.2");
+  policyFailures.push("paid reading model defaults must reference the premium 5.2 model");
 }
 if (
   !paidServer.includes("PAID_READING_TIMEOUT_MS") ||
@@ -703,7 +703,7 @@ if (
   policyFailures.push("paid generation must persist internal source/model/fallback metadata");
 }
 if (!aiServer.includes("allowLovableFallback && primaryModel !== LOVABLE_FALLBACK_MODEL")) {
-  policyFailures.push("shared AI helper must make gateway fallback opt-in/controllable");
+  policyFailures.push("shared editorial helper must make fallback opt-in/controllable");
 }
 if (
   !aiServer.includes("export type AiResultMeta") ||
@@ -712,7 +712,7 @@ if (
   !aiServer.includes('provider: "openai" | "lovable"') ||
   !aiServer.includes("latencyMs: Date.now() - opts.started")
 ) {
-  policyFailures.push("shared AI helper must return provider/model/latency metadata");
+  policyFailures.push("shared editorial helper must return internal routing and latency metadata");
 }
 if (
   aiServer.includes("body: t.slice") ||
@@ -721,7 +721,7 @@ if (
   aiServer.includes("e instanceof Error ? e.message") ||
   aiServer.includes("error: e.message")
 ) {
-  policyFailures.push("shared AI helper must not expose raw provider/runtime error text");
+  policyFailures.push("shared editorial helper must not expose raw runtime error text");
 }
 if (policyFailures.length) {
   console.error("\nFailed paid AI policy audit:");
