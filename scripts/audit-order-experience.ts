@@ -133,11 +133,12 @@ const checks: Check[] = [
     includes: [
       "orderPreparationLead",
       "orderPreparationDetail",
-      "nem egy rövid automata választ",
+      "nem egy rövid sablonválaszt",
       "több szakaszban dolgozzuk össze",
       "pár percig hagyd nyitva",
       "biztonságos rendelési linket érdemes megtartanod",
     ],
+    excludes: ["nem egy rövid automata választ"],
   },
   {
     name: "thank-you page exposes a short order reference",
@@ -263,7 +264,7 @@ const checks: Check[] = [
       "runProcess({ data: { sessionId: session_id } })",
       "const refreshed = await fetchOrder",
       "Feldolgozás újrapróbálása",
-      "akkor engedjük, ha a fizetés igazoltan sikeres",
+      "engedjük, ha a fizetés igazoltan sikeres",
       "Ha az újrapróbálás sem rendezi",
       "A rendelés nem vész el",
       "jogos esetben visszatérítési egyeztetést indítunk",

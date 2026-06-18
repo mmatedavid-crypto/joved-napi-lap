@@ -380,9 +380,9 @@ function Page() {
             {order.status === "failed" && (
               <Section eyebrow="Sajnos hiba történt">
                 <p>
-                  Nem sikerült automatikusan feldolgozni az olvasatot. Ez nem jelenti azt, hogy a
-                  vásárlásod elveszett: megpróbálhatod újraindítani az olvasatkészítést. Ezt csak
-                  akkor engedjük, ha a fizetés igazoltan sikeres.
+                  Az olvasat elkészítése most megakadt. Ez nem jelenti azt, hogy a vásárlásod
+                  elveszett: megpróbálhatod újraindítani az olvasatkészítést. Ezt csak akkor
+                  engedjük, ha a fizetés igazoltan sikeres.
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
                   Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük
@@ -758,7 +758,7 @@ function feedbackMailto(opts: {
 
 function orderPreparationLead(order: OrderView): string {
   if (order.category === "delayed") {
-    return "A részletes olvasatod rögzítve van. Itt nem egy rövid automata választ mutatunk: a megadott kérdést, adatokat és témát több szakaszban dolgozzuk össze.";
+    return "A részletes olvasatod rögzítve van. Itt nem egy rövid sablonválaszt mutatunk: a megadott kérdést, adatokat és témát több szakaszban dolgozzuk össze.";
   }
   return "A személyes olvasatod ezen az oldalon jelenik meg, amint elkészült. Az azonnali termékek általában pár percen belül megérkeznek.";
 }

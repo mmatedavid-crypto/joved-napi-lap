@@ -54,9 +54,10 @@ export const Route = createFileRoute("/aszf")({
 
       <LegalSection title="Teljesítés">
         <p>
-          A digitális olvasatok a sikeres fizetés után automatikusan készülnek el, és a rendelési
-          oldalon vagy a felhasználói profilban érhetők el. Egyes részletesebb olvasatok elkészítése
-          hosszabb ideig tarthat; ezeknél a terméklapon jelzett tájékoztatás irányadó.
+          A digitális olvasatok elkészítése a sikeres fizetés után indul el, és az elkészült
+          olvasat a rendelési oldalon vagy a felhasználói profilban érhető el. Egyes részletesebb
+          olvasatok elkészítése hosszabb ideig tarthat; ezeknél a terméklapon jelzett tájékoztatás
+          irányadó.
         </p>
         <p>
           Vendégvásárlásnál a fizetés utáni rendelési linket és a vásárláshoz használt email címet

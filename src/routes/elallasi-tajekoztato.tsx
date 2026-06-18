@@ -21,9 +21,9 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
     >
       <LegalSection title="Digitális tartalom">
         <p>
-          A Jövőd.hu fizetős olvasatai digitális tartalmak. Az olvasatok a sikeres fizetés után
-          automatikusan készülnek el, és a rendelési oldalon vagy a felhasználói profilban érhetők
-          el.
+          A Jövőd.hu fizetős olvasatai digitális tartalmak. Az elkészítés a sikeres fizetés után
+          indul el, az elkészült olvasat pedig a rendelési oldalon vagy a felhasználói profilban
+          érhető el.
         </p>
       </LegalSection>
 

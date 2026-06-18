@@ -185,6 +185,8 @@ const checks: Check[] = [
     name: "terms explain safe digital fulfillment support path",
     file: "src/routes/aszf.tsx",
     includes: [
+      "A digitális olvasatok elkészítése a sikeres fizetés után indul el",
+      "olvasat a rendelési oldalon vagy a felhasználói profilban érhető el",
       "Vendégvásárlásnál",
       "fizetés utáni rendelési linket",
       "vásárláshoz használt email címet",
@@ -198,7 +200,11 @@ const checks: Check[] = [
       "újraküldjük az olvasatot",
       "emailes értesítés melyik ponton akadt el",
     ],
-    excludes: ["garantáltan pótoljuk", "feltétel nélkül visszatérítjük"],
+    excludes: [
+      "garantáltan pótoljuk",
+      "feltétel nélkül visszatérítjük",
+      "automatikusan készülnek el",
+    ],
   },
   {
     name: "mobile bottom navigation gives direct profile access",
@@ -631,6 +637,8 @@ const checks: Check[] = [
     name: "withdrawal page gives clear recovery steps for paid delivery issues",
     file: "src/routes/elallasi-tajekoztato.tsx",
     includes: [
+      "elkészítés a sikeres fizetés után",
+      "az elkészült olvasat pedig a rendelési oldalon vagy a felhasználói profilban",
       "Hibás teljesítés vagy hozzáférési gond",
       "vásárláshoz használt email címet",
       "rövid rendelésazonosítót",
@@ -640,6 +648,7 @@ const checks: Check[] = [
       "profilod rendelési előzményeit",
       "nem csak emailben",
     ],
+    excludes: ["automatikusan készülnek el"],
   },
   {
     name: "numerology SEO pages never expose raw router error messages",
