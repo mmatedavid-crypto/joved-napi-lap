@@ -356,10 +356,19 @@ const checks: Check[] = [
     file: "src/routes/email/unsubscribe.ts",
     includes: [
       "function redactToken",
+      "function stableErrorCode",
+      'error_code: "unsubscribe_token_mark_used_failed"',
+      'error_code: "unsubscribe_email_suppression_failed"',
+      "database_code: stableErrorCode(updateError)",
+      "database_code: stableErrorCode(suppressError)",
       "token_redacted: redactToken(token)",
       "email_redacted: redactEmail(tokenRecord.email)",
     ],
-    excludes: ['console.error("Failed to mark token as used", { error: updateError, token })'],
+    excludes: [
+      'console.error("Failed to mark token as used", { error: updateError, token })',
+      "error: updateError,\n            token_redacted",
+      "error: suppressError,\n            email_redacted",
+    ],
   },
   {
     name: "unsubscribe endpoint returns localized public errors",

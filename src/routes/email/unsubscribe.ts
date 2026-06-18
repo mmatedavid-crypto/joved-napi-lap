@@ -14,6 +14,12 @@ function redactToken(token: string | null | undefined): string {
   return `${token.slice(0, 4)}***${token.slice(-4)}`;
 }
 
+function stableErrorCode(error: unknown): string {
+  if (!error || typeof error !== "object") return "unknown_error";
+  const code = (error as { code?: unknown }).code;
+  return typeof code === "string" && /^[a-zA-Z0-9_.-]{1,80}$/.test(code) ? code : "unknown_error";
+}
+
 const PUBLIC_UNSUBSCRIBE_ERROR =
   "A leiratkozási kérést most nem tudtuk feldolgozni. Kérlek próbáld újra később.";
 const MISSING_UNSUBSCRIBE_TOKEN =
@@ -134,7 +140,8 @@ export const Route = createFileRoute("/email/unsubscribe")({
 
         if (updateError) {
           console.error("Failed to mark token as used", {
-            error: updateError,
+            error_code: "unsubscribe_token_mark_used_failed",
+            database_code: stableErrorCode(updateError),
             token_redacted: redactToken(token),
           });
           return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
@@ -154,7 +161,8 @@ export const Route = createFileRoute("/email/unsubscribe")({
 
         if (suppressError) {
           console.error("Failed to suppress email", {
-            error: suppressError,
+            error_code: "unsubscribe_email_suppression_failed",
+            database_code: stableErrorCode(suppressError),
             email_redacted: redactEmail(tokenRecord.email),
           });
           return unsubscribeError(PUBLIC_UNSUBSCRIBE_ERROR, 500);
