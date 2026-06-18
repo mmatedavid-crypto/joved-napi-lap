@@ -233,7 +233,7 @@ function Page() {
         ...current,
         [orderId]: {
           kind: "error",
-          text: "Most nem sikerült újraindítani a feldolgozást. A rendelés nem vész el; próbáld újra később, vagy írj nekünk a vásárlási email címedről.",
+          text: "Most nem sikerült újraindítani az olvasatkészítést. A rendelés nem vész el; írj nekünk a vásárlási email címedről, és utánanézünk.",
         },
       }));
     } finally {
@@ -638,13 +638,16 @@ function OrderStatusNote({
     const shortId = shortOrderId(order.id);
     return (
       <div className="mt-3 rounded-md border border-gold/20 bg-gold/[0.06] px-3 py-2">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-gold/75">
+          Rendelés biztonságban
+        </div>
         <p className="text-xs leading-relaxed text-ivory/65">
-          A feldolgozás elakadt, de a rendelés nem vész el. Megpróbálhatod újraindítani az
-          olvasatkészítést; ezt csak akkor engedjük, ha a fizetés igazoltan sikeres.
+          Az olvasatkészítés most elakadt, de a rendelés nem vész el. A fizetést ellenőrizzük, és
+          az újraindítást csak akkor engedjük, ha a fizetés igazoltan sikeres.
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-ivory/52">
-          Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük az
-          olvasatot, vagy jogos esetben visszatérítési egyeztetést indítunk.
+          Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: pótoljuk az olvasathoz való
+          hozzáférést, vagy jogos esetben visszatérítési egyeztetést indítunk.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button
@@ -674,12 +677,16 @@ function OrderRetryNotice({ notice }: { notice?: RetryNotice }) {
   if (!notice) return null;
   const tone =
     notice.kind === "error"
-      ? "border-red-400/25 bg-red-950/20 text-red-100/80"
+      ? "border-gold/20 bg-gold/[0.07] text-ivory/70"
       : notice.kind === "success"
         ? "border-gold/20 bg-gold/[0.07] text-ivory/70"
         : "border-[oklch(0.78_0.10_80/0.16)] bg-black/10 text-ivory/62";
   return (
-    <div className={`mt-3 rounded-md border px-3 py-2 text-xs leading-relaxed ${tone}`}>
+    <div
+      aria-live="polite"
+      role="status"
+      className={`mt-3 rounded-md border px-3 py-2 text-xs leading-relaxed ${tone}`}
+    >
       {notice.text}
     </div>
   );
