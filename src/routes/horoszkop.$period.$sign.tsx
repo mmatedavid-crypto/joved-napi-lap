@@ -79,7 +79,7 @@ export const Route = createFileRoute("/horoszkop/$period/$sign")({
         { name: "twitter:image:alt", content: `${title} · Jövőd.hu` },
         { name: "robots", content: loaderData.fallbackUsed ? "noindex,follow" : "index,follow" },
       ],
-      links: [{ rel: "canonical", href: canonicalPath }],
+      links: [{ rel: "canonical", href: canonicalUrl }],
       scripts: [
         {
           type: "application/ld+json",

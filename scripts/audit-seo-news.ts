@@ -64,6 +64,7 @@ const checks: Check[] = [
       'property: "og:image"',
       'name: "twitter:card", content: "summary_large_image"',
       'name: "twitter:image"',
+      'links: [{ rel: "canonical", href: canonicalUrl }]',
       "BRAND_LOGO_URL",
       "image: BRAND_OG_IMAGE_URL",
       'loaderData.fallbackUsed ? "noindex,follow" : "index,follow"',
@@ -71,7 +72,7 @@ const checks: Check[] = [
       "datePublished: articleDate",
       "dateModified: articleDate",
     ],
-    excludes: ['const SITE_URL = "https://jovod.hu"', "/__l5e/assets-v1/e7a03b1f"],
+    excludes: ['const SITE_URL = "https://jovod.hu"', 'href: canonicalPath', "/__l5e/assets-v1/e7a03b1f"],
   },
   {
     name: "horoscope article communicates live preparation during slow loads",
