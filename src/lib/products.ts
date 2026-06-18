@@ -297,7 +297,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "personal_yearly",
     priceId: "personal_yearly_price",
     name: "Személyes éves horoszkóp",
-    short: "Teljes éves időszaki térkép a saját születési képletedből, hónapról hónapra.",
+    short: "Részletes éves időszaki térkép a saját születési képletedből, hónapról hónapra.",
     includes: [
       "12 hónap kulcstémái a saját képletedre szabva",
       "kiemelt időablakok: szerelem, munka, döntések",

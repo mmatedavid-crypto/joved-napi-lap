@@ -289,7 +289,7 @@ function situationReflection(situation: string): { heading: string; text: string
   }
   return {
     heading: "A megadott témád felől",
-    text: `A „${situation}” témájában ez az olvasat nem nagy előrejelzést ad, hanem napi fókuszt: hol érdemes ma kevesebb zajból, tisztább belső ritmusból reagálnod.`,
+    text: `A „${situation}” témájában ez az olvasat nem kész jövőképet ad, hanem napi fókuszt: hol érdemes ma kevesebb zajból, tisztább belső ritmusból reagálnod.`,
   };
 }
 

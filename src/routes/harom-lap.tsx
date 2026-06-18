@@ -360,7 +360,7 @@ function HaromLap() {
                   {productCtaLabel("Három lap — mély elemzés", "harom_lap_mely")}
                 </button>
                 <div className="mt-4 text-sm text-ivory/65">
-                  Kelta keresztet akkor válassz, ha nem csak választ, hanem teljesebb képet
+                  Kelta keresztet akkor válassz, ha nem csak választ, hanem tágabb mintázatot
                   szeretnél: mi tart vissza, mi mozgat belül, mi látszik kívülről, és merre nyílhat
                   út.
                 </div>

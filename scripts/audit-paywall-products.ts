@@ -506,6 +506,7 @@ for (const forbiddenNeedle of [
   "30 napos előrejelzést kérek",
   "Ha tudni akarod, mire figyelj",
   "A 30 napos előrejelzés",
+  "teljes védikus elemzést",
 ]) {
   if (pricingRoute.includes(forbiddenNeedle)) {
     failed.push(
@@ -517,6 +518,7 @@ for (const forbiddenNeedle of [
 for (const forbiddenNeedle of [
   "Személyes 30 napos előrejelzés",
   "Teljes éves előrejelzés",
+  "Teljes éves időszaki térkép",
   "konkrét napokra figyelmeztetés",
   "konkrét napokra szóló",
   "natalchart",
@@ -580,6 +582,12 @@ for (const { file, source } of delayedAstrologyRouteSources) {
 for (const forbiddenNeedle of ["30 napos előrejelzés"]) {
   if (homeRoute.includes(forbiddenNeedle)) {
     failed.push(`Home route must avoid prediction-style paid astrology link: ${forbiddenNeedle}`);
+  }
+}
+
+for (const forbiddenNeedle of ["teljesebb képet", "nem nagy előrejelzést"]) {
+  if (threeCardRoute.includes(forbiddenNeedle) || productsSource.includes(forbiddenNeedle)) {
+    failed.push(`Visible product copy must avoid overpromising wording: ${forbiddenNeedle}`);
   }
 }
 

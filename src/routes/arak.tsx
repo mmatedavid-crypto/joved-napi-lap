@@ -335,7 +335,7 @@ function PricingPage() {
               title="Részletes asztrológiai riport"
               price={delayedPriceRange}
               delivery="Normál esetben 24 órán belül, expresszel 6 órán belül"
-              bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy teljes védikus elemzést."
+              bestFor="Ha a saját születési képletedből kérsz 30 napos, éves, tranzit- vagy részletes védikus elemzést."
               result="Több oldalas, személyre szabott riport születési dátum, idő és hely alapján."
             />
           </div>
