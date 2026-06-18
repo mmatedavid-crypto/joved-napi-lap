@@ -533,6 +533,10 @@ function OrderPollingPaused({ order }: { order: OrderView }) {
         Frissíts rá később erre az oldalra. Ha sürgős, írj nekünk a vásárlási email címedről, és add
         meg a rövid rendelésazonosítót: {shortOrderId(order.id) ?? "a köszönőoldalon látható kód"}.
       </p>
+      <p className="mt-2 text-sm leading-relaxed text-ivory/55">
+        Ilyenkor ne indíts új fizetést és ne rendeld meg újra ugyanazt az olvasatot; ugyanerről a
+        biztonságos linkről vagy a rendelésazonosító alapján rendezzük a hozzáférést.
+      </p>
       <SupportContact className="mt-3" orderId={order.id} />
     </div>
   );
