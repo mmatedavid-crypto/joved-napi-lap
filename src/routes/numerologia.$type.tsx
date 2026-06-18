@@ -8,7 +8,7 @@ import { SITE_LEGAL } from "@/lib/legal";
 const SITE_URL = SITE_LEGAL.siteUrl;
 const VALID = new Set(NUMEROLOGY_TYPES.map((t) => t.slug));
 const SAFE_NUMEROLOGY_PAGE_ERROR =
-  "A számmisztikai tartalom most nem töltődött be. Kérlek próbáld újra egy pillanat múlva.";
+  "A számmisztikai oldal most nem nyílt meg elég tisztán. Nem veszett el semmilyen adat; indítsd újra nyugodtan.";
 
 export const Route = createFileRoute("/numerologia/$type")({
   beforeLoad: ({ params }) => {
@@ -73,10 +73,14 @@ export const Route = createFileRoute("/numerologia/$type")({
   ),
   errorComponent: ({ reset }) => (
     <Layout>
-      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={SAFE_NUMEROLOGY_PAGE_ERROR} />
+      <PageHeader
+        eyebrow="Számmisztika"
+        title="Most nem nyílt meg az oldal"
+        lead={SAFE_NUMEROLOGY_PAGE_ERROR}
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 text-center">
         <button onClick={reset} className="btn-gold">
-          Újra
+          Megpróbálom újra
         </button>
       </div>
     </Layout>

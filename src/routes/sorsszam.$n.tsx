@@ -7,7 +7,7 @@ import { SITE_LEGAL } from "@/lib/legal";
 
 const VALID = new Set(LIFE_PATH_NUMBERS.map(String));
 const SAFE_NUMEROLOGY_PAGE_ERROR =
-  "A számmisztikai tartalom most nem töltődött be. Kérlek próbáld újra egy pillanat múlva.";
+  "A számmisztikai oldal most nem nyílt meg elég tisztán. Nem veszett el semmilyen adat; indítsd újra nyugodtan.";
 
 export const Route = createFileRoute("/sorsszam/$n")({
   beforeLoad: ({ params }) => {
@@ -58,10 +58,14 @@ export const Route = createFileRoute("/sorsszam/$n")({
   ),
   errorComponent: ({ reset }) => (
     <Layout>
-      <PageHeader eyebrow="Hiba" title="Nem sikerült betölteni" lead={SAFE_NUMEROLOGY_PAGE_ERROR} />
+      <PageHeader
+        eyebrow="Számmisztika"
+        title="Most nem nyílt meg az oldal"
+        lead={SAFE_NUMEROLOGY_PAGE_ERROR}
+      />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 text-center">
         <button onClick={reset} className="btn-gold">
-          Újra
+          Megpróbálom újra
         </button>
       </div>
     </Layout>

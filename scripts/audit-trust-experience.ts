@@ -728,14 +728,26 @@ const checks: Check[] = [
   {
     name: "numerology SEO pages never expose raw router error messages",
     file: "src/routes/sorsszam.$n.tsx",
-    includes: ["SAFE_NUMEROLOGY_PAGE_ERROR", "A számmisztikai tartalom most nem töltődött be"],
-    excludes: ["lead={error.message}"],
+    includes: [
+      "SAFE_NUMEROLOGY_PAGE_ERROR",
+      "A számmisztikai oldal most nem nyílt meg elég tisztán",
+      "Nem veszett el semmilyen adat",
+      "indítsd újra nyugodtan",
+      "Megpróbálom újra",
+    ],
+    excludes: ["lead={error.message}", "Kérlek próbáld újra", 'eyebrow="Hiba"'],
   },
   {
     name: "numerology type pages never expose raw router error messages",
     file: "src/routes/numerologia.$type.tsx",
-    includes: ["SAFE_NUMEROLOGY_PAGE_ERROR", "A számmisztikai tartalom most nem töltődött be"],
-    excludes: ["lead={error.message}"],
+    includes: [
+      "SAFE_NUMEROLOGY_PAGE_ERROR",
+      "A számmisztikai oldal most nem nyílt meg elég tisztán",
+      "Nem veszett el semmilyen adat",
+      "indítsd újra nyugodtan",
+      "Megpróbálom újra",
+    ],
+    excludes: ["lead={error.message}", "Kérlek próbáld újra", 'eyebrow="Hiba"'],
   },
   {
     name: "natal chart page never displays raw provider or AI errors",
