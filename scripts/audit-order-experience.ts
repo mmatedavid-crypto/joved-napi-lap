@@ -482,6 +482,7 @@ const checks: Check[] = [
       "OrderOverviewNotice",
       "Rendelési állapot összefoglaló",
       "készül vagy egyeztetés alatt",
+      "A profilban is megjelenik; a fizetés utáni rendelési linket is érdemes megtartanod",
       "kész olvasat",
       "másolhatod, letöltheted és visszajelzést küldhetsz",
       "figyelmet kér",
@@ -495,7 +496,7 @@ const checks: Check[] = [
       "jogos esetben visszatérítési egyeztetést",
       "SITE_LEGAL.supportEmail",
     ],
-    excludes: ["az olvasatot, vagy visszatérítjük"],
+    excludes: ["az olvasatot, vagy visszatérítjük", "Tartsd meg a linket; ha elkészül"],
     enforceExcludes: true,
   },
   {

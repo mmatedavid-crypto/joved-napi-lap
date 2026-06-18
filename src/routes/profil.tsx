@@ -578,7 +578,7 @@ function OrderOverviewNotice({ orders }: { orders: ProfileOrder[] }) {
             <span className="font-medium text-ivory/78">
               {active} készül vagy egyeztetés alatt.
             </span>{" "}
-            Tartsd meg a linket; ha elkészül, itt is megjelenik.
+            A profilban is megjelenik; a fizetés utáni rendelési linket is érdemes megtartanod.
           </div>
         )}
         {delivered > 0 && (
