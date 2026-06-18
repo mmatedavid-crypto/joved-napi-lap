@@ -122,7 +122,7 @@ function Index() {
                 },
                 {
                   title: "Hagyományos jelképek",
-                  text: "A tarot, a számmisztika és az asztrológia régi szimbólumait józan, mai nyelven olvassuk.",
+                  text: "A tarot, a számmisztika és az asztrológia nagy hagyományú, történeti jelképrendszereit és népi megfigyeléseit józan, mai nyelven olvassuk.",
                 },
                 {
                   title: "Visszatérő ív",

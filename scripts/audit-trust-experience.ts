@@ -33,7 +33,8 @@ const checks: Check[] = [
       "A kérdésedből, a jelekből és a visszatérő mintáidból indul",
       "Konkrét helyzet",
       "Hagyományos jelképek",
-      "régi szimbólumait józan, mai nyelven olvassuk",
+      "nagy hagyományú, történeti jelképrendszereit",
+      "népi megfigyeléseit józan, mai nyelven olvassuk",
       "Visszatérő ív",
       "Opcionális, törölhető",
       "csak finomabb folytatást ad",
@@ -42,6 +43,18 @@ const checks: Check[] = [
       "Személyes olvasatok",
     ],
     excludes: ["biztosan", "garantáltan", "mindenképpen"],
+  },
+  {
+    name: "pricing FAQ frames readings through tradition, not machinery",
+    file: "src/routes/arak.tsx",
+    includes: [
+      "Ezek jóslatok?",
+      "nagy hagyományú, történeti jelképrendszerekből",
+      "népi megfigyelésekből indul",
+      "nem biztos jövőként",
+      "önismereti olvasatként kezeljük",
+    ],
+    excludes: ["Roxy", "API", "provider", "lefordít", "fordítjuk"],
   },
   {
     name: "homepage personal briefing failure keeps trust and next action",

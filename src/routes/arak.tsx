@@ -33,7 +33,7 @@ const PRICING_FAQ = [
   {
     question: "Ezek jóslatok?",
     answer:
-      "A tarot, a számmisztika és az asztrológia régi jelképrendszerekből indul. Mi ezeket nem biztos jövőként, hanem önismereti olvasatként kezeljük: segíthetnek tisztábban ránézni egy helyzetre, de nem helyettesítenek orvosi, jogi, pénzügyi vagy krízishelyzeti segítséget.",
+      "A tarot, a számmisztika és az asztrológia nagy hagyományú, történeti jelképrendszerekből és népi megfigyelésekből indul. Mi ezeket nem biztos jövőként, hanem önismereti olvasatként kezeljük: segíthetnek tisztábban ránézni egy helyzetre, de nem helyettesítenek orvosi, jogi, pénzügyi vagy krízishelyzeti segítséget.",
   },
 ] as const;
 
