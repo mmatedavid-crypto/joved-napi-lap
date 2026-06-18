@@ -18,7 +18,7 @@ const checks: Check[] = [
     name: "homepage explains free entry, paid price floor, and safe access",
     file: "src/routes/index.tsx",
     includes: [
-      'const SITE_URL = "https://jovod.hu"',
+      "const SITE_URL = SITE_LEGAL.siteUrl",
       'links: [{ rel: "canonical", href: SITE_URL }]',
       "ENTRY_PRICE",
       "formatHuf(ENTRY_PRICE)",

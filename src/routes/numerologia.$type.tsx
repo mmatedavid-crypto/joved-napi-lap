@@ -3,8 +3,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { getNumerologyType, NUMEROLOGY_TYPES } from "@/data/numerologyTypes.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const VALID = new Set(NUMEROLOGY_TYPES.map((t) => t.slug));
 const SAFE_NUMEROLOGY_PAGE_ERROR =
   "A számmisztikai tartalom most nem töltődött be. Kérlek próbáld újra egy pillanat múlva.";

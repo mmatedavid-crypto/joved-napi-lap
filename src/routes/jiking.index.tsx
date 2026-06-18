@@ -3,8 +3,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "I Ching / Ji King — mind a 64 hexagram magyarul";
 const DESCRIPTION =
   "I Ching enciklopédia: 64 hexagram magyar névvel, témával, útmutatással és figyelmeztetéssel. Ősi kínai bölcsesség mai döntésekhez.";

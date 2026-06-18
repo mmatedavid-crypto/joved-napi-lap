@@ -3,8 +3,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { CHINESE_ANIMALS, findAnimalBySlug } from "@/data/chineseZodiac.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 
 export const Route = createFileRoute("/kinai-horoszkop/$animal")({
   loader: ({ params }) => {

@@ -8,8 +8,9 @@ import {
   findAngelNumberPage,
   reduceAngel,
 } from "@/lib/angel.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 
 export const Route = createFileRoute("/angyalszam/$szam")({
   loader: ({ params }) => {

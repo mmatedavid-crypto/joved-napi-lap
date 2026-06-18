@@ -6,8 +6,9 @@ import { PageHeader, Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import { huTodayKey } from "@/lib/dateKeys";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Napi szerencseszámok csillagjegy szerint";
 const DESCRIPTION =
   "Mai szerencseszámok mind a 12 csillagjegyhez: 6 személyes szám és egy játékos lottótipp, minden nap frissítve.";

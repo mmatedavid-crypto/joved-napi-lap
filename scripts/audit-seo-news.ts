@@ -274,10 +274,12 @@ const checks: Check[] = [
 const failed: string[] = [];
 
 const publicHubCanonicalChecks = [
+  ["src/routes/index.tsx", "href: SITE_URL"],
   ["src/routes/horoszkop.tsx", 'href: `${SITE_LEGAL.siteUrl}/horoszkop`'],
   ["src/routes/tarot.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/tarot`'],
   ["src/routes/numerologia.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/numerologia`'],
   ["src/routes/magazin.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/magazin`'],
+  ["src/routes/rolunk.tsx", 'href: `${SITE_LEGAL.siteUrl}/rolunk`'],
   ["src/routes/arak.tsx", 'href: `${SITE_LEGAL.siteUrl}/arak`'],
   ["src/routes/mai-lap.tsx", 'href: `${SITE_LEGAL.siteUrl}/mai-lap`'],
   ["src/routes/harom-lap.tsx", 'href: `${SITE_LEGAL.siteUrl}/harom-lap`'],
@@ -289,6 +291,15 @@ const publicHubCanonicalChecks = [
   ["src/routes/angyalszam.index.tsx", 'href: `${SITE_LEGAL.siteUrl}/angyalszam`'],
   ["src/routes/kristaly.tsx", 'href: `${SITE_LEGAL.siteUrl}/kristaly`'],
   ["src/routes/mai-iranytu.tsx", 'href: `${SITE_LEGAL.siteUrl}/mai-iranytu`'],
+  ["src/routes/szerencseszamok.tsx", "href: `${SITE_URL}/szerencseszamok`"],
+  ["src/routes/szuletesi-keplet.tsx", 'href: `${SITE_LEGAL.siteUrl}/szuletesi-keplet`'],
+  ["src/routes/vedikus-asztrologia.tsx", 'href: `${SITE_LEGAL.siteUrl}/vedikus-asztrologia`'],
+  ["src/routes/eves-horoszkop.tsx", 'href: `${SITE_LEGAL.siteUrl}/eves-horoszkop`'],
+  ["src/routes/tranzitok.tsx", 'href: `${SITE_LEGAL.siteUrl}/tranzitok`'],
+  [
+    "src/routes/szemelyes-30-napos-horoszkop.tsx",
+    'href: `${SITE_LEGAL.siteUrl}/szemelyes-30-napos-horoszkop`',
+  ],
 ] as const;
 
 const publicContentCanonicalChecks = [
@@ -329,6 +340,9 @@ for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
   if (body.includes('links: [{ rel: "canonical", href: "/')) {
     failed.push(`${file}: public hub must not use a relative canonical URL`);
   }
+  if (body.includes('const SITE_URL = "https://jovod.hu"')) {
+    failed.push(`${file}: public hub must use SITE_LEGAL.siteUrl instead of a hard-coded domain`);
+  }
 }
 
 for (const [file, canonicalNeedle] of publicContentCanonicalChecks) {
@@ -338,6 +352,9 @@ for (const [file, canonicalNeedle] of publicContentCanonicalChecks) {
   }
   if (body.includes('links: [{ rel: "canonical", href: "/')) {
     failed.push(`${file}: public content must not use a relative canonical URL`);
+  }
+  if (body.includes('const SITE_URL = "https://jovod.hu"')) {
+    failed.push(`${file}: public content must use SITE_LEGAL.siteUrl instead of a hard-coded domain`);
   }
 }
 

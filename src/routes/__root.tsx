@@ -15,7 +15,7 @@ import { SITE_LEGAL } from "../lib/legal";
 import brandLogoAsset from "../assets/jovod-logo.png.asset.json";
 import brandShareAsset from "../assets/jovod-share.png.asset.json";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const BRAND_NAME = "Jövőd.hu";
 const SITE_DESCRIPTION =
   "Magyar tarot, számmisztika, horoszkóp és önismereti olvasatok egy csendes napi rituáléhoz.";

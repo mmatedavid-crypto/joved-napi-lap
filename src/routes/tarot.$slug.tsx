@@ -3,8 +3,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { CARDS } from "@/data/cards";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 
 export const Route = createFileRoute("/tarot/$slug")({
   loader: ({ params }) => {

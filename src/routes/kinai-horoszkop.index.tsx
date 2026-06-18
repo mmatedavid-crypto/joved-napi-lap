@@ -4,8 +4,9 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { CHINESE_ANIMALS, findAnimalByDate, type ChineseCalcResult } from "@/data/chineseZodiac.hu";
+import { SITE_LEGAL } from "@/lib/legal";
 
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Kínai horoszkóp — 12 állatöv jelentése magyarul";
 const DESCRIPTION =
   "Kínai zodiákus magyarul: patkány, bivaly, tigris, nyúl, sárkány, kígyó, ló, kecske, majom, kakas, kutya, disznó. Jellem, szerelem, karrier, kompatibilitás és születési évek.";

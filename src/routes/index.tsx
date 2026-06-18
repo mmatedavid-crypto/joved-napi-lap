@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { MoonPhaseStrip } from "@/components/MoonPhaseStrip";
 import { PersonalDailyBriefing } from "@/components/PersonalDailyBriefing";
 import { YesNoWidget } from "@/components/YesNoWidget";
+import { SITE_LEGAL } from "@/lib/legal";
 import { PRODUCTS, formatHuf } from "@/lib/products";
 
 const RitualTable = lazy(() =>
@@ -11,7 +12,7 @@ const RitualTable = lazy(() =>
 );
 
 const ENTRY_PRICE = Math.min(...PRODUCTS.map((product) => product.priceHuf));
-const SITE_URL = "https://jovod.hu";
+const SITE_URL = SITE_LEGAL.siteUrl;
 
 export const Route = createFileRoute("/")({
   head: () => ({
