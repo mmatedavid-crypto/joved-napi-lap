@@ -64,6 +64,11 @@ export const Route = createFileRoute("/aszf")({
           érdemes megőrizni. Bejelentkezett felhasználónál az elkészült olvasat a profilban is visszanézhető.
         </p>
         <p>
+          Express gyorsítás választásakor a részletes olvasatnál külön gyorsított határidőt vállalunk.
+          Ha ez a határidő csúszna, a rendelés nem vész el; a vásárlási email cím és a rendelési
+          azonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.
+        </p>
+        <p>
           Ha hozzáférési vagy teljesítési gond miatt az olvasat nem nyílik meg, nem hozzáférhető,
           vagy hibásan jelenik meg, a felhasználó a kapcsolati email címen kérhet segítséget.
           Ilyenkor a vásárlási email cím és a rövid rendelésazonosító alapján ellenőrizzük a

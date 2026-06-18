@@ -414,7 +414,9 @@ export function PaywallDialog({
                 <span>
                   Express gyorsítás 6 órán belül · +{formatHuf(EXPRESS_PRICE_HUF)}
                   <span className="block text-xs text-ivory/45 mt-1">
-                    Ha nem sürgős, a normál kézbesítés kedvezőbb.
+                    Ha nem sürgős, a normál kézbesítés kedvezőbb. Ha az express vállalás csúszna,
+                    nem kell új rendelést indítanod; rendelés alapján utánanézünk, és a gyorsítás
+                    díját külön rendezzük.
                   </span>
                 </span>
               </label>

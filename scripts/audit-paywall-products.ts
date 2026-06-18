@@ -41,6 +41,7 @@ const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
 const productsSource = readFileSync("src/lib/products.ts", "utf8");
 const pricingRoute = readFileSync("src/routes/arak.tsx", "utf8");
 const withdrawalRoute = readFileSync("src/routes/elallasi-tajekoztato.tsx", "utf8");
+const termsRoute = readFileSync("src/routes/aszf.tsx", "utf8");
 const layout = readFileSync("src/components/Layout.tsx", "utf8");
 const homeRoute = readFileSync("src/routes/index.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
@@ -150,6 +151,10 @@ for (const needle of [
   "A fizetéshez javítsd az email címet",
   "A fizetés előtt fogadd el a feltételeket",
   "A fizetés indításához most segítség kell",
+  "Ha az express vállalás csúszna",
+  "nem kell új rendelést indítanod",
+  "a gyorsítás",
+  "díját külön rendezzük",
   "product.depthPromise.map",
   "Ez akkor jó választás, ha",
   "choiceFitPromise(product).map",
@@ -444,6 +449,8 @@ for (const needle of [
   "minőségi visszajelzést is tudsz küldeni",
   "normál esetben 24",
   "expressz gyorsítással 6 órán belül",
+  "Ha az express határidő",
+  "utánanézünk, és a gyorsítás díját külön rendezzük",
   "const PRE_PURCHASE_CHECKS",
   "Fizetés előtt átnézhető",
   "A döntés nem rejtett feltételeken múlik",
@@ -646,6 +653,15 @@ for (const needle of [
 }
 if (withdrawalRoute.includes("szimbolikus, önismereti és szórakoztató tartalmak")) {
   failed.push("Withdrawal route must frame readings through tradition, not cold content wording");
+}
+
+for (const needle of [
+  "Express gyorsítás választásakor",
+  "külön gyorsított határidőt vállalunk",
+  "Ha ez a határidő csúszna",
+  "a gyorsítás díját külön rendezzük",
+]) {
+  if (!termsRoute.includes(needle)) failed.push(`Terms route missing express remedy wording: ${needle}`);
 }
 
 if (!layout.includes('{ to: "/arak", label: "Árak" }')) {
