@@ -5,6 +5,13 @@ import { SITE_LEGAL } from "@/lib/legal";
 type Status = "loading" | "valid" | "already" | "invalid" | "done" | "error";
 
 export const Route = createFileRoute("/unsubscribe")({
+  head: () => ({
+    meta: [
+      { title: "Leiratkozás | Jövőd.hu" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/unsubscribe` }],
+  }),
   component: UnsubscribePage,
   validateSearch: (search: Record<string, unknown>) => ({
     token: typeof search.token === "string" ? search.token : "",

@@ -317,6 +317,7 @@ const privateNoindexCanonicalChecks = [
   ["src/routes/bejelentkezes.tsx", 'href: `${SITE_LEGAL.siteUrl}/bejelentkezes`'],
   ["src/routes/profil.tsx", 'href: `${SITE_LEGAL.siteUrl}/profil`'],
   ["src/routes/koszonjuk.tsx", 'href: `${SITE_LEGAL.siteUrl}/koszonjuk`'],
+  ["src/routes/unsubscribe.tsx", 'href: `${SITE_LEGAL.siteUrl}/unsubscribe`'],
 ] as const;
 
 for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
