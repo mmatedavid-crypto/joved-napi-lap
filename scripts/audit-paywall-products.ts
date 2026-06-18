@@ -182,6 +182,7 @@ for (const needle of [
   "const normalizedEmail = normalizeCheckoutEmailInput(email)",
   "const emailValid = isCheckoutEmailValid(normalizedEmail)",
   "onBlur={() => setEmail(normalizedEmail)}",
+  "setEmail(normalizedEmail);",
   "customerEmail={normalizedEmail}",
   "function normalizeCheckoutEmailInput",
   'value.trim().toLocaleLowerCase("hu-HU")',

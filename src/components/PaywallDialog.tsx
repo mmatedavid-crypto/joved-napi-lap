@@ -456,6 +456,7 @@ export function PaywallDialog({
               disabled={!email || !emailValid || !termsAccepted || !canStartPayment}
               onClick={() => {
                 if (!canStartPayment) return;
+                setEmail(normalizedEmail);
                 trackEvent("checkout_confirmed", {
                   productSlug: product.slug,
                   category: product.category,
