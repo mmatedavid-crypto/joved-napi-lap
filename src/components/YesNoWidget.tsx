@@ -53,9 +53,12 @@ export function YesNoWidget() {
         <div className="text-[10px] tracking-[0.3em] uppercase text-[oklch(0.78_0.10_80/0.75)]">
           Igen / Nem kérdés
         </div>
-        <h2 className="font-display text-xl md:text-2xl text-ivory mt-1">Egy kérdés — egy lap.</h2>
+        <h2 className="font-display text-xl md:text-2xl text-ivory mt-1">
+          Egy kérdés — egy tarot-irányjel.
+        </h2>
         <p className="font-editorial text-sm text-ivory/65 mt-1">
-          Kérdezz egyértelműen, eldöntendő formában. A lap nem ígér biztos jövőt — irányt mutat.
+          Kérdezz egyértelműen, eldöntendő formában. A lap a tarot hagyományából ad
+          fókuszt: nem dönt helyetted, és nem ígér biztos jövőt.
         </p>
 
         {!reading && (
@@ -81,10 +84,13 @@ export function YesNoWidget() {
               <div className={`font-display text-4xl ${answerTone}`}>{answerLabel}</div>
               {reading.strength && (
                 <div className="text-xs uppercase tracking-[0.25em] text-ivory/55">
-                  {reading.strength} jel
+                  {reading.strength} irányjel
                 </div>
               )}
             </div>
+            <p className="text-xs uppercase tracking-[0.22em] text-ivory/45">
+              Tarot-hagyomány szerinti fókusz, nem végleges döntés
+            </p>
             <div className="text-sm text-ivory/75">
               <span className="text-ivory/55">A lap: </span>
               <span className="text-ivory">

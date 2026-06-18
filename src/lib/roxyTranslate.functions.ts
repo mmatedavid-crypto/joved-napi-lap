@@ -932,7 +932,7 @@ export const aiTarotYesNoHU = createServerFn({ method: "POST" })
           interpretation: payload.interpretationEn ?? huCard.meaning,
         },
         domainHint:
-          "Tarot yes/no kérdésre adott rövid válasz. Az 'answer' magyarul kötelező (igen/nem/talán), a 'strength' csak ha a forrás adja. Az 'interpretation' 2-3 mondat, a kérdést konkrétan tükrözve, a forrás interpretáción alapulva — semmit ne találj ki, ne ígérj biztos jövőt.",
+          "Tarot yes/no kérdésre adott rövid, hagyomány-alapú irányjel. Az 'answer' magyarul kötelező (igen/nem/talán), a 'strength' csak ha a forrás adja. Az 'interpretation' 2-3 mondat, a kérdést konkrétan tükrözve, a forrás interpretáción alapulva — semmit ne találj ki, ne ígérj biztos jövőt, és ne dönts a kérdező helyett.",
         schemaName: "TarotYesNoHU",
         schema: YESNO_INTERP_SCHEMA,
       });

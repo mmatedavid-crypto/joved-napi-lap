@@ -913,6 +913,19 @@ const checks: Check[] = [
     excludes: ["Próbáld újra egy pillanat múlva"],
   },
   {
+    name: "yes-no widget frames answers as tarot guidance, not decisions",
+    file: "src/components/YesNoWidget.tsx",
+    includes: [
+      "Egy kérdés — egy tarot-irányjel",
+      "a tarot hagyományából ad",
+      "nem dönt helyetted",
+      "nem ígér biztos jövőt",
+      "irányjel",
+      "Tarot-hagyomány szerinti fókusz, nem végleges döntés",
+    ],
+    excludes: ["egyértelmű választ ad", "biztos választ ad", "végleges válasz"],
+  },
+  {
     name: "yes-no widget failures never expose server messages",
     file: "src/components/YesNoWidget.tsx",
     includes: [
@@ -932,6 +945,9 @@ const checks: Check[] = [
       "PUBLIC_YES_NO_ERROR",
       "A válasz most nem állt össze elég tisztán",
       "message: PUBLIC_YES_NO_ERROR",
+      "Tarot yes/no kérdésre adott rövid, hagyomány-alapú irányjel",
+      "ne ígérj biztos jövőt",
+      "ne dönts a kérdező helyett",
     ],
     excludes: [
       "Üres válasz a forrásból",
