@@ -35,7 +35,7 @@ export const PRODUCTS: ProductDef[] = [
       "egy figyelni érdemes belső irány",
     ],
     depthPromise: [
-      "a lap jelentését a kérdésedhez és a mai helyzetedhez köti",
+      "a tarot hagyományos lapjelképét a kérdésedhez és a mai helyzetedhez köti",
       "nem csak kulcsszavakat ad, hanem rövid belső irányt",
     ],
     qualityPromise: "Azonnali, rövid, de személyes olvasat. Nem általános horoszkópszöveg.",
@@ -54,7 +54,7 @@ export const PRODUCTS: ProductDef[] = [
       "egy konkrét kérdés, amire érdemes figyelned",
     ],
     depthPromise: [
-      "a nap üzenetét a megadott személyes adataiddal hangolja össze",
+      "a napi rituálé hagyományos jeleit a megadott személyes adataiddal hangolja össze",
       "külön kezeli a kapcsolat, munka és belső ritmus rétegeit",
     ],
     qualityPromise: "Azonnali napi iránytű, személyesebb hanggal, nem magazinos jóslatként.",
@@ -73,7 +73,7 @@ export const PRODUCTS: ProductDef[] = [
       "egy rövid önismereti fókusz",
     ],
     depthPromise: [
-      "a számot nem önmagában, hanem a megadott helyzeted felől értelmezi",
+      "a számmisztikai hagyomány számjelét a megadott helyzeted felől értelmezi",
       "óvatos, önismereti nyelven mutatja meg a visszatérő mintát",
     ],
     qualityPromise: "Szimbolikus értelmezés, józanul megfogalmazva, túlzó ígéretek nélkül.",
@@ -92,7 +92,7 @@ export const PRODUCTS: ProductDef[] = [
       "rövid, józan és szimbolikus értelmezés",
     ],
     depthPromise: [
-      "a kristályt hónaphoz, jegyhez vagy megadott témához kapcsolja",
+      "a kristályszimbolika régi jelentésrétegeit hónaphoz, jegyhez vagy témához kapcsolja",
       "szimbolikus önismereti jelentést ad, testi hatásígéret nélkül",
     ],
     qualityPromise: "Önismereti kristály-ajánlás, nem egészségügyi állítás.",
@@ -111,7 +111,7 @@ export const PRODUCTS: ProductDef[] = [
       "visszatérő álomnál finom mintajelzés",
     ],
     depthPromise: [
-      "a leírt álmot és az ébredés utáni érzést együtt olvassa",
+      "az álomfejtés szimbólumhagyományát az ébredés utáni érzéssel együtt olvassa",
       "nem diagnosztizál, hanem önismereti jelként keresi a visszatérő témát",
     ],
     qualityPromise: "Önismereti álomfejtés, diagnózis és ijesztgetés nélkül.",
@@ -130,7 +130,7 @@ export const PRODUCTS: ProductDef[] = [
       "a megadott helyzetedhez igazított üzenet",
     ],
     depthPromise: [
-      "a napi jegyhangulatot nem bulvárjóslatként, hanem személyes fókuszként adja",
+      "az asztrológiai hagyomány napi jegyhangulatát személyes fókuszként adja",
       "ha megadsz témát, arra külön reflektál a szerelem/munka/figyelem bontásban",
     ],
     qualityPromise: "Rövid, személyes napi horoszkóp; nem bulvárjóslat.",
@@ -149,7 +149,7 @@ export const PRODUCTS: ProductDef[] = [
       "külön jelzés, ha a kérdés ismétlődik",
     ],
     depthPromise: [
-      "az új húzást a korábbi napi kérdésedhez képest is keretezi",
+      "az új tarot-húzást a korábbi napi kérdésedhez képest is keretezi",
       "segít észrevenni, ha ugyanazt a választ keresed másik laptól",
     ],
     qualityPromise: "Az extra húzás nem dönt helyetted, hanem új nézőpontot ad.",
@@ -168,7 +168,7 @@ export const PRODUCTS: ProductDef[] = [
       "a kérdésedre reflektáló mélyebb összegzés",
     ],
     depthPromise: [
-      "a három lapot egy történetté fűzi, nem külön lapmagyarázatként adja",
+      "a háromlapos tarot-hagyományt egy történetté fűzi, nem külön lapmagyarázatként adja",
       "a kérdésedben megjelenő feszültségre és következő belső lépésre figyel",
     ],
     qualityPromise: "Részletesebb, prémium olvasat; nem három különálló lapmagyarázat.",
@@ -187,7 +187,7 @@ export const PRODUCTS: ProductDef[] = [
       "összefüggő nagy kép a kérdésed körül",
     ],
     depthPromise: [
-      "a tíz pozícióból mélyebb mintát és belső ellentmondást rajzol ki",
+      "a klasszikus kelta kereszt hagyományos pozícióiból rajzol ki mélyebb mintát",
       "komplex helyzeteknél nem gyors választ, hanem átláthatóbb képet ad",
     ],
     qualityPromise: "A legmélyebb azonnali tarot-olvasat: részletesebb, összefüggő elemzés.",
@@ -206,7 +206,7 @@ export const PRODUCTS: ProductDef[] = [
       "érzelmi szempontok döntésparancs nélkül",
     ],
     depthPromise: [
-      "a konkrét döntésedre reflektál, nem általános tanácsot ad",
+      "a tarot jelképrendszerét a konkrét döntésedre vonatkoztatja, nem általános tanácsot ad",
       "külön kezeli, mi félelemből és mi tisztább belső irányból mozgat",
     ],
     qualityPromise: "Nem mondja meg, mit tegyél; segít tisztábban látni, mi mozgat.",
@@ -225,7 +225,7 @@ export const PRODUCTS: ProductDef[] = [
       "ex/visszatérő történetnél óvatos visszatérési minta",
     ],
     depthPromise: [
-      "a kapcsolat típusát is figyeli: randi, ex, visszatérő történet vagy összeillés",
+      "a szerelmi tarot hagyományos kapcsolati motívumait a kapcsolat típusához illeszti",
       "nem ígér visszatérést, hanem tempót, realitást és ismétlődő mintát olvas",
     ],
     qualityPromise:
@@ -245,7 +245,7 @@ export const PRODUCTS: ProductDef[] = [
       "szerelem, munka, árnyékoldal és személyes év",
     ],
     depthPromise: [
-      "a születési dátumot és teljes nevet együtt értelmezi, ha megadtad",
+      "a számmisztikai hagyomány szerint együtt nézi a születési dátumot és a teljes nevet",
       "a számokat személyes életút, munka, szerelem és árnyékoldal szerint bontja",
     ],
     qualityPromise: "Személyesebb életút-olvasat születési dátum és név alapján.",
@@ -264,7 +264,7 @@ export const PRODUCTS: ProductDef[] = [
       "időszaki figyelmi pontok és lehetőségi ablakok",
     ],
     depthPromise: [
-      "a tranzitokat a saját képletedre vetíti, nem általános horoszkóp",
+      "az asztrológiai tranzithagyományt a saját képletedre vetíti, nem általános horoszkóp",
       "életterületre fókuszál: szerelem, munka, pénz-döntés vagy általános",
     ],
     qualityPromise: "Több oldalas, személyre szabott időszaki térkép a következő 30 napra.",
@@ -304,7 +304,7 @@ export const PRODUCTS: ProductDef[] = [
       "éves fő motívum és a 9 éves életciklusod helyzete",
     ],
     depthPromise: [
-      "a következő 12 hónap tranzitjait a saját születési képletedhez illeszti",
+      "az éves asztrológiai ciklusokat a saját születési képletedhez illeszti",
       "havi bontás, nem általános éves jegyhoroszkóp",
     ],
     qualityPromise: "Több oldalas, személyre szabott éves riport — nem újságos jegyhoroszkóp.",
@@ -324,7 +324,7 @@ export const PRODUCTS: ProductDef[] = [
       "időszaki figyelmi pontok és hangsúlyváltások",
     ],
     depthPromise: [
-      "a Szaturnusz/Jupiter/Mars-tranzitokat a saját bolygóid és házaid felől olvassa",
+      "a hagyományos bolygótranzitokat a saját bolygóid és házaid felől olvassa",
       "nem általános napi horoszkóp, hanem a te képletedre szóló időzítés",
     ],
     qualityPromise: "Komoly asztrológiai tranzit-elemzés magyarul, józan hanggal.",

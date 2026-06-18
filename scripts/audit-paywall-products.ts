@@ -20,6 +20,15 @@ for (const product of PRODUCTS) {
       failed.push(`${product.slug}: technical wording in depthPromise: ${item}`);
     }
   }
+  if (
+    !product.depthPromise.some((item) =>
+      /\b(hagyomány|jelképrendszer|szimbólumhagyomány|rituálé|tarot|asztrológiai|védikus|számmisztikai|kristályszimbolika|álomfejtés|kelta kereszt|bolygótranzit)/i.test(
+        item,
+      ),
+    )
+  ) {
+    failed.push(`${product.slug}: paywall promise must frame the reading through tradition/symbols`);
+  }
   if (/gyógy/i.test(visibleCopy)) {
     failed.push(`${product.slug}: health-adjacent crystal wording must be avoided`);
   }
