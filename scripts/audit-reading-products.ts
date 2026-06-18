@@ -717,9 +717,11 @@ if (
 if (
   aiServer.includes("body: t.slice") ||
   aiServer.includes("res.text()") ||
-  aiServer.includes("raw response")
+  aiServer.includes("raw response") ||
+  aiServer.includes("e instanceof Error ? e.message") ||
+  aiServer.includes("error: e.message")
 ) {
-  policyFailures.push("shared AI helper must not log raw response bodies");
+  policyFailures.push("shared AI helper must not expose raw provider/runtime error text");
 }
 if (policyFailures.length) {
   console.error("\nFailed paid AI policy audit:");

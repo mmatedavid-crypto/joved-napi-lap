@@ -204,8 +204,8 @@ async function lovableJSON<T>(opts: {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(opts.timeoutMs ?? 45_000),
     });
-  } catch (e) {
-    return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
+  } catch {
+    return { ok: false, data: null, error: "network" };
   }
   if (!res.ok) {
     try {
@@ -270,8 +270,8 @@ async function openaiJSON<T>(opts: {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(opts.timeoutMs ?? 45_000),
     });
-  } catch (e) {
-    return { ok: false, data: null, error: e instanceof Error ? e.message : "network" };
+  } catch {
+    return { ok: false, data: null, error: "network" };
   }
   if (!res.ok) return { ok: false, data: null, error: `http_${res.status}` };
 
