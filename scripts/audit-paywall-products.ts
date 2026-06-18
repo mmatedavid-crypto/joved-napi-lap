@@ -585,6 +585,12 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   ) {
     failed.push(`${file}: delayed astrology route must show accurate delivery timing`);
   }
+  if (
+    !source.includes("A város a születési képlet hely szerinti pontosításához kell") ||
+    !source.includes("elég a település neve")
+  ) {
+    failed.push(`${file}: delayed astrology route must explain why birth place is required`);
+  }
 }
 
 const delayedRouteExpectations = new Map<string, string>([

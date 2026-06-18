@@ -98,6 +98,9 @@ function Page() {
               placeholder="Pl. Budapest"
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
+            <p className="mt-2 text-xs text-ivory/50 font-editorial">
+              A város a születési képlet hely szerinti pontosításához kell; elég a település neve.
+            </p>
           </div>
 
           <div>
