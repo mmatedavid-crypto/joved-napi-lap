@@ -3,7 +3,7 @@
 //   2) magyar szerkesztői olvasattá rendezi őket,
 //   3) forráshű módban dolgozik: nem talál ki új tartalmat,
 //      csak a kapott jelentésmezőkből formál természetes magyar olvasatot,
-//      kihagyva a hiányzó mezőket. A magyar eredményt cache-eli az api_cache-be.
+//      kihagyva a hiányzó mezőket.
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
@@ -838,8 +838,8 @@ export const aiMoonPhaseHU = createServerFn({ method: "POST" })
   );
 
 // ─── Tarot Yes/No ─────────────────────────────────────────────────────────
-// Roxy POST /tarot/yes-no → { answer, strength, card, interpretation }.
-// Magyar kimenet: igen/nem/talán, erősség, magyar interpretáció.
+// Igen/nem tarot: jelképi válasz, erősség, lap és rövid értelmezés.
+// Magyar kimenet: igen/nem/talán, erősség, kártya és helyzethez kötött olvasat.
 
 export type TarotYesNoHU = {
   answer: "igen" | "nem" | "talán";
@@ -1104,11 +1104,11 @@ export const aiTarotSpreadHU = createServerFn({ method: "POST" })
   );
 
 // ─── Natal chart (Sprint 3) ───────────────────────────────────────────────
-// Roxy POST /astrology/natal-chart body: { date, time, latitude, longitude, timezone }
-// Forrás: planets[], houses[], ascendant, midheaven, sunSign, moonSign stb.
+// Születési képlet forrásmezők: planets[], houses[], ascendant, midheaven,
+// sunSign, moonSign stb.
 // Magyar kimenet: kulcsbolygók (Nap, Hold, Aszcendens) magyarul + 3-4 mondatos
-// magyar összefoglaló a kapott angol részleges leírások alapján. Cache 30 nap
-// (azonos születési adat → azonos képlet).
+// magyar összefoglaló a kapott részleges jelképi leírások alapján. Cache 30 nap
+// (azonos születési adat -> azonos képlet).
 
 export type NatalPlanetHU = {
   key: string; // "sun" | "moon" | "ascendant" | "mercury" | ...
