@@ -11,6 +11,14 @@ export const Route = createFileRoute("/robots.txt")({
         return new Response(
           [
             "User-agent: *",
+            "Disallow: /api/",
+            "Disallow: /dev/",
+            "Disallow: /lovable/",
+            "Disallow: /email/",
+            "Disallow: /profil",
+            "Disallow: /koszonjuk",
+            "Disallow: /bejelentkezes",
+            "Disallow: /unsubscribe",
             "Allow: /",
             `Sitemap: ${origin}/sitemap.xml`,
             `Sitemap: ${origin}/sitemap-news.xml`,
