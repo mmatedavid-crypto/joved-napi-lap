@@ -152,7 +152,8 @@ function Page() {
             {productCtaLabel("Kérem a tranzit-elemzésemet", "transits_personal")}
           </button>
           <p className="text-[11px] text-ivory/45 text-center font-editorial">
-            Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred a riportot.
+            Fizetés után a vállalt elkészülési időn belül ezen a biztonságos rendelési linken és
+            emailben is eléred a riportot; ha elakadna, a vásárlási email címedről segítünk.
           </p>
         </form>
 

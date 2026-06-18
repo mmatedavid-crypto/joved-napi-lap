@@ -566,7 +566,13 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   if (/előrejelz(és|ést|ése)/i.test(source)) {
     failed.push(`${file}: delayed astrology route must avoid prediction-style wording`);
   }
-  if (!source.includes("Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred")) {
+  if (source.includes("Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred")) {
+    failed.push(`${file}: delayed astrology route must mention the secure order link before payment`);
+  }
+  if (
+    !source.includes("Fizetés után a vállalt elkészülési időn belül ezen a biztonságos rendelési linken") ||
+    !source.includes("emailben is eléred a riportot; ha elakadna, a vásárlási email címedről segítünk")
+  ) {
     failed.push(`${file}: delayed astrology route must show accurate delivery timing`);
   }
 }
