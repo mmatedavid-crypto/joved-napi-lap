@@ -355,13 +355,14 @@ const checks: Check[] = [
     includes: [
       "delivery_email_error: result.error",
       'delivery_email_error: "delivery_email_exception"',
-      "order delivered email queue failed:",
+      "order delivered email queue failed",
       'error_code: "delivery_email_exception"',
     ],
     excludes: [
       "delivery_email_error: result.error.slice",
       "delivery_email_error: message.slice",
       "const message = error instanceof Error ? error.message : String(error)",
+      'console.warn("order delivered email queue failed:", {',
       'console.warn("order delivered email queue failed:", message)',
       'console.warn("order delivery email error state failed:", updateError)',
     ],

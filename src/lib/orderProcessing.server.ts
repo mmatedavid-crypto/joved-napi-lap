@@ -326,7 +326,7 @@ async function queueDeliveredEmail(order: {
       }
     }
   } catch {
-    console.warn("order delivered email queue failed:", {
+    console.warn("order delivered email queue failed", {
       order_id_redacted: redactOrderId(order.id),
       error_code: "delivery_email_exception",
     });
