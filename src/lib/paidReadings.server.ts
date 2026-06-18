@@ -41,6 +41,8 @@ type PaidReadingQualityResult = {
   sections: number;
   contextHits: number;
   requiredContextHits: number;
+  contextSections: number;
+  requiredContextSections: number;
 };
 
 function paidReadingMinimumLength(productSlug: string): number {
@@ -176,10 +178,23 @@ function countContextHits(body: string, anchors: string[]): number {
   return anchors.filter((anchor) => normalizedBody.includes(anchor)).length;
 }
 
+function countContextSections(body: string, anchors: string[]): number {
+  if (!anchors.length) return 0;
+  return body
+    .split(/\n\n+/)
+    .map((section) => normalizeContextText(section))
+    .filter((section) => anchors.some((anchor) => section.includes(anchor))).length;
+}
+
 function paidReadingMinimumContextHits(productSlug: string, anchors: string[]): number {
   if (anchors.length < 2) return 0;
   if (!isDeepPaidProduct(productSlug)) return 1;
   return Math.min(3, Math.max(2, Math.ceil(anchors.length * 0.18)));
+}
+
+function paidReadingMinimumContextSections(productSlug: string, anchors: string[]): number {
+  if (anchors.length < 2) return 0;
+  return isDeepPaidProduct(productSlug) ? 2 : 1;
 }
 
 function inspectPaidReadingQuality(
@@ -195,6 +210,8 @@ function inspectPaidReadingQuality(
   const anchors = inputContextAnchors(inputPayload);
   const contextHits = countContextHits(body, anchors);
   const requiredContextHits = paidReadingMinimumContextHits(productSlug, anchors);
+  const contextSections = countContextSections(reading.body, anchors);
+  const requiredContextSections = paidReadingMinimumContextSections(productSlug, anchors);
   if (body.length < minLength) issues.push(`too_short:${body.length}<${minLength}`);
   if (FORBIDDEN_PAID_PATTERNS.some((pattern) => pattern.test(body))) issues.push("forbidden_text");
   if (sections < minSections) issues.push(`too_few_sections:${sections}<${minSections}`);
@@ -203,6 +220,9 @@ function inspectPaidReadingQuality(
   else if (contextHits < requiredContextHits) {
     issues.push(`weak_user_context:${contextHits}<${requiredContextHits}`);
   }
+  if (requiredContextSections > 0 && contextSections < requiredContextSections) {
+    issues.push(`thin_user_context_sections:${contextSections}<${requiredContextSections}`);
+  }
   return {
     ok: issues.length === 0,
     issues,
@@ -210,6 +230,8 @@ function inspectPaidReadingQuality(
     sections,
     contextHits,
     requiredContextHits,
+    contextSections,
+    requiredContextSections,
   };
 }
 
@@ -262,6 +284,7 @@ export async function generatePaidOrderReading(opts: {
         "Írj természetes, választékos magyar olvasatot a megadott adatokból és a kiinduló vázlat tényeiből.",
         "Beszélj közvetlenül az olvasóhoz. Ne magyarázd a feladatot, ne dicsérd a saját szövegedet, és ne ismételd vissza szó szerint a kérdését.",
         "Minden bekezdés mondjon valami újat és konkrétat. Kerüld a ködös spirituális közhelyeket, a túl sok ellentétpárt, a gondolatjeles felsorolásokat és a hatásvadász egyszavas kijelentéseket.",
+        "Legalább két külön szakaszban kösd vissza az olvasatot a felhasználó megadott kérdéséhez, helyzetéhez, nevéhez, dátumához vagy előző rövid olvasatához. Ne csak a címben vagy az első bekezdésben jelenjen meg a saját kontextusa.",
         "A lapot, számot vagy jegyet önismereti tükörként értelmezd. Ne állíts biztos jövőt, egészségi, jogi vagy pénzügyi eredményt.",
         deep
           ? "Írj 5-7 rövid, jól elkülönülő részt, összesen 1800-3000 karakterben."
@@ -309,6 +332,8 @@ export async function generatePaidOrderReading(opts: {
         sections: quality.sections,
         contextHits: quality.contextHits,
         requiredContextHits: quality.requiredContextHits,
+        contextSections: quality.contextSections,
+        requiredContextSections: quality.requiredContextSections,
         issues: quality.issues,
       });
       return withLocalPremiumDraftMeta(draft, {

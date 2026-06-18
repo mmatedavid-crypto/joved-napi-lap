@@ -665,13 +665,19 @@ if (
   !paidServer.includes('"followupContext"') ||
   !paidServer.includes('"memoryContext"') ||
   !paidServer.includes("countContextHits(body, anchors)") ||
+  !paidServer.includes("countContextSections(reading.body, anchors)") ||
   !paidServer.includes("function paidReadingMinimumContextHits") ||
+  !paidServer.includes("function paidReadingMinimumContextSections") ||
   !paidServer.includes("requiredContextHits") ||
+  !paidServer.includes("requiredContextSections") ||
   !paidServer.includes("weak_user_context") ||
   !paidServer.includes("contextHits < requiredContextHits") ||
+  !paidServer.includes("thin_user_context_sections") ||
   !paidServer.includes("missing_user_context") ||
   !paidServer.includes("contextHits: quality.contextHits") ||
   !paidServer.includes("requiredContextHits: quality.requiredContextHits") ||
+  !paidServer.includes("contextSections: quality.contextSections") ||
+  !paidServer.includes("requiredContextSections: quality.requiredContextSections") ||
   !paidServer.includes("inspectPaidReadingQuality(ai.data, opts.productSlug, opts.inputPayload)") ||
   !paidServer.includes("[paid_reading_quality_rejected]") ||
   !paidServer.includes("issues: quality.issues") ||
@@ -680,6 +686,7 @@ if (
   !paidServer.includes("önismereti") ||
   !paidServer.includes("önismereti biztonsági keret") ||
   !paidServer.includes("Minden bekezdés mondjon valami újat és konkrétat") ||
+  !paidServer.includes("Legalább két külön szakaszban kösd vissza") ||
   !paidServer.includes("Ne használj Markdown-jeleket vagy emojit")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
