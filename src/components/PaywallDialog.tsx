@@ -735,6 +735,7 @@ function readingFocusPreview(
   const cards = get("Lapok") ?? get("Lap");
   const sign = get("Jegy");
   const dates = get("Dátumok") ?? get("Születési dátum");
+  const birthTime = payloadText(payload, "birthTime");
   const names = get("Nevek") ?? get("Név") ?? get("Megszólítás");
   const dream = get("Álom");
   const crystal = get("Kristály");
@@ -767,7 +768,20 @@ function readingFocusPreview(
   }
 
   if (cards) lines.push(`A húzott lapok is bekerülnek a fókuszba: ${cards}.`);
-  if (dates) lines.push(`A számolási alap: ${dates}${names ? ` · ${names}` : ""}.`);
+  if (dates) {
+    const timePart =
+      product.category === "delayed"
+        ? birthTime
+          ? ` · születési idő: ${birthTime}`
+          : " · születési idő nélkül, közelített képlettel"
+        : "";
+    lines.push(`A számolási alap: ${dates}${timePart}${names ? ` · ${names}` : ""}.`);
+  }
+  if (product.category === "delayed" && !birthTime) {
+    lines.push(
+      "Ha nem adtál meg pontos születési időt, a riport ezt jelzi, és óvatosabban kezeli az időhöz kötött részeket.",
+    );
+  }
   if (sign) lines.push(`A horoszkóp fókusza: ${sign}.`);
   if (dream) lines.push(`Az álomszövegedből indulunk ki, nem előre írt álomszótár-szövegből.`);
   if (crystal) lines.push(`A kristályt szimbolikus önismereti jelként kezeljük: ${crystal}.`);
