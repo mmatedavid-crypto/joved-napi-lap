@@ -402,7 +402,7 @@ function sanitizeGenerationIssue(issue: string): string {
     return issue;
   }
   if (
-    /^(too_short|too_few_sections|forbidden_text|missing_safety_frame|missing_user_context|weak_user_context)/.test(
+    /^(too_short|too_few_sections|forbidden_text|missing_safety_frame|missing_user_context|weak_user_context|thin_user_context_sections)/.test(
       issue,
     )
   ) {

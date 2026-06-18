@@ -732,7 +732,8 @@ if (
   !paidServer.includes("qualityIssues: quality.issues") ||
   !paidServer.includes("withLocalPremiumDraftMeta") ||
   !paidServer.includes("function sanitizeGenerationIssue") ||
-  !paidServer.includes('"paid_generation_fallback"')
+  !paidServer.includes('"paid_generation_fallback"') ||
+  !paidServer.includes("weak_user_context|thin_user_context_sections")
 ) {
   policyFailures.push("paid generation must persist internal source/model/fallback metadata");
 }
