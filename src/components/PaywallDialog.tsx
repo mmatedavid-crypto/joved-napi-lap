@@ -378,8 +378,8 @@ export function PaywallDialog({
                   {!canStartPayment && (
                     <div className="rounded-md border border-gold/20 bg-black/20 px-3 py-2 text-ivory/68">
                       A fizetés előkészítése most nem elérhető. Kártyaadat ilyenkor nem jut el
-                      hozzánk; írj nekünk a vásárlási email címedről, és kézzel is segítünk
-                      elindítani a rendelést.
+                      hozzánk; írj nekünk a vásárlási email címedről, és a választott olvasatot
+                      rendelés előtt segítünk rendezni.
                     </div>
                   )}
                   <div>
@@ -514,7 +514,7 @@ function checkoutBlockerText({
   canStartPayment: boolean;
 }): string | null {
   if (!canStartPayment) {
-    return "A fizetés indításához most segítség kell. Kártyaadat ilyenkor nem jut el hozzánk; írj nekünk a vásárlási email címedről, és kézzel is segítünk elindítani a rendelést.";
+    return "A fizetés indításához most segítség kell. Kártyaadat ilyenkor nem jut el hozzánk; írj nekünk a vásárlási email címedről, és a választott olvasatot rendelés előtt segítünk rendezni.";
   }
   if (!email) {
     return "A fizetéshez először add meg azt az email címet, ahol később is eléred az olvasatot.";

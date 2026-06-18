@@ -119,14 +119,14 @@ for (const needle of [
   "canStartPayment",
   "A fizetés előkészítése most nem elérhető",
   "Kártyaadat ilyenkor nem jut el hozzánk",
-  "írj nekünk a vásárlási email címedről, és kézzel is segítünk",
+  "írj nekünk a vásárlási email címedről, és a választott olvasatot",
+  "rendelés előtt segítünk rendezni",
   "const checkoutBlocker = checkoutBlockerText({",
   "function checkoutBlockerText(",
   "A fizetéshez először add meg azt az email címet",
   "A fizetéshez javítsd az email címet",
   "A fizetés előtt fogadd el a feltételeket",
   "A fizetés indításához most segítség kell",
-  "kézzel is segítünk elindítani a rendelést",
   "product.depthPromise.map",
   "Ez akkor jó választás, ha",
   "choiceFitPromise(product).map",
@@ -315,6 +315,7 @@ for (const forbidden of [
   "technikai hiba miatt nem nyílik meg az olvasat",
   "technikai hiba miatt nem nyílik meg",
   "Kérlek próbáld újra később, vagy írj",
+  "kézzel is segítünk elindítani a rendelést",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(`PaywallDialog must use customer-friendly access wording: ${forbidden}`);

@@ -322,9 +322,13 @@ const checks: Check[] = [
       "A fizetés indításához most segítség kell",
       "Kártyaadat ilyenkor nem jut el hozzánk",
       "vásárlási email címedről",
+      "a választott olvasatot rendelés előtt segítünk rendezni",
+    ],
+    excludes: [
+      "technikai segítség kell",
+      "kézzel is utánanézünk a rendelésnek",
       "kézzel is segítünk elindítani a rendelést",
     ],
-    excludes: ["technikai segítség kell", "kézzel is utánanézünk a rendelésnek"],
   },
   {
     name: "profile load failures are visible and safe",
