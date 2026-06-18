@@ -62,6 +62,8 @@ const checks: Check[] = [
       "nem idegenként indul",
       "Nem készítünk belőle személyiségprofilt",
       "A törlés nem érinti a rendelési előzményeket",
+      'to="/adatkezelesi-tajekoztato"',
+      "adatkezelési tájékoztatóban",
     ],
   },
   {

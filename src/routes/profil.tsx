@@ -337,7 +337,11 @@ function Page() {
               </button>
               <p className="text-xs leading-relaxed text-ivory/42">
                 A törlés nem érinti a rendelési előzményeket és a számlázási célból szükséges
-                adatokat. A részleteket az adatkezelési tájékoztatóban találod.
+                adatokat. A részleteket az{" "}
+                <Link to="/adatkezelesi-tajekoztato" className="text-gold hover:text-gold/80">
+                  adatkezelési tájékoztatóban
+                </Link>{" "}
+                találod.
               </p>
             </div>
           )}
