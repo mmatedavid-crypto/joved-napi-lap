@@ -185,7 +185,7 @@ function MaiLap() {
       <PageHeader
         eyebrow="Napi rituálé"
         title="Mai lap"
-        lead="Egy lap, egy üzenet a mai napodra. Engedd, hogy szóljon hozzád."
+        lead="Egy lap, egy napi fókusz a tarot hagyományából. Nem jóslatként kezeljük, hanem csendes önismereti jelként."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20">
         {!card && (

@@ -342,6 +342,8 @@ const compatibilityRoute = readFileSync("src/routes/osszeillunk.tsx", "utf8");
 for (const needle of [
   "dailyFocus",
   "dailyFocusReflection",
+  "Egy lap, egy napi fókusz a tarot hagyományából",
+  "Nem jóslatként kezeljük, hanem csendes önismereti jelként",
   "Mire kérsz ma finomabb fókuszt?",
   "A napi lap ugyanaz marad",
   "A te fókuszodban",
