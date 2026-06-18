@@ -185,6 +185,8 @@ for (const needle of [
   "function qualityReviewPromise(product: ProductDef)",
   "minden olvasat a választott hagyomány jelképeit a megadott helyzethez köti",
   "nem tartalmazhat biztos jövőígéretet",
+  "az elkészült olvasat mellett pontosítási vázlat",
+  "ha egy fontos rész kimaradt",
   "több, egymásra épülő szakaszban",
   "konkrétan a megadott helyzethez kötöttnek",
   "Teljesítési biztonság",
