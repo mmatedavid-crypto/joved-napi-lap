@@ -411,7 +411,7 @@ function Page() {
                       />
                       {o.status === "delivered" &&
                         o.delivery_email_status === "attention_needed" && (
-                          <ProfileDeliveryEmailNotice orderId={o.id} />
+                          <ProfileDeliveryEmailNotice order={o} />
                         )}
                       <OrderRetryNotice notice={retryNotices[o.id]} />
 
@@ -443,7 +443,7 @@ function Page() {
                           <p className="text-sm text-ivory/62">
                             Az olvasat elkészült, de itt nem tudjuk teljes szövegként megjeleníteni.
                           </p>
-                          <ProfileSupportContact className="mt-2" orderId={o.id} />
+                          <ProfileSupportContact className="mt-2" order={o} />
                         </div>
                       )}
 
@@ -620,7 +620,7 @@ function OrderStatusNote({
           A fizetés állapotát még egyeztetjük. Ha már fizettél, pár percen belül frissülhet; a
           rendelés nem vész el, csak a fizetési visszajelzésre várunk.
         </p>
-        <ProfileSupportContact className="mt-2" orderId={order.id} />
+        <ProfileSupportContact className="mt-2" order={order} />
       </div>
     );
   }
@@ -664,7 +664,7 @@ function OrderStatusNote({
           </button>
           <span className="text-xs leading-relaxed text-ivory/50">
             Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
-            <a className="text-gold hover:text-gold/80" href={profileSupportMailto(shortId)}>
+            <a className="text-gold hover:text-gold/80" href={profileSupportMailto({ order })}>
               {SITE_LEGAL.supportEmail}
             </a>
             {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
@@ -696,7 +696,7 @@ function OrderRetryNotice({ notice }: { notice?: RetryNotice }) {
   );
 }
 
-function ProfileDeliveryEmailNotice({ orderId }: { orderId?: string }) {
+function ProfileDeliveryEmailNotice({ order }: { order?: ProfileOrder }) {
   return (
     <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
       <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
@@ -704,7 +704,7 @@ function ProfileDeliveryEmailNotice({ orderId }: { orderId?: string }) {
         Az olvasat elkészült és itt a profilban megnyitható. Ha az email késik vagy nem találod a
         postafiókodban, ez a profilnézet marad a biztos hozzáférésed.
       </p>
-      <ProfileSupportContact className="mt-2" orderId={orderId} />
+      <ProfileSupportContact className="mt-2" order={order} />
     </div>
   );
 }
@@ -729,16 +729,16 @@ function profileOrderPreparationDetail(order: ProfileOrder): string {
 
 function ProfileSupportContact({
   className = "",
-  orderId,
+  order,
 }: {
   className?: string;
-  orderId?: string;
+  order?: ProfileOrder;
 }) {
-  const shortId = shortOrderId(orderId);
+  const shortId = shortOrderId(order?.id);
   return (
     <p className={`text-xs leading-relaxed text-ivory/55 ${className}`.trim()}>
       Ha továbbra is így marad, írj a vásárlási email címedről:{" "}
-      <a className="text-gold hover:text-gold/80" href={profileSupportMailto(shortId)}>
+      <a className="text-gold hover:text-gold/80" href={profileSupportMailto({ order })}>
         {SITE_LEGAL.supportEmail}
       </a>
       {shortId ? `. Add meg ezt is: ${shortId}.` : "."}
@@ -780,18 +780,22 @@ function profileLoadErrorMailto(label: string): string {
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-function profileSupportMailto(shortId?: string): string {
-  const orderRef = shortId ?? "nincs rövid azonosító";
+function profileSupportMailto({ order }: { order?: ProfileOrder }): string {
+  const orderRef = shortOrderId(order?.id) ?? "nincs rövid azonosító";
   const subject = `Jövőd.hu rendelési segítség · ${orderRef}`;
   const body = [
     "Segítséget szeretnék kérni a profilomban látható rendelésemhez.",
     "",
     `Rendelés: ${orderRef}`,
+    order?.product_name ? `Termék: ${order.product_name}` : null,
+    order?.status ? `Állapot: ${STATUS_HU[order.status] ?? order.status}` : null,
     "A vásárlási email címem:",
     "Mi történt röviden:",
     "",
     "Köszönöm.",
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
