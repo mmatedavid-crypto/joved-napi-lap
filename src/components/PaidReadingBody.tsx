@@ -276,8 +276,8 @@ function ReadingUseGuide() {
         ))}
       </div>
       <p className="mt-4 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/48">
-        Nem kell mindent ma eldöntened; elég, ha egy mondatot továbbviszel.{" "}
-        Ha az olvasat valamelyik része félrement, írhatsz nekünk a{" "}
+        Nem kell mindent ma eldöntened; elég, ha egy mondatot továbbviszel. Ha az olvasat valamelyik
+        része félrement, írhatsz nekünk a{" "}
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
         </a>{" "}
@@ -298,20 +298,19 @@ type PaidReadingContinuation = {
   }>;
 };
 
-function ReadingContinuationGuide({
-  continuation,
-}: {
-  continuation: PaidReadingContinuation;
-}) {
+function ReadingContinuationGuide({ continuation }: { continuation: PaidReadingContinuation }) {
   return (
     <aside className="rounded-md border border-gold/15 bg-black/16 p-4">
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Innen folytathatod</div>
-      <h3 className="mt-2 font-display text-xl leading-snug text-ivory">
-        {continuation.heading}
-      </h3>
+      <h3 className="mt-2 font-display text-xl leading-snug text-ivory">{continuation.heading}</h3>
       <p className="mt-2 text-sm leading-relaxed text-ivory/60">{continuation.text}</p>
       <p className="mt-3 rounded-md border border-gold/10 bg-gold/[0.035] px-3 py-3 text-xs leading-relaxed text-ivory/58">
         {continuation.prompt}
+      </p>
+      <p className="mt-3 text-xs leading-relaxed text-ivory/46">
+        Új olvasatot akkor érdemes indítani, ha valóban új kérdésed van. Ha a mostani szöveg egy
+        része pontatlan vagy hiányos, ne vásárolj emiatt újra: a rendelésazonosító alapján
+        pontosítást kérhetsz.
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {continuation.actions.map((action) => (
