@@ -197,9 +197,16 @@ for (const needle of [
 }
 
 for (const utility of ["btn-gold", "btn-ghost-gold"]) {
-  const block = stylesSource.match(new RegExp(`@utility ${utility} \\{[\\s\\S]*?\\n\\}`))?.[0] ?? "";
-  for (const needle of ["text-align: center;", "line-height: 1.25;", "white-space: normal;", "overflow-wrap: anywhere;"]) {
-    if (!block.includes(needle)) failed.push(`styles.css ${utility} missing mobile CTA wrapping guard: ${needle}`);
+  const block =
+    stylesSource.match(new RegExp(`@utility ${utility} \\{[\\s\\S]*?\\n\\}`))?.[0] ?? "";
+  for (const needle of [
+    "text-align: center;",
+    "line-height: 1.25;",
+    "white-space: normal;",
+    "overflow-wrap: anywhere;",
+  ]) {
+    if (!block.includes(needle))
+      failed.push(`styles.css ${utility} missing mobile CTA wrapping guard: ${needle}`);
   }
 }
 
@@ -359,7 +366,8 @@ for (const needle of [
   "Mikor ne ezt válaszd?",
   "régi jelképrendszerekből induló önismereti szövegek",
   "kész tényt",
-  "kockázatos döntést",
+  "kockázatos",
+  "döntést vársz tőlük",
   "Ha biztos eseményválaszt vársz",
   "Nem mondjuk ki kész tényként",
   "hogy valaki visszajön-e",
@@ -391,6 +399,19 @@ for (const needle of [
   "minőségi visszajelzést is tudsz küldeni",
   "normál esetben 24",
   "expressz gyorsítással 6 órán belül",
+  "const PRE_PURCHASE_CHECKS",
+  "Fizetés előtt átnézhető",
+  "A döntés nem rejtett feltételeken múlik",
+  "Fizetés előtt látod",
+  "A választott olvasat nevét, árát, elkészülési módját",
+  "Digitális teljesítés",
+  "A fizetési folyamatban külön jelzed",
+  "Segítség, ha elakadsz",
+  "vásárlási email és a rendelési link alapján utánanézünk",
+  'to="/aszf"',
+  'to="/elallasi-tajekoztato"',
+  'to="/adatkezelesi-tajekoztato"',
+  "Kérdés vásárlás előtt",
   "function productDeliveryBadge",
   "Pár percen belül elkészül",
   "órán belül készül el",
@@ -406,7 +427,7 @@ for (const needle of [
   'import { SITE_LEGAL } from "@/lib/legal"',
   '"@type": "ItemList"',
   "Jövőd.hu fizetős olvasatok",
-  'PRODUCTS.map((product, index)',
+  "PRODUCTS.map((product, index)",
   '"@type": "Product"',
   'product.category === "instant"',
   "Azonnali önismereti olvasat",
@@ -443,7 +464,9 @@ if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos ripo
   failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
 }
 if (paywall.includes("Szimbolikus, önismereti digitális tartalom")) {
-  failed.push("Paywall CTA trust note must use tradition-based wording, not cold digital-content copy");
+  failed.push(
+    "Paywall CTA trust note must use tradition-based wording, not cold digital-content copy",
+  );
 }
 if (
   !productsSource.includes("A legmélyebb azonnali tarot-olvasat") ||
@@ -455,9 +478,9 @@ if (
 for (const needle of [
   "export function productDeliveryShortLabel",
   'if (product.category === "instant") return "pár perc"',
-  'return `${product.standardHours ?? 24} órán belül`',
+  "return `${product.standardHours ?? 24} órán belül`",
   "const delivery = productDeliveryShortLabel(slug)",
-  '`${label} · ${price} · ${delivery}`',
+  "`${label} · ${price} · ${delivery}`",
 ]) {
   if (!productsSource.includes(needle)) {
     failed.push(`Product CTA labels must include price and delivery timing: ${needle}`);
@@ -581,7 +604,7 @@ if (natalChartRouteSource.includes('content: "noindex,follow"')) {
 }
 if (
   !natalChartRouteSource.includes('{ name: "robots", content: "index,follow" }') ||
-  !natalChartRouteSource.includes('href: `${SITE_LEGAL.siteUrl}/szuletesi-keplet`')
+  !natalChartRouteSource.includes("href: `${SITE_LEGAL.siteUrl}/szuletesi-keplet`")
 ) {
   failed.push("Natal chart route must use explicit indexing and a production canonical URL");
 }

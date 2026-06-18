@@ -83,6 +83,21 @@ const NOT_FOR_GUIDE = [
   },
 ] as const;
 
+const PRE_PURCHASE_CHECKS = [
+  {
+    title: "Fizetés előtt látod",
+    text: "A választott olvasat nevét, árát, elkészülési módját és azt, hogy vendégként vagy profillal hogyan éred el.",
+  },
+  {
+    title: "Digitális teljesítés",
+    text: "A fizetési folyamatban külön jelzed, hogy a digitális tartalom elkészítése elindulhat.",
+  },
+  {
+    title: "Segítség, ha elakadsz",
+    text: "A vásárlási email és a rendelési link alapján utánanézünk a hozzáférésnek vagy a hibás megjelenésnek.",
+  },
+] as const;
+
 export const Route = createFileRoute("/arak")({
   head: () => ({
     meta: [
@@ -154,7 +169,9 @@ export const Route = createFileRoute("/arak")({
 function PricingPage() {
   const instant = PRODUCTS.filter((product) => product.category === "instant");
   const delayed = PRODUCTS.filter((product) => product.category === "delayed");
-  const entry = PRODUCTS.filter((product) => product.category === "instant" && product.priceHuf < 900);
+  const entry = PRODUCTS.filter(
+    (product) => product.category === "instant" && product.priceHuf < 900,
+  );
   const focused = PRODUCTS.filter(
     (product) => product.category === "instant" && product.priceHuf >= 900,
   );
@@ -236,8 +253,8 @@ function PricingPage() {
             <h2 className="mt-2 font-display text-3xl text-ivory">A kérdésedhez válassz</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
               Nem mindenkinek ugyanaz az olvasat kell. Itt a leggyorsabb út, ha még nem tudod, hol
-              kezdd. Ha ugyanaz a téma tér vissza, általában nem újabb gyors húzás kell, hanem
-              olyan olvasat, amely továbbviszi az előző kérdésed ívét.
+              kezdd. Ha ugyanaz a téma tér vissza, általában nem újabb gyors húzás kell, hanem olyan
+              olvasat, amely továbbviszi az előző kérdésed ívét.
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -278,15 +295,15 @@ function PricingPage() {
           category="instant"
         />
 
-        <section className="mt-10 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-5 md:p-7">
+        <section className="mt-10">
           <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
             Elvárások tisztázása
           </div>
           <h2 className="mt-2 font-display text-3xl text-ivory">Mikor ne ezt válaszd?</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
-            A Jövőd.hu olvasatai régi jelképrendszerekből induló önismereti szövegek. Akkor
-            működnek jól, ha egy helyzetre szeretnél ránézni, nem akkor, ha kész tényt vagy
-            kockázatos döntést vársz tőlük.
+            A Jövőd.hu olvasatai régi jelképrendszerekből induló önismereti szövegek. Akkor működnek
+            jól, ha egy helyzetre szeretnél ránézni, nem akkor, ha kész tényt vagy kockázatos
+            döntést vársz tőlük.
           </p>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {NOT_FOR_GUIDE.map((item) => (
@@ -348,6 +365,52 @@ function PricingPage() {
               Az asztrológiai riportok a saját születési adataidból készülnek; normál esetben 24
               órán belül érkeznek, expressz gyorsítással 6 órán belül.
             </p>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-5 md:p-7">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">
+            Fizetés előtt átnézhető
+          </div>
+          <h2 className="mt-2 font-display text-3xl text-ivory">
+            A döntés nem rejtett feltételeken múlik
+          </h2>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {PRE_PURCHASE_CHECKS.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-md border border-[oklch(0.78_0.10_80/0.12)] bg-[oklch(0.13_0.03_292/0.48)] p-4"
+              >
+                <h3 className="font-display text-xl leading-tight text-ivory">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ivory/62">{item.text}</p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2 text-sm">
+            <Link
+              to="/aszf"
+              className="rounded-md border border-gold/25 px-3 py-2 text-gold transition-colors hover:border-gold/60"
+            >
+              ÁSZF
+            </Link>
+            <Link
+              to="/elallasi-tajekoztato"
+              className="rounded-md border border-gold/25 px-3 py-2 text-gold transition-colors hover:border-gold/60"
+            >
+              Elállási tájékoztató
+            </Link>
+            <Link
+              to="/adatkezelesi-tajekoztato"
+              className="rounded-md border border-gold/25 px-3 py-2 text-gold transition-colors hover:border-gold/60"
+            >
+              Adatkezelés
+            </Link>
+            <a
+              href={`mailto:${SITE_LEGAL.supportEmail}`}
+              className="rounded-md border border-gold/25 px-3 py-2 text-gold transition-colors hover:border-gold/60"
+            >
+              Kérdés vásárlás előtt
+            </a>
           </div>
         </section>
 
