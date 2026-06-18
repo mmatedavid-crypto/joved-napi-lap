@@ -398,7 +398,11 @@ async function expireUnusableCheckoutSession(stripe: Stripe, sessionId: string):
   try {
     await stripe.checkout.sessions.expire(sessionId);
   } catch (error) {
-    console.warn("Could not expire checkout session without order:", error);
+    console.warn("Could not expire checkout session without order", {
+      error_code: "checkout_session_expire_failed",
+      provider_code: stableErrorCode(error),
+      session_id_redacted: redactStripeId(sessionId),
+    });
   }
 }
 
@@ -516,12 +520,20 @@ async function reconcilePendingPayment<T extends OrderForPaymentRecheck | null>(
         const { processPaidOrderBySession } = await import("@/lib/orderProcessing.server");
         await processPaidOrderBySession(sessionId);
       } catch (error) {
-        console.warn("order reconciliation processing failed:", error);
+        console.warn("order reconciliation processing failed", {
+          error_code: "order_reconciliation_processing_failed",
+          provider_code: stableErrorCode(error),
+          session_id_redacted: redactStripeId(sessionId),
+        });
       }
       return paidOrder as unknown as T;
     }
   } catch (error) {
-    console.warn("checkout payment reconciliation failed:", error);
+    console.warn("checkout payment reconciliation failed", {
+      error_code: "checkout_payment_reconciliation_failed",
+      provider_code: stableErrorCode(error),
+      session_id_redacted: redactStripeId(sessionId),
+    });
   }
 
   return { ...order, payment_rechecked_at: recheckedAt };
@@ -760,7 +772,11 @@ async function prepareFailedOrderRetry(
       return { ok: false, error: "Még nincs feldolgozható állapotban" };
     }
   } catch (error) {
-    console.warn("failed order retry payment verification failed:", error);
+    console.warn("failed order retry payment verification failed", {
+      error_code: "failed_order_retry_payment_verification_failed",
+      provider_code: stableErrorCode(error),
+      session_id_redacted: redactStripeId(order.stripe_session_id),
+    });
     return { ok: false, error: "Most nem sikerült ellenőrizni a fizetést" };
   }
 
