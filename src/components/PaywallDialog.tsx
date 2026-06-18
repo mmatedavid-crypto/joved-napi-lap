@@ -215,9 +215,14 @@ export function PaywallDialog({
                   ehhez kötjük az olvasat elküldését és visszakeresését.
                 </p>
               )}
+              <p className="mt-1 text-xs leading-relaxed text-ivory/48">
+                Fizetés előtt még egyszer nézd át: erre az email címre küldjük az értesítést, és
+                vendégként ezzel tudunk gyorsan segíteni, ha később vissza kell keresni az olvasatot.
+              </p>
               {email && !emailValid && (
                 <p className="mt-1 text-xs text-gold/75">
-                  Kérlek ellenőrizd az email címet, ide küldjük az olvasatot is.
+                  Javítsd az email címet fizetés előtt; elgépelésnél nehezebb lesz eljuttatni vagy
+                  visszakeresni az olvasatot.
                 </p>
               )}
             </div>
