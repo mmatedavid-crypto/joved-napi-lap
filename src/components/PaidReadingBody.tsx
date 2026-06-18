@@ -94,7 +94,8 @@ export function PaidReadingBody({
           </p>
           <p className="text-[11px] leading-relaxed text-ivory/38">
             Mentéskor a fájl tartalmazza a címet
-            {orderReference ? ` és a rendelésazonosítót (${orderReference})` : ""}.
+            {orderReference ? `, a rendelésazonosítót (${orderReference})` : ""}, a visszaolvasási
+            útmutatót és a pontosítási teendőket is.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

@@ -608,6 +608,8 @@ const checks: Check[] = [
       "később is visszanézheted",
       "kimásolhatod vagy letöltheted",
       "Mentéskor a fájl tartalmazza a címet",
+      "visszaolvasási",
+      "pontosítási teendőket",
       "ReadingUseGuide",
       "ReadingSelfCheck",
       "ReadingContinuationGuide",
