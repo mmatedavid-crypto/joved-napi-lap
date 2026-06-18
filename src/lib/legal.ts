@@ -14,8 +14,11 @@ export const SITE_LEGAL = {
     conciliationInfoUrl: "https://www.bekeltetes.hu",
     euOdrInfoUrl: "https://consumer-redress.ec.europa.eu/site-relocation_en",
   },
-  updatedAt: "2026. június 9.",
+  updatedAt: "2026. június 19.",
 } as const;
 
 export const ENTERTAINMENT_DISCLAIMER =
   "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
+
+export const SYMBOLIC_TRADITION_DISCLAIMER =
+  "A tarot, a számmisztika és a horoszkóp nagy hagyományú, történeti jelképrendszerekből és népi megfigyelésekből indul; a Jövőd.hu ezeket józan, mai önismereti nyelven olvassa.";

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL, SYMBOLIC_TRADITION_DISCLAIMER } from "@/lib/legal";
 
 export const Route = createFileRoute("/impresszum")({
   head: () => ({
@@ -57,6 +57,7 @@ export const Route = createFileRoute("/impresszum")({
 
       <LegalSection title="A szolgáltatás jellege">
         <p>{ENTERTAINMENT_DISCLAIMER}</p>
+        <p>{SYMBOLIC_TRADITION_DISCLAIMER}</p>
         <p>
           A kártyavetések, számmisztikai és horoszkóp jellegű olvasatok nem ígérnek biztos jövőbeli
           eseményt, és nem helyettesítik szakember döntését vagy tanácsát.

@@ -353,6 +353,30 @@ const checks: StaticSafetyCheck[] = [
     required: ["A részletes elemzés a születési dátum"],
   },
   {
+    file: "src/lib/legal.ts",
+    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
+    required: [
+      "SYMBOLIC_TRADITION_DISCLAIMER",
+      "nagy hagyományú, történeti jelképrendszerekből és népi megfigyelésekből indul",
+      "józan, mai önismereti nyelven olvassa",
+    ],
+  },
+  {
+    file: "src/components/Layout.tsx",
+    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
+    required: ["SYMBOLIC_TRADITION_DISCLAIMER"],
+  },
+  {
+    file: "src/routes/aszf.tsx",
+    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
+    required: ["SYMBOLIC_TRADITION_DISCLAIMER"],
+  },
+  {
+    file: "src/routes/impresszum.tsx",
+    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
+    required: ["SYMBOLIC_TRADITION_DISCLAIMER"],
+  },
+  {
     file: "src/lib/roxy.functions.ts",
     forbidden: [
       /roxyAngolForras/,

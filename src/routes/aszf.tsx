@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL, SYMBOLIC_TRADITION_DISCLAIMER } from "@/lib/legal";
 
 export const Route = createFileRoute("/aszf")({
   head: () => ({
@@ -33,6 +33,7 @@ export const Route = createFileRoute("/aszf")({
 
       <LegalSection title="A szolgáltatás">
         <p>{ENTERTAINMENT_DISCLAIMER}</p>
+        <p>{SYMBOLIC_TRADITION_DISCLAIMER}</p>
         <p>
           A Jövőd.hu tarot, számmisztikai, párkapcsolati, horoszkóp és más önismereti jellegű
           digitális tartalmakat ad. Az olvasatok szimbolikus értelmezések, nem tényállítások és nem

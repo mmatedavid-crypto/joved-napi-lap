@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 import { BottomNav } from "./BottomNav";
 import { GuestMemoryNotice } from "./GuestMemoryNotice";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
-import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL, SYMBOLIC_TRADITION_DISCLAIMER } from "@/lib/legal";
 
 const NAV = [
   { to: "/mai-lap", label: "Mai lap" },
@@ -200,6 +200,9 @@ export function Layout({ children }: { children?: ReactNode }) {
             </ul>
             <p className="mt-3 font-editorial text-xs leading-relaxed text-ivory/50">
               {ENTERTAINMENT_DISCLAIMER}
+            </p>
+            <p className="mt-2 font-editorial text-xs leading-relaxed text-ivory/50">
+              {SYMBOLIC_TRADITION_DISCLAIMER}
             </p>
           </div>
         </div>
