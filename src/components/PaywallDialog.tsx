@@ -736,6 +736,7 @@ function readingFocusPreview(
   const sign = get("Jegy");
   const dates = get("Dátumok") ?? get("Születési dátum");
   const birthTime = payloadText(payload, "birthTime");
+  const birthPlace = payloadText(payload, "birthPlace");
   const names = get("Nevek") ?? get("Név") ?? get("Megszólítás");
   const dream = get("Álom");
   const crystal = get("Kristály");
@@ -775,7 +776,8 @@ function readingFocusPreview(
           ? ` · születési idő: ${birthTime}`
           : " · születési idő nélkül, közelített képlettel"
         : "";
-    lines.push(`A számolási alap: ${dates}${timePart}${names ? ` · ${names}` : ""}.`);
+    const placePart = product.category === "delayed" && birthPlace ? ` · hely: ${birthPlace}` : "";
+    lines.push(`A számolási alap: ${dates}${timePart}${placePart}${names ? ` · ${names}` : ""}.`);
   }
   if (product.category === "delayed" && !birthTime) {
     lines.push(
@@ -938,6 +940,7 @@ function summarizeInputPayload(
   add("Megszólítás", payload.callName ?? payload.preferredName, 60);
   addPair("Nevek", payload.myName ?? payload.fullNameA, payload.hisName ?? payload.fullNameB);
   add("Születési dátum", payload.dob ?? payload.birthDate, 30);
+  add("Születési hely", payload.birthPlace, 80);
   addPair("Dátumok", payload.myDob ?? payload.birthDateA, payload.hisDob ?? payload.birthDateB, 80);
   add("Kérdés", payload.question ?? payload.q);
   add("Helyzet", payload.sit ?? payload.status ?? payload.category ?? payload.cat, 90);
