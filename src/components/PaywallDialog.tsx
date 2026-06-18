@@ -91,6 +91,7 @@ export function PaywallDialog({
   const supportMailto = paywallSupportMailto({
     product,
     sourceRoute,
+    isLoggedIn,
     inputSummary,
   });
 
@@ -877,6 +878,7 @@ function payloadText(payload: Record<string, unknown> | undefined, key: string):
 function paywallSupportMailto(input: {
   product: ProductDef;
   sourceRoute?: string;
+  isLoggedIn: boolean;
   inputSummary: Array<{ label: string; value: string }>;
 }): string {
   const subject = `Jövőd.hu rendelési segítség - ${input.product.name}`;
@@ -886,6 +888,7 @@ function paywallSupportMailto(input: {
     `Termék: ${input.product.name}`,
     `Ár: ${formatHuf(input.product.priceHuf)}`,
     input.sourceRoute ? `Oldal: ${input.sourceRoute}` : null,
+    `Fizetési próbálkozás: ${input.isLoggedIn ? "bejelentkezve" : "vendégként"}`,
     ...input.inputSummary.map((item) => `${item.label}: ${item.value}`),
     "",
     "A vásárlási email címem:",

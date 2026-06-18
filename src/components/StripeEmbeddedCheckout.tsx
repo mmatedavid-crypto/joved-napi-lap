@@ -109,7 +109,7 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
             {"a választott olvasatot és a hozzáférést rendelés előtt is segítünk rendezni"}:{" "}
             <a
               className="text-gold hover:text-gold/80"
-              href={checkoutSupportMailto({ productSlug, sourceRoute })}
+              href={checkoutSupportMailto({ productSlug, sourceRoute, isLoggedIn: Boolean(userId) })}
             >
               {SITE_LEGAL.supportEmail}
             </a>
@@ -144,7 +144,11 @@ function defaultCheckoutReturnUrl(environment: "sandbox" | "live"): string {
   return `${origin}/koszonjuk?session_id={CHECKOUT_SESSION_ID}`;
 }
 
-function checkoutSupportMailto(input: { productSlug: string; sourceRoute?: string }): string {
+function checkoutSupportMailto(input: {
+  productSlug: string;
+  sourceRoute?: string;
+  isLoggedIn: boolean;
+}): string {
   const productName = PRODUCTS_BY_SLUG[input.productSlug]?.name ?? input.productSlug;
   const subject = `Jövőd.hu fizetési segítség - ${productName}`;
   const body = [
@@ -152,6 +156,7 @@ function checkoutSupportMailto(input: { productSlug: string; sourceRoute?: strin
     "",
     `Termék: ${productName}`,
     input.sourceRoute ? `Oldal: ${input.sourceRoute}` : null,
+    `Fizetési próbálkozás: ${input.isLoggedIn ? "bejelentkezve" : "vendégként"}`,
     "A vásárlási email címem:",
     "Mi történt röviden:",
     "",

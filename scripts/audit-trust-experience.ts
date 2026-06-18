@@ -326,6 +326,8 @@ const checks: Check[] = [
       "a választott olvasatot és a hozzáférést rendelés előtt is segítünk rendezni",
       "checkoutSupportMailto",
       "Jövőd.hu fizetési segítség",
+      "isLoggedIn: Boolean(userId)",
+      "Fizetési próbálkozás:",
       'aria-live="polite"',
       'role="status"',
       "Újrapróbálom",
