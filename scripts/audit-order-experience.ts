@@ -139,6 +139,8 @@ const checks: Check[] = [
       "Express rendelésnél",
       "gyorsított határidő csúszna",
       "a gyorsítás díját külön rendezzük",
+      "const base = deadline",
+      "if (!order.express) return base",
       "pár percig hagyd nyitva",
       "biztonságos rendelési linket érdemes megtartanod",
     ],

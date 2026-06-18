@@ -788,9 +788,11 @@ function orderPreparationLead(order: OrderView): string {
 function orderPreparationDetail(order: OrderView): string {
   if (order.category === "delayed") {
     const deadline = order.deliver_by ? new Date(order.deliver_by).toLocaleString("hu-HU") : null;
-    return deadline
+    const base = deadline
       ? `A vállalt határidő: ${deadline}. Addig ezt a biztonságos rendelési linket érdemes megtartanod; elkészüléskor emailben is jelzünk.`
       : "A részletes elemzést gondosabb szövegezéssel készítjük el; amikor kész, ezen a biztonságos rendelési linken és emailben is eléred.";
+    if (!order.express) return base;
+    return `${base} Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.`;
   }
   return "Ha a fizetés már sikeres volt, de az oldal még készítést mutat, pár percig hagyd nyitva vagy frissítsd később ugyanerről a biztonságos linkről.";
 }
