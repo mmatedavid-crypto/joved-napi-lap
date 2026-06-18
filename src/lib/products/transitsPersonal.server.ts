@@ -1,6 +1,6 @@
-// SERVER-ONLY. A "Tranzitok — személyes elemzés" termék Roxy + AI flow-ja.
-// 90 napos időablak, a /transits Roxy endpointra épülve, fallback a
-// /forecast/timeline-re, ha a tranzit-specifikus végpont nem felel.
+// SERVER-ONLY. A "Tranzitok — személyes elemzés" termék forráshű szerkesztői flow-ja.
+// 90 napos időablak, tranzit-forrásanyaggal; ha ez nem elég használható,
+// az idővonali asztrológiai forrásanyag adja a biztonságos tartalmi tartalékot.
 
 import { aiJSON } from "@/lib/ai.server";
 import { addDaysToDateKey, huTodayKey } from "@/lib/dateKeys";

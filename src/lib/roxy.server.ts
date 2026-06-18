@@ -1,8 +1,8 @@
 // SERVER-ONLY. Do NOT import from client code. The .server.ts suffix prevents
 // any client bundle from reaching this file (it would fail the build).
 //
-// Reads ROXY_API_KEY from process.env (Lovable Cloud Secrets). The key never
-// leaves the server.
+// Reads the server-side symbolic source key from process.env. The key never
+// leaves the server and returned errors stay neutral for downstream copy.
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
@@ -55,11 +55,11 @@ async function writeCache(
 }
 
 /**
- * Call a Roxy endpoint with caching. Returns a structured result so callers
- * can always fall back to local data when Roxy is unavailable.
+ * Call the symbolic source service with caching. Returns a structured result
+ * so callers can always fall back to local data when source material is absent.
  */
 export async function callRoxy<T = unknown>(opts: {
-  endpoint: string; // e.g. "/tarot/draw"
+  endpoint: string;
   method?: "GET" | "POST";
   body?: Record<string, unknown>;
   cacheKey: string;

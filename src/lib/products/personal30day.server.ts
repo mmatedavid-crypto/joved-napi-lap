@@ -1,4 +1,4 @@
-// SERVER-ONLY. A "30 napod térképe" termék Roxy + AI flow-ja.
+// SERVER-ONLY. A "30 napod térképe" termék forráshű szerkesztői flow-ja.
 // Webhook hívja `processPaidOrderBySession` ágból. Kimenete a megszokott
 // PaidOrderReading shape ({ title, body }), így a köszönő oldal és az
 // email-template változatlanul tudja megjeleníteni.

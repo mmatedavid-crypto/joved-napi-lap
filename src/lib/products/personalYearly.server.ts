@@ -1,6 +1,6 @@
-// SERVER-ONLY. A "Személyes éves horoszkóp" termék Roxy + AI flow-ja.
+// SERVER-ONLY. A "Személyes éves horoszkóp" termék forráshű szerkesztői flow-ja.
 // Mintát ad a personal30day.server.ts — itt 365 napos időablakkal és
-// havi bontás-fókusszal hívjuk a Roxy forecast/timeline-t.
+// havi bontás-fókusszal dolgozzuk össze az asztrológiai forrásanyagot.
 
 import { aiJSON } from "@/lib/ai.server";
 import { addDaysToDateKey, huTodayKey } from "@/lib/dateKeys";

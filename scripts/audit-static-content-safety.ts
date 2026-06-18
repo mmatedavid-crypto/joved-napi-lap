@@ -56,12 +56,17 @@ const checks: StaticSafetyCheck[] = [
       /errorMessage: `Roxy/i,
       /errorMessage: "Roxy nem JSON/i,
       /HTTP \$\{res\.status\}/i,
+      /Call a Roxy endpoint/i,
+      /Roxy is unavailable/i,
+      /ROXY_API_KEY from process\.env/i,
     ],
     required: [
       'providerCode: "missing_api_key"',
       'providerCode: "network_error"',
       'providerCode: "invalid_json"',
       'errorMessage: "A szimbolikus forrásanyag most nem érhető el."',
+      "server-side symbolic source key",
+      "source material is absent",
     ],
   },
   {
@@ -355,8 +360,15 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/lib/products/personal30day.server.ts",
-    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY FORECAST/i, /nyers JSON, angol/i],
+    forbidden: [
+      /Roxy-forrás/i,
+      /Roxy \+ AI flow/i,
+      /ROXY NATAL/i,
+      /ROXY FORECAST/i,
+      /nyers JSON, angol/i,
+    ],
     required: [
+      "forráshű szerkesztői flow",
       "asztrológiai forrásanyagból",
       "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
       "ASZTROLÓGIAI IDŐVONAL 30 NAPRA",
@@ -364,8 +376,17 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/lib/products/personalYearly.server.ts",
-    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY ÉVES/i, /nyers JSON, angol/i],
+    forbidden: [
+      /Roxy-forrás/i,
+      /Roxy \+ AI flow/i,
+      /ROXY NATAL/i,
+      /ROXY ÉVES/i,
+      /Roxy forecast\/timeline/i,
+      /nyers JSON, angol/i,
+    ],
     required: [
+      "forráshű szerkesztői flow",
+      "asztrológiai forrásanyagot",
       "asztrológiai forrásanyagból",
       "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
       "ÉVES ASZTROLÓGIAI FORRÁSANYAG",
@@ -373,8 +394,19 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/lib/products/transitsPersonal.server.ts",
-    forbidden: [/Roxy-forrás/i, /ROXY NATAL/i, /ROXY TRANZIT/i, /nyers JSON, angol/i],
+    forbidden: [
+      /Roxy-forrás/i,
+      /Roxy \+ AI flow/i,
+      /ROXY NATAL/i,
+      /ROXY TRANZIT/i,
+      /Roxy endpointra/i,
+      /tranzit-specifikus végpont/i,
+      /nyers JSON, angol/i,
+    ],
     required: [
+      "forráshű szerkesztői flow",
+      "tranzit-forrásanyaggal",
+      "idővonali asztrológiai forrásanyag",
       "asztrológiai forrásanyagból",
       "SZÜLETÉSI KÉPLET FORRÁSANYAGA",
       "TRANZITFORRÁS 90 NAPRA",
