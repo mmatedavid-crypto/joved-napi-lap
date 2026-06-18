@@ -819,7 +819,9 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
         data: { orderId: order.id, feedback: option.value, note: note?.trim() },
       });
       if (!result.ok) {
-        setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+        setFeedbackError(
+          "Most nem sikerült menteni a visszajelzést. A beírt szöveg nem vész el: az emailes út ugyanazzal a rendelésazonosítóval működik.",
+        );
         return;
       }
       setSelectedFeedback(option.value);
@@ -832,7 +834,9 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
         saved: true,
       });
     } catch {
-      setFeedbackError("Most nem sikerült menteni a visszajelzést, de emailben elküldheted.");
+      setFeedbackError(
+        "Most nem sikerült menteni a visszajelzést. A beírt szöveg nem vész el: az emailes út ugyanazzal a rendelésazonosítóval működik.",
+      );
     } finally {
       setFeedbackSaving(null);
     }
@@ -916,7 +920,11 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
           </div>
         </div>
       )}
-      {feedbackError && <p className="mt-3 text-xs text-amber-200/80">{feedbackError}</p>}
+      {feedbackError && (
+        <p aria-live="polite" className="mt-3 text-xs text-amber-200/80">
+          {feedbackError}
+        </p>
+      )}
       <p className="mt-3 text-[11px] leading-relaxed text-ivory/42">
         A levélbe csak a rendelés rövid azonosítója és a termék neve kerül előre kitöltve, az
         olvasat teljes szövegét nem tesszük bele automatikusan.
