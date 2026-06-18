@@ -63,8 +63,9 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
 
       <LegalSection title="Fontos korlát">
         <p>
-          Az olvasatok szimbolikus, önismereti és szórakoztató tartalmak. Az, hogy egy olvasat
-          érzelmileg mennyire találónak érződik, önmagában nem minősül hozzáférési hibának.
+          Az olvasatok nagy hagyományú jelképrendszerekből és népi megfigyelésekből induló
+          önismereti tartalmak. Az, hogy egy olvasat érzelmileg mennyire találónak érződik,
+          önmagában nem minősül hozzáférési hibának.
         </p>
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>

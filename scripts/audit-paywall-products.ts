@@ -610,8 +610,13 @@ for (const needle of [
   "korlátozott lehet",
   "hozzáférési vagy teljesítési gond miatt az olvasat",
   "a hozzáférést pótoljuk",
+  "nagy hagyományú jelképrendszerekből",
+  "népi megfigyelésekből induló",
 ]) {
   if (!withdrawalRoute.includes(needle)) failed.push(`Withdrawal route missing: ${needle}`);
+}
+if (withdrawalRoute.includes("szimbolikus, önismereti és szórakoztató tartalmak")) {
+  failed.push("Withdrawal route must frame readings through tradition, not cold content wording");
 }
 
 if (!layout.includes('{ to: "/arak", label: "Árak" }')) {

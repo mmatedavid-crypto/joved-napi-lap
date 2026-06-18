@@ -757,8 +757,11 @@ const checks: Check[] = [
       "köszönőoldalt",
       "profilod rendelési előzményeit",
       "nem csak emailben",
+      "nagy hagyományú jelképrendszerekből",
+      "népi megfigyelésekből induló",
+      "önmagában nem minősül hozzáférési hibának",
     ],
-    excludes: ["automatikusan készülnek el"],
+    excludes: ["automatikusan készülnek el", "szimbolikus, önismereti és szórakoztató tartalmak"],
   },
   {
     name: "numerology SEO pages never expose raw router error messages",
