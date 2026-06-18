@@ -31,6 +31,7 @@ function Page() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const switchAuthMode = useAuthModeSwitch({ mode, setMode, setErr, setMsg });
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/profil" });
@@ -44,7 +45,7 @@ function Page() {
     });
     if (r.error) {
       setErr(
-        "Most nem sikerült elindítani a külső bejelentkezést. A fiók létrehozása nem indít fizetést, és a korábbi rendeléseid nem vesznek el; próbáld újra, vagy írj nekünk.",
+        `Most nem sikerült elindítani a ${provider === "google" ? "Google" : "Apple"} bejelentkezést. A fiók létrehozása nem indít fizetést, és a korábbi rendeléseid nem vesznek el; próbáld újra, vagy írj nekünk.`,
       );
       setBusy(false);
       return;
@@ -157,9 +158,20 @@ function Page() {
           <button disabled={busy} className="w-full btn-gold">
             {mode === "signin" ? "Belépés" : "Regisztráció"}
           </button>
-          {msg && <p className="text-sm text-gold">{msg}</p>}
+          {msg && (
+            <p
+              aria-live="polite"
+              className="rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-gold"
+            >
+              {msg}
+            </p>
+          )}
           {err && (
-            <p aria-live="polite" className="text-sm leading-relaxed text-red-300">
+            <p
+              aria-live="polite"
+              role="status"
+              className="rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-ivory/78"
+            >
               {err}{" "}
               <a
                 className="text-gold hover:text-gold/80"
@@ -171,7 +183,7 @@ function Page() {
           )}
           <button
             type="button"
-            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+            onClick={() => switchAuthMode()}
             className="w-full text-sm text-ivory/60 hover:text-gold"
           >
             {mode === "signin" ? "Még nincs fiókom — regisztráció" : "Van fiókom — belépés"}
@@ -193,27 +205,45 @@ function normalizeAuthEmail(value: string): string {
   return value.trim().toLocaleLowerCase("hu-HU");
 }
 
+function useAuthModeSwitch({
+  mode,
+  setMode,
+  setErr,
+  setMsg,
+}: {
+  mode: "signin" | "signup";
+  setMode: (mode: "signin" | "signup") => void;
+  setErr: (message: string | null) => void;
+  setMsg: (message: string | null) => void;
+}) {
+  return () => {
+    setErr(null);
+    setMsg(null);
+    setMode(mode === "signin" ? "signup" : "signin");
+  };
+}
+
 function safeAuthErrorMessage(error: unknown, mode: "signin" | "signup"): string {
   const raw = error instanceof Error ? error.message.toLocaleLowerCase("hu-HU") : "";
   if (raw.includes("invalid login") || raw.includes("invalid credentials")) {
     return "Nem egyezik az email cím és a jelszó. Ellenőrizd az adatokat, vagy regisztrálj új fiókot.";
   }
   if (raw.includes("email not confirmed") || raw.includes("not confirmed")) {
-    return "Ezt az email címet még meg kell erősíteni. Nézd meg a postaládádat, és utána próbáld újra.";
+    return "Ezt az email címet még meg kell erősíteni. Nézd meg a postaládádat; a korábbi rendeléseid ettől nem vesznek el.";
   }
   if (raw.includes("already registered") || raw.includes("already exists")) {
-    return "Ezzel az email címmel már van fiók. Válts belépésre, és próbáld meg úgy.";
+    return "Ezzel az email címmel már van fiók. Válts belépésre; nem indul új fizetés, csak a profilodat nyitod meg.";
   }
   if (raw.includes("password") && raw.includes("6")) {
     return "A jelszó legyen legalább 6 karakter hosszú.";
   }
   if (raw.includes("rate") || raw.includes("too many")) {
-    return "Túl sok próbálkozás történt rövid idő alatt. Várj egy kicsit, majd próbáld újra.";
+    return "Túl sok próbálkozás történt rövid idő alatt. Várj egy kicsit; a biztonságos rendelési linkjeid továbbra is működnek.";
   }
   if (mode === "signup") {
-    return "Most nem sikerült létrehozni a fiókot. Próbáld újra pár perc múlva.";
+    return "Most nem sikerült létrehozni a fiókot. A vendégvásárlásaid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk.";
   }
-  return "Most nem sikerült belépni. Próbáld újra pár perc múlva.";
+  return "Most nem sikerült belépni. A korábbi rendeléseid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk.";
 }
 
 function authSupportMailto({
