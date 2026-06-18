@@ -17,7 +17,7 @@ export const Route = createFileRoute("/bejelentkezes")({
       },
       { name: "robots", content: "noindex,follow" },
     ],
-    links: [{ rel: "canonical", href: "/bejelentkezes" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/bejelentkezes` }],
   }),
   component: Page,
 });

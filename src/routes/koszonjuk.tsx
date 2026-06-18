@@ -80,7 +80,7 @@ export const Route = createFileRoute("/koszonjuk")({
   }),
   head: () => ({
     meta: [{ title: "Köszönjük! | Jövőd.hu" }, { name: "robots", content: "noindex,nofollow" }],
-    links: [{ rel: "canonical", href: "/koszonjuk" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/koszonjuk` }],
   }),
   component: Page,
 });

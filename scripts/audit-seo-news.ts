@@ -313,6 +313,12 @@ const publicContentCanonicalChecks = [
   ["src/routes/kinai-horoszkop.$animal.tsx", "href: url"],
 ] as const;
 
+const privateNoindexCanonicalChecks = [
+  ["src/routes/bejelentkezes.tsx", 'href: `${SITE_LEGAL.siteUrl}/bejelentkezes`'],
+  ["src/routes/profil.tsx", 'href: `${SITE_LEGAL.siteUrl}/profil`'],
+  ["src/routes/koszonjuk.tsx", 'href: `${SITE_LEGAL.siteUrl}/koszonjuk`'],
+] as const;
+
 for (const [file, canonicalNeedle] of publicHubCanonicalChecks) {
   const body = readFileSync(file, "utf8");
   if (!body.includes("SITE_LEGAL.siteUrl") || !body.includes(canonicalNeedle)) {
@@ -330,6 +336,19 @@ for (const [file, canonicalNeedle] of publicContentCanonicalChecks) {
   }
   if (body.includes('links: [{ rel: "canonical", href: "/')) {
     failed.push(`${file}: public content must not use a relative canonical URL`);
+  }
+}
+
+for (const [file, canonicalNeedle] of privateNoindexCanonicalChecks) {
+  const body = readFileSync(file, "utf8");
+  if (!body.includes('name: "robots"') || !body.includes("noindex")) {
+    failed.push(`${file}: private account/order route must remain noindex`);
+  }
+  if (!body.includes("SITE_LEGAL.siteUrl") || !body.includes(canonicalNeedle)) {
+    failed.push(`${file}: private account/order route must use a production-domain canonical URL`);
+  }
+  if (body.includes('links: [{ rel: "canonical", href: "/')) {
+    failed.push(`${file}: private account/order route must not use a relative canonical URL`);
   }
 }
 

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/profil")({
       { name: "description", content: "Mentett húzásaid, vásárlásaid és sorsszámod." },
       { name: "robots", content: "noindex,nofollow" },
     ],
-    links: [{ rel: "canonical", href: "/profil" }],
+    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/profil` }],
   }),
   component: Page,
 });
