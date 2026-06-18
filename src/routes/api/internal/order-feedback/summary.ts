@@ -108,6 +108,11 @@ function parseStaleProcessingMinutes(value: string | null): number {
   return Math.max(5, Math.min(MAX_STALE_PROCESSING_MINUTES, Math.floor(parsed)));
 }
 
+function stableDatabaseErrorCode(error: unknown): string {
+  const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
+  return /^[a-z0-9_:-]{3,80}$/i.test(code) ? code : "unknown";
+}
+
 function normalizeOrderHealthErrorCode(value: string | null, status: string): string {
   const trimmed = value?.trim();
   if (!trimmed) return status === "processing" ? "processing" : "none";
@@ -369,9 +374,9 @@ async function handleSummary(request: Request) {
     .limit(1000);
 
   if (error) {
-    console.error("order feedback summary failed:", {
-      code: error.code,
-      message: error.message,
+    console.error("order feedback summary failed", {
+      error_code: "order_feedback_summary_failed",
+      database_code: stableDatabaseErrorCode(error),
     });
     return Response.json(
       { ok: false, error: "feedback_summary_unavailable" },
@@ -390,9 +395,9 @@ async function handleSummary(request: Request) {
     .limit(1000);
 
   if (orderHealthError) {
-    console.error("order health summary failed:", {
-      code: orderHealthError.code,
-      message: orderHealthError.message,
+    console.error("order health summary failed", {
+      error_code: "order_health_summary_failed",
+      database_code: stableDatabaseErrorCode(orderHealthError),
     });
     return Response.json(
       { ok: false, error: "order_health_summary_unavailable" },
@@ -411,9 +416,9 @@ async function handleSummary(request: Request) {
     .limit(1000);
 
   if (deliveryEmailHealthError) {
-    console.error("delivery email health summary failed:", {
-      code: deliveryEmailHealthError.code,
-      message: deliveryEmailHealthError.message,
+    console.error("delivery email health summary failed", {
+      error_code: "delivery_email_health_summary_failed",
+      database_code: stableDatabaseErrorCode(deliveryEmailHealthError),
     });
     return Response.json(
       { ok: false, error: "delivery_email_health_summary_unavailable" },
