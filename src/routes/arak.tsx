@@ -587,7 +587,7 @@ function PricingGroup({
                 to={product.sourceRoute}
                 className="mt-4 inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60"
               >
-                Megnézem
+                {productCardCta(product)}
               </Link>
             )}
           </article>
@@ -595,6 +595,12 @@ function PricingGroup({
       </div>
     </section>
   );
+}
+
+function productCardCta(product: (typeof PRODUCTS)[number]): string {
+  if (product.category === "delayed") return "Riport részletei";
+  if (product.priceHuf < 900) return "Próbaolvasat indítása";
+  return "Személyes olvasat indítása";
 }
 
 function productFitHint(product: (typeof PRODUCTS)[number]): string {
