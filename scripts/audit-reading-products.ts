@@ -655,10 +655,14 @@ if (
   !paidServer.includes("hasPaidSafetyFrame") ||
   !paidServer.includes("missing_safety_frame") ||
   !paidServer.includes("önismereti") ||
+  !paidServer.includes("önismereti biztonsági keret") ||
   !paidServer.includes("Minden bekezdés mondjon valami újat és konkrétat") ||
   !paidServer.includes("Ne használj Markdown-jeleket vagy emojit")
 ) {
   policyFailures.push("paid AI quality gate must be stricter for deep paid products");
+}
+if (paidServer.includes("önismereti jogi megjegyzés")) {
+  policyFailures.push("paid AI prompt must ask for a safety frame, not a confusing legal note");
 }
 if (
   !paidReadingsSource.includes("export function paidReadingInputBrief") ||

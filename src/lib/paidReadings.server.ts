@@ -266,7 +266,7 @@ export async function generatePaidOrderReading(opts: {
         deep
           ? "Írj 5-7 rövid, jól elkülönülő részt, összesen 1800-3000 karakterben."
           : "Írj 4-5 rövid, jól elkülönülő részt, összesen 900-1500 karakterben.",
-        "A címsorok egyszerű szövegsorok legyenek. Ne használj Markdown-jeleket vagy emojit. Az utolsó rész legyen egy valóban elvégezhető mai lépés, utána egy rövid önismereti jogi megjegyzés.",
+        "A címsorok egyszerű szövegsorok legyenek. Ne használj Markdown-jeleket vagy emojit. Az utolsó rész legyen egy valóban elvégezhető mai lépés, utána egy rövid önismereti biztonsági keret.",
         "Csak JSON-t adj vissza: { title, body }.",
       ].join("\n"),
       user: [
