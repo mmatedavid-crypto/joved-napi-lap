@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPage, LegalSection } from "@/components/LegalPage";
-import { SITE_LEGAL } from "@/lib/legal";
+import { SITE_LEGAL, SYMBOLIC_TRADITION_DISCLAIMER } from "@/lib/legal";
 
 export const Route = createFileRoute("/elallasi-tajekoztato")({
   head: () => ({
@@ -62,10 +62,10 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
       </LegalSection>
 
       <LegalSection title="Fontos korlát">
+        <p>{SYMBOLIC_TRADITION_DISCLAIMER}</p>
         <p>
-          Az olvasatok nagy hagyományú jelképrendszerekből és népi megfigyelésekből induló
-          önismereti tartalmak. Az, hogy egy olvasat érzelmileg mennyire találónak érződik,
-          önmagában nem minősül hozzáférési hibának.
+          Az, hogy egy olvasat érzelmileg mennyire találónak érződik, önmagában nem minősül
+          hozzáférési hibának.
         </p>
         <p className="text-sm text-ivory/55">Utolsó frissítés: {SITE_LEGAL.updatedAt}</p>
       </LegalSection>

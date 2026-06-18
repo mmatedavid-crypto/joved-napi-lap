@@ -377,6 +377,21 @@ const checks: StaticSafetyCheck[] = [
     required: ["SYMBOLIC_TRADITION_DISCLAIMER"],
   },
   {
+    file: "src/routes/elallasi-tajekoztato.tsx",
+    forbidden: [
+      /technikai szolgáltatóként készít/i,
+      /\bAPI\b/i,
+      /lefordít/i,
+      /fordítjuk/i,
+      /szimbolikus, önismereti és szórakoztató tartalmak/i,
+    ],
+    required: [
+      "SYMBOLIC_TRADITION_DISCLAIMER",
+      "önmagában nem minősül",
+      "hozzáférési hibának",
+    ],
+  },
+  {
     file: "src/lib/roxy.functions.ts",
     forbidden: [
       /roxyAngolForras/,

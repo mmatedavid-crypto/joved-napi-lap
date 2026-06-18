@@ -646,8 +646,9 @@ for (const needle of [
   "korlátozott lehet",
   "hozzáférési vagy teljesítési gond miatt az olvasat",
   "a hozzáférést pótoljuk",
-  "nagy hagyományú jelképrendszerekből",
-  "népi megfigyelésekből induló",
+  "SYMBOLIC_TRADITION_DISCLAIMER",
+  "önmagában nem minősül",
+  "hozzáférési hibának",
 ]) {
   if (!withdrawalRoute.includes(needle)) failed.push(`Withdrawal route missing: ${needle}`);
 }
