@@ -171,6 +171,7 @@ type PaidReadingSelfCheck = {
   intro: string;
   checks: string[];
   clarificationDraft: string;
+  clarificationMailto: string;
 };
 
 function ReadingSelfCheck({
@@ -211,8 +212,15 @@ function ReadingSelfCheck({
               ? "Nem másolható"
               : "Pontosítási vázlat másolása"}
         </button>
+        <a
+          href={selfCheck.clarificationMailto}
+          className="inline-flex items-center justify-center rounded-md border border-gold/25 px-3 py-2 text-xs text-gold transition-colors hover:border-gold/60 hover:text-gold/85"
+        >
+          Pontosítást kérek emailben
+        </a>
         <p className="text-xs leading-relaxed text-ivory/45">
-          Akkor hasznos, ha az olvasat jó irányba indult, de egy fontos rész kimaradt.
+          Akkor hasznos, ha az olvasat jó irányba indult, de egy fontos rész kimaradt. Az email
+          tartalmazza a rendelésazonosítót és a pontosítási vázlatot.
         </p>
       </div>
     </aside>
@@ -501,6 +509,11 @@ function paidReadingSelfCheck({
     "",
     "Ebben az irányban kérek pontosítást:",
   ].join("\n");
+  const clarificationMailto = paidReadingClarificationMailto({
+    orderReference,
+    productLabel,
+    clarificationDraft,
+  });
 
   return {
     heading: selfCheckHeading(readingType),
@@ -508,7 +521,28 @@ function paidReadingSelfCheck({
       "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Ha egy fontos rész kimaradt vagy félrement, innen gyorsan meg tudod írni, mit pontosítsunk.",
     checks,
     clarificationDraft,
+    clarificationMailto,
   };
+}
+
+function paidReadingClarificationMailto({
+  orderReference,
+  productLabel,
+  clarificationDraft,
+}: {
+  orderReference?: string;
+  productLabel: string;
+  clarificationDraft: string;
+}): string {
+  const subject = `Jövőd.hu pontosítási kérés${orderReference ? ` · ${orderReference}` : ""}`;
+  const body = [
+    clarificationDraft,
+    "",
+    "Kérlek, nézzétek vissza rendelés alapján, melyik rész igényel finomítást.",
+    `Olvasat típusa: ${productLabel}`,
+  ].join("\n");
+
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function paidReadingAssurance(
