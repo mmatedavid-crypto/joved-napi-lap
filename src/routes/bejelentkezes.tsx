@@ -69,7 +69,9 @@ function Page() {
           options: { emailRedirectTo: window.location.origin + "/profil" },
         });
         if (error) throw error;
-        setMsg("Megerősítő emailt küldtünk. Kérlek nyisd meg a postaládád.");
+        setMsg(
+          "Megerősítő emailt küldtünk. Nyisd meg a postaládád; ha vendégként vásároltál, ugyanazzal az email címmel tudjuk a korábbi rendeléseidet a profilodhoz kapcsolni. A biztonságos rendelési linkjeid addig is működnek.",
+        );
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: normalizedEmail,
