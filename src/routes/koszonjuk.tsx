@@ -234,9 +234,9 @@ function Page() {
       <div className="mx-auto max-w-2xl px-4 pb-20 space-y-4">
         {loading && <Section eyebrow="Egy pillanat">Egyeztetjük a fizetést…</Section>}
         {err && (
-          <Section eyebrow="Kapcsolódási hiba">
-            Nem a fizetéseddel van baj; csak az állapotlekérés akadt meg. Frissítsd az oldalt pár
-            perc múlva, vagy írj nekünk a vásárlási email címedről.
+          <Section eyebrow="Rendelés egyeztetése" title="A fizetésed ettől nem vész el">
+            A rendelés állapota most nem frissült, de ez nem jelenti azt, hogy a fizetéseddel baj
+            lenne. Frissítsd az oldalt pár perc múlva, vagy írj nekünk a vásárlási email címedről.
             <SupportContact className="mt-4" />
           </Section>
         )}
@@ -378,15 +378,15 @@ function Page() {
               })()}
 
             {order.status === "failed" && (
-              <Section eyebrow="Sajnos hiba történt">
+              <Section eyebrow="Rendelés biztonságban" title="Az olvasatkészítés most elakadt">
                 <p>
-                  Az olvasat elkészítése most megakadt. Ez nem jelenti azt, hogy a vásárlásod
-                  elveszett: megpróbálhatod újraindítani az olvasatkészítést. Ezt csak akkor
-                  engedjük, ha a fizetés igazoltan sikeres.
+                  A rendelésed nem veszett el: a fizetést ellenőrizzük, és az olvasatkészítést csak
+                  akkor engedjük újraindítani, ha a fizetés igazoltan sikeres.
                 </p>
                 <p className="mt-3 text-sm text-ivory/55">
-                  Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: kézzel elkészítjük
-                  az olvasatot, vagy jogos esetben visszatérítési egyeztetést indítunk.
+                  Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: pótoljuk az
+                  olvasathoz való hozzáférést, vagy jogos esetben visszatérítési egyeztetést
+                  indítunk.
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
                   <button
@@ -403,7 +403,11 @@ function Page() {
                   </span>
                 </div>
                 {retryNotice && (
-                  <p className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-ivory/62">
+                  <p
+                    aria-live="polite"
+                    role="status"
+                    className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-ivory/62"
+                  >
                     {retryNotice}
                   </p>
                 )}
@@ -786,5 +790,5 @@ function safeOrderStatusErrorMessage(error: unknown): string {
   if (raw.includes("rendelés nem található")) {
     return "Ezt a rendelési linket most nem találtuk. Ellenőrizd, hogy a fizetés utáni teljes linket nyitottad-e meg.";
   }
-  return "Az állapotlekérés most megakadt. A rendelés nem vész el; frissítsd az oldalt pár perc múlva.";
+  return "A rendelés állapota most nem frissült. A rendelés nem vész el; frissítsd az oldalt pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
 }
