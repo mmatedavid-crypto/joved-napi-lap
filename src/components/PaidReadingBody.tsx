@@ -34,6 +34,7 @@ export function PaidReadingBody({
   const selfCheck = paidReadingSelfCheck({ body, title, productName, orderReference });
   const assurance = paidReadingAssurance(generation);
   const continuation = paidReadingContinuation({ body, title, productName });
+  const saveStatusMessage = readingSaveStatusMessage({ copyState, downloadState, clarifyState });
 
   async function copyReading() {
     try {
@@ -105,7 +106,7 @@ export function PaidReadingBody({
             {copyState === "copied"
               ? "Kimásolva"
               : copyState === "failed"
-                ? "Most nem sikerült"
+                ? "Nem másolható"
                 : "Olvasat másolása"}
           </button>
           <button
@@ -116,11 +117,16 @@ export function PaidReadingBody({
             {downloadState === "ready"
               ? "Letöltés indult"
               : downloadState === "failed"
-                ? "Most nem sikerült"
+                ? "Nem indult el"
                 : "Olvasat letöltése"}
           </button>
         </div>
       </div>
+      {saveStatusMessage && (
+        <p aria-live="polite" className="text-xs leading-relaxed text-amber-200/78">
+          {saveStatusMessage}
+        </p>
+      )}
       {assurance && <ReadingAssuranceNotice assurance={assurance} />}
       <ReadingUseGuide />
       <ReadingSelfCheck
@@ -202,7 +208,7 @@ function ReadingSelfCheck({
           {clarifyState === "copied"
             ? "Vázlat kimásolva"
             : clarifyState === "failed"
-              ? "Most nem sikerült"
+              ? "Nem másolható"
               : "Pontosítási vázlat másolása"}
         </button>
         <p className="text-xs leading-relaxed text-ivory/45">
@@ -211,6 +217,23 @@ function ReadingSelfCheck({
       </div>
     </aside>
   );
+}
+
+function readingSaveStatusMessage(states: {
+  copyState: "idle" | "copied" | "failed";
+  downloadState: "idle" | "ready" | "failed";
+  clarifyState: "idle" | "copied" | "failed";
+}): string {
+  if (states.copyState === "failed") {
+    return "A böngésző most nem engedte a másolást. Az olvasat nem vész el; kijelölheted kézzel, vagy készíthetsz képernyőképet.";
+  }
+  if (states.downloadState === "failed") {
+    return "A letöltés most nem indult el. Az olvasat ezen az oldalon továbbra is elérhető; próbáld újra, vagy másold ki kézzel.";
+  }
+  if (states.clarifyState === "failed") {
+    return "A pontosítási vázlatot most nem sikerült kimásolni. Írhatsz nekünk a lenti email címen, elég a rendelésazonosítót megadnod.";
+  }
+  return "";
 }
 
 function ReadingUseGuide() {
