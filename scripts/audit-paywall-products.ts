@@ -238,6 +238,8 @@ for (const needle of [
   "const productName = PRODUCTS_BY_SLUG[input.productSlug]?.name ?? input.productSlug",
   "`Termék: ${productName}`",
   "Jövőd.hu fizetési segítség",
+  'aria-live="polite"',
+  'role="status"',
   '"invalid_return_url"',
   "A fizetés visszaigazoló oldala most nem állítható be biztonságosan",
   "A vásárlási email címem:",
@@ -246,8 +248,9 @@ for (const needle of [
   'message === "Érvénytelen visszatérési cím"',
   'return "invalid_return_url"',
   'checkoutErrorMessageByCode("invalid_return_url")',
-  "Most nem sikerült elindítani a fizetést. Kártyaadat ilyenkor nem jut el hozzánk",
-  "a választott olvasatot és a hozzáférést kézzel is segítünk rendezni",
+  "A fizetés most nem nyílt meg. Kártyaadat ilyenkor nem jut el hozzánk",
+  "indítsd újra nyugodtan",
+  "a választott olvasatot és a hozzáférést rendelés előtt is segítünk rendezni",
   "vásárlási email címedről",
 ]) {
   if (!checkout.includes(needle)) failed.push(`StripeEmbeddedCheckout missing: ${needle}`);

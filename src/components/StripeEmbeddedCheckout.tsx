@@ -94,14 +94,19 @@ export function StripeEmbeddedCheckoutForm(props: StripeEmbeddedCheckoutProps) {
   return (
     <div id="checkout" className="overflow-hidden rounded-lg bg-white">
       {checkoutError || !canLoadStripe ? (
-        <div className="bg-[oklch(0.12_0.03_290)] p-5 text-center text-ivory">
-          <div className="font-display text-xl">Nem indult el a fizetés</div>
+        <div
+          aria-live="polite"
+          role="status"
+          className="bg-[oklch(0.12_0.03_290)] p-5 text-center text-ivory"
+        >
+          <div className="font-display text-xl">A fizetés most nem nyílt meg</div>
           <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ivory/65">
             {checkoutError ??
-              "A fizetés előkészítése most nem elérhető. Kártyaadat ilyenkor nem jut el hozzánk; próbáld újra, vagy írj nekünk a vásárlási email címedről."}
+              "A fizetés előkészítése most nem elérhető. Kártyaadat ilyenkor nem jut el hozzánk; indítsd újra nyugodtan, vagy írj nekünk a vásárlási email címedről."}
           </p>
           <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ivory/50">
-            Ha már próbáltad újra, a választott olvasatot és a hozzáférést kézzel is segítünk rendezni:{" "}
+            Ha újraindítás után sem nyílik meg,{" "}
+            {"a választott olvasatot és a hozzáférést rendelés előtt is segítünk rendezni"}:{" "}
             <a
               className="text-gold hover:text-gold/80"
               href={checkoutSupportMailto({ productSlug, sourceRoute })}
@@ -209,13 +214,13 @@ function checkoutErrorMessageByCode(code: CheckoutErrorCode): string {
     return "Kérlek ellenőrizd az email címet, mert erre küldjük az olvasat értesítését is.";
   }
   if (code === "unknown_product") {
-    return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Kérlek válassz újra a termékek közül.";
+    return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Válassz újra a termékek közül, vagy írj nekünk, ha ugyanitt akadtál el.";
   }
   if (code === "invalid_user_id") {
-    return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. Frissítsd az oldalt, majd próbáld újra.";
+    return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. A korábbi rendeléseid nem vesznek el; frissítsd az oldalt, vagy írj nekünk.";
   }
   if (code === "invalid_return_url") {
-    return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Frissítsd az oldalt, majd próbáld újra.";
+    return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Kártyaadat ilyenkor nem jut el hozzánk; frissítsd az oldalt, vagy írj nekünk.";
   }
-  return "Most nem sikerült elindítani a fizetést. Kártyaadat ilyenkor nem jut el hozzánk; próbáld újra pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
+  return "A fizetés most nem nyílt meg. Kártyaadat ilyenkor nem jut el hozzánk; indítsd újra nyugodtan, vagy írj nekünk a vásárlási email címedről.";
 }
