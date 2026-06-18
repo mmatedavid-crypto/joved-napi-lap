@@ -39,21 +39,22 @@ const SignSchema = z.enum([
 const AI_TRANSLATION_CACHE_VERSION = "hu-v2";
 const DAY_SECONDS = 60 * 60 * 24;
 const STATIC_AI_TRANSLATION_TTL_SECONDS: number | null = null;
-const PUBLIC_AI_TRANSLATION_ERROR = "A magyar olvasat most nem készült el. Próbáld újra később.";
+const PUBLIC_AI_TRANSLATION_ERROR =
+  "Az olvasat most nem állt össze elég tisztán. Nem mentettünk félkész szöveget; indítsd újra nyugodtan.";
 const PUBLIC_HOROSCOPE_ERROR =
-  "A mai horoszkóp most nem állt össze elég tisztán. Próbáld újra később.";
+  "A mai horoszkóp most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_CRYSTAL_ERROR =
-  "A kristályjel most nem állt össze elég tisztán. Próbáld újra később.";
+  "A kristályjel most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_ANGEL_ERROR =
-  "Az angyalszám olvasata most nem állt össze elég tisztán. Próbáld újra később.";
+  "Az angyalszám olvasata most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_DREAM_ERROR =
-  "Az álomjel most nem állt össze elég tisztán. Próbáld újra később.";
+  "Az álomjel most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_NUMEROLOGY_ERROR =
-  "A számmisztikai olvasat most nem állt össze elég tisztán. Próbáld újra később.";
+  "A számmisztikai olvasat most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_MOON_ERROR =
-  "A holdfázis üzenete most nem állt össze elég tisztán. Próbáld újra később.";
+  "A holdfázis üzenete most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan.";
 const PUBLIC_NATAL_ERROR =
-  "A születési képlet olvasata most nem állt össze elég tisztán. Próbáld újra később.";
+  "A születési képlet olvasata most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan, vagy ellenőrizd a megadott adatokat.";
 const PUBLIC_TAROT_DRAW_ERROR =
   "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.";
 const PUBLIC_TAROT_SPREAD_ERROR =

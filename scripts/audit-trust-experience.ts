@@ -742,10 +742,13 @@ const checks: Check[] = [
     file: "src/routes/szuletesi-keplet.tsx",
     includes: [
       "SAFE_NATAL_CHART_ERROR",
-      "A képletet most nem sikerült elkészíteni",
+      "A képlet most nem állt össze elég tisztán",
+      "Nem mentettünk félkész olvasatot",
+      "indítsd újra nyugodtan",
       "setErr(SAFE_NATAL_CHART_ERROR)",
     ],
     excludes: [
+      "Próbáld újra később",
       'setErr(r.message ?? "A képletet most nem sikerült elkészíteni.")',
       "setErr(r.message",
     ],
@@ -902,8 +905,13 @@ const checks: Check[] = [
       "Az álomjel most nem állt össze elég tisztán",
       "A számmisztikai olvasat most nem állt össze elég tisztán",
       "A holdfázis üzenete most nem állt össze elég tisztán",
+      "Nem mentettünk félkész olvasatot",
+      "Nem mentettünk félkész szöveget",
+      "indítsd újra nyugodtan",
     ],
     excludes: [
+      "Próbáld újra később",
+      "próbáld újra később",
       "Most nem értem el a horoszkóp adatot",
       "Most nem értem el a kristály adatot",
       "Most nem értem el az angyalszám adatot",

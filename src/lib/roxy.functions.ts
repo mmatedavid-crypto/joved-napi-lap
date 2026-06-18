@@ -29,7 +29,7 @@ export type RoxyEnvelope = {
 };
 
 const FAIL_MESSAGE =
-  "Most nem állt össze elég tisztán az olvasat. Próbáld újra később.";
+  "Most nem állt össze elég tisztán az olvasat. Nem mentettünk félkész szöveget; indítsd újra nyugodtan.";
 
 async function runRoxy(opts: {
   endpoint: string;

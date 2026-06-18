@@ -39,7 +39,7 @@ type City = {
 };
 
 const SAFE_NATAL_CHART_ERROR =
-  "A képletet most nem sikerült elkészíteni. Próbáld újra később, vagy ellenőrizd a megadott adatokat.";
+  "A képlet most nem állt össze elég tisztán. Nem mentettünk félkész olvasatot; indítsd újra nyugodtan, vagy ellenőrizd a megadott adatokat.";
 
 function parseCities(payload: unknown): City[] {
   if (!payload || typeof payload !== "object") return [];
