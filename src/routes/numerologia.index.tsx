@@ -9,7 +9,7 @@ import { SITE_LEGAL } from "@/lib/legal";
 const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Számmisztika magyarul — sorsszám, lélekszám, kifejezésszám";
 const DESCRIPTION =
-  "Teljes magyar számmisztika útmutató: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év jelentése. Számítási módszerek és értelmezések.";
+  "Magyar számmisztika útmutató hagyományos értelmezésekkel: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év jelentése.";
 
 export const Route = createFileRoute("/numerologia/")({
   head: () => ({
@@ -41,14 +41,15 @@ function NumerologyHub() {
       <PageHeader
         eyebrow="Számmisztika"
         title="Számmisztika magyarul"
-        lead="A számmisztika öt fő száma rajzolja ki a teljes képet rólad: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év. Mindegyik más rétegét világítja meg az életednek."
+        lead="A számmisztika régi jelképrendszere öt fő számon keresztül ad önismereti nézőpontot: sorsszám, lélekszám, személyiségszám, kifejezésszám és személyes év. Mindegyik más réteget világíthat meg az élethelyzetedből."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
-        <Section title="A teljes számmisztika kép">
+        <Section title="A számmisztikai kép fő rétegei">
           <p>
             A sorsszám az életutad fő tengelye — a születési dátumodból számolódik. A lélekszám a belső
-            motivációd, a személyiségszám a külső megjelenésed, a kifejezésszám a tehetséged és a
-            sorsfeladatod. A személyes év pedig azt mutatja, hol tartasz a 9 éves ciklusban.
+            motivációdra, a személyiségszám a külső megjelenésedre, a kifejezésszám pedig a tehetségedre
+            és visszatérő témáidra adhat nézőpontot. A személyes év azt mutatja, hol tartasz a 9 éves
+            ciklusban.
           </p>
         </Section>
 

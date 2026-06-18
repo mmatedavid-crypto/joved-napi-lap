@@ -135,6 +135,22 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/routes/numerologia.index.tsx",
+    forbidden: [
+      /\bteljes képet rólad\b/i,
+      /\bA teljes számmisztika kép\b/i,
+      /\bsorsfeladatod\b/i,
+    ],
+    required: [
+      "hagyományos értelmezésekkel",
+      "régi jelképrendszere",
+      "önismereti nézőpontot",
+      "más réteget világíthat meg az élethelyzetedből",
+      "A számmisztikai kép fő rétegei",
+      "visszatérő témáidra adhat nézőpontot",
+    ],
+  },
+  {
     file: "src/data/lifePathMeanings.hu.ts",
     forbidden: [
       /\bgyógyít/i,
