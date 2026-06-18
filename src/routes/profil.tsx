@@ -505,7 +505,7 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
     <div
       className={
         compact
-          ? "grid gap-3 sm:grid-cols-3"
+          ? "grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
           : "rounded-md border border-gold/15 bg-gold/[0.045] p-4"
       }
     >
@@ -520,7 +520,7 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
           </p>
         </div>
       )}
-      <div className={compact ? "contents" : "grid gap-3 sm:grid-cols-3"}>
+      <div className={compact ? "contents" : "grid gap-3 sm:grid-cols-2 lg:grid-cols-4"}>
         {items.map((item) => (
           <Link
             key={item.to}

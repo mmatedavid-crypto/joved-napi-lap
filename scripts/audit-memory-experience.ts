@@ -102,6 +102,7 @@ const checks: Check[] = [
     file: "src/routes/profil.tsx",
     includes: [
       "Születési képlet",
+      "grid gap-3 sm:grid-cols-2 lg:grid-cols-4",
       'to: "/szuletesi-keplet"',
       "mélyebb személyes alapot",
       "későbbi 30 napos vagy éves térkép",
