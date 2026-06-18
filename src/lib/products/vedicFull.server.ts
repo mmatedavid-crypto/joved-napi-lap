@@ -1,4 +1,4 @@
-// SERVER-ONLY. A "Védikus asztrológia – teljes elemzés" termék forráshű szerkesztői flow-ja.
+// SERVER-ONLY. A "Védikus asztrológia – részletes elemzés" termék forráshű szerkesztői flow-ja.
 // Webhook hívja `processPaidOrderBySession` ágból. Kimenete a megszokott
 // PaidOrderReading shape ({ title, body }), így a köszönő oldal és az
 // email-template változatlanul tudja megjeleníteni.
@@ -339,7 +339,7 @@ export async function generateVedicFullReport(
   });
 
   const greeting = input.name?.trim() ? `${input.name.trim()}, ` : "";
-  const title = `Védikus asztrológia – teljes elemzésed`;
+  const title = `Védikus asztrológia – részletes elemzésed`;
   const body = [
     `# ${title}`,
     "",

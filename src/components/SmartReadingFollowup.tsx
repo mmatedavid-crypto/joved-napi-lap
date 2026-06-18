@@ -408,7 +408,7 @@ function followupOptions(
         slug: "szammisztika_eletut",
         label: "Mi az életutam mélyebb mintája?",
         reason:
-          "A teljes elemzés a születési dátum mellett a nevet is figyelembe veszi, ha megadod.",
+          "A részletes elemzés a születési dátum mellett a nevet is figyelembe veszi, ha megadod.",
       },
       {
         slug: "personal_30_day",

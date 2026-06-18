@@ -321,6 +321,32 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/routes/vedikus-asztrologia.tsx",
+    forbidden: [/\bteljes elemzés\b/i, /\bTeljes életkép\b/i],
+    required: [
+      "részletes elemzés a születési képletedből",
+      "Védikus asztrológia – részletes elemzés",
+      "Átfogó képlet-nézőpont",
+      "visszatérő minta",
+      "nem büntetés",
+    ],
+  },
+  {
+    file: "src/lib/products.ts",
+    forbidden: [/Védikus asztrológia — teljes elemzés/i],
+    required: ["Védikus asztrológia — részletes elemzés"],
+  },
+  {
+    file: "src/lib/products/vedicFull.server.ts",
+    forbidden: [/Védikus asztrológia – teljes elemzés/i],
+    required: ["Védikus asztrológia – részletes elemzésed"],
+  },
+  {
+    file: "src/components/SmartReadingFollowup.tsx",
+    forbidden: [/A teljes elemzés a születési dátum/i],
+    required: ["A részletes elemzés a születési dátum"],
+  },
+  {
     file: "src/lib/roxy.functions.ts",
     forbidden: [
       /roxyAngolForras/,

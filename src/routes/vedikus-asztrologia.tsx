@@ -13,13 +13,17 @@ const AREA_OPTIONS: { value: AreaKey; label: string; hint: string }[] = [
   { value: "szerelem", label: "Szerelem / párkapcsolat (kama)", hint: "Kapcsolatok, vonzódás" },
   { value: "munka", label: "Munka / karrier (artha)", hint: "Hivatás, váltás, projekt" },
   { value: "penz", label: "Pénz / döntések (artha)", hint: "Anyagi biztonság, értékrend" },
-  { value: "altalanos", label: "Általános (dharma–moksha egyensúly)", hint: "Teljes életkép" },
+  {
+    value: "altalanos",
+    label: "Általános (dharma–moksha egyensúly)",
+    hint: "Átfogó képlet-nézőpont",
+  },
 ];
 
 export const Route = createFileRoute("/vedikus-asztrologia")({
   head: () => ({
     meta: [
-      { title: "Védikus asztrológia – teljes elemzés a születési képletedből | Jövőd.hu" },
+      { title: "Védikus asztrológia – részletes elemzés a születési képletedből | Jövőd.hu" },
       {
         name: "description",
         content:
@@ -53,7 +57,7 @@ function Page() {
     <Layout>
       <PageHeader
         eyebrow="Védikus asztrológia"
-        title="Védikus asztrológia – teljes elemzés"
+        title="Védikus asztrológia – részletes elemzés"
         lead="Sziderikus (indiai) szemlélet: Lagna, Hold-rashi és nakshatra. A karma itt nem büntetés, hanem visszatérő minta — ezt nézzük meg a te képletedben."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">

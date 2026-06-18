@@ -276,7 +276,7 @@ export const PRODUCTS: ProductDef[] = [
   {
     slug: "vedic_full",
     priceId: "vedic_full_price",
-    name: "Védikus asztrológia — teljes elemzés",
+    name: "Védikus asztrológia — részletes elemzés",
     short: "Több oldalas védikus képlet-elemzés születési adatokból.",
     includes: [
       "sziderikus Nap, Hold és aszcendens, ha a forrásadat engedi",
