@@ -239,7 +239,14 @@ export function PersonalDailyBriefing() {
           <button className="btn-gold" onClick={drawDaily} disabled={drawing}>
             {drawing ? "Húzás..." : "Húzom a mai lapom"}
           </button>
-          {drawError && <p className="text-sm text-ivory/60">{drawError}</p>}
+          {drawError && (
+            <p
+              aria-live="polite"
+              className="rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2 text-sm leading-relaxed text-ivory/68"
+            >
+              {drawError}
+            </p>
+          )}
         </div>
       )}
 

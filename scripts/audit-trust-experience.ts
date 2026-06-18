@@ -802,6 +802,8 @@ const checks: Check[] = [
     name: "free draw failures do not feel like lost readings",
     file: "src/routes/mai-lap.tsx",
     includes: [
+      'aria-live="polite"',
+      "rounded-md border border-gold/15 bg-gold/[0.06]",
       "A húzás most nem érkezett meg",
       "Nem mentettünk félkész olvasatot",
       "indíts új húzást nyugodtan",
@@ -812,6 +814,8 @@ const checks: Check[] = [
     name: "relationship draw failures do not feel like lost readings",
     file: "src/routes/randi-elott.tsx",
     includes: [
+      'aria-live="polite"',
+      "rounded-md border border-gold/15 bg-gold/[0.06]",
       "A húzás most nem érkezett meg",
       "Nem mentettünk félkész olvasatot",
       "indíts új húzást nyugodtan",
@@ -822,6 +826,8 @@ const checks: Check[] = [
     name: "decision draw failures do not feel like lost readings",
     file: "src/routes/dontes-elott.tsx",
     includes: [
+      'aria-live="polite"',
+      "rounded-md border border-gold/15 bg-gold/[0.06]",
       "A húzás most nem érkezett meg",
       "Nem mentettünk félkész olvasatot",
       "indíts új húzást nyugodtan",
@@ -832,6 +838,8 @@ const checks: Check[] = [
     name: "three-card draw failures do not feel like lost readings",
     file: "src/routes/harom-lap.tsx",
     includes: [
+      'aria-live="polite"',
+      "rounded-md border border-gold/15 bg-gold/[0.06]",
       "A húzás most nem érkezett meg",
       "A húzás nem teljes",
       "Nem mentettünk félkész olvasatot",
@@ -843,6 +851,8 @@ const checks: Check[] = [
     name: "homepage daily draw failures do not feel like lost readings",
     file: "src/components/PersonalDailyBriefing.tsx",
     includes: [
+      'aria-live="polite"',
+      "rounded-md border border-gold/15 bg-gold/[0.06]",
       "A húzás most nem érkezett meg",
       "Nem mentettünk félkész olvasatot",
       "indíts új húzást nyugodtan",
