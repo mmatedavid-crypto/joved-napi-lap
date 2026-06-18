@@ -43,7 +43,9 @@ function Page() {
       redirect_uri: window.location.origin + "/profil",
     });
     if (r.error) {
-      setErr("Bejelentkezés sikertelen. Próbáld újra.");
+      setErr(
+        "Most nem sikerült elindítani a külső bejelentkezést. A fiók létrehozása nem indít fizetést, és a korábbi rendeléseid nem vesznek el; próbáld újra, vagy írj nekünk.",
+      );
       setBusy(false);
       return;
     }
@@ -107,7 +109,8 @@ function Page() {
           </div>
           <p className="mt-2 text-sm leading-relaxed text-ivory/64">
             Ha korábban vendégként vásároltál, ugyanazzal az igazolt email címmel jelentkezz be vagy
-            regisztrálj. Így a korábbi vendégvásárlásaidat át tudjuk hozni ebbe a profilba, új fizetés nélkül.
+            regisztrálj. Így a korábbi vendégvásárlásaidat át tudjuk hozni ebbe a profilba, új
+            fizetés nélkül.
           </p>
           <p className="mt-2 text-xs leading-relaxed text-ivory/46">
             A fizetés utáni biztonságos rendelési link ilyenkor is működik; a profil csak egy
@@ -156,11 +159,11 @@ function Page() {
           </button>
           {msg && <p className="text-sm text-gold">{msg}</p>}
           {err && (
-            <p className="text-sm leading-relaxed text-red-300">
+            <p aria-live="polite" className="text-sm leading-relaxed text-red-300">
               {err}{" "}
               <a
                 className="text-gold hover:text-gold/80"
-                href={`mailto:${SITE_LEGAL.supportEmail}`}
+                href={authSupportMailto({ email: normalizeAuthEmail(email), mode, error: err })}
               >
                 Segítünk.
               </a>
@@ -211,4 +214,28 @@ function safeAuthErrorMessage(error: unknown, mode: "signin" | "signup"): string
     return "Most nem sikerült létrehozni a fiókot. Próbáld újra pár perc múlva.";
   }
   return "Most nem sikerült belépni. Próbáld újra pár perc múlva.";
+}
+
+function authSupportMailto({
+  email,
+  mode,
+  error,
+}: {
+  email: string;
+  mode: "signin" | "signup";
+  error: string;
+}): string {
+  const subject = "Jövőd.hu bejelentkezési segítség";
+  const body = [
+    "Segítséget szeretnék kérni a bejelentkezéshez.",
+    "",
+    `Mód: ${mode === "signin" ? "belépés" : "regisztráció"}`,
+    `Email cím: ${email || "ide írom az email címemet"}`,
+    `Oldalon látott üzenet: ${error}`,
+    "",
+    "Ha vendégként vásároltam, a vásárlási email címem:",
+    "",
+    "Röviden mi történt:",
+  ].join("\n");
+  return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
