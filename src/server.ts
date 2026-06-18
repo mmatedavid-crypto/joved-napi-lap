@@ -30,10 +30,17 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
     return response;
   }
 
-  console.error(consumeLastCapturedError() ?? swallowedSsrError(body));
+  logSsrFallbackError(consumeLastCapturedError() ?? swallowedSsrError(body));
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
+  });
+}
+
+function logSsrFallbackError(error: unknown) {
+  console.error("SSR fallback error", {
+    error_code: "ssr_fallback_error",
+    error_name: error instanceof Error ? error.name : "unknown",
   });
 }
 
@@ -64,7 +71,7 @@ export default {
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
-      console.error(error);
+      logSsrFallbackError(error);
       return new Response(renderErrorPage(), {
         status: 500,
         headers: { "content-type": "text/html; charset=utf-8" },
