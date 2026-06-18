@@ -696,6 +696,12 @@ function formatDownloadedReading(
     "- 7 nap múlva: figyeld meg, melyik téma tért vissza; ebből születhet a következő jó kérdés.",
     "- Egy mondatban: írd le, mit viszel tovább; ebből lesz a következő kérdés magja.",
     "",
+    "Mentett példány és pontosítás:",
+    meta.orderReference
+      ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
+      : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, mi volt pontatlan, és mi maradt ki a helyzetedből.",
+    "",
     "Ez az olvasat régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
   ]
