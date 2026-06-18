@@ -330,7 +330,7 @@ function Page() {
                 <p className="mt-3 text-sm text-ivory/50">
                   Ha az oldal nem frissül, írj nekünk a rendelés email címéről, és utánanézünk.
                 </p>
-                <SupportContact className="mt-4" orderId={order.id} />
+                <SupportContact className="mt-4" order={order} />
               </Section>
             )}
 
@@ -367,7 +367,7 @@ function Page() {
                       Vendégvásárlásnál ez az oldal marad a legbiztosabb közvetlen hozzáférés.
                     </p>
                     {order.delivery_email_status === "attention_needed" && (
-                      <DeliveryEmailNotice orderId={order.id} />
+                      <DeliveryEmailNotice order={order} />
                     )}
                     <PaidReadingFeedback
                       order={order}
@@ -412,7 +412,7 @@ function Page() {
                     {retryNotice}
                   </p>
                 )}
-                <SupportContact className="mt-4" orderId={order.id} />
+                <SupportContact className="mt-4" order={order} />
               </Section>
             )}
 
@@ -542,12 +542,12 @@ function OrderPollingPaused({ order }: { order: OrderView }) {
         Ilyenkor ne indíts új fizetést és ne rendeld meg újra ugyanazt az olvasatot; ugyanerről a
         biztonságos linkről vagy a rendelésazonosító alapján rendezzük a hozzáférést.
       </p>
-      <SupportContact className="mt-3" orderId={order.id} />
+      <SupportContact className="mt-3" order={order} />
     </div>
   );
 }
 
-function DeliveryEmailNotice({ orderId }: { orderId?: string }) {
+function DeliveryEmailNotice({ order }: { order?: OrderView }) {
   return (
     <div className="mt-4 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
       <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
@@ -555,17 +555,17 @@ function DeliveryEmailNotice({ orderId }: { orderId?: string }) {
         Az olvasatod már elkészült, ezért innen biztonságosan elérhető akkor is, ha az email
         később érkezik meg vagy nem találod a postafiókodban.
       </p>
-      <SupportContact className="mt-2" orderId={orderId} />
+      <SupportContact className="mt-2" order={order} />
     </div>
   );
 }
 
-function SupportContact({ className = "", orderId }: { className?: string; orderId?: string }) {
-  const shortId = shortOrderId(orderId);
+function SupportContact({ className = "", order }: { className?: string; order?: OrderView }) {
+  const shortId = shortOrderId(order?.id);
   return (
     <p className={`text-sm leading-relaxed text-ivory/58 ${className}`.trim()}>
       Ügyfélszolgálat:{" "}
-      <a className="text-gold hover:text-gold/80" href={supportMailto(shortId)}>
+      <a className="text-gold hover:text-gold/80" href={supportMailto({ order })}>
         {SITE_LEGAL.supportEmail}
       </a>
       . A gyors azonosításhoz a vásárlási email címedről írj
@@ -574,19 +574,35 @@ function SupportContact({ className = "", orderId }: { className?: string; order
   );
 }
 
-function supportMailto(shortId?: string): string {
-  const orderRef = shortId ?? "nincs rövid azonosító";
+function supportMailto({ order }: { order?: OrderView }): string {
+  const orderRef = shortOrderId(order?.id) ?? "nincs rövid azonosító";
   const subject = `Jövőd.hu rendelési segítség · ${orderRef}`;
   const body = [
     "Segítséget szeretnék kérni a rendelésemhez.",
     "",
     `Rendelés: ${orderRef}`,
+    order?.product_name ? `Termék: ${order.product_name}` : null,
+    order?.status ? `Állapot: ${orderStatusLabel(order.status)}` : null,
     "A vásárlási email címem:",
     "Mi történt röviden:",
     "",
     "Köszönöm.",
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
   return `mailto:${SITE_LEGAL.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function orderStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    pending_payment: "fizetésre vár",
+    paid: "kifizetve — készítjük",
+    processing: "feldolgozás alatt",
+    delivered: "kész",
+    failed: "sikertelen",
+    refunded: "visszatérítve",
+  };
+  return labels[status] ?? status;
 }
 
 function PaidReadingFeedback({

@@ -106,8 +106,11 @@ const checks: Check[] = [
     file: "src/routes/koszonjuk.tsx",
     includes: [
       "SupportContact",
-      "supportMailto(shortId)",
+      "supportMailto({ order })",
       "Jövőd.hu rendelési segítség",
+      "Termék:",
+      "Állapot:",
+      "orderStatusLabel(order.status)",
       "A vásárlási email címem:",
       "Mi történt röviden:",
       "SITE_LEGAL.supportEmail",
@@ -185,7 +188,7 @@ const checks: Check[] = [
       "ne rendeld meg újra ugyanazt az olvasatot",
       "ugyanerről a biztonságos linkről",
       "rendelésazonosító alapján rendezzük a hozzáférést",
-      '<SupportContact className="mt-3" orderId={order.id} />',
+      '<SupportContact className="mt-3" order={order} />',
     ],
   },
   {
