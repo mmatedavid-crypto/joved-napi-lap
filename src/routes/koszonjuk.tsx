@@ -451,7 +451,7 @@ function OrderCapturedSummary({ order }: { order: OrderView }) {
       ? "elkészült"
       : order.category === "delayed"
         ? order.express
-          ? "részletes olvasat express határidővel"
+          ? "részletes olvasat express határidővel; csúszásnál a gyorsítás díját külön rendezzük"
           : "részletes olvasat vállalt határidővel"
         : "azonnali olvasat, általában pár percen belül";
   const source =
@@ -493,6 +493,11 @@ function OrderPreparationTimeline({ order }: { order: OrderView }) {
       ? [
           "A fizetés megérkezett, a kérdésedet és a megadott adatokat rögzítettük.",
           "A részletes olvasat több szakaszban készül, ezért nem azonnali sablonszöveget kapsz.",
+          ...(order.express
+            ? [
+                "Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.",
+              ]
+            : []),
           "Amikor elkészül, ezen a linken megnyílik; emailben is jelzünk, akkor is, ha közben bezárod az oldalt.",
         ]
       : [
