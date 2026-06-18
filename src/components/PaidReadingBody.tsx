@@ -60,7 +60,7 @@ export function PaidReadingBody({
       const url = URL.createObjectURL(file);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `jovod-olvasat-${huTodayKey()}.txt`;
+      link.download = paidReadingDownloadFilename(orderReference);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -667,6 +667,20 @@ function formatDownloadedReading(
   ]
     .filter((line): line is string => line !== null)
     .join("\n");
+}
+
+function paidReadingDownloadFilename(orderReference?: string): string {
+  const safeReference =
+    typeof orderReference === "string"
+      ? orderReference
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9-]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+      : "";
+  return safeReference
+    ? `jovod-olvasat-${huTodayKey()}-${safeReference}.txt`
+    : `jovod-olvasat-${huTodayKey()}.txt`;
 }
 
 function isLikelyHeading(value: string): boolean {
