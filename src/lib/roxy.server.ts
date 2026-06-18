@@ -87,7 +87,7 @@ export async function callRoxy<T = unknown>(opts: {
       data: null,
       cached: false,
       providerCode: "missing_api_key",
-      errorMessage: "ROXY_API_KEY hiányzik a szerveroldali secrets-ből.",
+      errorMessage: "A szimbolikus forrásanyag most nem érhető el.",
     };
   }
 
@@ -103,13 +103,13 @@ export async function callRoxy<T = unknown>(opts: {
       },
       body: method === "GET" ? undefined : JSON.stringify(body ?? {}),
     });
-  } catch (err) {
+  } catch {
     return {
       ok: false,
       data: null,
       cached: false,
       providerCode: "network_error",
-      errorMessage: err instanceof Error ? err.message : "Hálózati hiba.",
+      errorMessage: "A szimbolikus forrásanyag most nem érhető el.",
     };
   }
 
@@ -131,7 +131,7 @@ export async function callRoxy<T = unknown>(opts: {
       data: null,
       cached: false,
       providerCode: code,
-      errorMessage: `Roxy ${endpoint} -> HTTP ${res.status}`,
+      errorMessage: "A szimbolikus forrásanyag most nem érhető el.",
     };
   }
 
@@ -144,7 +144,7 @@ export async function callRoxy<T = unknown>(opts: {
       data: null,
       cached: false,
       providerCode: "invalid_json",
-      errorMessage: "Roxy nem JSON választ adott.",
+      errorMessage: "A szimbolikus forrásanyag most nem érhető el.",
     };
   }
 

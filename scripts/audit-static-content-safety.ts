@@ -49,6 +49,22 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/lib/roxy.server.ts",
+    forbidden: [
+      /errorMessage: "ROXY_API_KEY/i,
+      /errorMessage: err instanceof Error/i,
+      /errorMessage: `Roxy/i,
+      /errorMessage: "Roxy nem JSON/i,
+      /HTTP \$\{res\.status\}/i,
+    ],
+    required: [
+      'providerCode: "missing_api_key"',
+      'providerCode: "network_error"',
+      'providerCode: "invalid_json"',
+      'errorMessage: "A szimbolikus forrásanyag most nem érhető el."',
+    ],
+  },
+  {
     file: "src/routes/sitemap[.]xml.tsx",
     forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
     required: ['import { huTodayKey } from "@/lib/dateKeys";', "const today = huTodayKey();"],
