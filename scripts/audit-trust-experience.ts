@@ -573,10 +573,20 @@ const checks: Check[] = [
     file: "src/lib/payments.functions.ts",
     includes: [
       "function redactStripeId",
+      "function stableErrorCode",
+      'error_code: "checkout_order_insert_failed"',
       "session_id_redacted: redactStripeId(session.id)",
+      "database_code: stableErrorCode(orderError)",
       "createCheckoutSession order insert failed",
+      "createCheckoutSession failed",
+      "error_code: safeCheckoutErrorCode(error)",
+      "has_user_id: Boolean(data.userId)",
     ],
-    excludes: ["sessionId: session.id"],
+    excludes: [
+      "sessionId: session.id",
+      "error: orderError.message",
+      'console.error("createCheckoutSession error:", error)',
+    ],
   },
   {
     name: "payment webhooks redact Stripe session ids in operational logs",

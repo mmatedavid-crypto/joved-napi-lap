@@ -102,6 +102,12 @@ function redactStripeId(value: string | null | undefined): string {
   return `${value.slice(0, 8)}***${value.slice(-4)}`;
 }
 
+function stableErrorCode(error: unknown): string {
+  if (!error || typeof error !== "object") return "unknown_error";
+  const code = (error as { code?: unknown }).code;
+  return typeof code === "string" && /^[a-zA-Z0-9_.-]{1,80}$/.test(code) ? code : "unknown_error";
+}
+
 function normalizeOrderFeedback(value: unknown): OrderFeedbackValue {
   if (FEEDBACK_VALUES.includes(value as OrderFeedbackValue)) return value as OrderFeedbackValue;
   throw new Error("Érvénytelen visszajelzés");
@@ -260,9 +266,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       if (orderError) {
         console.error("createCheckoutSession order insert failed:", {
+          error_code: "checkout_order_insert_failed",
           session_id_redacted: redactStripeId(session.id),
           productSlug: data.productSlug,
-          error: orderError.message,
+          database_code: stableErrorCode(orderError),
         });
         await expireUnusableCheckoutSession(stripe, session.id);
         throw new Error("order_insert_failed");
@@ -270,7 +277,12 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
       return { clientSecret: session.client_secret };
     } catch (error) {
-      console.error("createCheckoutSession error:", error);
+      console.error("createCheckoutSession failed:", {
+        error_code: safeCheckoutErrorCode(error),
+        productSlug: data.productSlug,
+        environment: data.environment,
+        has_user_id: Boolean(data.userId),
+      });
       return { error: safeCheckoutErrorCode(error) };
     }
   });
