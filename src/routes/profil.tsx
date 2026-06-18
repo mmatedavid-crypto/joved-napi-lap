@@ -687,10 +687,11 @@ function OrderRetryNotice({ notice }: { notice?: RetryNotice }) {
 
 function ProfileDeliveryEmailNotice({ orderId }: { orderId?: string }) {
   return (
-    <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-3 py-2">
-      <p className="text-xs leading-relaxed text-ivory/62">
-        Az olvasat elkészült és itt a profilban megnyitható. Ha az email késik vagy nem találod, ez
-        a profilnézet marad a biztos hozzáférésed.
+    <div className="mt-3 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
+      <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
+      <p className="mt-2 text-xs leading-relaxed text-ivory/62">
+        Az olvasat elkészült és itt a profilban megnyitható. Ha az email késik vagy nem találod a
+        postafiókodban, ez a profilnézet marad a biztos hozzáférésed.
       </p>
       <ProfileSupportContact className="mt-2" orderId={orderId} />
     </div>
