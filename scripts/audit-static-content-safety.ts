@@ -431,8 +431,15 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/components/RitualTable.tsx",
-    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /endpoint:/],
-    required: ["knowledge_lookup_started", "knowledge_cache_hit", "local_meaning_used"],
+    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /endpoint:/, /code: r\.providerCode/],
+    required: [
+      "knowledge_lookup_started",
+      "knowledge_lookup_failed",
+      'trackEvent("knowledge_lookup_failed", { area: "numerology/chart" })',
+      'trackEvent("knowledge_lookup_failed", { area: "numerology/compatibility" })',
+      "knowledge_cache_hit",
+      "local_meaning_used",
+    ],
   },
   {
     file: "src/routes/mai-iranytu.tsx",

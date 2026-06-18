@@ -342,7 +342,7 @@ function SzamInline() {
             area: "numerology/chart",
           });
         } else {
-          trackEvent("knowledge_lookup_failed", { area: "numerology/chart", code: r.providerCode });
+          trackEvent("knowledge_lookup_failed", { area: "numerology/chart" });
           trackEvent("local_meaning_used", { area: "numerology/chart" });
         }
       } catch {
@@ -479,10 +479,7 @@ function OsszeillunkInline() {
           area: "numerology/compatibility",
         });
       } else {
-        trackEvent("knowledge_lookup_failed", {
-          area: "numerology/compatibility",
-          code: r.providerCode,
-        });
+        trackEvent("knowledge_lookup_failed", { area: "numerology/compatibility" });
         trackEvent("local_meaning_used", { area: "numerology/compatibility" });
       }
     } catch {
