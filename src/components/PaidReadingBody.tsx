@@ -496,20 +496,7 @@ function paidReadingSelfCheck({
   const productLabel = productName || title || "Személyes olvasat";
   const readingType = selfCheckReadingType(source);
   const checks = selfCheckItems(readingType);
-  const orderLine = orderReference ? `Rendelés: ${orderReference}` : "Rendelés:";
-  const clarificationDraft = [
-    "Jövőd.hu pontosítási kérés",
-    orderLine,
-    `Olvasat: ${productLabel}`,
-    "",
-    "Ami talált:",
-    "",
-    "Ami túl általános vagy pontatlan volt:",
-    "",
-    "A helyzetemből ez maradt ki:",
-    "",
-    "Ebben az irányban kérek pontosítást:",
-  ].join("\n");
+  const clarificationDraft = paidReadingClarificationDraft({ orderReference, productLabel });
   const clarificationMailto = paidReadingClarificationMailto({
     orderReference,
     productLabel,
@@ -524,6 +511,28 @@ function paidReadingSelfCheck({
     clarificationDraft,
     clarificationMailto,
   };
+}
+
+function paidReadingClarificationDraft({
+  orderReference,
+  productLabel,
+}: {
+  orderReference?: string;
+  productLabel: string;
+}): string {
+  return [
+    "Jövőd.hu pontosítási kérés",
+    orderReference ? `Rendelés: ${orderReference}` : "Rendelés:",
+    `Olvasat: ${productLabel}`,
+    "",
+    "Ami talált:",
+    "",
+    "Ami túl általános vagy pontatlan volt:",
+    "",
+    "A helyzetemből ez maradt ki:",
+    "",
+    "Ebben az irányban kérek pontosítást:",
+  ].join("\n");
 }
 
 function paidReadingClarificationMailto({
@@ -682,6 +691,10 @@ function formatDownloadedReading(
     day: "numeric",
   }).format(new Date());
   const title = meta.title || meta.productName || "Személyes olvasat";
+  const clarificationDraft = paidReadingClarificationDraft({
+    orderReference: meta.orderReference,
+    productLabel: meta.productName || title,
+  });
   return [
     "Jövőd.hu",
     title,
@@ -702,6 +715,9 @@ function formatDownloadedReading(
       ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
       : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
     "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, mi volt pontatlan, és mi maradt ki a helyzetedből.",
+    "",
+    "Pontosítási vázlat:",
+    clarificationDraft,
     "",
     "Ez az olvasat régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.",
     `Kapcsolat: ${SITE_LEGAL.supportEmail}`,
