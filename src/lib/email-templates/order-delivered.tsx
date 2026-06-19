@@ -151,7 +151,7 @@ const OrderDeliveredEmail = ({
                     productName,
                     shortOrderId,
                     feedback: "Pontosítást kérek",
-                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi talált:\n\nAmi túl általános vagy pontatlan volt:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
                   })}
                   style={link}
                 >
