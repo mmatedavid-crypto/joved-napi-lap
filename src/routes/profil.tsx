@@ -362,8 +362,8 @@ function Page() {
           {!ordersLoading && !ordersError && orders.length === 0 && (
             <div className="space-y-4">
               <p className="text-ivory/70">
-                Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy olcsó,
-                személyes próbaolvasatot.
+                Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy belépő
+                árú személyes próbaolvasatot.
               </p>
               <ProfileStarterActions compact />
             </div>
@@ -520,7 +520,7 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
           </div>
           <p className="mt-2 text-sm leading-relaxed text-ivory/58">
             A profil akkor lesz igazán hasznos, ha néhány kérdés után már látjuk, milyen témákhoz
-            térsz vissza. Kezdhetsz könnyű, olcsó vagy ingyenes iránnyal.
+            térsz vissza. Kezdhetsz könnyű, belépő árú vagy ingyenes iránnyal.
           </p>
         </div>
       )}

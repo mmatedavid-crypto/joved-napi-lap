@@ -39,8 +39,8 @@ type QualityEnvelopeBase = {
 type QualityEnvelope<TExtra extends Record<string, unknown> | object = {}> = QualityEnvelopeBase &
   TExtra;
 
-// A gyors, ingyenes olvasatoknál olcsóbb / gyorsabb modellt használunk a Lovable
-// gateway-en. A prémium (fizetős) utak nem ezen mennek át — azok marad gpt-5.2.
+// A gyors, ingyenes olvasatoknál kisebb költségű, gyorsabb szerkesztői utat használunk.
+// A prémium (fizetős) utak külön, szigorúbb minőségi kapun mennek át.
 const FAST_LOVABLE_MODEL = "google/gemini-2.5-flash";
 const FAST_READING_TYPES = new Set(["horoscope", "numerology"]);
 

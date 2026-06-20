@@ -437,7 +437,7 @@ function followupOptions(
     {
       slug: "napi_lap_ai",
       label: "Mit üzen ez nekem személyesen?",
-      reason: "Rövid, olcsó személyes olvasat, ha a napi lapnál konkrétabb választ szeretnél.",
+      reason: "Rövid, belépő árú személyes olvasat, ha a napi lapnál konkrétabb választ szeretnél.",
     },
     {
       slug: decisionIntent ? "dontes_komplex" : "harom_lap_mely",

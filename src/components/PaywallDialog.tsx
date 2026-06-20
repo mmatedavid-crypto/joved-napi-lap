@@ -596,10 +596,10 @@ function readingFormatPromise(product: ProductDef): string {
 
 function priceFitNudge(product: ProductDef): string | null {
   if (product.category === "delayed") {
-    return "Ezt akkor válaszd, ha tényleg többoldalas, születési adatokra épülő időszaki elemzést szeretnél. Ha csak kipróbálnád a hangot, elég lehet egy olcsóbb azonnali olvasat.";
+    return "Ezt akkor válaszd, ha tényleg többoldalas, születési adatokra épülő időszaki elemzést szeretnél. Ha csak kipróbálnád a hangot, elég lehet egy belépő árú azonnali olvasat.";
   }
   if (product.priceHuf >= 900) {
-    return "Ez mélyebb azonnali olvasat. Ha most csak rövid próbát szeretnél, a belépő olvasatok olcsóbbak; ha viszont visszatérő kérdésed van, ez ad több kapaszkodót.";
+    return "Ez mélyebb azonnali olvasat. Ha most csak rövid próbát szeretnél, a belépő árú olvasatok kisebb első lépést jelentenek; ha viszont visszatérő kérdésed van, ez ad több kapaszkodót.";
   }
   return null;
 }
@@ -648,7 +648,7 @@ function choiceFitPromise(product: ProductDef): string[] {
     ];
   }
   return [
-    "gyors, olcsó próbaolvasatot szeretnél, mielőtt mélyebb elemzést kérsz",
+    "gyors, belépő árú próbaolvasatot szeretnél, mielőtt mélyebb elemzést kérsz",
     "egy konkrét kérdésre vagy napi helyzetre elég néhány fókuszált bekezdés",
     "azonnali visszajelzést keresel, nem hosszú írásos riportot",
   ];

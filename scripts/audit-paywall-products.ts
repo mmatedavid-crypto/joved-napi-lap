@@ -44,6 +44,8 @@ const withdrawalRoute = readFileSync("src/routes/elallasi-tajekoztato.tsx", "utf
 const termsRoute = readFileSync("src/routes/aszf.tsx", "utf8");
 const layout = readFileSync("src/components/Layout.tsx", "utf8");
 const homeRoute = readFileSync("src/routes/index.tsx", "utf8");
+const profileRoute = readFileSync("src/routes/profil.tsx", "utf8");
+const smartFollowupSource = readFileSync("src/components/SmartReadingFollowup.tsx", "utf8");
 const sitemap = readFileSync("src/routes/sitemap[.]xml.tsx", "utf8");
 const threeCardRoute = readFileSync("src/routes/harom-lap.tsx", "utf8");
 const stylesSource = readFileSync("src/styles.css", "utf8");
@@ -74,7 +76,9 @@ for (const needle of [
   "priceFitNudge(product)",
   "function priceFitNudge(product: ProductDef)",
   "Ha csak kipróbálnád a hangot",
+  "belépő árú azonnali olvasat",
   "Ez mélyebb azonnali olvasat",
+  "belépő árú olvasatok kisebb első lépést jelentenek",
   "ha viszont visszatérő kérdésed van",
   "Pontossági visszajelzés",
   "Ha az elkészült olvasat részben talál",
@@ -174,7 +178,7 @@ for (const needle of [
   "diagnózist, traumamagyarázatot",
   "biztos eseményjóslatot vársz",
   "megváltozhatatlan jövőt vársz",
-  "gyors, olcsó próbaolvasatot",
+  "gyors, belépő árú próbaolvasatot",
   "nem csak százalékot szeretnél",
   "nem azt várod, hogy valaki döntsön helyetted",
   "nem egyetlen igen-nem kérdésed van",
@@ -398,6 +402,7 @@ for (const needle of [
   "Stripe fizetés",
   "Menthető olvasat",
   "Pontosítási út",
+  "belépő árú olvasatok alacsony kockázatú első próbát",
   "Ha nem elég pontos, rendelés alapján visszanézzük",
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
@@ -409,7 +414,7 @@ for (const needle of [
   "const focusedPriceRange = productRange(focused)",
   'href="#azonnali-olvasatok"',
   'id={category === "instant" ? "azonnali-olvasatok" : "asztrologiai-riportok"}',
-  "Olcsó próbaolvasat",
+  "Belépő próbaolvasat",
   "Helyzethez választok",
   "const CHOICE_GUIDE",
   "Melyiket válasszam?",
@@ -515,6 +520,24 @@ for (const needle of [
   "önismereti olvasatként kezeljük",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
+}
+
+for (const [file, source] of [
+  ["src/components/PaywallDialog.tsx", paywall],
+  ["src/routes/arak.tsx", pricingRoute],
+  ["src/routes/profil.tsx", profileRoute],
+  ["src/components/SmartReadingFollowup.tsx", smartFollowupSource],
+] as const) {
+  if (/\bolcsó(bb|k)?\b/i.test(source)) {
+    failed.push(`${file}: conversion copy should use belépő árú / alacsony kockázatú wording instead of olcsó`);
+  }
+}
+
+if (!profileRoute.includes("belépő") || !profileRoute.includes("árú személyes próbaolvasat")) {
+  failed.push("Profile empty order state must frame starter paid readings as belépő árú");
+}
+if (!smartFollowupSource.includes("Rövid, belépő árú személyes olvasat")) {
+  failed.push("SmartReadingFollowup must frame starter paid reading as belépő árú");
 }
 
 if (productsSource.includes("A legmélyebb tarot-riport: lassabb")) {

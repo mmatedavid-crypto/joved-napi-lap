@@ -40,7 +40,7 @@ const PRICING_FAQ = [
 const CHOICE_GUIDE = [
   {
     title: "Csak kipróbálnám",
-    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, olcsó, és gyorsan kiderül, megszólít-e a Jövőd.hu hangja.",
+    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, belépő árú, és gyorsan kiderül, megszólít-e a Jövőd.hu hangja.",
     productSlug: "napi_lap_ai",
     cta: "Napi lap",
   },
@@ -192,7 +192,7 @@ function PricingPage() {
         <section className="grid gap-3 md:grid-cols-4">
           <TrustPoint
             title="590 Ft-tól"
-            text="A belépő olvasatok olcsók, hogy kockázat nélkül kipróbálhasd a hangot."
+            text="A belépő árú olvasatok alacsony kockázatú első próbát adnak, mielőtt mélyebb elemzést kérnél."
           />
           <TrustPoint
             title="Stripe fizetés"
@@ -225,7 +225,7 @@ function PricingPage() {
               title="Belépő olvasat"
               price={entryPriceRange}
               text="Egy napi lap, angyalszám, kristály vagy álomszimbólum személyesebb értelmezéséhez."
-              cta="Olcsó próbaolvasat"
+              cta="Belépő próbaolvasat"
               href="/mai-lap"
             />
             <BudgetFitCard
