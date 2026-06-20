@@ -165,7 +165,7 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "444",
     intro:
-      "A 444 a védelem és a stabil alapok száma. Ha gyakran látod, az üzenete megnyugtató: nem vagy egyedül, a munkád biztos alapokra épül — folytasd, amit elkezdtél.",
+      "A 444 a védelem és a stabil alapok száma. Ha gyakran látod, a hagyomány szerint a rend, a kitartás és a belső támasz keresésére terelheti a figyelmed.",
     pattern: "A megháromszorozott 4-es a rendet, a kitartást és a támogató jelenlétet erősíti. Sokan nehéz időszakban találkoznak vele.",
   },
   {

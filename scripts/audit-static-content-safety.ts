@@ -216,6 +216,9 @@ const checks: StaticSafetyCheck[] = [
       /\blenned kell\b/i,
       /\bteremtő erejű\b/i,
       /\bmanifesztáció\b/i,
+      /\bnem vagy egyedül\b/i,
+      /\bbiztos alapokra épül\b/i,
+      /\bfolytasd, amit elkezdtél\b/i,
     ],
     required: [
       "arra hívhatja fel a figyelmed",
