@@ -19,7 +19,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     essence:
       "Ez a szám a kezdeményezőkészséget, az innovációt és a magabiztosságot testesíti meg. Az 1-es arra ösztönöz, hogy bízzunk a saját erőnkben, és alakítsuk a körülményeinket. A teremtés és a kezdetek energiáját hordozza, amely a lehetőségek gyökerét jelenti az életünkben.",
     strengths:
-      "Az 1-es sorsszámú személyek rendkívül önállóak, nem várnak a lehetőségekre, hanem megteremtik azokat. Célratörők és pozitív életszemléletűek, folyamatos fejlődésre vágynak. Innovatív gondolkodásmódjuk révén az akadályokat kihívásként kezelik, és kreatív megoldásokkal néznek szembe a nehézségekkel.",
+      "Az 1-es sorsszám mintája az önálló kezdeményezést, a saját irány keresését és a cselekvő bátorságot emeli ki. Erőssége akkor látszik tisztán, amikor az újrakezdés nem türelmetlen bizonyítás, hanem felelősen vállalt első lépés. A hagyomány szerint ez a szám kreatív megoldáskeresést és kezdeményező ritmust jelezhet.",
     shadow:
       "Erőteljes előrehaladásuk során hajlamosak lehetnek túl dominánssá válni, ami figyelmetlenséggel párosulva sértést okozhat másoknak.  A túlzott kockázatvállalás és a korlátozott látásmód elkerülhető problémákhoz vezethet. Belső bizonytalanságuk, a hibáktól való félelem mélyen élhet bennük, noha kifelé ezt ritkán mutatják.",
     love: "Párkapcsolataikban az önállóság és a tisztelet kulcsfontosságú. Olyan társat kereshetnek, aki támogatja függetlenségüket, és értékeli vezetői hajlamaikat, miközben teret ad egyéniségüknek.",
@@ -64,7 +64,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     essence:
       "Ezen sorsszám rezgése a földelésről, a kitartó munkáról és a gyakorlati megközelítésről szól. A 4-es energiát hordozó személyek általában konkrét, mérhető eredményeket szeretnének látni, és ragaszkodnak a bevált módszerekhez. Számukra a szervezettség és a rendszer a biztonság alapja.",
     strengths:
-      "Az életút 4-esek rendkívül gyakorlatiasak, realista a világlátásuk, nem tévesztik meg őket az illúziók. Hűségesek és megbízhatóak, nagy hangsúlyt fektetnek a tartós kapcsolatokra és a stabil alapokra. Szolgálatkészek, tudják, hogy a jó eredményekhez idő és erőfeszítés szükséges, örömmel áldozzák idejüket mások támogatására.",
+      "A 4-es sorsszám erőssége a rend, kitartás és gyakorlati építkezés jelképes mintájában jelenhet meg. Józan formában stabil alapokat keres, figyel a részletekre, és értékeli azt, ami idővel válik megbízhatóvá. Kapcsolatokban és munkában is akkor támogató, ha a biztonság nem merevségként, hanem tartós figyelemként jelenik meg.",
     shadow:
       "Időnként dogmatikussá válhatnak, mereven ragaszkodnak a saját igazukhoz, és nehezen fogadnak el más nézőpontokat. Előfordulhat, hogy túlságosan is ragaszkodnak a megszokotthoz, és elutasítanak minden újdonságot, ami unalmassá vagy fantáziátlanná teheti őket. Rugalmatlanságuk miatt nehezen illeszkednek be olyan helyzetekbe, ahol kompromisszumra és csapatmunkára van szükség.",
     love: "Párkapcsolataikban a stabilitásra és a hosszú távú elköteleződésre törekednek. Hűségesek, megbízhatóak és odaadóak, akik számára a tartós biztonság fontosabb, mint a spontán kalandok. Hajlamosak lehetnek a megszokott rutinokhoz ragaszkodni, és szükségük van egy olyan partnerre, aki értékelni tudja a biztonságra való törekvésüket és a kitartó gondoskodásukat.",
@@ -79,7 +79,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     essence:
       "A sorsszám középpontjában a kíváncsiság és a változatosság iránti igény áll. A beteljesedést az izgalmas élmények sokaságában találja meg, és bátran hagyja, hogy a 'szél sodorja'. Ez a szám nem a merev tervek vagy célkitűzések embere; sokkal inkább a kísérletezésről és a tapasztalásról szól az élete.",
     strengths:
-      "Kíváncsi természete rendkívül nyitottá teszi az újdonságokra, sokrétű és izgalmas élményekhez juttatva. Képes alkalmazkodni a változásokhoz, könnyedén vált közeget és irányt, és a legkülönfélébb helyzetekben is megtalálja a helyét. Társas lény, aki szívesen lép kapcsolatba másokkal, hiszen az interakciókon keresztül szerzi a legjobb tapasztalatokat és bővíti látókörét.",
+      "Az 5-ös sorsszám erőssége a kíváncsiságban, mozgékonyságban és tapasztalati tanulásban jelenhet meg. Ez a minta könnyebben kapcsolódik új helyzetekhez, emberekhez és nézőpontokhoz, ha közben marad elég belső irány is. Támogató oldala a rugalmasság: az a képesség, hogy a változás ne szétszórjon, hanem tágítsa a látókört.",
     shadow:
       "Az elköteleződés nehézsége jellemző lehet, mivel a szabadság iránti olthatatlan vágy miatt a kötöttségeket gyakran fojtogatóként élheti meg. Emiatt nehezebben mélyedhet el kapcsolatokban vagy szakmai feladatokban. A fegyelem hiánya és a könnyű elvonhatóság megbízhatatlanná teheti, ami kihívást jelenthet a projektek befejezésében és az ígéretek betartásában. Időnként céltalannak érezheti magát, ha nem talál olyan irányt, amely valós célokat szolgálna, és ezáltal értékes időt pazarolhat el.",
     love: "Ez a sorsszám nehezen köteleződik el, mivel a szabadságát félti, de ha megtalálja azt a partnert, aki értékeli a függetlenségét és együtt él át vele izgalmas kalandokat, akkor mély és szenvedélyes kapcsolatot alakíthat ki.",
