@@ -152,7 +152,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     title: "A Sorsszám 11 jelentése — A Mester-Intuitív",
     lead: "A 11-es sorsszám különleges mesterszám a numerológiában, amely mély intuíciót és spirituális érzékenységet hordoz. Ez az út a belső tudás, finom érzékelés és földelt jelenlét összehangolásáról szól.",
     essence:
-      "A 11-es sorsszámú embereket kivételes intuíció és rendkívüli érzékenység jellemzi. Képesek észlelni azokat a finom energiákat és összefüggéseket, melyek mások előtt rejtve maradnak. Életük során egyfajta belső tudás vezérli őket, ami a szellemi síkok mély megértéséből fakad. Gyakran érezhetik úgy, mintha mások gondolatait és érzéseit olvasnák, ami áldás és kihívás is egyben.",
+      "A 11-es sorsszám a numerológiai hagyományban az intuíció, érzékenység és belső figyelem mesterszáma. Nem különleges képességet vagy gondolatolvasást jelent, hanem azt a mintát, amikor valaki erősebben reagál a finom hangulatokra, kimondatlan feszültségekre és visszatérő belső jelzésekre. A 11-es út ezért nem elszakadás a valóságtól, hanem annak tanulása, hogyan lehet az ihletet földelt, józan formába rendezni.",
     strengths:
       "Rendkívül intuitív lehetsz, gyorsan ráhangolódhatsz egy helyzet érzelmi légkörére. A 11-es erőssége, hogy a nagyobb képet is érzékeli, és finom összefüggéseket vesz észre ott, ahol mások csak részleteket látnak. Empatikus természeted mély kapcsolódást adhat, ha közben megtartod a saját határaidat is.",
     shadow:
