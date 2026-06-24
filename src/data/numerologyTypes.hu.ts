@@ -73,7 +73,7 @@ export const KIFEJEZES_SZAM: NumerologyType = {
   shortTitle: "Kifejezésszám",
   lead: "A kifejezésszám (Expression Number, vagy Sorsfeladat-szám) azt írja le, milyen képességek megnyilvánítására születtél — a tehetségedet és az életcélodat.",
   intro:
-    "Ez a szám a teljes születési nevedből számolódik (minden betű — magán- és mássalhangzó —, a magyar ékezetes formák ugyanazt az értéket kapják, mint az alapbetű) — abból a névből, amit a szüleidtől kaptál, és ami a sorsod kódját hordozza. A kifejezésszám nem azt mondja meg, mit fogsz csinálni, hanem azt, hogy milyen módon vagy a leghatékonyabb.",
+    "Ez a szám a teljes születési nevedből számolódik (minden betű — magán- és mássalhangzó —, a magyar ékezetes formák ugyanazt az értéket kapják, mint az alapbetű) — abból a névből, amit a szüleidtől kaptál, és amelyet a numerológiai hagyomány jelképes mintaként olvas. A kifejezésszám nem azt mondja meg, mit fogsz csinálni, hanem azt, hogy milyen módon vagy a leghatékonyabb.",
   howTo:
     "A teljes születési neved minden betűjét számértékre váltod (A=1, B=2 … I=9, J=1, K=2 …), összeadod, és egy számjegyre vagy mesterszámra (11, 22, 33) redukálod.",
   numbers: [

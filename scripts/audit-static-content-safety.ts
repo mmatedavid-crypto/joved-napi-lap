@@ -125,6 +125,7 @@ const checks: StaticSafetyCheck[] = [
       /\bpénzügyeidet\b/i,
       /\bházasság, gyerek, költözés\b/i,
       /\bMost jönnek az eredmények\b/i,
+      /\bsorsod kódját hordozza\b/i,
     ],
     required: [
       "mélyen támogató jelenlétként",
@@ -201,7 +202,13 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/data/cards.ts",
-    forbidden: [/\bbiztosan\b/i, /\bgyógyít/i, /\bgyógyítható\b/i, /\bbefektetés\b/i],
+    forbidden: [
+      /\bbiztosan\b/i,
+      /\bgyógyít/i,
+      /\bgyógyítható\b/i,
+      /\bbefektetés\b/i,
+      /\bvalósággá válik\b/i,
+    ],
     required: ["bukkanhat fel", "finoman feldolgozható"],
   },
   {

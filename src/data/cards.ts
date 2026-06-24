@@ -31,7 +31,7 @@ export const CARDS: TarotCard[] = [
       "Most minden kéznél van, amire szükséged van. A kérdés inkább az, mire irányítod a figyelmed.",
     love: "Tudatos jelenlét. Az, ahogy megszólítasz valakit, most többet számít, mint amit mondasz.",
     decision: "A döntés nem új információra vár, hanem arra, hogy felvállald, amit már látsz.",
-    warning: "A szavak ereje most kétélű. Amit kimondasz, az könnyen valósággá válik.",
+    warning: "A szavak ereje most kétélű. Amit kimondasz, az könnyen irányt adhat a következő lépésednek.",
     daily: "Egyetlen tiszta szándék ma többet ér, mint öt párhuzamos terv.",
   },
   {
