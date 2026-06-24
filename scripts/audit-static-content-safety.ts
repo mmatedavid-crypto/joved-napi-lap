@@ -126,8 +126,13 @@ const checks: StaticSafetyCheck[] = [
       /\bházasság, gyerek, költözés\b/i,
       /\bMost jönnek az eredmények\b/i,
       /\bsorsod kódját hordozza\b/i,
+      /\blelked alapvágya\b/i,
+      /\bteszi teljessé az életed\b/i,
+      /\bszenvedsz a legjobban\b/i,
     ],
     required: [
+      "szeretet, gondoskodás és otthonosság iránti érzékenységet jelképezi",
+      "önfeladással",
       "mélyen támogató jelenlétként",
       "megtartó erőt",
       "mások támogatására",
