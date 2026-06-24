@@ -446,8 +446,17 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/components/SmartReadingFollowup.tsx",
-    forbidden: [/A teljes elemzés a születési dátum/i],
-    required: ["A részletes elemzés a születési dátum"],
+    forbidden: [
+      /A teljes elemzés a születési dátum/i,
+      /Mi történik köztetek valójában/i,
+      /napi lap valójában kapcsolati kérdést/i,
+    ],
+    required: [
+      "A részletes elemzés a születési dátum",
+      "Milyen mintát mutat köztetek?",
+      "tempót, kölcsönösséget, kommunikációt",
+      "tempót, kölcsönösséget és visszatérő mintát",
+    ],
   },
   {
     file: "src/lib/legal.ts",

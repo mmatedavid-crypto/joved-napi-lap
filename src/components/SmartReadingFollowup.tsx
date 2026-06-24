@@ -280,9 +280,9 @@ function followupOptions(
         label:
           text.includes("ex") || text.includes("visszatér")
             ? "Mi történne, ha újra megjelenne?"
-            : "Mi történik köztetek valójában?",
+            : "Milyen mintát mutat köztetek?",
         reason:
-          "A kapcsolati olvasat nem csak százalékot ad: tempót, vonzalmat, kommunikációt és visszatérő mintát is néz.",
+          "A kapcsolati olvasat nem csak százalékot ad: tempót, kölcsönösséget, kommunikációt és visszatérő mintát is néz.",
       },
       {
         slug: "dontes_komplex",
@@ -300,7 +300,7 @@ function followupOptions(
           ? "Mi ismétlődik ebben a kapcsolatban?"
           : "Mit mutat ez kettőtökről?",
         reason:
-          "Ha a napi lap valójában kapcsolati kérdést érintett meg, jobb külön nézni a tempót, vonzalmat és visszatérő mintát.",
+          "Ha a napi lap kapcsolati kérdést érintett meg, jobb külön nézni a tempót, kölcsönösséget és visszatérő mintát.",
       },
       {
         slug: "harom_lap_mely",
