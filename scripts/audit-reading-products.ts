@@ -313,6 +313,22 @@ const contextChecks = [
     ),
     required: ["A kérdésed felől", "visszajön", "rövid", "tartós"],
   },
+  {
+    name: "context:free_love_intent_question",
+    body: textFromReading(
+      composeCompatibilityReading(
+        calculateCompatibilityProfile({
+          birthDateA: "1992-04-17",
+          birthDateB: "1990-01-14",
+          fullNameA: "Kovács Anna",
+          fullNameB: "Nagy Péter",
+          status: "most ismerkedünk",
+          question: "Szeret engem?",
+        }),
+      ),
+    ),
+    required: ["Érzések helyett biztos bizonyítékot nem ad", "következetesebb jelenlét", "konkrét figyelem"],
+  },
 ].map((item) => {
   const lower = item.body.toLocaleLowerCase("hu-HU");
   const missing = item.required.filter((word) => !lower.includes(word.toLocaleLowerCase("hu-HU")));
@@ -328,6 +344,23 @@ const contextChecks = [
 console.log(JSON.stringify({ paid, free: freeReadings, context: contextChecks }, null, 2));
 const failed = [...paid, ...freeReadings, ...contextChecks].filter((item) => !item.ok);
 const policyFailures: string[] = [];
+const loveIntentBody = textFromReading(
+  composeCompatibilityReading(
+    calculateCompatibilityProfile({
+      birthDateA: "1992-04-17",
+      birthDateB: "1990-01-14",
+      fullNameA: "Kovács Anna",
+      fullNameB: "Nagy Péter",
+      status: "most ismerkedünk",
+      question: "Szeret engem?",
+    }),
+  ),
+);
+for (const forbiddenNeedle of ["ahol valódi szándék van", "valódi szándék"]) {
+  if (loveIntentBody.includes(forbiddenNeedle)) {
+    policyFailures.push(`compatibility intent answer must not claim to identify another person's true intent: ${forbiddenNeedle}`);
+  }
+}
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
 const paidReadingsSource = readFileSync("src/lib/paidReadings.ts", "utf8");
 const aiServer = readFileSync("src/lib/ai.server.ts", "utf8");

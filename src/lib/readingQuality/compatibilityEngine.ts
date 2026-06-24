@@ -150,7 +150,7 @@ function questionText(question: string, status: string | undefined): string {
     return `${quoted} A tartósság itt nem egyetlen nagy érzelem kérdése, hanem azé, hogy a vonzalom mellé megérkezik-e a kiszámítható figyelem, a hétköznapi jelenlét és a konfliktusok utáni visszarendeződés.`;
   }
   if (/szeret|érez|gondol|komolyan/.test(normalized)) {
-    return `${quoted} Érzések helyett biztos bizonyítékot nem ad, de a mintát megmutatja: ahol valódi szándék van, ott a vonzalom mellett idővel több tisztaság, ritmus és konkrét figyelem is megjelenik.`;
+    return `${quoted} Érzések helyett biztos bizonyítékot nem ad, de a mintát segít olvasni: a vonzalom akkor válik tisztábban láthatóvá, ha idővel következetesebb jelenlét, ritmus és konkrét figyelem is társul hozzá.`;
   }
   if (/ír|keres|jelentkez|csend/.test(normalized)) {
     return `${quoted} A csendet nem érdemes automatikus válasznak venni. Itt inkább az számít, hogy a hallgatás után jön-e tisztább közeledés, vagy ugyanazt a bizonytalanságot indítja újra.`;
