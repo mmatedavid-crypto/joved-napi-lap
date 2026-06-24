@@ -134,53 +134,6 @@ export type Database = {
         }
         Relationships: []
       }
-      order_feedback: {
-        Row: {
-          created_at: string
-          feedback: string
-          id: string
-          note: string | null
-          order_id: string
-          product_name: string
-          product_slug: string
-          source: string
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          feedback: string
-          id?: string
-          note?: string | null
-          order_id: string
-          product_name: string
-          product_slug: string
-          source: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          feedback?: string
-          id?: string
-          note?: string | null
-          order_id?: string
-          product_name?: string
-          product_slug?: string
-          source?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "order_feedback_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: true
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       orders: {
         Row: {
           category: Database["public"]["Enums"]["product_category"]

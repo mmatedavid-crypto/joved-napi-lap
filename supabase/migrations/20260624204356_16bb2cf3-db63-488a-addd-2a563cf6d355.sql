@@ -1,4 +1,4 @@
-CREATE TABLE public.order_feedback (
+CREATE TABLE IF NOT EXISTS public.order_feedback (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   order_id UUID NOT NULL UNIQUE REFERENCES public.orders(id) ON DELETE CASCADE,
   user_id UUID,
