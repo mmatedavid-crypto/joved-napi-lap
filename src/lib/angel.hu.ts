@@ -147,7 +147,7 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "111",
     intro:
-      "A 111 az egyik legismertebb angyalszám: a kapunyitás és a gyors megvalósulás jele. Amit most gondolsz, az szokatlanul gyorsan formálódik valósággá — ezért érdemes tudatosan figyelni, mire irányítod a figyelmed.",
+      "A 111 az egyik legismertebb angyalszám: a kapunyitás, a fókusz és az új kezdet jelképe. Ha gyakran látod, a hagyomány szerint érdemes tudatosan figyelni, mire irányítod a gondolataidat.",
     pattern: "A megháromszorozott 1-es az új kezdet energiáját erősíti fel. Sokan akkor látják, amikor egy régóta érlelődő váltás végre beindul.",
   },
   {
@@ -225,7 +225,7 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "1234",
     intro:
-      "Az 1234 a lépcsőzetes haladás száma. Nem ugrást kér, hanem következetes, egymásra épülő lépéseket — és azt üzeni: pontosan jó sorrendben csinálod, amit csinálsz.",
+      "Az 1234 a lépcsőzetes haladás száma. Nem ugrást kér, hanem következetes, egymásra épülő lépéseket, hogy könnyebben észrevedd, melyik mozdulat készítheti elő a következőt.",
     pattern: "Az emelkedő számsor a természetes fejlődést jelzi: minden lépés a következőt készíti elő.",
   },
   {

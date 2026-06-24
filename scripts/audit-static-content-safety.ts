@@ -219,6 +219,9 @@ const checks: StaticSafetyCheck[] = [
       /\bnem vagy egyedül\b/i,
       /\bbiztos alapokra épül\b/i,
       /\bfolytasd, amit elkezdtél\b/i,
+      /\bgyors megvalósulás\b/i,
+      /\bformálódik valósággá\b/i,
+      /\bpontosan jó sorrendben\b/i,
     ],
     required: [
       "arra hívhatja fel a figyelmed",
