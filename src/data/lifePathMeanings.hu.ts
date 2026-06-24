@@ -165,14 +165,14 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "22": {
     title: "Sorsszám 22 jelentése — Az Építőmester útja",
-    lead: "A 22-es sorsszám a „Mester Építő” energiáját hordozza, egyesítve a mély intuíciót a gyakorlati megvalósítás képességével. Ez az út a grandiózus elképzelések valósággá formálásáról szól.",
+    lead: "A 22-es sorsszámot a hagyomány a „Mester Építő” archetípusához köti: a vízió és a gyakorlati felelősség találkozásához. Ez az út nem kész sorsot ír le, hanem azt vizsgálja, hogyan kaphatnak formát a nagyobb elképzelések józan, lépésről lépésre építkező módon.",
     essence:
       "Ez a szám nagy potenciált jelöl: hidat épít az elképzelés és a konkrét tett között. A 22-es akkor működik erősen, ha a vízió nem marad álom, hanem módszerességgel, felelősséggel és emberi érzékkel kap formát. Nem felsőbbrendűség, hanem nagyobb teherbírás és nagyobb tudatossági feladat.",
     strengths:
       "Erős képességed lehet arra, hogy nagyobb elképzeléseket gyakorlati fegyelemmel építs fel. Átláthatod a nagy képet, miközben a részleteket sem veszted szem elől. A 22-es ereje nem abban áll, hogy minden akadályt legyőz, hanem abban, hogy a nehézségekből is rendszert, tanulságot és következő lépést tud formálni.",
     shadow:
       "Előfordulhat, hogy a túlzott maximalizmusod megbénít, és a tökéletességre való törekvés megakadályoz abban, hogy elfogadd a „jó” megoldásokat. Ez gyakran késedelmekhez, stresszhez és kiégéshez vezethet. A hatalmas felelősségvállalás és a céljaid hajszolása közben könnyen figyelmen kívül hagyhatod a pihenést, a kapcsolataidat és az öngondoskodást, kimerülve a túlhajszoltságban. Nehezen delegálsz, mert úgy érzed, mindent jobban elvégzel magad, ami korlátozhatja a nagyszabású elképzeléseid kibontakozását.",
-    love: "Párkapcsolataidban intenzív, céltudatos és ambiciózus vagy, olyan társat keresel, aki támogatja grandiózus vízióidat és megérti elhivatottságodat. Fontos, hogy olyan partnerre találj, aki képes felvenni a ritmust veled, és elfogadja, hogy a munkád gyakran központi szerepet játszik az életedben.",
+    love: "Párkapcsolataidban intenzív, céltudatos és ambiciózus mintát hozhatsz, ezért fontos lehet, hogy a közös tervek mellett a hétköznapi figyelem is helyet kapjon. Olyan kapcsolat támogathat igazán, ahol a nagyobb célok mellett a pihenés, az érzelmi jelenlét és a kölcsönös ritmus is számít.",
     career:
       "Kiválóan teljesítesz olyan területeken, ahol rendszereket, struktúrákat és szervezeteket építhetsz, melyek sok ember javát szolgálják. Remek építész, mérnök, városfejlesztő, projektmenedzser vagy vállalkozó lehetsz. Vezetői szerepekben is kiemelkedő vagy, ahol monumentális léptékű és tartós hatású munkával foglalkozhatsz.",
     advice:

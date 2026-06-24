@@ -62,7 +62,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
     publishedAt: "2026-02-12",
     readMinutes: 6,
     keywords: ["asztrológia", "horoszkóp", "születési képlet", "natal chart"],
-    body: `Az újságos horoszkóp egyetlen adatból dolgozik: a Nap-jegyedből. Ezért 1/12-ed pontossággal "általánosít" — mindenkire egyszerre próbál érvényes lenni, aki adott hónapban született.\n\nA személyes asztrológia ezzel szemben a teljes születési képletedből indul ki: pontos dátum, óra, perc, hely. A Nap, a Hold, az Aszcendens és a többi bolygó helyzete együtt rajzol ki egy egyedi mintát.\n\nA Nap-jegy a tudatos énedet, a Hold az érzelmi belső ritmusodat, az Aszcendens pedig azt, ahogyan a világba lépsz. Csak a hármat együtt nézve kezd személyessé válni a kép.\n\nNapi újságos horoszkóp szórakozásnak jó. Ha tényleg magadat akarod látni, személyes képletet kérj.`,
+    body: `Az újságos horoszkóp egyetlen adatból dolgozik: a Nap-jegyedből. Ezért 1/12-ed pontossággal "általánosít" — mindenkire egyszerre próbál érvényes lenni, aki adott hónapban született.\n\nA személyes asztrológia ezzel szemben a teljes születési képletedből indul ki: pontos dátum, óra, perc, hely. A Nap, a Hold, az Aszcendens és a többi bolygó helyzete együtt rajzol ki egy egyedi mintát.\n\nA Nap-jegy a tudatos énedet, a Hold az érzelmi belső ritmusodat, az Aszcendens pedig azt, ahogyan a világba lépsz. Csak a hármat együtt nézve kezd személyesebb réteget kapni a kép.\n\nNapi újságos horoszkóp könnyű napi rituálénak jó. Ha mélyebb, saját adataidból induló önismereti nézőpontot keresel, a személyes képlet jobb választás.`,
   },
   {
     slug: "angyalszamok-ertelmezese",

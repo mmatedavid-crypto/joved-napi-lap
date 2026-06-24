@@ -136,6 +136,19 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/data/magazin.hu.ts",
+    forbidden: [
+      /\bHa tényleg magadat akarod látni\b/i,
+      /\bszórakozásnak jó\b/i,
+      /\bkezd személyessé válni a kép\b/i,
+    ],
+    required: [
+      "saját adataidból induló önismereti nézőpontot",
+      "személyesebb réteget kapni a kép",
+      "könnyű napi rituálénak jó",
+    ],
+  },
+  {
     file: "src/routes/numerologia.index.tsx",
     forbidden: [
       /\bteljes képet rólad\b/i,
@@ -191,6 +204,8 @@ const checks: StaticSafetyCheck[] = [
       /\belőre megérezni dolgokat\b/i,
       /\bfelsőbb síkok\b/i,
       /\bideális diplomaták\b/i,
+      /\bgrandiózus elképzelések valósággá formálás/i,
+      /\bgrandiózus vízióidat\b/i,
     ],
     required: [
       "egészséges határokkal",
