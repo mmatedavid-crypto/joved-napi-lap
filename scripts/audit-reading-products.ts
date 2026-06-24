@@ -369,6 +369,28 @@ for (const needle of [
 }
 
 for (const needle of [
+  "most látható kapcsolati jelekre adnak nézőpontot",
+  "milyen józan lépés marad nálad",
+  "ismétlődő mintára érdemes figyelned",
+  "józan következő lépésre adnak nézőpontot",
+]) {
+  if (!loveRoute.includes(needle)) {
+    policyFailures.push(`relationship tarot route must avoid mind-reading promises: ${needle}`);
+  }
+}
+
+for (const forbiddenNeedle of [
+  "valódi szándékát",
+  "valójában mi zajlik",
+  "mi mozgatja",
+  "belső irányát",
+]) {
+  if (loveRoute.includes(forbiddenNeedle)) {
+    policyFailures.push(`relationship tarot route must not claim to reveal another person's inner state: ${forbiddenNeedle}`);
+  }
+}
+
+for (const needle of [
   "Te / első személy neve",
   "Másik fél neve",
   "Te / első személy születési dátuma",
