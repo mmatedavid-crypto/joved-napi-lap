@@ -69,26 +69,26 @@ export const SZEMELYISEG_SZAM: NumerologyType = {
 
 export const KIFEJEZES_SZAM: NumerologyType = {
   slug: "kifejezes-szam",
-  title: "Kifejezésszám jelentése — a sorsfeladatod",
+  title: "Kifejezésszám jelentése — milyen mintát fejez ki a neved",
   shortTitle: "Kifejezésszám",
-  lead: "A kifejezésszám (Expression Number, vagy Sorsfeladat-szám) azt írja le, milyen képességek megnyilvánítására születtél — a tehetségedet és az életcélodat.",
+  lead: "A kifejezésszám (Expression Number) a név hagyományos számmintáját olvassa: milyen kifejezési mód, tehetségirány és visszatérő belső ritmus kapcsolódhat hozzád a numerológiai hagyomány szerint.",
   intro:
-    "Ez a szám a teljes születési nevedből számolódik (minden betű — magán- és mássalhangzó —, a magyar ékezetes formák ugyanazt az értéket kapják, mint az alapbetű) — abból a névből, amit a szüleidtől kaptál, és amelyet a numerológiai hagyomány jelképes mintaként olvas. A kifejezésszám nem azt mondja meg, mit fogsz csinálni, hanem azt, hogy milyen módon vagy a leghatékonyabb.",
+    "Ez a szám a teljes születési nevedből számolódik (minden betű — magán- és mássalhangzó —, a magyar ékezetes formák ugyanazt az értéket kapják, mint az alapbetű) — abból a névből, amit a szüleidtől kaptál, és amelyet a numerológiai hagyomány jelképes mintaként olvas. A kifejezésszám nem kész életprogram, hanem önismereti nézőpont: azt figyeli, milyen módon tudsz természetesebben hatni, alkotni vagy kapcsolódni.",
   howTo:
     "A teljes születési neved minden betűjét számértékre váltod (A=1, B=2 … I=9, J=1, K=2 …), összeadod, és egy számjegyre vagy mesterszámra (11, 22, 33) redukálod.",
   numbers: [
-    { n: 1, title: "1-es kifejezésszám", body: "Vezetésre, úttörésre, önálló alkotásra születtél. A feladatod megtanulni felelősséget vállalni a saját irányodért." },
-    { n: 2, title: "2-es kifejezésszám", body: "Diplomata vagy: közvetítesz, harmonizálsz, kapcsolatokat építesz. A feladatod megtanulni határt szabni anélkül, hogy elveszítenéd az érzékenységed." },
-    { n: 3, title: "3-as kifejezésszám", body: "Alkotásra születtél: szó, kép, hang. A feladatod, hogy az önkifejezésedet ne aprózd el — koncentráld egy fő alkotói pályára." },
-    { n: 4, title: "4-es kifejezésszám", body: "Építkezésre születtél — rendszereket, struktúrákat hozol létre. A feladatod megtanulni, hogy a fegyelem nem rugalmatlanság, és a stabilitás nem unalom." },
-    { n: 5, title: "5-ös kifejezésszám", body: "Szabadság, változatosság, kommunikáció. Sok mindennel megpróbálkozol — a feladatod megtanulni elkötelezni magad anélkül, hogy bezárva éreznéd magad." },
-    { n: 6, title: "6-os kifejezésszám", body: "Gondoskodásra, otthonteremtésre és mások támogatására születtél. A feladatod megtanulni a felelősséget örömmel hordozni, nem áldozatként." },
-    { n: 7, title: "7-es kifejezésszám", body: "Mélységkutató: tudomány, spiritualitás, kutatás. A feladatod megtanulni, hogy a magány nem elszigeteltség, és a bölcsesség akkor szolgál, ha megosztod." },
-    { n: 8, title: "8-as kifejezésszám", body: "Erő, vezetés, felelősség és kézzelfogható eredmény. A feladatod megtanulni, hogy a hatás szolgálni való, nem dominálni." },
-    { n: 9, title: "9-es kifejezésszám", body: "Humanitárius út: szolgálat, együttérzés, művészet a köz javára. A feladatod megtanulni elengedni — embereket, kötődéseket, régi sebeket." },
-    { n: 11, title: "11-es kifejezésszám (mesterszám)", body: "Ihletett közvetítői minőség. Magas feszültségű szám: a feladatod megtanulni földelni az intuíciót, hogy ne csak érzés, hanem tiszta forma legyen belőle." },
-    { n: 22, title: "22-es kifejezésszám (mesterszám)", body: "Építő minőség: nagyobb víziókat tudsz gyakorlati formába rendezni. Feladatod összekötni az ihletet, a felelősséget és a megvalósítást." },
-    { n: 33, title: "33-as kifejezésszám (mesterszám)", body: "Tanító, megtartó minőség: szeretetből szolgálsz, de nem önfeladásból. Feladatod a saját szívedhez is türelmesen visszatérni, mielőtt másoknak tartanál teret." },
+    { n: 1, title: "1-es kifejezésszám", body: "Az 1-es kifejezésszám az önálló kezdeményezés, irányadás és alkotó bátorság mintáját jelképezi. Józan formában saját irányt keres, árnyékában viszont könnyen túl magányossá vagy túl akaraterőssé válhat." },
+    { n: 2, title: "2-es kifejezésszám", body: "A 2-es kifejezésszám a közvetítés, együttműködés és kapcsolati érzékenység jelképe. Akkor működik tisztábban, ha a béketeremtés mellett a saját határok is láthatóak maradnak." },
+    { n: 3, title: "3-as kifejezésszám", body: "A 3-as kifejezésszám a szó, kép, hang és örömteli önkifejezés hagyományos mintája. Támogató oldala az alkotókedv, árnyéka a szétszóródás vagy a felszín mögé rejtett szomorúság lehet." },
+    { n: 4, title: "4-es kifejezésszám", body: "A 4-es kifejezésszám a rend, szerkezet és kitartó építkezés jelképe. Akkor ad jó irányt, ha a stabilitás nem merevséggé, hanem megbízható ritmussá alakul." },
+    { n: 5, title: "5-ös kifejezésszám", body: "Az 5-ös kifejezésszám a szabadság, változatosság és tapasztalati tanulás mintáját hordozza. Egyensúlyban frissességet hoz, árnyékában viszont nehéz lehet hosszabb ideig egy választás mellett maradni." },
+    { n: 6, title: "6-os kifejezésszám", body: "A 6-os kifejezésszám a gondoskodás, otthonteremtés és mások támogatására hangolódó figyelem jelképe. Akkor marad egészséges, ha a felelősség nem áldozatszereppé, hanem kölcsönös jelenlétté válik." },
+    { n: 7, title: "7-es kifejezésszám", body: "A 7-es kifejezésszám a kutatás, elmélyülés és belső csend mintáját jelképezi. Támogató oldala a megértés keresése, árnyéka az elszigetelődés vagy a túlzott bizalmatlanság lehet." },
+    { n: 8, title: "8-as kifejezésszám", body: "A 8-as kifejezésszám az erő, döntés, felelősség és kézzelfogható eredmények jelképe. Józan formában rendezni és vállalni tanít, nem uralkodni vagy mindent teljesítményként mérni." },
+    { n: 9, title: "9-es kifejezésszám", body: "A 9-es kifejezésszám az együttérzés, tágabb nézőpont és lezárásra való képesség mintája. Akkor válik éretté, ha a segítés mellett az elengedés és a saját határ is helyet kap." },
+    { n: 11, title: "11-es kifejezésszám (mesterszám)", body: "A 11-es mesterszám az ihlet, érzékenység és közvetítői figyelem jelképe. Erős belső feszültséget is mutathat, ezért különösen fontos benne a földeltség és a hétköznapi forma." },
+    { n: 22, title: "22-es kifejezésszám (mesterszám)", body: "A 22-es mesterszám az építő minőség és a nagyobb víziók gyakorlati rendezésének jelképe. Akkor támogató, ha az ihlet, a felelősség és a fokozatos megvalósítás együtt marad." },
+    { n: 33, title: "33-as kifejezésszám (mesterszám)", body: "A 33-as mesterszám a tanító, megtartó és szeretetből szolgáló minőség jelképe. Árnyéka az önfeladás lehet, ezért a saját szívhez való türelmes visszatérés is része a mintának." },
   ],
 };
 
