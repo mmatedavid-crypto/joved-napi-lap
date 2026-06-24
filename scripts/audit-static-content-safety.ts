@@ -136,6 +136,18 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/lib/numerology.ts",
+    forbidden: [
+      /\btényleg meg tud állni\b/i,
+      /\bHalogatott beszélgetésekből lesznek a nagy szakítások\b/i,
+    ],
+    required: [
+      "kapcsolatmintát jelezhet",
+      "tartósság a figyelmes hétköznapi jelenléten múlik",
+      "halogatott beszélgetések idővel feszültséget gyűjthetnek",
+    ],
+  },
+  {
     file: "src/data/magazin.hu.ts",
     forbidden: [
       /\bHa tényleg magadat akarod látni\b/i,

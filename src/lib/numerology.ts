@@ -288,7 +288,7 @@ const PAIR_TEXT: Record<string, Pair> = {
   "3-5": {
     works: "Élet, kíváncsiság, könnyedség. Mellettetek vidám az élet, és ez nem felszín — energia.",
     tension:
-      "Amikor jön a komoly, mindketten elsiklotok mellette. Halogatott beszélgetésekből lesznek a nagy szakítások.",
+      "Amikor jön a komoly, mindketten elsiklotok mellette. A halogatott beszélgetések idővel feszültséget gyűjthetnek, ezért érdemes hamarabb nevet adni annak, ami fontos.",
     advice: "Egy mondatot ne csomagoljatok viccbe a héten.",
   },
   "3-6": {
@@ -298,7 +298,7 @@ const PAIR_TEXT: Record<string, Pair> = {
   },
   "4-8": {
     works:
-      "Két komoly ember. Stabil keretek, hosszú táv, közös építés. Egy olyan kapcsolat, ami tényleg meg tud állni.",
+      "Két komoly ember. Stabil keretek, hosszú táv, közös építés. Olyan kapcsolatmintát jelezhet, amelyben a tartósság a figyelmes hétköznapi jelenléten múlik.",
     tension: "A munka és a kontroll lassan megeszi a gyengédséget, ha nem figyeltek rá.",
     advice: "Egy estét hetente írjatok be a naptárba, ahol semmit nem szerveztek.",
   },
