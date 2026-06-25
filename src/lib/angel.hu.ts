@@ -142,13 +142,15 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
     szam: "000",
     intro:
       "A 000 a tiszta potenciál száma: a kör, amelynek nincs eleje és vége. Ha sokszor látod, az életed egy olyan pontján állsz, ahol bármi újraindítható — a lap üres, és te írhatsz rá.",
-    pattern: "A megháromszorozott nulla a végtelen lehetőséget és az isteni teljességet jelképezi. Gyakran nagy újrakezdés előtt bukkan fel.",
+    pattern:
+      "A megháromszorozott nulla a számszimbolikai hagyományban a nyitott lehetőséget és a körszerű lezárás-újrakezdés mintáját jelképezi. Nem nagy fordulatot ígér, inkább arra hívhatja fel a figyelmed, hol érdemes tiszta lapot nyitni.",
   },
   {
     szam: "111",
     intro:
       "A 111 az egyik legismertebb angyalszám: a kapunyitás, a fókusz és az új kezdet jelképe. Ha gyakran látod, a hagyomány szerint érdemes tudatosan figyelni, mire irányítod a gondolataidat.",
-    pattern: "A megháromszorozott 1-es az új kezdet energiáját erősíti fel. Sokan akkor látják, amikor egy régóta érlelődő váltás végre beindul.",
+    pattern:
+      "A megháromszorozott 1-es az új kezdet és a szándék rendezésének témáját emeli ki. Nem ígéretként, inkább önismereti jelként segíthet észrevenni, hol kér több figyelmet az első lépés.",
   },
   {
     szam: "222",
@@ -159,8 +161,9 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "333",
     intro:
-      "A 333 a kifejeződés és a kreatív erő száma. Azt jelzi, hogy a hangodra most szükség van: amit kimondasz, megírsz vagy megalkotsz, az másoknak is utat mutat.",
-    pattern: "A megháromszorozott 3-as a kommunikáció és az önkifejezés energiáját sokszorozza. Sok hagyomány a felemelkedett mesterek jelenlétéhez köti.",
+      "A 333 a kifejeződés és a kreatív figyelem száma. Nem azt jelzi, hogy másoknak utat kell mutatnod, inkább arra terelheti a figyelmed, hogy a kimondott, megírt vagy megalkotott forma most tisztábban szólhat hozzád.",
+    pattern:
+      "A megháromszorozott 3-as a kommunikáció és önkifejezés témáit emeli ki. Egyes hagyományok tanítói jelképrendszerekhez kötik, de itt nem külső üzenetként, hanem önismereti figyelmeztető jelként érdemes olvasni.",
   },
   {
     szam: "444",
@@ -172,7 +175,8 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
     szam: "555",
     intro:
       "Az 555 a nagy változás száma. Ha mindenhol ezt látod, arra hívhatja fel a figyelmed, hogy valami régi forma lazul, és több tér kellene az új mozgásnak.",
-    pattern: "A megháromszorozott 5-ös a fordulat és a szabadság energiáját hordozza. Gyakran váltás, költözés vagy új életszakasz kérdéseinél tűnik fel.",
+    pattern:
+      "A megháromszorozott 5-ös a fordulat, mozgástér és rugalmas alkalmazkodás témáit emeli ki. Nem költözést vagy új életszakaszt jósol, inkább azt mutatja, hol lazulhat egy régi forma.",
   },
   {
     szam: "666",
@@ -190,8 +194,9 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "888",
     intro:
-      "A 888 a bőség és az áramlás száma. Gyakori felbukkanása arra utalhat, hogy érdemes észrevenned, hol érik már a befektetett figyelmed és munkád eredménye.",
-    pattern: "A megháromszorozott 8-as az erő, az eredmény és a kiegyenlítődés energiáját hordozza — nem ígéretként, inkább önismereti jelként.",
+      "A 888 a számszimbolikában az eredmény, méltányosság és kiegyenlítődés témáihoz kapcsolódik. Gyakori felbukkanása arra utalhat, hogy érdemes észrevenned, hol kap formát a befektetett figyelmed és munkád.",
+    pattern:
+      "A megháromszorozott 8-as az erő, felelősség és következmény témáit emeli ki. Nem anyagi ígéretként, inkább önismereti jelként érdemes olvasni.",
   },
   {
     szam: "999",
@@ -232,8 +237,9 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "2222",
     intro:
-      "A 2222 a mély béke és a hosszú távú építkezés száma. Ha sokszor látod, az üzenete: a türelmed nem tétlenség — amit most csendben gondozol, az tartós lesz.",
-    pattern: "A négyszeres 2-es (és a 22-es mesterszám kétszerese) a nagy ívű, közösen épített tervek energiáját hordozza.",
+      "A 2222 a béke, türelem és hosszabb távú építkezés száma. Ha sokszor látod, önismereti jelként arra terelheti a figyelmed, hogy a csendes gondozás nem feltétlen tétlenség.",
+    pattern:
+      "A négyszeres 2-es a kapcsolódás, arányérzék és közösen épített tervek témáit emeli ki. Nem tartós eredményt ígér, inkább a lassabb, következetesebb ritmust támogatja.",
   },
 ];
 
