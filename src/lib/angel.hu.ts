@@ -183,8 +183,9 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
   {
     szam: "777",
     intro:
-      "A 777 a spirituális mélyülés és a belső irány száma. Ha sokszor látod, érdemes lehet több csendet adni annak, ami benned már tisztábban formálódik.",
-    pattern: "A megháromszorozott 7-es a befelé figyelést és a szerencsés egybeeséseket erősíti. Sokan tanulás vagy önismereti időszakban látják.",
+      "A 777 a hagyományos számszimbolikában a belső elmélyülés és a csendesebb iránykeresés jele lehet. Ha sokszor látod, érdemes lehet több teret adni annak, ami benned már tisztábban formálódik.",
+    pattern:
+      "A megháromszorozott 7-es a befelé figyelés, tanulás és önismereti ritmus témáit emeli ki. Nem különleges spirituális állapotot jelez, inkább azt, hogy a csend most tisztább figyelmet adhat.",
   },
   {
     szam: "888",

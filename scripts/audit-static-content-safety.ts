@@ -626,12 +626,18 @@ const checks: StaticSafetyCheck[] = [
       /\bgyors megvalósulás\b/i,
       /\bformálódik valósággá\b/i,
       /\bpontosan jó sorrendben\b/i,
+      /\bspirituális mélyülés\b/i,
+      /\bszerencsés egybeeséseket erősíti\b/i,
+      /\bkülönleges spirituális állapotot ígér\b/i,
     ],
     required: [
       "arra hívhatja fel a figyelmed",
       "nem ígéretként, inkább önismereti jelként",
       "önismereti jelként arra terelheti a figyelmed",
       "tisztábban szólhat hozzád",
+      "a belső elmélyülés és a csendesebb iránykeresés jele lehet",
+      "Nem különleges spirituális állapotot jelez",
+      "a csend most tisztább figyelmet adhat",
     ],
   },
   {
