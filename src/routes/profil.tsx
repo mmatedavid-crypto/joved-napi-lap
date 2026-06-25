@@ -819,9 +819,9 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
-      label: "Nem volt elég pontos",
+      label: "Pontosítást kérek",
       value: "missed" as const,
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem kapcsolódott eléggé a helyzetemhez?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nMelyik részt szeretném finomítani?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
@@ -862,8 +862,8 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     <div className="mt-5 rounded-md border border-gold/15 bg-gold/[0.05] p-4">
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
       <p className="mt-2 text-xs leading-relaxed text-ivory/58">
-        Ha az olvasat nem volt elég pontos, jelezd nyugodtan. Rendelés alapján visszanézzük, és
-        rövid pontosítási vázlattal segítünk megírni, mi maradt ki vagy hol csúszott félre.
+        Ha pontosítanál az olvasaton, jelezd nyugodtan. Rendelés alapján visszanézzük, és rövid
+        pontosítási vázlattal segítünk megírni, mi maradt ki vagy melyik részt finomítsuk.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => (
@@ -965,7 +965,7 @@ function profileFeedbackMailto(opts: {
     `Rendelés: ${opts.shortId}`,
     `Termék: ${opts.order.product_name}`,
     "",
-    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyik nem talált.",
+    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyet finomítanál.",
     "",
     "Röviden ezt szeretném hozzátenni:",
     note || "",

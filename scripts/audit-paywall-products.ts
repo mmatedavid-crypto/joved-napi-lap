@@ -102,11 +102,10 @@ for (const needle of [
   "belépő árú olvasatok kisebb első lépést jelentenek",
   "több szempontot adhat",
   "Pontossági visszajelzés",
-  "Ha az elkészült olvasat részben talál",
-  "fontos helyzet kimarad belőle",
-  "alapján visszanézzük",
-  "rövid pontosítási vázlatot",
-  "melyik rész nem kapcsolódott eléggé a helyzetedhez",
+  "Az elkészült olvasatnál közvetlen visszajelzési út vár",
+  "visszanézhető, melyik részt szeretnéd finomítani",
+  "melyik részt szeretnéd finomítani",
+  "pontosítási vázlat",
   "mi maradt ki",
   "Részletek: miből készül az olvasat, hogyan kapod meg",
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
@@ -440,7 +439,7 @@ for (const needle of [
   "Menthető olvasat",
   "Pontosítási út",
   "belépő árú olvasatok alacsony kockázatú első próbát",
-  "Ha valami nem kapcsolódott eléggé a helyzetedhez",
+  "Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani",
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
   "Belépő olvasat",
@@ -548,7 +547,7 @@ for (const needle of [
   "segítünk a hozzáférésben",
   "Mi van, ha az olvasat nem érződik elég pontosnak?",
   "rövid pontosítási vázlat",
-  "melyik rész nem kapcsolódott eléggé a helyzetedhez",
+  "melyik részt szeretnéd finomítani",
   "milyen irányban vársz segítséget",
   "Elállhatok a digitális olvasattól?",
   "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését",
@@ -573,7 +572,13 @@ for (const [file, source] of [
   }
 }
 
-for (const forbidden of ["melyik rész csúszott félre", "melyik rész nem talált", "mi nem talált"]) {
+for (const forbidden of [
+  "melyik rész csúszott félre",
+  "melyik rész nem talált",
+  "mi nem talált",
+  "nem volt elég pontos",
+  "nem kapcsolódott eléggé",
+]) {
   if (pricingRoute.includes(forbidden)) {
     failed.push(`Pricing copy should use situation-linked clarification wording: ${forbidden}`);
   }
@@ -761,7 +766,7 @@ if (withdrawalRoute.includes("szimbolikus, önismereti és szórakoztató tartal
 
 for (const needle of [
   "Express gyorsítás választásakor",
-  "külön gyorsított határidőt vállalunk",
+  "külön gyorsított határidőt",
   "Ha ez a határidő csúszna",
   "a gyorsítás díját külön rendezzük",
 ]) {

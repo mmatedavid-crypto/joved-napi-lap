@@ -264,8 +264,8 @@ function ReadingUseGuide() {
       text: "Írd le magadnak: „Most azt viszem tovább, hogy…”. Ez lesz a következő kérdés magja.",
     },
     {
-      label: "Ha nem pontos",
-      text: "Írd meg, melyik rész nem talált, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
+      label: "Ha pontosítanál",
+      text: "Írd meg, melyik részt szeretnéd finomítani, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
     },
   ] as const;
 
@@ -286,11 +286,11 @@ function ReadingUseGuide() {
       </div>
       <p className="mt-4 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/48">
         Nem kell mindent ma eldöntened; elég, ha egy mondatot továbbviszel. Ha az olvasat valamelyik
-        része félrement, írhatsz nekünk a{" "}
+        része pontosítást kér, írhatsz nekünk a{" "}
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
         </a>{" "}
-        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik rész nem talált.
+        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik részt szeretnéd finomítani.
       </p>
     </aside>
   );
@@ -506,7 +506,7 @@ function paidReadingSelfCheck({
   return {
     heading: selfCheckHeading(readingType),
     intro:
-      "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Ha egy fontos rész kimaradt vagy félrement, innen gyorsan meg tudod írni, mit pontosítsunk.",
+      "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Ha egy fontos rész kimaradt, innen gyorsan meg tudod írni, mit pontosítsunk.",
     checks,
     clarificationDraft,
     clarificationMailto,
@@ -527,7 +527,7 @@ function paidReadingClarificationDraft({
     "",
     "Ami talált:",
     "",
-    "Ami nem kapcsolódott eléggé a helyzetemhez:",
+    "Ezt a részt szeretném finomítani:",
     "",
     "A helyzetemből ez maradt ki:",
     "",
@@ -568,7 +568,7 @@ function paidReadingAssurance(
   if (generation.source === "local_premium_draft" || generation.fallbackUsed) {
     return {
       heading: "Rendelés alapján visszanézhető olvasat",
-      text: "Az olvasat a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Ha nem reagál elég pontosan a konkrét kérdésedre, rendelés alapján visszanézzük, melyik részt kell finomítani.",
+      text: "Az olvasat a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Ha pontosítanál a konkrét kérdésed felől, rendelés alapján visszanézzük, melyik részt érdemes finomítani.",
     };
   }
   return null;
@@ -714,7 +714,7 @@ function formatDownloadedReading(
     meta.orderReference
       ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
       : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
-    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, melyik nem kapcsolódott eléggé a helyzetedhez, és mi maradt ki.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, melyik részt finomítanád, és mi maradt ki.",
     "",
     "Pontosítási vázlat:",
     clarificationDraft,

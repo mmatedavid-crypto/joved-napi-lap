@@ -62,10 +62,10 @@ const OrderDeliveredEmail = ({
       body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
-      label: "Nem volt elég pontos",
-      feedback: "Nem volt elég pontos",
+      label: "Pontosítást kérek",
+      feedback: "Pontosítást kérek",
       feedbackValue: "missed",
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem kapcsolódott eléggé a helyzetemhez?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nMelyik részt szeretném finomítani?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ];
   return (
@@ -129,9 +129,9 @@ const OrderDeliveredEmail = ({
             <Section style={feedbackCard}>
               <Text style={feedbackTitle}>Minőségi visszajelzés</Text>
               <Text style={feedbackText}>
-                Segít, ha jelzed, mennyire talált el az olvasat. Ha nem volt elég pontos, rendelés
-                alapján visszanézzük, és rövid pontosítási vázlattal segítünk megírni, mi maradt ki
-                vagy hol csúszott félre.
+                Segít, ha jelzed, mennyire talált el az olvasat. Ha pontosítanál rajta, rendelés
+                alapján visszanézzük, és rövid pontosítási vázlattal segítünk megírni, melyik részt
+                finomítsuk.
               </Text>
               <Section>
                 {feedbackOptions.map((option) => (
@@ -151,7 +151,7 @@ const OrderDeliveredEmail = ({
                     productName,
                     shortOrderId,
                     feedback: "Pontosítást kérek",
-                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi talált:\n\nAmi nem kapcsolódott eléggé a helyzetemhez:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
+                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi talált:\n\nEzt a részt szeretném finomítani:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
                   })}
                   style={link}
                 >
@@ -243,7 +243,7 @@ function feedbackMailto(opts: {
     `Rendelés: ${orderRef}`,
     `Termék: ${opts.productName}`,
     "",
-    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyik nem talált.",
+    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyet finomítanál.",
     "",
     "Röviden ezt szeretném hozzátenni:",
   ].join("\n");

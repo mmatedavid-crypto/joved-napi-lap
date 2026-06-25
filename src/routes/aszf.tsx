@@ -55,19 +55,19 @@ export const Route = createFileRoute("/aszf")({
 
       <LegalSection title="Teljesítés">
         <p>
-          A digitális olvasatok elkészítése a sikeres fizetés után indul el, és az elkészült
-          olvasat a rendelési oldalon vagy a felhasználói profilban érhető el. Egyes részletesebb
-          olvasatok elkészítése hosszabb ideig tarthat; ezeknél a terméklapon jelzett tájékoztatás
-          irányadó.
+          A digitális olvasatok elkészítése a sikeres fizetés után indul el, és az elkészült olvasat
+          a rendelési oldalon vagy a felhasználói profilban érhető el. Egyes részletesebb olvasatok
+          elkészítése hosszabb ideig tarthat; ezeknél a terméklapon jelzett tájékoztatás irányadó.
         </p>
         <p>
           Vendégvásárlásnál a fizetés utáni rendelési linket és a vásárláshoz használt email címet
-          érdemes megőrizni. Bejelentkezett felhasználónál az elkészült olvasat a profilban is visszanézhető.
+          érdemes megőrizni. Bejelentkezett felhasználónál az elkészült olvasat a profilban is
+          visszanézhető.
         </p>
         <p>
-          Express gyorsítás választásakor a részletes olvasatnál külön gyorsított határidőt vállalunk.
-          Ha ez a határidő csúszna, a rendelés nem vész el; a vásárlási email cím és a rendelési
-          azonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.
+          Express gyorsítás választásakor a részletes olvasatnál külön gyorsított határidőt
+          vállalunk. Ha ez a határidő csúszna, a rendelés nem vész el; a vásárlási email cím és a
+          rendelési azonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.
         </p>
         <p>
           Ha hozzáférési vagy teljesítési gond miatt az olvasat nem nyílik meg, nem hozzáférhető,
@@ -81,8 +81,8 @@ export const Route = createFileRoute("/aszf")({
       <LegalSection title="Minőségi visszajelzés">
         <p>
           Az elkészült fizetős olvasatoknál rövid visszajelzést adhatsz arról, hogy az olvasat
-          mennyire talált. Ha részben talált vagy nem volt elég pontos, opcionálisan azt is
-          megírhatod, mi maradt ki a helyzetedből.
+          mennyire talált. Ha pontosítást kérsz, opcionálisan azt is megírhatod, melyik részt
+          finomítanád és mi maradt ki a helyzetedből.
         </p>
         <p>
           A visszajelzéseket a szolgáltatás javítására és ügyfélszolgálati ellenőrzésre használjuk.
@@ -124,9 +124,9 @@ export const Route = createFileRoute("/aszf")({
           .
         </p>
         <p>
-          Hozzáférési vagy rendelési kérdésnél mindig a vásárlási email címedről
-          írj, és ha látod, add meg a rövid rendelésazonosítót is. Így gyorsabban ellenőrizhető,
-          hogy a fizetés, az olvasat elkészítése vagy az emailes értesítés melyik ponton akadt el.
+          Hozzáférési vagy rendelési kérdésnél mindig a vásárlási email címedről írj, és ha látod,
+          add meg a rövid rendelésazonosítót is. Így gyorsabban ellenőrizhető, hogy a fizetés, az
+          olvasat elkészítése vagy az emailes értesítés melyik ponton akadt el.
         </p>
       </LegalSection>
 
