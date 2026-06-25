@@ -114,7 +114,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Hajlamos lehet az elvonulásra, ami idővel elszigeteltséget okozhat, gátolva az új kapcsolatok kialakítását. Zárkózottsága és titoktartása megnehezítheti a mélyebb érzelmi kapcsolódást másokkal. Néha túl sokat analizál, és gyanakvóvá válhat, ott is keresve a rejtett motívumokat, ahol nincsenek.",
     love: "Párkapcsolataiban a valódi, mély intellektuális és spirituális kapcsolódásra vágyik. Nehezen nyílik meg, de ha megtalálja azt a partnert, aki megérti és tiszteletben tartja belső világát, akkor rendkívül hűséges és elkötelezett társsá válik. Fontos számára a bizalom és a megértés.",
     career:
-      "Kiválóan teljesít olyan területeken, ahol a mély gondolkodást, kutatást és elemzést igénylő feladatok dominálnak. Tudós, kutató, filozófus, író, pszichológus vagy adatelemző munkakörben találhatja meg a hivatását. Fontos, hogy a munkája intellektuálisan kihívást jelentő és elmélyült legyen.",
+      "Nem kész pályaválasztási tanács, inkább azt jelzi, hogy a 7-es mintázatban erős lehet a kutatás, elemzés és csendes elmélyülés igénye. Jól illhet hozzá olyan közeg, ahol van idő kérdezni, rendszerezni, írni vagy összefüggéseket keresni, de ez nem igazol konkrét hivatást. A munka akkor támogató, ha nem zár el teljesen másoktól, és a tudáskeresést józan kapcsolódással egészíti ki.",
     advice:
       "Érdemes tudatosan keresnie az egyensúlyt a belső elmélyülés és a külvilággal való kapcsolódás között. Próbáljon meg nyitottabb lenni, és megosztani gondolatait másokkal, anélkül, hogy attól tartana, hogy nem értik meg. Engedje meg magának, hogy időnként csak legyen, és ne mindig a válaszokat keresse.",
   },
