@@ -45,19 +45,20 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Érdemes tudatosítani az asszertivitás jelentőségét és azt, hogy a saját szükségleteink kielégítése nem feltétlenül rombolja a harmóniát. Fontos megtanulni határokat húzni és kimondani a véleményünket, még ha az eltér is másoktól. Próbálja meg gyakorolni a döntéshozatalt kisebb dolgokban, hogy fejlessze az önbizalmát ezen a téren.",
   },
   "3": {
-    title: "Sorsszám 3 jelentése — Az életöröm és kreativitás útja",
-    lead: "A 3-as Sorsszám az önkifejezés, a kommunikáció és az optimista életszemlélet erejét hordozza. Egy örökifjú lélek, aki a kapcsolódásokon és a kreatív megnyilvánulásokon keresztül teljesedik ki.",
+    title: "Sorsszám 3 jelentése — A kreatív önkifejezés",
+    lead: "A 3-as sorsszámot a numerológiai hagyomány az önkifejezés, a kommunikáció és a kreatív mozgástér jelképeként olvassa. Nem örök derűt vagy kész személyiségcímkét ír le, inkább azt a mintát mutatja, ahol a gondolatok, érzések és kapcsolódások formát keresnek.",
     essence:
-      "Ezen sorsszám energiája fiatalos, pozitív és tele van életerővel. Az életet egy táncnak tekinti, ahol egyik élvezetes élményből a másikba lendül, miközben folyamatosan kapcsolatba lép másokkal.  Fő mozgatórugója a vidámság, a spontaneitás és a szépség megteremtése a mindennapokban. Az absztrakt gondolatok és művészeti kifejezések mestere, aki szívesen osztja meg belső világát másokkal.",
+      "A 3-as hagyományos olvasata az alkotás, beszéd, játékosság és kapcsolódás témáit emeli előtérbe. Nem állítja, hogy valaki mindig könnyed vagy vidám, inkább arra figyelmeztet, hogy a belső tartalmaknak szükségük lehet nyelvre, ritmusra és látható formára. Akkor támogató, ha a kreatív lendület mellett marad elég fókusz és érzelmi őszinteség is.",
     strengths:
-      "Kiemelkedő kommunikációs képességekkel rendelkezik, ötletei és gondolatai gazdag áramlása inspirálóan hat a környezetére.  Művészi érzéke és kreatív vénája lehetővé teszi számára, hogy mélyebb érzéseket fejezzen ki, túllépve a szavakon.  Természetes bájjal és karizmával vonzza magához az embereket, könnyedén teremt barátságokat és tartja fenn az érdeklődést, bárhová is érkezzen.",
+      "A 3-as mintázat erőssége lehet a könnyebb megszólalás, az ötletek összekapcsolása és az, hogy a nehéz érzések is kaphatnak emberi, alkotó formát. Nem kiemelkedő képességet vagy természetes karizmát ígér, inkább azt jelzi, hogy a beszélgetés, írás, humor vagy alkotás segíthet rendezni a belső anyagot.",
     shadow:
-      "Időnként naivitás jellemezheti, nehezen ismeri fel a világ árnyoldalait, ami sebezhetővé teszi. Hajlamos lehet a szétszórtságra, mivel egyszerre sok dolog iránt lelkesedik, és nehezen koncentrál egyetlen célra.  A mélyebb érzelmek és konfliktusok elől való menekülés is előfordulhat, inkább a felületes, ám kellemes interakciókat preferálja, a nehézségeket kerülve.",
-    love: "Párkapcsolataiban játékos, kifejező és spontán, örömmel tölti meg a közös pillanatokat.  Számára fontos az intellektuális és érzelmi kapcsolódás, a könnyed és vidám légkör fenntartása.  A beszélgetésekben és a közös alkotásban találja meg a harmóniát, de óvakodnia kell attól, hogy a konfliktusokat elkerülje, ahelyett, hogy szembenézne velük.",
+      "A 3-as árnyéka lehet a szétszóródás, a túl gyors témaváltás vagy az, amikor a könnyed hang elfedi a nehezebb érzéseket. Nem felszínességet ír elő, hanem arra hívja fel a figyelmet, hogy az önkifejezés akkor marad hiteles, ha a vidámabb forma mögött a valós tartalom is helyet kap.",
+    love:
+      "Párkapcsolatban a 3-as mintázat a beszélgetés, játékosság és közös alkotás témáit hozhatja elő. Nem könnyed vagy konfliktusmentes kapcsolatot ígér, inkább azt mutatja, hogy a kapcsolódás akkor mélyülhet, ha a humor és spontaneitás mellett a nehezebb mondatoknak is van tere.",
     career:
       "Nem kész szakmai útmutató, inkább azt jelzi, hogy a 3-as mintázatban fontos lehet az önkifejezés, a kommunikáció és a kreatív mozgástér. Jól illhet hozzá olyan közeg, ahol ötleteket lehet formába rendezni, beszélgetni, alkotni vagy kapcsolatokat építeni. A munka akkor támogató, ha a változatosság mellett marad elég fókusz és józan ritmus is.",
     advice:
-      "Törekedjen arra, hogy a felszínesség helyett merjen mélyebbre tekinteni önmagában és a kapcsolataiban.  Fogadja el, hogy a kihívások is részei az életnek, és érdemes időt szánni a fókusz megtartására a célok eléréséhez.  A kibontakozó képességei és örök optimizmusa igazi ajándék, melyekkel gazdagíthatja saját életét és másokét is, ha tudatosan használja őket.",
+      "A 3-as tanulsága a hagyomány szerint az, hogy a kifejezés nem csak könnyedség, hanem felelősség is. Érdemes egyszerre teret adni az ötleteknek és a fókusznak: kimondani, ami formát keres, majd kiválasztani azt a néhány irányt, amelyet valóban végig tudsz vinni.",
   },
   "4": {
     title: "Sorsszám 4 jelentése —  Az építő alapokon",
