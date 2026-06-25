@@ -67,7 +67,7 @@ function ChineseHubPage() {
       <PageHeader
         eyebrow="Kínai zodiákus"
         title="Kínai horoszkóp — 12 állatöv magyarul"
-        lead="A kínai állatöv minden jegye egy energiát képvisel. Az alábbi listából megnyithatod a saját jegyedet, és elolvashatod a jellemzőit, szerelmi mintáit, karrieres alkatát és a kompatibilis jegyeket."
+        lead="A kínai állatöv jegyei régi jelképi mintákat őriznek. Az alábbi listából megnyithatod a saját jegyedet, és józan önismereti nézőpontként olvashatsz kapcsolati, munkabeli és kompatibilitási témákról."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
         <section className="surface p-5 md:p-7">

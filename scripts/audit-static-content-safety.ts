@@ -188,6 +188,20 @@ const checks: StaticSafetyCheck[] = [
     ],
   },
   {
+    file: "src/routes/kinai-horoszkop.index.tsx",
+    forbidden: [
+      /\bminden jegye egy energiát képvisel\b/i,
+      /\bjellemzőit\b/i,
+      /\bkarrieres alkatát\b/i,
+      /\bkompatibilis jegyeket\b/i,
+    ],
+    required: [
+      "régi jelképi mintákat őriznek",
+      "józan önismereti nézőpontként",
+      "kapcsolati, munkabeli és kompatibilitási témákról",
+    ],
+  },
+  {
     file: "src/data/numerologyTypes.hu.ts",
     forbidden: [
       /\bgyógyít/i,
