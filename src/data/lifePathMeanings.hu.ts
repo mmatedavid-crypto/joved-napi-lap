@@ -138,19 +138,20 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Törekedj a belső és külső gazdagság kiegyenlítésére, és ne kizárólag az anyagi sikerekre fókuszálj. Ügyelj arra, hogy a vezetői ambícióid ne váljanak uralkodóvá, és adj teret mások véleményének. Tanuld meg, hogy a valódi hatalom nem az ellenőrzésben, hanem a bölcs együttműködésben és a megosztott sikerekben rejlik.",
   },
   "9": {
-    title: "Sorsszám 9 jelentése — Az Önzetlen Segítő",
-    lead: "A 9-es sorsszám a személyes fejlődés és a spirituális út egy fontos állomását jelöli. Az életed során szerzett tapasztalatokból merítve bölcsességedet mások megsegítésére fordíthatod.",
+    title: "Sorsszám 9 jelentése — A tágabb rálátás",
+    lead: "A 9-es sorsszámot a numerológiai hagyomány a lezárás, elengedés és tágabb emberi rálátás jelképeként olvassa. Nem spirituális állomást vagy segítő szerepet ír elő, inkább azt a mintát mutatja, ahol a tapasztalatból együttérzőbb, józanabb jelenlét formálódhat.",
     essence:
       "Ez a sorsszám az emberségesség, a bölcsesség és az együttérzés jelképe a numerológiai hagyományban. Nem kész spirituális válaszokat ad, inkább a lezárás, elengedés és tágabb rálátás témáit hozza előtérbe. A 9-es mintázat akkor támogató, ha a jó szándék nem önfeladásba fordul, hanem józan figyelemmel és egészséges határokkal párosul.",
     strengths:
       "A 9-es mintázat erőssége lehet a tapasztalatokból érkező együttérzés, a tágabb nézőpont és az, hogy könnyebben észreveszed mások emberi oldalát. Nem felsőbb tudást vagy megmentő szerepet jelent, inkább azt, hogy a nehézségekből tanulságot, mértéket és tiszteletteljes jelenlétet lehet formálni. Akkor működik jól, ha a segítő szándék mellett a saját határaidat is komolyan veszed.",
     shadow:
-      "A múltbéli nehéz tapasztalatok mély nyomot hagyhattak benned, és ha nem adsz teret a feldolgozásnak, a régi sérelmek árnyékot vethetnek kapcsolataidra. Hajlamos lehetsz túlzásba vinni az önfeláldozást, mások igényeinek előtérbe helyezésével elhanyagolhatod saját szükségleteidet. A sok megtapasztalt nehézség miatt néha többet tulajdoníthatsz a küzdelmes időszakoknak, mint a könnyedebb pillanatoknak.",
-    love: "Párkapcsolataidban együttérző, odaadó és érzelmileg gazdag tudsz lenni. Fontos számodra a mély, értelmes kapcsolat, ahol mindketten fejlődhettek, de vigyázz, nehogy túlságosan feloldódj a másikban.",
+      "A 9-es árnyéka lehet, amikor a régi sérelmek túl nagy teret kapnak, vagy a segítő szándék csendes önfeladásba fordul. Nem személyes kötelességet ír elő mások nehézségeivel kapcsolatban, inkább arra figyelmeztet, hogy az együttérzés csak világos határokkal marad tartós és tiszta.",
+    love:
+      "Párkapcsolatban a 9-es mintázat az együttérzés, a lezáratlan történetek és a közös fejlődés témáit hozhatja elő. Nem mély elköteleződést vagy spirituális összeillést ígér, inkább azt mutatja, hogy a kapcsolódás akkor marad egészséges, ha a figyelem mellett az önazonosság és a határtartás is jelen van.",
     career:
       "A 9-es sorsszám olyan munkákban találhat több értelmet, ahol emberi figyelem, tanítás, támogatás, közösségi szemlélet vagy kreatív önkifejezés kap helyet. Nem pusztán a cím vagy fizetés érdekli, hanem az, hogy amit csinál, hordoz-e tágabb emberi értelmet.",
     advice:
-      "Próbáld meg egyensúlyba hozni mások segítését a saját szükségleteid kielégítésével. Engedd meg magadnak a pihenést és a feltöltődést, hogy hosszú távon is hatékonyan tudj támogatást nyújtani. Fontos, hogy feldolgozd a múltbéli sérelmeket, hogy azok ne akadályozzák meg jelenlegi kapcsolataidat és a belső békédet.",
+      "A 9-es tanulsága a hagyomány szerint az, hogy az együttérzés nem önfeladás. Érdemes a lezáratlan történetekre józan figyelemmel ránézni, közben pedig megtartani a saját szükségleteidet, pihenésedet és döntési teredet is.",
   },
   "11": {
     title: "A Sorsszám 11 jelentése — A Mester-Intuitív",
