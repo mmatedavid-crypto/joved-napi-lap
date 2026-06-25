@@ -114,7 +114,9 @@ for (const needle of [
   'trackEvent("checkout_confirmed"',
   "checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn)",
   "checkoutSteps(product.category, deliveryLabel, isLoggedIn)",
-  "Fizetés után azonnal elkészítjük az olvasatot.",
+  "Fizetés után elindítjuk az olvasat elkészítését; az azonnali termékek általában pár percen belül megjelennek.",
+  "A köszönőoldalon megjelenik, és a profilodban is visszanézhető.",
+  "A köszönőoldalon megjelenik; vendégként a biztonságos linket és az emailt érdemes megtartanod.",
   "ezen az oldalon, emailben és a profilodban",
   "ezen az oldalon és emailben",
   "vendégként a biztonságos linket és az emailt érdemes megtartanod",
@@ -126,6 +128,7 @@ for (const needle of [
   "isLoggedIn,",
   "href={supportMailto}",
   "function paywallSupportMailto(",
+  "Az azonnali olvasat általában pár percen belül megjelenik a köszönőoldalon",
   "Fizetési próbálkozás:",
   "bejelentkezve",
   "vendégként",
@@ -233,6 +236,14 @@ for (const needle of [
   'add("Lap", payload.cardName',
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
+}
+
+for (const forbidden of [
+  "Fizetés után azonnal elkészítjük az olvasatot.",
+  "A köszönőoldalon rögtön megnyílik",
+  "Az olvasat a köszönőoldalon azonnal megnyílik",
+]) {
+  if (paywall.includes(forbidden)) failed.push(`PaywallDialog overpromises instant delivery: ${forbidden}`);
 }
 
 for (const utility of ["btn-gold", "btn-ghost-gold"]) {

@@ -555,10 +555,10 @@ function checkoutSteps(
 ): string[] {
   if (category === "instant") {
     return [
-      "Fizetés után azonnal elkészítjük az olvasatot.",
+      "Fizetés után elindítjuk az olvasat elkészítését; az azonnali termékek általában pár percen belül megjelennek.",
       isLoggedIn
-        ? "A köszönőoldalon rögtön megnyílik, és a profilodban is visszanézhető."
-        : "A köszönőoldalon rögtön megnyílik; vendégként a biztonságos linket és az emailt érdemes megtartanod.",
+        ? "A köszönőoldalon megjelenik, és a profilodban is visszanézhető."
+        : "A köszönőoldalon megjelenik; vendégként a biztonságos linket és az emailt érdemes megtartanod.",
       "Emailben is jelzünk, ezért fontos a pontos email cím.",
     ];
   }
@@ -576,7 +576,7 @@ function checkoutSteps(
 
 function deliveryAccessText(isLoggedIn: boolean): string {
   if (isLoggedIn) {
-    return "Az olvasat a köszönőoldalon azonnal megnyílik, a profilodban később is visszanézhető, kimásolható és letölthető, emailben pedig értesítést küldünk.";
+    return "Az azonnali olvasat általában pár percen belül megjelenik a köszönőoldalon, a profilodban később is visszanézhető, kimásolható és letölthető, emailben pedig értesítést küldünk.";
   }
   return "Vendégként az olvasatot a köszönőoldali biztonságos linken és emailben éred el. A rendelési linket érdemes megtartanod; az elkészült olvasat kimásolható és letölthető.";
 }
