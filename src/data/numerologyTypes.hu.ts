@@ -59,7 +59,7 @@ export const SZEMELYISEG_SZAM: NumerologyType = {
     { n: 5, title: "5-ös személyiség", body: "Szabadnak, vonzónak, kalandvágyónak látnak. Vibrálsz — könnyen kerülsz a figyelem középpontjába." },
     { n: 6, title: "6-os személyiség", body: "Melegnek, gondoskodónak, jelenlévőnek látszol. Az emberek hozzád fordulnak a gondjaikkal, mert biztonságot sugárzol." },
     { n: 7, title: "7-es személyiség", body: "Rejtélyesnek, mélynek, kicsit visszafogottnak látnak. Nem fecsegsz — ha megszólalsz, súlya van." },
-    { n: 8, title: "8-as személyiség", body: "Erősnek, tekintélyesnek, sikeresnek látszol. Az emberek üzleti vagy döntéshozói szerepben látnak téged ösztönösen." },
+    { n: 8, title: "8-as személyiség", body: "A 8-as személyiségszám erős, határozott külső benyomást jelezhet. Mások könnyebben társíthatnak hozzád szervezettséget, felelősséget és gyakorlati súlyt, de ez nem státusz- vagy sikerígéret." },
     { n: 9, title: "9-es személyiség", body: "Bölcsnek, együttérzőnek, finomnak látnak. Egyfajta nemesség lengi körül a megjelenésedet." },
     { n: 11, title: "11-es személyiség", body: "Intuitívnak, érzékenynek, ihletettnek látszol. Mások gyakran kérik a véleményedet, anélkül hogy tudnák, miért." },
     { n: 22, title: "22-es személyiség", body: "Nagyívű látomásokat sugárzol — az emberek úgy érzik, valami fontosat építesz." },
