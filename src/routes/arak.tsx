@@ -357,9 +357,9 @@ function PricingPage() {
           <div className="text-[10px] uppercase tracking-[0.3em] text-gold/75">Hogyan válassz?</div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
-              Ha csak azt szeretnéd érezni, hogy a Jövőd.hu hangja működik-e neked, próbáld ki a
-              napi lap ingyenes húzását vagy az ingyenes horoszkópot. A személyes olvasatok 590
-              Ft-tól indulnak.
+              Ha először csak tájékozódnál, kezdd a napi lap ingyenes húzásával vagy az ingyenes
+              horoszkóppal. Ha már a saját helyzetedhez kapcsolt, rövid személyes irányt kérsz, a
+              belépő árú olvasatok 590 Ft-tól indulnak.
             </p>
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
               Az asztrológiai riportok a saját születési adataidból készülnek; normál esetben 24
