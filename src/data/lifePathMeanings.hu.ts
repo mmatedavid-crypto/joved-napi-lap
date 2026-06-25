@@ -154,18 +154,19 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "11": {
     title: "A Sorsszám 11 jelentése — A Mester-Intuitív",
-    lead: "A 11-es sorsszám különleges mesterszám a numerológiában, amely mély intuíciót és spirituális érzékenységet hordoz. Ez az út a belső tudás, finom érzékelés és földelt jelenlét összehangolásáról szól.",
+    lead:
+      "A 11-es sorsszámot a numerológiai hagyomány mesterszámként, az ihlet, érzékeny figyelem és földelt jelenlét jelképeként olvassa. Nem különleges képességet vagy spirituális rangot ír le, inkább azt a mintát mutatja, ahol fontos lehet az érzékenység józan formába rendezése.",
     essence:
-      "A 11-es sorsszám a numerológiai hagyományban az intuíció, érzékenység és belső figyelem mesterszáma. Nem különleges képességet vagy gondolatolvasást jelent, hanem azt a mintát, amikor valaki erősebben reagál a finom hangulatokra, kimondatlan feszültségekre és visszatérő belső jelzésekre. A 11-es út ezért nem elszakadás a valóságtól, hanem annak tanulása, hogyan lehet az ihletet földelt, józan formába rendezni.",
+      "A 11-es sorsszám hagyományos olvasata az intuíció, érzékenység és belső figyelem témáit emeli előtérbe. Nem különleges képességet vagy gondolatolvasást jelent, hanem azt jelezheti, hogy a finom benyomásokat érdemes józan keretben vizsgálni. A 11-es út ezért nem elszakadás a valóságtól, hanem annak tanulása, hogyan lehet az ihletet földelt, józan formába rendezni.",
     strengths:
-      "Rendkívül intuitív lehetsz, gyorsan ráhangolódhatsz egy helyzet érzelmi légkörére. A 11-es erőssége, hogy a nagyobb képet is érzékeli, és finom összefüggéseket vesz észre ott, ahol mások csak részleteket látnak. Empatikus természeted mély kapcsolódást adhat, ha közben megtartod a saját határaidat is.",
+      "A 11-es mintázat erőssége lehet az érzékeny megfigyelés, az ihlet és az, hogy a finomabb hangulatokból is értelmes formát keressen. Támogató oldala akkor látszik tisztán, ha az intuíció nem bizonyosságként jelenik meg, hanem kérdésként, figyelemként és földelt megfogalmazásként. A határok itt különösen fontosak.",
     shadow:
-      "Fokozott érzékenységed, bár a legnagyobb erőd, túlterhelővé válhat. A negatív érzelmek, a kemény környezet vagy a kritika mélyebben érinthet, ami szorongáshoz, önbizalomhiányhoz vagy elzárkózáshoz vezethet. Hajlamod van az analízisre és az önmagadban való elmélyedésre, ami döntésképtelenséget okozhat. Perfekcionista hajlamod miatt irreálisan magas elvárásokat támaszthatsz magaddal és másokkal szemben, ami frusztrációhoz vezethet, ha a valóság nem felel meg az ideális vízióidnak.",
-    love: "Párkapcsolataidban a mély érzelmi és spirituális kapcsolódásra vágysz. Kulcsfontosságú számodra az őszinteség és a megértés, valamint egy olyan partner, aki képes elfogadni és támogatni egyedi érzékenységedet. Fontos, hogy megtaláld az egyensúlyt a szeretet és a függetlenség iránti igényed között.",
+      "Árnyékban a 11-es mintázat túlterheltséget, túlelemzést vagy a külső visszajelzésekre való túl erős ráhangolódást jelezhet. Ilyenkor az érzékenység nem feltétlenül tisztább látás, hanem zajosabb belső tér is lehet. A józan ritmus, pihenés és ellenőrizhető valóságkapcsolat segíthet abban, hogy az ihlet ne önbizonytalanságba forduljon.",
+    love: "Párkapcsolatban a 11-es mintázat az őszinteség, finom figyelem és érzelmi biztonság kérdéseit hozhatja elő. Nem spirituális kapcsolódást vagy különleges összeillést ígér, inkább arra figyelmeztet, hogy a közelség akkor marad megtartó, ha az érzékenység mellett világos kommunikáció és határtartás is jelen van.",
     career:
       "Nem spirituális hivatást vagy különleges rangot jelöl, inkább azt mutatja, hogy a 11-es mintázatban fontos lehet az értelmes, figyelmes és emberi léptékű munka. Jól illhet hozzá olyan közeg, ahol az intuíció, kreativitás, írás, tanítás vagy támogatás józan keretek között kap helyet. A munka akkor marad megtartó, ha az ihlet nem önfeladásba fordul, hanem világos határokkal és földelt felelősséggel társul.",
     advice:
-      "Tanulj meg bízni a belső hangodban és az intuíciódban, ez a legfőbb iránytűd. Engedd meg magadnak, hogy megéld érzékenységedet, de találd meg a módját, hogy megvédd energiáidat a külső hatásoktól. Ne kritizáld magad, ha nem felelsz meg irreális elvárásaidnak; a tökéletesség helyett az önelfogadásra törekedj.",
+      "Érdemes az érzékeny benyomásokat nem azonnali igazságként, hanem finom jelzésként kezelni. Segíthet, ha az ihletet leírod, összeveted a helyzet tényeivel, és hagysz időt a döntéseknek. A 11-es mintázat akkor válhat megtartóvá, ha a belső figyelemhez földelt ritmus és emberi léptékű elvárás társul.",
   },
   "22": {
     title: "Sorsszám 22 jelentése — Az Építőmester útja",
