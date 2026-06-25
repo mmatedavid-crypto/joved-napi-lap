@@ -909,7 +909,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
             onChange={(event) => setFeedbackNote(event.target.value)}
             maxLength={600}
             rows={3}
-            placeholder="Pl. nem kötődött eléggé a helyzetemhez, vagy nem vette figyelembe a kérdésem egyik részét..."
+            placeholder="Pl. ezt a részt szeretném finomítani, vagy a kérdésem egyik fontos oldala kimaradt..."
             className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-transparent px-3 py-2 text-xs text-ivory outline-none placeholder:text-ivory/35 focus:border-gold/65"
           />
           <div className="mt-2 flex flex-wrap items-center gap-3">
