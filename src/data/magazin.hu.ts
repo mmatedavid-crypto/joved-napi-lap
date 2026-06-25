@@ -38,7 +38,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
     publishedAt: "2026-01-22",
     readMinutes: 5,
     keywords: ["sorsszám", "numerológia", "mesterszám", "életút szám"],
-    body: `A sorsszám a numerológia központi száma: a születési dátumod összes számjegyét adod össze, amíg egyetlen számjegyű eredményt nem kapsz (1–9), kivéve a mesterszámokat (11, 22, 33).\n\nPélda: 1989.07.14 → 1+9+8+9+0+7+1+4 = 39 → 3+9 = 12 → 1+2 = 3. Sorsszám: 3.\n\nA mesterszámokat (11, 22, 33) nem bontjuk tovább, mert önálló rezgést hordoznak. Ha az összegzés közben mesterszámra futsz, megállhatsz ott — de a "végeredmény" mesterszámként is és tovább bontva is értelmezhető.\n\nA sorsszám az életutadat írja le: milyen tanulási pályára érkeztél. Nem személyiségteszt, hanem irány.`,
+    body: `A sorsszám a numerológia központi száma: a születési dátumod összes számjegyét adod össze, amíg egyetlen számjegyű eredményt nem kapsz (1–9), kivéve a mesterszámokat (11, 22, 33).\n\nPélda: 1989.07.14 → 1+9+8+9+0+7+1+4 = 39 → 3+9 = 12 → 1+2 = 3. Sorsszám: 3.\n\nA mesterszámokat (11, 22, 33) a numerológiai hagyomány külön jelképi minőségként kezeli. Ha az összegzés közben mesterszámra futsz, megállhatsz ott — de a "végeredmény" mesterszámként is és tovább bontva is értelmezhető.\n\nA sorsszám nem kész életleírás. Inkább azt mutatja meg, milyen visszatérő témákra és tanulási irányokra érdemes figyelned önismereti nézőpontként.`,
   },
   {
     slug: "holdnaptar-rituale",
@@ -153,7 +153,7 @@ export const MAGAZIN_POSTS: MagazinPost[] = [
     publishedAt: "2026-06-22",
     readMinutes: 6,
     keywords: ["személyes év", "számmisztika", "éves szám", "kilencéves ciklus"],
-    body: `A személyes év azt jelzi, hol jársz egy kilencéves számmisztikai ciklusban. Nem jósol konkrét eseményeket, inkább azt mutatja meg, milyen témák kerülhetnek könnyebben előtérbe az adott évben.\n\nA számításhoz add össze a születési hónapod és napod számjegyeit az aktuális év számjegyeivel. Például július 14. és 2026 esetén: 0+7+1+4+2+0+2+6 = 22. A 22 mesterszámként is értelmezhető, vagy tovább bontható 4-re.\n\nAz 1-es év a kezdeményezés, a 2-es a türelem és együttműködés, a 3-as a kifejezés, a 4-es az alapozás, az 5-ös a változás, a 6-os a felelősség és kapcsolatok, a 7-es a befelé figyelés, a 8-as az eredmény és anyagi rend, a 9-es pedig a lezárás időszaka.\n\nA személyes év akkor hasznos, ha nem utasításként olvasod. Inkább olyan, mint egy évszak: megmutatja az időjárást, de azt továbbra is te döntöd el, hogyan öltözöl fel hozzá.`,
+    body: `A személyes év azt jelzi, hol jársz egy kilencéves számmisztikai ciklusban. Nem jósol konkrét eseményeket, inkább azt mutatja meg, milyen témák kerülhetnek könnyebben előtérbe az adott évben.\n\nA számításhoz add össze a születési hónapod és napod számjegyeit az aktuális év számjegyeivel. Például július 14. és 2026 esetén: 0+7+1+4+2+0+2+6 = 22. A 22 mesterszámként is értelmezhető, vagy tovább bontható 4-re.\n\nAz 1-es év a kezdeményezés, a 2-es a türelem és együttműködés, a 3-as a kifejezés, a 4-es az alapozás, az 5-ös a változás, a 6-os a felelősség és kapcsolatok, a 7-es a befelé figyelés, a 8-as az eredmény és felelős rendezés, a 9-es pedig a lezárás időszaka.\n\nA személyes év akkor hasznos, ha nem utasításként olvasod. Inkább olyan, mint egy évszak: jelzi a jellemzőbb témákat, de azt továbbra is te döntöd el, hogyan öltözöl fel hozzá.`,
   },
   {
     slug: "asztrologiai-tranzitok-alapjai",
