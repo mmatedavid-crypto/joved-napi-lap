@@ -816,7 +816,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     {
       label: "Részben volt hasznos",
       value: "partial" as const,
-      body: "Az olvasat részben volt hasznos, de van benne olyan rész, amit pontosítanék.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmi nem volt elég pontos:\n\nA helyzetemből ez maradt ki:",
+      body: "Az olvasat részben volt hasznos, és szeretnék egy részt pontosabban a saját helyzetemhez igazítani.\n\nAmi kapcsolódott a helyzetemhez:\n\nEzt a részt szeretném finomítani:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Pontosítást kérek",
@@ -902,7 +902,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       {selectedOption && selectedOption.value !== "accurate" && (
         <div className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-3">
           <label className="block text-[11px] uppercase tracking-[0.16em] text-gold/70">
-            Mi maradt ki?
+            Mit finomítsunk?
           </label>
           <textarea
             value={feedbackNote}
