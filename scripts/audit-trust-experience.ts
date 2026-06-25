@@ -149,7 +149,8 @@ const checks: Check[] = [
       "A fizetést Stripe dolgozza fel",
       "bankkártyaadatot nem tárolunk",
       "biztonságos rendelési linken és emailben",
-      "szimbólumaiból indulnak",
+      "hagyományos szimbólumaiból",
+      "indulnak, majd a te kérdésedhez",
       "adataidhoz és helyzetedhez kapcsolódnak",
       'to="/arak"',
       "SITE_LEGAL.operator.name",
@@ -158,6 +159,8 @@ const checks: Check[] = [
       "SITE_LEGAL.operator.taxNumber",
       "mailto:${SITE_LEGAL.supportEmail}",
       "nem szakmai döntéshelyettesítő",
+      "SYMBOLIC_TRADITION_DISCLAIMER",
+      "{SYMBOLIC_TRADITION_DISCLAIMER}",
     ],
     excludes: [
       "garantáltan",

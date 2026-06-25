@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
-import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL } from "@/lib/legal";
+import { ENTERTAINMENT_DISCLAIMER, SITE_LEGAL, SYMBOLIC_TRADITION_DISCLAIMER } from "@/lib/legal";
 
 export const Route = createFileRoute("/rolunk")({
   head: () => ({
@@ -25,10 +25,9 @@ export const Route = createFileRoute("/rolunk")({
       <div className="mx-auto max-w-2xl px-4 md:px-6 pb-20 space-y-4">
         <Section eyebrow="Mi ez az oldal?">
           <p>
-            A Jövőd.hu magyar nyelvű, hagyományalapú önismereti olvasatokat ad. Tarot,
-            számmisztika, párkapcsolati összeillés, álomfejtés, horoszkóp és más szimbolikus
-            olvasatok segítenek abban, hogy egy kérdésre ne csak gyors választ, hanem nyugodtabb
-            nézőpontot kapj.
+            A Jövőd.hu magyar nyelvű, hagyományalapú önismereti olvasatokat ad. Tarot, számmisztika,
+            párkapcsolati összeillés, álomfejtés, horoszkóp és más szimbolikus olvasatok segítenek
+            abban, hogy egy kérdésre ne csak gyors választ, hanem nyugodtabb nézőpontot kapj.
           </p>
           <p>
             Az oldal hangja szándékosan visszafogott: nem ijesztget, nem ígér biztos jövőt, és nem
@@ -69,9 +68,9 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Mit adunk?">
           <p>
-            Fizetős olvasataink a tarot, az asztrológia és a számmisztika hagyományos
-            szimbólumaiból indulnak, majd a te kérdésedhez, adataidhoz és helyzetedhez kapcsolódnak.
-            Az eredmény nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
+            Fizetős olvasataink a tarot, az asztrológia és a számmisztika hagyományos szimbólumaiból
+            indulnak, majd a te kérdésedhez, adataidhoz és helyzetedhez kapcsolódnak. Az eredmény
+            nem ígér biztos jövőt — inkább nyugodtabb belső tájékozódást ad.
           </p>
           <p>
             Nem vállalunk orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadást. A Jövőd.hu-n
@@ -95,6 +94,7 @@ export const Route = createFileRoute("/rolunk")({
 
         <Section eyebrow="Jogi tudnivaló">
           <p>{ENTERTAINMENT_DISCLAIMER}</p>
+          <p>{SYMBOLIC_TRADITION_DISCLAIMER}</p>
         </Section>
       </div>
     </Layout>
