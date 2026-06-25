@@ -463,6 +463,7 @@ for (const needle of [
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
   "Belépő olvasat",
+  "tarot-lap, számminta, kristályszimbólum vagy álomkép helyzethez kötött olvasatához",
   "Részletesebb azonnali elemzés",
   "Asztrológiai riport",
   "function BudgetFitCard",

@@ -224,7 +224,7 @@ function PricingPage() {
             <BudgetFitCard
               title="Belépő olvasat"
               price={entryPriceRange}
-              text="Egy napi lap, angyalszám, kristály vagy álomszimbólum személyesebb értelmezéséhez."
+              text="Egy tarot-lap, számminta, kristályszimbólum vagy álomkép helyzethez kötött olvasatához."
               cta="Belépő olvasat indítása"
               href="/mai-lap"
             />
