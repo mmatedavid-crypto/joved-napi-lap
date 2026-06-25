@@ -280,6 +280,8 @@ const checks: StaticSafetyCheck[] = [
       /\bA 4-es sorsszámúak kiválóak azokban a szakmákban\b/i,
       /\bJól érzik magukat mérnökként\b/i,
       /\bkiemelkedővé teszi őket\b/i,
+      /\bKiváló spirituális vezető\b/i,
+      /\ba lélek mélységeit szólítja meg\b/i,
     ],
     required: [
       "Nem kész személyiségcímke",
@@ -297,6 +299,9 @@ const checks: StaticSafetyCheck[] = [
       "Nem sikert vagy rangot ígér",
       "céltudatos építkezés, a stratégiai gondolkodás és a felelősségvállalás",
       "nem garantált jólétet jelent",
+      "Nem spirituális rangot vagy hivatást igazol",
+      "gondoskodó jelenlét és az értelmes forma",
+      "egészséges határokkal és józan felelősséggel",
       "tartós rend és felelősség eszközeként",
       "Nem felsőbbrendűség",
     ],

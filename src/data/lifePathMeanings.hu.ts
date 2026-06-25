@@ -189,7 +189,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Időnként túlzottan magas elvárásokat támaszthat önmagával és másokkal szemben, ami csalódottsághoz és kiégéshez vezethet. Mély érzelmi tudatossága sebezhetővé teszi a kritikával és negativitással szemben, határok kijelölésére lehet szüksége.  Az önfeláldozás tendenciája miatt hajlamos lehet elhanyagolni saját igényeit, ami kimerülést okozhat.",
     love: "Párkapcsolataiban mélyen elkötelezett, gondoskodó és spirituálisan érzékeny. Olyan társat keres, aki osztja szenvedélyét a fejlődés és a szolgálat iránt, és képes megérteni belső világának mélységeit.",
     career:
-      "A tanítás, támogatás és közösségi emelés iránti elhivatottság jellemzi. Kiváló spirituális vezető, oktató, mentor vagy kreatív közvetítő lehet, akinek munkája a lélek mélységeit szólítja meg. Műtárgyakkal, zenével vagy írásokkal is átadhatja üzenetét, ha azok egy magasabb célt szolgálnak.",
+      "A 33-as mintázathoz jól illhetnek azok a helyzetek, ahol tanítás, támogatás, közösségi figyelem vagy kreatív közvetítés kap szerepet. Nem spirituális rangot vagy hivatást igazol, inkább azt jelzi, hogy a gondoskodó jelenlét és az értelmes forma erősebb témává válhat. Művészi, írásos vagy segítő jellegű közegben akkor hasznos, ha egészséges határokkal és józan felelősséggel társul.",
     advice:
       "Mély empátiája erőt ad, de fontos, hogy megtanulja az egészséges érzelmi határokat felállítani. Fordítson figyelmet saját feltöltődésére és szükségleteire, hogy hosszú távon tudja adni a legjobbját. Engedje meg magának, hogy elfogadja a tökéletlenséget, és emlékezzen, hogy a legnagyobb tanítás a szeretetteljes jelenlét.",
   },
