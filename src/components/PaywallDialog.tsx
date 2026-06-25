@@ -190,9 +190,9 @@ export function PaywallDialog({
                 Minőségi visszajelzés
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ivory/66">
-                Az elkészült olvasatnál közvetlen visszajelzési út vár. Rendelés alapján
-                visszanézhető, melyik részt szeretnéd finomítani, a pontosítási vázlat pedig segít
-                röviden megírni, mi maradt ki a helyzetedből.
+                Az elkészült olvasatnál jelezheted, mennyire volt hasznos és kapcsolódott-e a
+                helyzetedhez. Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani, a
+                pontosítási vázlat pedig segít röviden megírni, mi maradt ki a helyzetedből.
               </p>
             </div>
 
