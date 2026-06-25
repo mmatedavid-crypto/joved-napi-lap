@@ -35,6 +35,9 @@ for (const product of PRODUCTS) {
   if (/\b(biztosan|garantáltan|mindenképpen|ez fog történni)\b/i.test(visibleCopy)) {
     failed.push(`${product.slug}: deterministic wording in paywall copy`);
   }
+  if (/\b(napi limit|limit feloldása)\b/i.test(visibleCopy)) {
+    failed.push(`${product.slug}: paywall copy must frame extra readings as a separate perspective, not a quota unlock`);
+  }
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");

@@ -142,7 +142,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "extra_huzas",
     priceId: "extra_huzas_price",
     name: "Extra napi húzás",
-    short: "Még egy húzás ma — a napi limit feloldása.",
+    short: "Még egy külön olvasat ma, ha új nézőpontot kérsz.",
     includes: [
       "egy új személyes lapolvasat",
       "rövid helyzethez kötött értelmezés",
