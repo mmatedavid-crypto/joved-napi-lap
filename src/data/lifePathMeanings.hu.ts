@@ -91,16 +91,17 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "6": {
     title: "Sorsszám 6 jelentése — A gondoskodó szív",
-    lead: "A 6-os sorsszám a gondoskodás, a felelősség és a szeretet energiáját hordozza. Szívközpontú lényként fontos dolgod van a világban.",
+    lead:
+      "A 6-os sorsszámot a numerológiai hagyomány a gondoskodás, felelősség és kapcsolati harmónia jelképeként olvassa. Nem kész szerepet ír elő, inkább azt a mintát mutatja, ahol fontos lehet a figyelmes jelenlét és az egészséges határtartás egyensúlya.",
     essence:
-      "A 6-os szám mélyen gyökerező szeretetről, harmóniáról és együttérzésről tanúskodik. Képessé tesz mások támogatására, megnyugtatására és megtartására. Feladatod, hogy szívvel, de egészséges határokkal legyél jelen a környezetedben.",
+      "A 6-os szám hagyományos olvasata a szeretet, a harmónia és a felelősség témáit emeli előtérbe. Nem azt állítja, hogy mindig neked kell megtartanod másokat, inkább arra emlékeztethet, hogy a gondoskodás akkor marad tiszta, ha önmagad felé is működik.",
     strengths:
-      "Rendkívül támogató vagy, képes vagy figyelmesen meghallgatni másokat és valódi empátiával fordulni feléjük. Védelmező természettel bírsz, különösen a családod és a szeretteid iránt, és kiállsz azokért, akiknek nincs hangjuk. Romantikus lelkületű vagy, aki keményen dolgozik a békés, kölcsönös kapcsolatokért.",
+      "A 6-os mintázat erőssége a figyelmes kapcsolódás, a felelősségvállalás és a békésebb légkör keresése lehet. Támogató oldala akkor látszik tisztán, amikor a gondoskodás nem önfeladás, hanem kölcsönös, emberi léptékű jelenlét. A hagyomány szerint ez a szám a szépség, rend és kapcsolati figyelem iránti érzékenységet is jelezheti.",
     shadow:
       "Hajlamos lehetsz túlzottan passzív lenni, és mások kedvéért háttérbe szorítani a saját igényeidet. Az önfeláldozásod néha odáig vezethet, hogy elhanyagolod önmagad. Idealista látásmódod miatt csalódhatsz, amikor a valóság nem felel meg az elképzeléseidnek.",
-    love: "Partnereid iránt hűséges, gondoskodó és rendkívül romantikus vagy, meleg és szeretetteljes otthont teremtve. Szeretetedet a gondoskodás, védelem és rendíthetetlen hűség által fejezed ki. Fontos, hogy megtaláld az egyensúlyt a szeretet és az esetleges túlzott ragaszkodás között.",
+    love: "Párkapcsolatban a 6-os mintázat a gondoskodás, otthonosság és kölcsönös figyelem témáit erősítheti. Nem hűséget vagy romantikát ígér, inkább arra figyelmeztet, hogy a szeretet akkor marad megtartó, ha nem válik túlzott alkalmazkodássá vagy csendes önfeladássá.",
     career:
-      "Kiválóan teljesíthetsz olyan területeken, ahol a szolgálat, a gondoskodás és a harmónia megteremtése a cél. Vonzódhatsz a tanácsadói, segítői, oktatói vagy közösségi szerepekhez. Értékeled a szépséget és az egyensúlyt, ami kreatív, otthonteremtő vagy kapcsolódást építő utak felé is vihet.",
+      "Nem kész pályaképet ad, inkább azt jelzi, hogy a 6-os mintázathoz jól illhetnek azok a közegek, ahol a felelősség, a rendezettség, a szépség vagy a kapcsolati figyelem kap szerepet. Támogató lehet minden olyan munka, ahol a gondoskodás nem önfeladás, hanem átlátható keretekkel és kölcsönösséggel társul.",
     advice:
       "Próbáld meg tudatosabban figyelni a saját igényeidre, és ne hagyd, hogy az önfeláldozás kimerítsen. Fontos, hogy megtaláld az egyensúlyt a mások támogatása és az önmagad gondozása között. Emellett érdemes elfogadni, hogy nem mindenki osztozik az idealista elképzeléseidben, és ez nem von le az emberi kapcsolatok értékéből.",
   },
