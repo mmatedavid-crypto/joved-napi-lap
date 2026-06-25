@@ -76,18 +76,19 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "5": {
     title: "Sorsszám 5 jelentése — A Szabadság keresője",
-    lead: "Az 5-ös sorsszám a változékonyság, a szabadság és az élmények iránti vágy megtestesítője. Életében a felfedezés és az új tapasztalatok gyűjtése áll a középpontban.",
+    lead:
+      "Az 5-ös sorsszámot a numerológiai hagyomány a változás, szabadság és tapasztalati tanulás jelképeként olvassa. Nem kész életstílust ír elő, inkább azt mutatja, hol lehet fontos a mozgástér, kíváncsiság és józan belső irány egyensúlya.",
     essence:
-      "A sorsszám középpontjában a kíváncsiság és a változatosság iránti igény áll. A beteljesedést az izgalmas élmények sokaságában találja meg, és bátran hagyja, hogy a 'szél sodorja'. Ez a szám nem a merev tervek vagy célkitűzések embere; sokkal inkább a kísérletezésről és a tapasztalásról szól az élete.",
+      "A sorsszám középpontjában a kíváncsiság és a változatosság iránti igény állhat. A hagyomány szerint ez a minta akkor támogató, ha az új tapasztalatok nem szétszórnak, hanem tágítják a látókört. A kísérletezés itt nem céltalanság, hanem annak keresése, hogyan lehet szabadságban is felelősen jelen lenni.",
     strengths:
       "Az 5-ös sorsszám erőssége a kíváncsiságban, mozgékonyságban és tapasztalati tanulásban jelenhet meg. Ez a minta könnyebben kapcsolódik új helyzetekhez, emberekhez és nézőpontokhoz, ha közben marad elég belső irány is. Támogató oldala a rugalmasság: az a képesség, hogy a változás ne szétszórjon, hanem tágítsa a látókört.",
     shadow:
-      "Az elköteleződés nehézsége jellemző lehet, mivel a szabadság iránti olthatatlan vágy miatt a kötöttségeket gyakran fojtogatóként élheti meg. Emiatt nehezebben mélyedhet el kapcsolatokban vagy szakmai feladatokban. A fegyelem hiánya és a könnyű elvonhatóság megbízhatatlanná teheti, ami kihívást jelenthet a projektek befejezésében és az ígéretek betartásában. Időnként céltalannak érezheti magát, ha nem talál olyan irányt, amely valós célokat szolgálna, és ezáltal értékes időt pazarolhat el.",
-    love: "Ez a sorsszám nehezen köteleződik el, mivel a szabadságát félti, de ha megtalálja azt a partnert, aki értékeli a függetlenségét és együtt él át vele izgalmas kalandokat, akkor mély és szenvedélyes kapcsolatot alakíthat ki.",
+      "Árnyékban az 5-ös mintázat szétszóródást, türelmetlenséget vagy a kötöttségektől való túl gyors távolodást jelezhet. Ilyenkor a sok lehetőség nem feltétlenül szabadságot ad, hanem nehezítheti az elmélyülést és a befejezést. A józan keretek segíthetnek abban, hogy a változás ne menekülés, hanem tudatos mozgás legyen.",
+    love: "Párkapcsolatban az 5-ös mintázat a szabadság, frissesség és őszinte mozgástér kérdéseit hozhatja elő. Nem szenvedélyt vagy tartós kötődést ígér, inkább arra figyelmeztet, hogy a közelség akkor marad élhető, ha a függetlenség és a felelős jelenlét egyszerre kap helyet.",
     career:
-      "A leginkább olyan munkakörökben teljesedik ki, amelyek szabadságot, változatosságot és állandó stimulációt biztosítanak. Kiválóan alkalmas az önálló vállalkozásra, értékesítésre, újságírásra, marketingre vagy utazással kapcsolatos foglalkozásokra. Jól érzi magát a gyorsan változó, innovatív és startup környezetekben.",
+      "Nem kész karrierutat jelöl, inkább azt mutatja, hogy az 5-ös mintázathoz jól illhet a változatosság, tanulás, kommunikáció és mozgástér. Támogató lehet olyan közeg, ahol új helyzetekhez lehet alkalmazkodni, de marad elég fókusz, keret és felelősség ahhoz, hogy az ötletek ne csak elinduljanak, hanem végig is érjenek.",
     advice:
-      "Érdemes tudatosan keresni a stabilitást és megtanulni értékelni az elköteleződés mélységét, anélkül, hogy feladná a szabadságérzetét. A változékonyság erejét a hosszú távú célok szolgálatába állíthatja, így elkerülheti a céltalanságot. Fedezze fel, hogyan tudja ötvözni a kalandvágyat a felelősséggel, hogy teljesebb és kiegyensúlyozottabb életet élhessen.",
+      "Érdemes tudatosan keresni azt a stabil keretet, amely nem zár be, hanem megtartja a kíváncsiságot. A változékonyság ereje akkor válhat hasznossá, ha van mellette néhány vállalt irány, lezárt lépés és visszatérő kapaszkodó. Így a szabadság nem szétszóródásként, hanem felelősen kezelt mozgástérként jelenhet meg.",
   },
   "6": {
     title: "Sorsszám 6 jelentése — A gondoskodó szív",
