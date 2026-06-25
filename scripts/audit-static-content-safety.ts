@@ -920,13 +920,22 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/routes/vedikus-asztrologia.tsx",
-    forbidden: [/\bteljes elemzés\b/i, /\bTeljes életkép\b/i],
+    forbidden: [
+      /\bteljes elemzés\b/i,
+      /\bTeljes életkép\b/i,
+      /\bkarma\b/i,
+      /\bkarmikus\b/i,
+      /\bMi a karmikus mintám\b/i,
+    ],
     required: [
       "részletes elemzés a születési képletedből",
       "Védikus asztrológia – részletes elemzés",
       "Átfogó képlet-nézőpont",
-      "visszatérő minta",
-      "nem büntetés",
+      "védikus hagyomány",
+      "visszatérő életmintákat",
+      "józan önismereti keretben",
+      "Milyen visszatérő mintát mutatnak",
+      "visszatérő minták",
     ],
   },
   {
@@ -936,8 +945,16 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/lib/products/vedicFull.server.ts",
-    forbidden: [/Védikus asztrológia – teljes elemzés/i],
-    required: ["Védikus asztrológia – részletes elemzésed"],
+    forbidden: [
+      /Védikus asztrológia – teljes elemzés/i,
+      /Roxy tropikus adat/i,
+      /\bkarmikus mintázat\b/i,
+    ],
+    required: [
+      "Védikus asztrológia – részletes elemzésed",
+      "tropikus forrásanyag csak háttér-bolygóhelyzet",
+      "Mire figyelj — visszatérő mintázat",
+    ],
   },
   {
     file: "src/components/SmartReadingFollowup.tsx",

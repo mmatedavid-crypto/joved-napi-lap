@@ -58,7 +58,7 @@ function Page() {
       <PageHeader
         eyebrow="Védikus asztrológia"
         title="Védikus asztrológia – részletes elemzés"
-        lead="Sziderikus (indiai) szemlélet: Lagna, Hold-rashi és nakshatra. A karma itt nem büntetés, hanem visszatérő minta — ezt nézzük meg a te képletedben."
+        lead="Sziderikus (indiai) szemlélet: Lagna, Hold-rashi és nakshatra. A védikus hagyomány visszatérő életmintákat és belső irányokat olvas a képletből, józan önismereti keretben."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
@@ -150,7 +150,7 @@ function Page() {
               value={question}
               maxLength={240}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Pl. Mi a karmikus mintám a kapcsolataimban?"
+              placeholder="Pl. Milyen visszatérő mintát mutatnak a kapcsolataim?"
               rows={3}
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory placeholder:text-ivory/40 focus:border-gold outline-none"
             />
@@ -174,7 +174,7 @@ function Page() {
             <li>• Artha – munka, anyagi biztonság</li>
             <li>• Kama – szerelem, kapcsolatok</li>
             <li>• Moksha – belső út, elengedés</li>
-            <li>• A választott életterületed mélyebben + karmikus mintázat</li>
+            <li>• A választott életterületed mélyebben + visszatérő minták</li>
           </ul>
           <p className="text-xs text-ivory/55">
             A jegyek és nakshatra számítása sziderikus (Lahiri ayanamsa). A riport a saját

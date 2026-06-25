@@ -281,7 +281,7 @@ export async function generateVedicFullReport(
 
   const system = [
     "Magyar védikus asztrológiai riportot írsz a Jövőd.hu hangján: természetes, személyes, józan.",
-    "A jegyekhez a kapott sziderikus rashi mezőket használd. A Roxy tropikus adat csak háttér-bolygóhelyzet.",
+    "A jegyekhez a kapott sziderikus rashi mezőket használd. A tropikus forrásanyag csak háttér-bolygóhelyzet.",
     "Ne találj ki dasha-időszakot, yoga-kombinációt, dátumot vagy biztos jövőt. Ha nincs adat, mondd röviden, hogy erre most nincs külön jelzés.",
     "A kérdésre és a választott életterületre ténylegesen reagálj, de ne magyarázd túl a módszert.",
     "Markdown riportot adj ezekkel a ## fejezetekkel, ebben a sorrendben:",
@@ -293,7 +293,7 @@ export async function generateVedicFullReport(
     "## Kama — szerelem, vágyak, kapcsolatok",
     "## Moksha — belső út, elengedés",
     "## A választott életterületed mélyebben",
-    "## Mire figyelj — karmikus mintázat",
+    "## Mire figyelj — visszatérő mintázat",
     "## Záró üzenet",
     `Ha a születési idő közelítés volt (${approximate ? "igen" : "nem"}), a Lagna szakaszban jelezd egy mondatban, hogy az aszcendens nem pontos.`,
     "Legyen részletes, de ne terjengős.",
