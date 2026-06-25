@@ -52,7 +52,7 @@ export const SZEMELYISEG_SZAM: NumerologyType = {
   howTo:
     "A születési neved mássalhangzóit váltod számértékre (a magánhangzókat kihagyod), összeadod, és egyetlen számjegyre vagy mesterszámra redukálod.",
   numbers: [
-    { n: 1, title: "1-es személyiség", body: "Magabiztosnak, kezdeményezőnek látszol. Az emberek úgy érzékelnek, mint aki tudja, mit akar — vezetői benyomást keltesz." },
+    { n: 1, title: "1-es személyiség", body: "Az 1-es személyiségszám a numerológiai hagyományban önálló, kezdeményező külső benyomást jelképezhet. Mások könnyebben érzékelhetnek benned határozott irányt vagy gyors első lépést, de ez nem vezetői rangot vagy kész szerepet jelent." },
     { n: 2, title: "2-es személyiség", body: "Kedvesnek, diplomatikusnak, együttműködőnek látszol. A légkört, ami körülötted van, mások nyugtatónak érzik." },
     { n: 3, title: "3-as személyiség", body: "Vidámnak, szellemesnek, könnyednek látnak. Az emberek szívesen vannak veled, mert életet viszel a térbe." },
     { n: 4, title: "4-es személyiség", body: "Megbízhatónak, földönjárónak, alaposnak látszol. Téged komolyan vesznek — ha valamit kimondasz, mások számítanak rá." },
