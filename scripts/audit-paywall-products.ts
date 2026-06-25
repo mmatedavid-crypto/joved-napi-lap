@@ -557,6 +557,12 @@ if (!smartFollowupSource.includes("Rövid, belépő árú személyes olvasat")) 
 if (productsSource.includes("A legmélyebb tarot-riport: lassabb")) {
   failed.push("Kelta kereszt is instant; product copy must not imply delayed delivery");
 }
+for (const forbidden of [
+  "Részletesebb, prémium olvasat",
+  "A legmélyebb azonnali tarot-olvasat",
+]) {
+  if (productsSource.includes(forbidden)) failed.push(`Product copy should avoid ranking/superlative promise: ${forbidden}`);
+}
 if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos riportot")) {
   failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
 }
@@ -566,10 +572,11 @@ if (paywall.includes("Szimbolikus, önismereti digitális tartalom")) {
   );
 }
 if (
-  !productsSource.includes("A legmélyebb azonnali tarot-olvasat") ||
+  !productsSource.includes("10 lapos, több pozíciós tarot-olvasat") ||
+  !productsSource.includes("Részletesebb, összefüggő olvasat") ||
   !paywall.includes("azonnali választ szeretnél, de nagyobb szerkezetben")
 ) {
-  failed.push("Kelta kereszt copy must present it as a deeper instant tarot reading");
+  failed.push("Kelta kereszt copy must present the concrete instant tarot structure without ranking claims");
 }
 
 for (const needle of [
