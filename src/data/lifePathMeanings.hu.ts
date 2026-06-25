@@ -120,11 +120,11 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "8": {
     title: "Sorsszám 8 jelentése – A Végrehajtó energiája",
-    lead: "A 8-as sorsszám a numerológiában az eredményességet, a hatalmat és az ambíciót testesíti meg. Azok, akik ezzel a sorsszámmal születtek, gyakran válnak kiemelkedő vezetőkké és sikeremberekké.",
+    lead: "A 8-as sorsszám a numerológiában az eredményesség, felelősség és hatás jelképe. Nem sikert vagy rangot ígér, inkább azt a mintát mutatja, ahol fontos lehet az erő, a mérték és a józan építkezés egyensúlya.",
     essence:
       "A 8-as sorsszám a kiegyensúlyozott erőfeszítés és következmény körforgását jelképezi. Ez a szám az eredmény, felelősség és hatás kérdését hozza előtérbe: hogyan bánsz az erőddel, a döntéseiddel és azzal, amit felépítesz. A szimmetrikus alakja is a stabilitás és méltányosság fontosságára utal.",
     strengths:
-      "Az ezzel a sorsszámmal rendelkezők rendkívül céltudatosak, szinte élnek azért, hogy elérjék céljaikat. Ez a szám a stratégiai gondolkodás és az elhivatottság megtestesítője. Elismeri, hogy a sikereket nem egyedül éri el, és hálával viszonyul a kapott segítséghez, ezzel egyensúlyozva az eredményeket a hálával. Még a nehéz időkben is kitartó, alapvető bizalommal rendelkezik abban, hogy a kitartás és a türelem végül elvezeti a jóléthez.",
+      "A 8-as mintázat erőssége a céltudatos építkezés, a stratégiai gondolkodás és a felelősségvállalás lehet. Akkor működik jól, ha az eredmény nem önigazolás, hanem rendezett, másokat is figyelembe vevő építés. A kitartás és a türelem itt nem garantált jólétet jelent, hanem azt, hogy a nagyobb célokhoz következetes, józan lépésekre van szükség.",
     shadow:
       "A 'nyolcasok' hajlamosak túl nagy hangsúlyt fektetni az anyagi javakra, az eredményeiket gyakran tárgyakkal 'jutalmazzák'. Ez a viselkedés mások számára felületesnek vagy hencegőnek tűnhet, és vonzhatja az opportunistákat. Elért eredményeik miatt hatalmi pozícióban érzik magukat, ami autokratikus viselkedéshez vezethet, figyelmen kívül hagyva mások véleményét és erőfeszítéseit. A siker utáni vágyuk gyakran vakká teszi őket a szabályokra és folyamatokra, ami megnehezíti a csapatmunkát és a partnerségeket.",
     love: "Párkapcsolataikban a 8-as sorsszámúak stabilitásra és kölcsönös tiszteletre törekednek. Fontos számukra, hogy partnerük elismerje és támogassa ambícióikat, de ugyanakkor ne érezze magát háttérbe szorítva. Egy egyenrangú és erős partnerre vágynak, akivel együtt építkezhetnek és osztozhatnak a sikereken.",
