@@ -607,21 +607,21 @@ function priceFitNudge(product: ProductDef): string | null {
 function choiceFitPromise(product: ProductDef): string[] {
   if (product.slug === "kelta_kereszt") {
     return [
-      "nem egyetlen igen-nem kérdésed van, hanem több egymásba kapaszkodó szál",
+      "több egymásba kapaszkodó szálat szeretnél egy nagyobb tarot-szerkezetben látni",
       "szeretnéd látni, mi tart vissza, mi mozgat belül és merre nyílhat tovább a helyzet",
       "azonnali választ szeretnél, de nagyobb szerkezetben, több tarot-pozícióval",
     ];
   }
   if (product.slug === "parkapcsolat_elemzes") {
     return [
-      "nem csak százalékot szeretnél, hanem érteni akarod kettőtök dinamikáját",
+      "a százalék mellé érthető kapcsolati dinamikát is szeretnél",
       "ex, visszatérő történet vagy új ismeretség esetén különösen fontos a helyzet típusa",
       "a vonzalom mellett a kommunikáció és hosszabb távú minta is érdekel",
     ];
   }
   if (product.slug === "dontes_komplex") {
     return [
-      "nem azt várod, hogy valaki döntsön helyetted, hanem tisztábban szeretnéd látni a mintát",
+      "tisztábban szeretnéd látni a döntés mögötti mintát és belső mérleget",
       "a kérdés mögött egyszerre van félelem, vágy és gyakorlati következmény",
       "részletesebb, több nézőpontú választ szeretnél egy rövid lapjelentésnél",
     ];
@@ -630,27 +630,27 @@ function choiceFitPromise(product: ProductDef): string[] {
     return [
       "a kérdésed napok óta visszatér, és egy rövid válasz kevés lenne",
       "fontos, hogy a megadott adataid és a helyzeted több szakaszban jelenjen meg",
-      "nem azonnali impulzust, hanem átgondoltabb írásos elemzést szeretnél",
+      "átgondoltabb, több szakaszos írásos elemzést szeretnél",
     ];
   }
   if (product.slug === "horoszkop_szemelyre") {
     return [
       "az általános jegyszöveg helyett a saját mostani témádra kérsz rövid választ",
-      "elég egy gyors, személyes napi irány, nem hosszú asztrológiai riportot keresel",
+      "gyors, személyes napi irányt keresel rövid asztrológiai formában",
       "fontos, hogy a szöveg józan maradjon és ne ígérjen biztos jövőt",
     ];
   }
   if (product.slug === "alomfejtes_rovid") {
     return [
       "van egy erős álomkép vagy érzés, amit önismereti jelként szeretnél kibontani",
-      "nem diagnózist vársz, hanem rövid, érthető szimbolikus értelmezést",
+      "rövid, érthető szimbolikus értelmezést vársz a hagyományos álomfejtés felől",
       "a konkrét álomszövegedre reagáló választ szeretnél",
     ];
   }
   return [
     "rövid, belépő árú személyes irányt szeretnél, mielőtt mélyebb elemzést kérsz",
     "egy konkrét kérdésre vagy napi helyzetre elég néhány fókuszált bekezdés",
-    "azonnali visszajelzést keresel, nem hosszú írásos riportot",
+    "azonnali visszajelzést keresel rövid írásos formában",
   ];
 }
 
@@ -756,11 +756,11 @@ function readingFocusPreview(
     lines.push(
       situation
         ? `A kapcsolat típusát külön kezeljük, ezért más hangot kap egy új ismeretség, egy ex vagy egy visszatérő történet.`
-        : "A kapcsolat mintáját nem csak százalékként, hanem kommunikáció, vonzalom és hosszabb táv szerint bontjuk ki.",
+        : "A kapcsolat mintáját százalék, kommunikáció, vonzalom és hosszabb táv szerint bontjuk ki.",
     );
   } else if (product.slug === "dontes_komplex") {
     lines.push(
-      "A válasz nem dönt helyetted; azt keresi, mi húz, mi tart vissza, és hol tisztulhat a következő lépés.",
+      "A válasz a belső mérleget tisztázza: mi húz, mi tart vissza, és hol tisztulhat a következő lépés.",
     );
   } else if (product.slug === "harom_lap_mely" || product.slug === "kelta_kereszt") {
     lines.push("A lapokat nem külön-külön magyarázzuk, hanem egy összefüggő történetté rendezzük.");

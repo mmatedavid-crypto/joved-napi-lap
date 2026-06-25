@@ -136,7 +136,7 @@ for (const needle of [
   "A fő fókusz a saját kérdésed lesz",
   "A szöveg a megadott helyzetből indul ki",
   "A kapcsolat típusát külön kezeljük",
-  "A válasz nem dönt helyetted",
+  "A válasz a belső mérleget tisztázza",
   "A lapokat nem külön-külön magyarázzuk",
   "A jegyedet és a mostani témádat",
   "személyesebb életút-mintát állítunk össze",
@@ -224,9 +224,9 @@ for (const needle of [
   "biztos eseményjóslatot keresel a mai napra",
   "megváltozhatatlan jövőt keresel",
   "rövid, belépő árú személyes irányt",
-  "nem csak százalékot szeretnél",
-  "nem azt várod, hogy valaki döntsön helyetted",
-  "nem egyetlen igen-nem kérdésed van",
+  "a százalék mellé érthető kapcsolati dinamikát is szeretnél",
+  "tisztábban szeretnéd látni a döntés mögötti mintát",
+  "több egymásba kapaszkodó szálat szeretnél",
   "az általános jegyszöveg helyett",
   "van egy erős álomkép vagy érzés",
   "Minőségi ellenőrzés",
@@ -277,8 +277,28 @@ for (const needle of [
   'add("Születési dátum", payload.dob ?? payload.birthDate',
   'addPair("Dátumok", payload.myDob ?? payload.birthDateA',
   'add("Lap", payload.cardName',
+  "A kapcsolat mintáját százalék, kommunikáció, vonzalom és hosszabb táv szerint bontjuk ki",
+  "A válasz a belső mérleget tisztázza",
 ]) {
   if (!paywall.includes(needle)) failed.push(`PaywallDialog missing: ${needle}`);
+}
+
+for (const forbidden of [
+  "nem csak százalékot szeretnél",
+  "nem azt várod, hogy valaki döntsön helyetted",
+  "nem azonnali impulzust",
+  "nem hosszú asztrológiai riportot keresel",
+  "nem diagnózist vársz",
+  "nem hosszú írásos riportot",
+  "nem csak százalékként",
+  "A válasz nem dönt helyetted",
+  "nem egyetlen igen-nem kérdésed van",
+]) {
+  if (paywall.includes(forbidden)) {
+    failed.push(
+      `PaywallDialog choice-fit copy should use positive tradition/product framing: ${forbidden}`,
+    );
+  }
 }
 
 for (const forbidden of [
