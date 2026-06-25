@@ -355,7 +355,7 @@ function paidReadingContinuation({
     case "love":
       return {
         heading: "Ha ezt a kapcsolatot tovább néznéd",
-        text: "Ne új, általános kérdésként kezdd újra. Vidd tovább azt a pontot, ahol az olvasat szerint a tempó, a szándék vagy a visszatérés kérdése még nyitva maradt.",
+        text: "Ugyanazt a fő kérdést vidd tovább. Azt a pontot nézd meg újra, ahol az olvasat szerint a tempó, a szándék vagy a visszatérés kérdése még nyitva maradt.",
         prompt: `${basePrompt} Például: most az érdekel, tartós közeledés látszik-e, vagy csak egy rövid visszakapcsolódás.`,
         actions: [
           {
@@ -527,7 +527,7 @@ function paidReadingClarificationDraft({
     "",
     "Ami talált:",
     "",
-    "Ami túl általános vagy pontatlan volt:",
+    "Ami nem kapcsolódott eléggé a helyzetemhez:",
     "",
     "A helyzetemből ez maradt ki:",
     "",
@@ -714,7 +714,7 @@ function formatDownloadedReading(
     meta.orderReference
       ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
       : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
-    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, mi volt pontatlan, és mi maradt ki a helyzetedből.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, melyik nem kapcsolódott eléggé a helyzetedhez, és mi maradt ki.",
     "",
     "Pontosítási vázlat:",
     clarificationDraft,

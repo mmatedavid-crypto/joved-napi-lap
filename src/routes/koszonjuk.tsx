@@ -52,7 +52,7 @@ const FEEDBACK_OPTIONS = [
   {
     label: "Nem volt elég pontos",
     value: "missed" as const,
-    body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+    body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem kapcsolódott eléggé a helyzetemhez?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
   },
 ] as const;
 
@@ -243,8 +243,8 @@ function Page() {
         {orderLookupPending && !order && !err && (
           <Section eyebrow="Fizetés egyeztetése">
             <p>
-              A fizetés utáni visszatérés megérkezett, most összekapcsoljuk a vásárlásoddal. Ez
-              néha pár frissítési körrel később látszik ezen az oldalon.
+              A fizetés utáni visszatérés megérkezett, most összekapcsoljuk a vásárlásoddal. Ez néha
+              pár frissítési körrel később látszik ezen az oldalon.
             </p>
             <p className="mt-3 text-sm text-ivory/60">
               Az oldalt nyugodtan hagyd nyitva. Ha sikeres volt a fizetés, a rendelés nem vész el;
@@ -552,8 +552,8 @@ function DeliveryEmailNotice({ order }: { order?: OrderView }) {
     <div className="mt-4 rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
       <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
       <p className="mt-2 text-sm leading-relaxed text-ivory/62">
-        Az olvasatod már elkészült, ezért innen biztonságosan elérhető akkor is, ha az email
-        később érkezik meg vagy nem találod a postafiókodban.
+        Az olvasatod már elkészült, ezért innen biztonságosan elérhető akkor is, ha az email később
+        érkezik meg vagy nem találod a postafiókodban.
       </p>
       <SupportContact className="mt-2" order={order} />
     </div>
@@ -730,7 +730,7 @@ function PaidReadingFeedback({
             onChange={(event) => setFeedbackNote(event.target.value)}
             maxLength={600}
             rows={3}
-            placeholder="Pl. a kérdésem érzelmi része kimaradt, vagy túl általános volt a kapcsolati rész..."
+            placeholder="Pl. a kérdésem érzelmi része kimaradt, vagy a kapcsolati rész nem kötődött eléggé a helyzetemhez..."
             className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-transparent px-3 py-2 text-sm text-ivory outline-none placeholder:text-ivory/35 focus:border-gold/65"
           />
           <div className="mt-2 flex flex-wrap items-center gap-3">

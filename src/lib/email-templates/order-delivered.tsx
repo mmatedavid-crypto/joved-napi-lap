@@ -65,7 +65,7 @@ const OrderDeliveredEmail = ({
       label: "Nem volt elég pontos",
       feedback: "Nem volt elég pontos",
       feedbackValue: "missed",
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem kapcsolódott eléggé a helyzetemhez?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ];
   return (
@@ -151,7 +151,7 @@ const OrderDeliveredEmail = ({
                     productName,
                     shortOrderId,
                     feedback: "Pontosítást kérek",
-                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi talált:\n\nAmi túl általános vagy pontatlan volt:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
+                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi talált:\n\nAmi nem kapcsolódott eléggé a helyzetemhez:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
                   })}
                   style={link}
                 >

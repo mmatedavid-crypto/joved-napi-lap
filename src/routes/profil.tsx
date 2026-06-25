@@ -821,7 +821,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     {
       label: "Nem volt elég pontos",
       value: "missed" as const,
-      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem talált?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Az olvasat nem volt elég pontos számomra. Szeretnék segítséget kérni vagy pontosítást.\n\nMelyik rész nem kapcsolódott eléggé a helyzetemhez?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";
@@ -909,7 +909,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
             onChange={(event) => setFeedbackNote(event.target.value)}
             maxLength={600}
             rows={3}
-            placeholder="Pl. túl általános volt, vagy nem vette figyelembe a kérdésem egyik részét..."
+            placeholder="Pl. nem kötődött eléggé a helyzetemhez, vagy nem vette figyelembe a kérdésem egyik részét..."
             className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-transparent px-3 py-2 text-xs text-ivory outline-none placeholder:text-ivory/35 focus:border-gold/65"
           />
           <div className="mt-2 flex flex-wrap items-center gap-3">
