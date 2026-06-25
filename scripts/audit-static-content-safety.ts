@@ -179,6 +179,7 @@ const checks: StaticSafetyCheck[] = [
       /\bteljes képet rólad\b/i,
       /\bA teljes számmisztika kép\b/i,
       /\bsorsfeladatod\b/i,
+      /\bmegmutatja, miért most jönnek azok a témák\b/i,
     ],
     required: [
       "hagyományos értelmezésekkel",
@@ -187,6 +188,8 @@ const checks: StaticSafetyCheck[] = [
       "más réteget világíthat meg az élethelyzetedből",
       "A számmisztikai kép fő rétegei",
       "visszatérő témáidra adhat nézőpontot",
+      "nézőpontot adhat arra",
+      "elő bizonyos visszatérő témák",
     ],
   },
   {

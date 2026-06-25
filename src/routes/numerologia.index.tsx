@@ -103,8 +103,8 @@ function NumerologyHub() {
           <p>
             A legtöbben a sorsszámmal kezdik — ez a leggyorsabb belépési pont. Onnan haladhatsz a
             lélekszámod és a kifejezésszámod felé, ha jobban szeretnéd érteni, miért éppen úgy hozol
-            döntéseket, ahogy. A személyes éved pedig megmutatja, miért most jönnek azok a témák, amik
-            jönnek.
+            döntéseket, ahogy. A személyes éved pedig nézőpontot adhat arra, miért kerülhetnek most
+            elő bizonyos visszatérő témák.
           </p>
         </Section>
       </div>
