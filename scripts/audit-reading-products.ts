@@ -813,6 +813,31 @@ if (
 ) {
   policyFailures.push("paid readings must build a short Hungarian customer context brief");
 }
+for (const needle of [
+  "Annak a mélyítéseként olvasd",
+  "belső irányként működik",
+  "eseményívet és belső reakciót is mutat",
+  "mostani élethelyzet",
+]) {
+  if (!paidReadingsSource.includes(needle)) {
+    policyFailures.push(`paid local draft must keep tradition-based customer voice: ${needle}`);
+  }
+}
+for (const forbiddenNeedle of [
+  "nem különálló, általános folytatásként",
+  "ne általános jóslatként",
+  "nem elvárásként",
+  "általános élethelyzet",
+  "nem csak eseményívet",
+  "nem lezárást, hanem",
+  "nem kész választ ad",
+]) {
+  if (paidReadingsSource.includes(forbiddenNeedle)) {
+    policyFailures.push(
+      `paid local draft must avoid defensive customer-facing phrasing: ${forbiddenNeedle}`,
+    );
+  }
+}
 if (
   !paidServer.includes("generation: {") ||
   !paidServer.includes('source: "ai"') ||

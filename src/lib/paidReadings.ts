@@ -360,7 +360,7 @@ function readingWithFollowupContext(
       ...reading.sections,
       {
         heading: "Miért ezt ajánlottuk?",
-        text: `Ez az olvasat abból a konkrét előzményből indul tovább, amit már megadtál: ${followupContext}. Így nem különálló, általános folytatásként olvasd, hanem annak mélyítéseként, ami az előző válaszban már megmozdult benned.`,
+        text: `Ez az olvasat abból a konkrét előzményből indul tovább, amit már megadtál: ${followupContext}. Annak a mélyítéseként olvasd, ami az előző válaszban már megmozdult benned.`,
       },
     ],
   };
@@ -391,13 +391,13 @@ function premiumTarotOneCard(
     sections: [
       {
         heading: "Miért ez a lap jött most?",
-        text: `${card.name} most nem kész választ ad, hanem azt mutatja, milyen minőség aktív benned: ${card.keywords.join(", ")}. ${card.general}`,
+        text: `${card.name} most azt mutatja, milyen minőség aktív benned: ${card.keywords.join(", ")}. ${card.general}`,
       },
       {
         heading: "A helyzetedben",
         text: question
           ? `A „${question}” kérdésben ez a lap arra hívhatja fel a figyelmed, hogy ne csak a másik fél vagy a külső körülmény válaszát keresd. A ${situation} témájában inkább azt nézd meg, hol érzed magad tisztábbnak, és hol szűkülsz össze.`
-          : `A ${situation} témájában ez a lap azt kéri, hogy ne általános jóslatként olvasd, hanem belső irányként. A hangsúly most azon van, mi ismétlődik benned, amikor dönteni vagy közeledni próbálsz.`,
+          : `A ${situation} témájában ez a lap belső irányként működik. A hangsúly most azon van, mi ismétlődik benned, amikor dönteni vagy közeledni próbálsz.`,
       },
       { heading: "Kapcsolódás és érzések", text: card.love },
       { heading: "Döntési irány", text: card.decision },
@@ -474,14 +474,14 @@ function premiumCelticCross(input: Record<string, unknown>): PaidReadingPayload 
       ...positions,
       {
         heading: "A tíz lap együtt",
-        text: `A fő feszültség ${cards[0].keywords[0].toLowerCase()} és ${cards[1].keywords[0].toLowerCase()} között rajzolódik ki. Ami nyílhat, az nem gyors bizonyosság, hanem ${cards[5].keywords[0].toLowerCase()} és ${cards[9].keywords[0].toLowerCase()} felé mutató lassabb rendeződés.`,
+        text: `A fő feszültség ${cards[0].keywords[0].toLowerCase()} és ${cards[1].keywords[0].toLowerCase()} között rajzolódik ki. Ami nyílhat, az ${cards[5].keywords[0].toLowerCase()} és ${cards[9].keywords[0].toLowerCase()} felé mutató lassabb rendeződés.`,
       },
       {
         heading: "Mire figyelj most?",
-        text: "A nagy spread értéke nem abban van, hogy több lapból erősebb jóslatot csinál. Abban segít, hogy lásd, melyik rétegben keresed rossz helyen a választ: eseményben, érzésben, félelemben vagy mások visszajelzésében.",
+        text: "A nagy spread értéke abban van, hogy lásd, melyik rétegben keresed rossz helyen a választ: eseményben, érzésben, félelemben vagy mások visszajelzésében.",
       },
     ],
-    oneSentence: `${cards[9].name} nem lezárást, hanem irányt mutat: akkor mozdulhat tisztábban a helyzet, ha a régi reakció helyett új belső tempót választasz.`,
+    oneSentence: `${cards[9].name} irányt mutat: akkor mozdulhat tisztábban a helyzet, ha a régi reakció helyett új belső tempót választasz.`,
     safetyNote: SAFETY_NOTE,
     meta: { fallbackUsed: true, readingType: "paid:kelta_kereszt" },
   };
@@ -598,9 +598,9 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
   );
   base.sections.push({
     heading: "Ezt vidd magaddal",
-    text: `A ${signName} mai üzenete akkor lesz használható, ha nem elvárásként olvasod. Válassz egyetlen helyzetet, ahol nem túlbiztosítani akarod magad, hanem tisztábban érzékelni, mihez van valódi belső nyugalmad.`,
+    text: `A ${signName} mai üzenete akkor lesz használható, ha egyetlen helyzethez kötöd. Ott figyeld meg, hol próbálod túlbiztosítani magad, és hol van valódi belső nyugalmad.`,
   });
-  base.oneSentence = `${signName} ma nem nagy bizonyosságot kér, hanem pontosabb belső időzítést.`;
+  base.oneSentence = `${signName} ma pontosabb belső időzítést kér.`;
   base.meta = { ...base.meta, fallbackUsed: true, readingType: "paid:horoscope" };
   return renderReading(base, input);
 }
@@ -846,7 +846,7 @@ export function composePaidOrderReading(
   if (productSlug === "kelta_kereszt") return premiumCelticCross(input);
   if (productSlug === "harom_lap_mely") {
     const question = text(input.question) || text(input.q);
-    const category = text(input.category) || "általános élethelyzet";
+    const category = text(input.category) || "mostani élethelyzet";
     const reading = composeThreeCardTarot({
       readingType: "3 lapos húzás",
       cards: completeCardsFromPayload(input, 3),
@@ -858,12 +858,12 @@ export function composePaidOrderReading(
       {
         heading: "A mélyebb réteg",
         text: question
-          ? `A „${question}” kérdésben a három lap nem csak eseményívet mutat, hanem azt is, hogyan reagálsz a ${category} helyzetére. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.`
-          : "A három lap nem csak eseményívet mutat, hanem azt is, hogyan reagálsz a helyzetre. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.",
+          ? `A „${question}” kérdésben a három lap eseményívet és belső reakciót is mutat a ${category} helyzetében. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.`
+          : "A három lap eseményívet és belső reakciót is mutat a helyzetben. A múlt lapja a megszokott védekezésedet, a jelen lapja a mostani feszültséget, a jövő lapja pedig azt a minőséget jelzi, ami felé akkor mozdulhatsz, ha nem ismétled ugyanazt a választ.",
       },
       {
         heading: "Következő belső lépés",
-        text: "Ne azonnali bizonyosságot keress. Egyetlen pontot válassz ki: mit kell kimondani, mit kell abbahagyni, vagy hol kell lassítani. A lapok akkor dolgoznak jól, ha nem helyetted döntenek, hanem letisztítják a következő mozdulatot.",
+        text: "Egyetlen pontot válassz ki: mit kell kimondani, mit kell abbahagyni, vagy hol kell lassítani. A lapok akkor dolgoznak jól, ha nem helyetted döntenek, hanem letisztítják a következő mozdulatot.",
       },
     );
     return renderReading(reading, input);
