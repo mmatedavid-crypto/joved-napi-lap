@@ -168,12 +168,13 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
   22: {
     number: 22,
     title: "A Mester Építő",
-    meaning: "Nagy léptékű alkotás. Képes vagy olyat építeni, ami túléli a te kis történetedet.",
+    meaning:
+      "A 22-es mintázat a nagyobb elképzelések földelt, lépésenkénti építésének jelképe. Nem életművet ígér, inkább azt kérdezi, hogyan kaphat formát a vízió józan ritmusban.",
     strengths: "Vízió + kivitelezés egyszerre.",
     shadow: "Túlvállalás, kiégés, kontrollvágy.",
     love: "Stabil, hosszú távú partnerséget keresel, aki bírja a tempódat.",
-    work: "Alapító, intézményépítő, nagy projektek vezetője.",
-    purpose: "Olyat létrehozni, ami túléli a nevedet — és közben emberi maradni az úton.",
+    work: "Olyan közeg támogathat, ahol rendszereket, kereteket és hosszabb távú terveket lehet józanul építeni.",
+    purpose: "Formát adni annak, ami fontos — és közben emberi maradni az úton.",
     advice: "Egy nagy víziót sok kicsi lépés visz végig. Ne ugord át a maiakat.",
   },
   33: {

@@ -201,6 +201,9 @@ const checks: StaticSafetyCheck[] = [
       /\bA pénz, a hatalom és a felelősség tanít téged\b/i,
       /\bVezetés, vállalkozás, pénzügy, ingatlan\b/i,
       /\bahol nagyban gondolkodhatsz\b/i,
+      /\bKépes vagy olyat építeni, ami túléli\b/i,
+      /\bAlapító, intézményépítő, nagy projektek vezetője\b/i,
+      /\bOlyat létrehozni, ami túléli a nevedet\b/i,
     ],
     required: [
       "kapcsolatmintát jelezhet",
@@ -210,6 +213,10 @@ const checks: StaticSafetyCheck[] = [
       "Nem pénzügyi vagy hatalmi ígéret",
       "hogyan bánsz azzal, amit felépítesz",
       "felelősséget, rendszert és józan döntéseket",
+      "Nem életművet ígér",
+      "hogyan kaphat formát a vízió józan ritmusban",
+      "rendszereket, kereteket és hosszabb távú terveket",
+      "Formát adni annak, ami fontos",
     ],
   },
   {
