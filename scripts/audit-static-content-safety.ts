@@ -997,8 +997,20 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/routes/impresszum.tsx",
-    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
-    required: ["SYMBOLIC_TRADITION_DISCLAIMER"],
+    forbidden: [
+      /technikai szolgáltatóként készít/i,
+      /Tárhely és technikai működés/i,
+      /technikai szolgáltatók/i,
+      /\bAPI\b/i,
+      /lefordít/i,
+      /fordítjuk/i,
+    ],
+    required: [
+      "SYMBOLIC_TRADITION_DISCLAIMER",
+      "Működési partnerek",
+      "online olvasatokat ad",
+      "fizetési, tárhely- és kézbesítési partnerek",
+    ],
   },
   {
     file: "src/routes/elallasi-tajekoztato.tsx",

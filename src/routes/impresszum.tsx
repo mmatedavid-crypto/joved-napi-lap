@@ -64,10 +64,10 @@ export const Route = createFileRoute("/impresszum")({
         </p>
       </LegalSection>
 
-      <LegalSection title="Tárhely és technikai működés">
+      <LegalSection title="Működési partnerek">
         <p>
-          A weboldal digitális szolgáltatásként működik. A rendelés, fizetés, tárhely és emailes
-          kézbesítés működéséhez megbízható technikai szolgáltatók kapcsolódhatnak.
+          A weboldal online olvasatokat ad. A rendelés, fizetés, tárhely és emailes kézbesítés
+          működéséhez megbízható fizetési, tárhely- és kézbesítési partnerek kapcsolódhatnak.
         </p>
       </LegalSection>
 
