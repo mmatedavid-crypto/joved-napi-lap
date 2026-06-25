@@ -27,7 +27,9 @@ for (const product of PRODUCTS) {
       ),
     )
   ) {
-    failed.push(`${product.slug}: paywall promise must frame the reading through tradition/symbols`);
+    failed.push(
+      `${product.slug}: paywall promise must frame the reading through tradition/symbols`,
+    );
   }
   if (/gyógy/i.test(visibleCopy)) {
     failed.push(`${product.slug}: health-adjacent crystal wording must be avoided`);
@@ -36,10 +38,23 @@ for (const product of PRODUCTS) {
     failed.push(`${product.slug}: deterministic wording in paywall copy`);
   }
   if (/\b(napi limit|limit feloldása)\b/i.test(visibleCopy)) {
-    failed.push(`${product.slug}: paywall copy must frame extra readings as a separate perspective, not a quota unlock`);
+    failed.push(
+      `${product.slug}: paywall copy must frame extra readings as a separate perspective, not a quota unlock`,
+    );
   }
   if (/\b(magazinos jóslat|bulvárjóslat|újságos jegyhoroszkóp)\b/i.test(visibleCopy)) {
-    failed.push(`${product.slug}: paywall copy should state the positive product voice instead of tabloid/magazine contrast`);
+    failed.push(
+      `${product.slug}: paywall copy should state the positive product voice instead of tabloid/magazine contrast`,
+    );
+  }
+  if (
+    /\b(Nem általános horoszkópszöveg|nem egészségügyi állítás|diagnózis és ijesztgetés nélkül|Nem mondja meg, mit tegyél|Nem ígéri, hogy valaki visszajön|Nem napi horoszkóp)\b/i.test(
+      visibleCopy,
+    )
+  ) {
+    failed.push(
+      `${product.slug}: paywall copy should use tradition/symbol framing instead of defensive contrast wording`,
+    );
   }
 }
 
@@ -108,8 +123,8 @@ for (const needle of [
   "személyesebb életút-mintát állítunk össze",
   "Az álomszövegedből indulunk ki",
   "szimbolikus önismereti jelként",
-  "const birthTime = payloadText(payload, \"birthTime\")",
-  "const birthPlace = payloadText(payload, \"birthPlace\")",
+  'const birthTime = payloadText(payload, "birthTime")',
+  'const birthPlace = payloadText(payload, "birthPlace")',
   "születési idő nélkül, közelített képlettel",
   "hely: ${birthPlace}",
   'add("Születési hely", payload.birthPlace',
@@ -252,7 +267,8 @@ for (const forbidden of [
   "A köszönőoldalon rögtön megnyílik",
   "Az olvasat a köszönőoldalon azonnal megnyílik",
 ]) {
-  if (paywall.includes(forbidden)) failed.push(`PaywallDialog overpromises instant delivery: ${forbidden}`);
+  if (paywall.includes(forbidden))
+    failed.push(`PaywallDialog overpromises instant delivery: ${forbidden}`);
 }
 
 for (const utility of ["btn-gold", "btn-ghost-gold"]) {
@@ -549,7 +565,9 @@ for (const [file, source] of [
   ["src/components/SmartReadingFollowup.tsx", smartFollowupSource],
 ] as const) {
   if (/\bolcsó(bb|k)?\b/i.test(source)) {
-    failed.push(`${file}: conversion copy should use belépő árú / alacsony kockázatú wording instead of olcsó`);
+    failed.push(
+      `${file}: conversion copy should use belépő árú / alacsony kockázatú wording instead of olcsó`,
+    );
   }
 }
 
@@ -570,9 +588,12 @@ for (const forbidden of [
   "többet ad egy napi lapnál",
   "ad több kapaszkodót",
 ]) {
-  if (productsSource.includes(forbidden)) failed.push(`Product copy should avoid ranking/superlative promise: ${forbidden}`);
-  if (paywall.includes(forbidden)) failed.push(`Paywall copy should avoid ranking/superlative promise: ${forbidden}`);
-  if (pricingRoute.includes(forbidden)) failed.push(`Pricing copy should avoid ranking/superlative promise: ${forbidden}`);
+  if (productsSource.includes(forbidden))
+    failed.push(`Product copy should avoid ranking/superlative promise: ${forbidden}`);
+  if (paywall.includes(forbidden))
+    failed.push(`Paywall copy should avoid ranking/superlative promise: ${forbidden}`);
+  if (pricingRoute.includes(forbidden))
+    failed.push(`Pricing copy should avoid ranking/superlative promise: ${forbidden}`);
 }
 if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos riportot")) {
   failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
@@ -587,7 +608,9 @@ if (
   !productsSource.includes("Részletesebb, összefüggő olvasat") ||
   !paywall.includes("azonnali választ szeretnél, de nagyobb szerkezetben")
 ) {
-  failed.push("Kelta kereszt copy must present the concrete instant tarot structure without ranking claims");
+  failed.push(
+    "Kelta kereszt copy must present the concrete instant tarot structure without ranking claims",
+  );
 }
 
 for (const needle of [
@@ -663,11 +686,17 @@ for (const { file, source } of delayedAstrologyRouteSources) {
     failed.push(`${file}: delayed astrology route must avoid prediction-style wording`);
   }
   if (source.includes("Fizetés után a vállalt elkészülési időn belül itt és emailben is eléred")) {
-    failed.push(`${file}: delayed astrology route must mention the secure order link before payment`);
+    failed.push(
+      `${file}: delayed astrology route must mention the secure order link before payment`,
+    );
   }
   if (
-    !source.includes("Fizetés után a vállalt elkészülési időn belül ezen a biztonságos rendelési linken") ||
-    !source.includes("emailben is eléred a riportot; ha elakadna, a vásárlási email címedről segítünk")
+    !source.includes(
+      "Fizetés után a vállalt elkészülési időn belül ezen a biztonságos rendelési linken",
+    ) ||
+    !source.includes(
+      "emailben is eléred a riportot; ha elakadna, a vásárlási email címedről segítünk",
+    )
   ) {
     failed.push(`${file}: delayed astrology route must show accurate delivery timing`);
   }
@@ -725,7 +754,8 @@ for (const needle of [
   "Ha ez a határidő csúszna",
   "a gyorsítás díját külön rendezzük",
 ]) {
-  if (!termsRoute.includes(needle)) failed.push(`Terms route missing express remedy wording: ${needle}`);
+  if (!termsRoute.includes(needle))
+    failed.push(`Terms route missing express remedy wording: ${needle}`);
 }
 
 if (!layout.includes('{ to: "/arak", label: "Árak" }')) {
