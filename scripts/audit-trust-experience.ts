@@ -177,9 +177,10 @@ const checks: Check[] = [
     includes: [
       "minőségi visszajelzést és opcionális rövid pontosítást",
       "Minőségi visszajelzés fizetős olvasatoknál",
-      "az olvasat eltalált",
-      "részben",
+      "az olvasat hasznos volt",
+      "részben volt hasznos",
       "pontosítást kérsz",
+      "kapcsolódott a helyzetedhez",
       "részt finomítanád",
       "kizárólag ügyfélszolgálati",
       "hibajavítási",
@@ -249,6 +250,7 @@ const checks: Check[] = [
       "feltétel nélkül visszatérítjük",
       "automatikusan készülnek el",
     ],
+    excludes: ["az olvasat eltalált", "részben talált"],
   },
   {
     name: "mobile bottom navigation gives direct profile access",

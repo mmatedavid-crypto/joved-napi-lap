@@ -525,7 +525,7 @@ function paidReadingClarificationDraft({
     orderReference ? `Rendelés: ${orderReference}` : "Rendelés:",
     `Olvasat: ${productLabel}`,
     "",
-    "Ami talált:",
+    "Ami kapcsolódott a helyzetemhez:",
     "",
     "Ezt a részt szeretném finomítani:",
     "",

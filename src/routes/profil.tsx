@@ -809,14 +809,14 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
   const [feedbackError, setFeedbackError] = useState("");
   const feedbackOptions = [
     {
-      label: "Eltalált",
+      label: "Hasznos volt",
       value: "accurate" as const,
-      body: "Az olvasat eltalált. Ezt szeretném jelezni rövid visszajelzésként.",
+      body: "Az olvasat hasznos volt és kapcsolódott a helyzetemhez. Ezt szeretném jelezni rövid visszajelzésként.",
     },
     {
-      label: "Részben talált",
+      label: "Részben volt hasznos",
       value: "partial" as const,
-      body: "Az olvasat részben talált, de van benne olyan rész, amit pontosítanék.\n\nAmi talált:\n\nAmi nem volt pontos:\n\nA helyzetemből ez maradt ki:",
+      body: "Az olvasat részben volt hasznos, de van benne olyan rész, amit pontosítanék.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmi nem volt elég pontos:\n\nA helyzetemből ez maradt ki:",
     },
     {
       label: "Pontosítást kérek",

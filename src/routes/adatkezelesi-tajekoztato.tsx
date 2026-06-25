@@ -83,9 +83,10 @@ function PrivacyPage() {
 
       <LegalSection title="Minőségi visszajelzés fizetős olvasatoknál">
         <p>
-          Az elkészült fizetős olvasatoknál röviden jelezheted, hogy az olvasat eltalált, részben
-          talált vagy pontosítást kérsz. Ha szeretnéd, néhány mondatban azt is leírhatod, melyik
-          részt finomítanád, mi maradt ki vagy milyen irányban vártál volna pontosabb segítséget.
+          Az elkészült fizetős olvasatoknál röviden jelezheted, hogy az olvasat hasznos volt,
+          részben volt hasznos, vagy pontosítást kérsz. Ha szeretnéd, néhány mondatban azt is
+          leírhatod, melyik rész kapcsolódott a helyzetedhez, melyik részt finomítanád, mi maradt ki
+          vagy milyen irányban vártál volna pontosabb segítséget.
         </p>
         <p>
           Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati, hibajavítási
