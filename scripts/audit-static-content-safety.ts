@@ -680,7 +680,7 @@ const checks: StaticSafetyCheck[] = [
       "Nem spirituális rangot vagy hivatást igazol",
       "gondoskodó jelenlét és az értelmes forma",
       "egészséges határokkal és józan felelősséggel",
-      "tartós rend és felelősség eszközeként",
+      "tartós rend és felelős értékteremtés",
       "gondoskodó figyelem és felelősen adott támogatás jelképeként olvassa",
       "Nem önzetlen szolgálatot vagy spirituális küldetést ír elő",
       "Nem egyetemes szeretetet vagy különleges rangot igazol",
@@ -1191,6 +1191,33 @@ const checks: StaticSafetyCheck[] = [
 ];
 
 const failures: string[] = [];
+
+const lifePathSource = readFileSync("src/data/lifePathMeanings.hu.ts", "utf8");
+for (const required of [
+  "A 6-os árnyéka akkor jelenhet meg, amikor a gondoskodás csendes önfeladásba",
+  "A 8-as árnyéka akkor erősödhet fel, amikor az eredmény, kontroll vagy külső elismerés túl nagy szerepet kap",
+  "Nem vezetői rangot vagy vállalkozói sorsot igazol",
+  "Párkapcsolatban a 8-as mintázat a stabilitás, kölcsönös tisztelet és közös építkezés témáit hozhatja elő",
+]) {
+  if (!lifePathSource.includes(required)) {
+    failures.push(
+      `life path meaning copy must keep symbolic, tradition-based framing: ${required}`,
+    );
+  }
+}
+for (const forbidden of [
+  /A 'nyolcasok' hajlamosak/i,
+  /vonzhatja az opportunistákat/i,
+  /autokratikus viselkedéshez vezethet/i,
+  /Párkapcsolataikban a 8-as sorsszámúak/i,
+  /Egy egyenrangú és erős partnerre vágynak/i,
+  /Hajlamos lehetsz túlzottan passzív lenni/i,
+  /Idealista látásmódod miatt csalódhatsz/i,
+]) {
+  if (forbidden.test(lifePathSource)) {
+    failures.push(`life path meaning copy must avoid personality-labeling claims: ${forbidden}`);
+  }
+}
 
 const publicUiFiles = [
   "src/components/ui/dialog.tsx",

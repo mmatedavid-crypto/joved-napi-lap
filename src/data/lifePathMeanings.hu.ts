@@ -15,8 +15,7 @@ export type LifePathMeaning = {
 export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   "1": {
     title: "Sorsszám 1 jelentése – Az önálló kezdeményező",
-    lead:
-      "Az 1-es sorsszám az önállóság, az újrakezdések és a saját irány keresésének jelképe. Nem vezetői rangot vagy kész szerepet ír le, inkább azt a mintát mutatja, amikor fontos lehet a kezdeményezés és a felelős önállóság.",
+    lead: "Az 1-es sorsszám az önállóság, az újrakezdések és a saját irány keresésének jelképe. Nem vezetői rangot vagy kész szerepet ír le, inkább azt a mintát mutatja, amikor fontos lehet a kezdeményezés és a felelős önállóság.",
     essence:
       "Az 1-es hagyományos olvasata a kezdeményezés, újrakezdés és önálló iránykeresés témáit emeli előtérbe. Nem azt állítja, hogy mindent egyedül kell alakítanod, inkább arra figyelmeztet, hogy a saját döntési tér felismerése akkor támogató, ha felelősséggel és másokra is figyelő jelenléttel társul.",
     strengths:
@@ -53,8 +52,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "A 3-as mintázat erőssége lehet a könnyebb megszólalás, az ötletek összekapcsolása és az, hogy a nehéz érzések is kaphatnak emberi, alkotó formát. Nem kiemelkedő képességet vagy természetes karizmát ígér, inkább azt jelzi, hogy a beszélgetés, írás, humor vagy alkotás segíthet rendezni a belső anyagot.",
     shadow:
       "A 3-as árnyéka lehet a szétszóródás, a túl gyors témaváltás vagy az, amikor a könnyed hang elfedi a nehezebb érzéseket. Nem felszínességet ír elő, hanem arra hívja fel a figyelmet, hogy az önkifejezés akkor marad hiteles, ha a vidámabb forma mögött a valós tartalom is helyet kap.",
-    love:
-      "Párkapcsolatban a 3-as mintázat a beszélgetés, játékosság és közös alkotás témáit hozhatja elő. Nem könnyed vagy konfliktusmentes kapcsolatot ígér, inkább azt mutatja, hogy a kapcsolódás akkor mélyülhet, ha a humor és spontaneitás mellett a nehezebb mondatoknak is van tere.",
+    love: "Párkapcsolatban a 3-as mintázat a beszélgetés, játékosság és közös alkotás témáit hozhatja elő. Nem könnyed vagy konfliktusmentes kapcsolatot ígér, inkább azt mutatja, hogy a kapcsolódás akkor mélyülhet, ha a humor és spontaneitás mellett a nehezebb mondatoknak is van tere.",
     career:
       "Nem kész szakmai útmutató, inkább azt jelzi, hogy a 3-as mintázatban fontos lehet az önkifejezés, a kommunikáció és a kreatív mozgástér. Jól illhet hozzá olyan közeg, ahol ötleteket lehet formába rendezni, beszélgetni, alkotni vagy kapcsolatokat építeni. A munka akkor támogató, ha a változatosság mellett marad elég fókusz és józan ritmus is.",
     advice:
@@ -69,8 +67,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "A 4-es sorsszám erőssége a rend, kitartás és gyakorlati építkezés jelképes mintájában jelenhet meg. Józan formában stabil alapokat keres, figyel a részletekre, és értékeli azt, ami idővel válik megbízhatóvá. Kapcsolatokban és munkában is akkor támogató, ha a biztonság nem merevségként, hanem tartós figyelemként jelenik meg.",
     shadow:
       "A 4-es árnyéka lehet, amikor a biztonság keresése merev ragaszkodássá vagy túl szűk keretté válik. Nem rugalmatlanságot ír elő, inkább arra hívja fel a figyelmet, hogy a stabilitás akkor marad élő, ha van benne párbeszéd, tanulás és hely az új szempontoknak is.",
-    love:
-      "Párkapcsolatban a 4-es mintázat a stabilitás, megbízhatóság és közösen épített biztonság témáit hozhatja elő. Nem hűséget vagy hosszú távú elköteleződést ígér, inkább azt mutatja, hogy a kapcsolat akkor marad megtartó, ha a rutin mellett az érzések kimondása és a rugalmasság is helyet kap.",
+    love: "Párkapcsolatban a 4-es mintázat a stabilitás, megbízhatóság és közösen épített biztonság témáit hozhatja elő. Nem hűséget vagy hosszú távú elköteleződést ígér, inkább azt mutatja, hogy a kapcsolat akkor marad megtartó, ha a rutin mellett az érzések kimondása és a rugalmasság is helyet kap.",
     career:
       "A 4-es sorsszámhoz jól illhetnek azok a munkakörnyezetek, ahol precizitás, szervezettség és módszeres gondolkodás érték. Nem kész szakmai útmutató, inkább arra ad nézőpontot, hogy a stabil alapok, rendszerek és tartós építés témái erősebbek lehetnek nálad. A kitartás és a részletekre figyelés akkor hasznos, ha nem merevséggé, hanem megbízható ritmussá válik.",
     advice:
@@ -78,8 +75,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "5": {
     title: "Sorsszám 5 jelentése — A Szabadság keresője",
-    lead:
-      "Az 5-ös sorsszámot a numerológiai hagyomány a változás, szabadság és tapasztalati tanulás jelképeként olvassa. Nem kész életstílust ír elő, inkább azt mutatja, hol lehet fontos a mozgástér, kíváncsiság és józan belső irány egyensúlya.",
+    lead: "Az 5-ös sorsszámot a numerológiai hagyomány a változás, szabadság és tapasztalati tanulás jelképeként olvassa. Nem kész életstílust ír elő, inkább azt mutatja, hol lehet fontos a mozgástér, kíváncsiság és józan belső irány egyensúlya.",
     essence:
       "A sorsszám középpontjában a kíváncsiság és a változatosság iránti igény állhat. A hagyomány szerint ez a minta akkor támogató, ha az új tapasztalatok nem szétszórnak, hanem tágítják a látókört. A kísérletezés itt nem céltalanság, hanem annak keresése, hogyan lehet szabadságban is felelősen jelen lenni.",
     strengths:
@@ -94,24 +90,22 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "6": {
     title: "Sorsszám 6 jelentése — A gondoskodó szív",
-    lead:
-      "A 6-os sorsszámot a numerológiai hagyomány a gondoskodás, felelősség és kapcsolati harmónia jelképeként olvassa. Nem kész szerepet ír elő, inkább azt a mintát mutatja, ahol fontos lehet a figyelmes jelenlét és az egészséges határtartás egyensúlya.",
+    lead: "A 6-os sorsszámot a numerológiai hagyomány a gondoskodás, felelősség és kapcsolati harmónia jelképeként olvassa. Nem kész szerepet ír elő, inkább azt a mintát mutatja, ahol fontos lehet a figyelmes jelenlét és az egészséges határtartás egyensúlya.",
     essence:
       "A 6-os szám hagyományos olvasata a szeretet, a harmónia és a felelősség témáit emeli előtérbe. Nem azt állítja, hogy mindig neked kell megtartanod másokat, inkább arra emlékeztethet, hogy a gondoskodás akkor marad tiszta, ha önmagad felé is működik.",
     strengths:
       "A 6-os mintázat erőssége a figyelmes kapcsolódás, a felelősségvállalás és a békésebb légkör keresése lehet. Támogató oldala akkor látszik tisztán, amikor a gondoskodás nem önfeladás, hanem kölcsönös, emberi léptékű jelenlét. A hagyomány szerint ez a szám a szépség, rend és kapcsolati figyelem iránti érzékenységet is jelezheti.",
     shadow:
-      "Hajlamos lehetsz túlzottan passzív lenni, és mások kedvéért háttérbe szorítani a saját igényeidet. Az önfeláldozásod néha odáig vezethet, hogy elhanyagolod önmagad. Idealista látásmódod miatt csalódhatsz, amikor a valóság nem felel meg az elképzeléseidnek.",
+      "A 6-os árnyéka akkor jelenhet meg, amikor a gondoskodás csendes önfeladásba, túlzott alkalmazkodásba vagy kimondatlan elvárásba fordul. A harmónia keresése ilyenkor nem pihenést ad, hanem belső feszültséget gyűjthet. A hagyomány szerint ez a szám arra emlékeztet, hogy a szeretet csak akkor marad tiszta, ha önmagad felé is működik.",
     love: "Párkapcsolatban a 6-os mintázat a gondoskodás, otthonosság és kölcsönös figyelem témáit erősítheti. Nem hűséget vagy romantikát ígér, inkább arra figyelmeztet, hogy a szeretet akkor marad megtartó, ha nem válik túlzott alkalmazkodássá vagy csendes önfeladássá.",
     career:
       "Nem kész pályaképet ad, inkább azt jelzi, hogy a 6-os mintázathoz jól illhetnek azok a közegek, ahol a felelősség, a rendezettség, a szépség vagy a kapcsolati figyelem kap szerepet. Támogató lehet minden olyan munka, ahol a gondoskodás nem önfeladás, hanem átlátható keretekkel és kölcsönösséggel társul.",
     advice:
-      "Próbáld meg tudatosabban figyelni a saját igényeidre, és ne hagyd, hogy az önfeláldozás kimerítsen. Fontos, hogy megtaláld az egyensúlyt a mások támogatása és az önmagad gondozása között. Emellett érdemes elfogadni, hogy nem mindenki osztozik az idealista elképzeléseidben, és ez nem von le az emberi kapcsolatok értékéből.",
+      "A 6-os tanulsága a hagyomány szerint az, hogy a figyelem nem azonos az önfeladással. Érdemes különválasztani, mi az, amit szívesen adsz, és mi az, amit már csak békefenntartásból vállalsz. A kapcsolataid akkor maradnak megtartók, ha a gondoskodás mellett a saját pihenésednek és határaidnak is van helye.",
   },
   "7": {
     title: "Sorsszám 7 jelentése – A tudáskereső útja",
-    lead:
-      "A 7-es sorsszámot a numerológiai hagyomány a csendes elmélyülés, a kérdezés és a belső figyelem jelképeként olvassa. Nem rejtett igazságot vagy különleges tudást ígér, inkább azt a mintát mutatja, ahol fontos lehet a megértés keresése és a józan kapcsolódás egyensúlya.",
+    lead: "A 7-es sorsszámot a numerológiai hagyomány a csendes elmélyülés, a kérdezés és a belső figyelem jelképeként olvassa. Nem rejtett igazságot vagy különleges tudást ígér, inkább azt a mintát mutatja, ahol fontos lehet a megértés keresése és a józan kapcsolódás egyensúlya.",
     essence:
       "A 7-es szám hagyományos olvasata a kutatás, elemzés és befelé figyelés témáit emeli előtérbe. Támogató oldala nem felsőbb tudás, hanem annak igénye, hogy a felszín mögött is legyen idő kérdezni, rendszerezni és megérteni. Akkor marad földelt, ha a csend nem elszigetelődésbe, hanem tisztább rálátásba vezet.",
     strengths:
@@ -132,12 +126,12 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     strengths:
       "A 8-as mintázat erőssége a céltudatos építkezés, a stratégiai gondolkodás és a felelősségvállalás lehet. Akkor működik jól, ha az eredmény nem önigazolás, hanem rendezett, másokat is figyelembe vevő építés. A kitartás és a türelem itt nem garantált jólétet jelent, hanem azt, hogy a nagyobb célokhoz következetes, józan lépésekre van szükség.",
     shadow:
-      "A 'nyolcasok' hajlamosak túl nagy hangsúlyt fektetni az anyagi javakra, az eredményeiket gyakran tárgyakkal 'jutalmazzák'. Ez a viselkedés mások számára felületesnek vagy hencegőnek tűnhet, és vonzhatja az opportunistákat. Elért eredményeik miatt hatalmi pozícióban érzik magukat, ami autokratikus viselkedéshez vezethet, figyelmen kívül hagyva mások véleményét és erőfeszítéseit. A siker utáni vágyuk gyakran vakká teszi őket a szabályokra és folyamatokra, ami megnehezíti a csapatmunkát és a partnerségeket.",
-    love: "Párkapcsolataikban a 8-as sorsszámúak stabilitásra és kölcsönös tiszteletre törekednek. Fontos számukra, hogy partnerük elismerje és támogassa ambícióikat, de ugyanakkor ne érezze magát háttérbe szorítva. Egy egyenrangú és erős partnerre vágynak, akivel együtt építkezhetnek és osztozhatnak a sikereken.",
+      "A 8-as árnyéka akkor erősödhet fel, amikor az eredmény, kontroll vagy külső elismerés túl nagy szerepet kap. Ilyenkor a felelősség könnyen nyomássá, a céltudatosság pedig keménységgé válhat. A hagyomány szerint ez a szám arra hív, hogy az erő mellé mérték, méltányosság és valódi együttműködés társuljon.",
+    love: "Párkapcsolatban a 8-as mintázat a stabilitás, kölcsönös tisztelet és közös építkezés témáit hozhatja elő. Nem erős vagy ambiciózus partnert ír elő, inkább azt mutatja, hogy a kapcsolat akkor marad egyensúlyban, ha egyik fél eredményei sem nyomják el a másik ritmusát. A közös siker itt akkor megtartó, ha emberi figyelemmel párosul.",
     career:
-      "A 8-as sorsszámhoz jól illhetnek azok a területek, ahol stratégia, felelősség, szervezés és mérhető eredmény is megjelenik. Vezetői, vállalkozói, projektirányítói vagy értékteremtő szerepekben akkor tud jól működni, ha az anyagi világot nem puszta célként, hanem tartós rend és felelősség eszközeként kezeli.",
+      "A 8-as mintázathoz jól illhetnek azok a helyzetek, ahol stratégia, felelősség, szervezés és mérhető eredmény is megjelenik. Nem vezetői rangot vagy vállalkozói sorsot igazol, inkább azt jelzi, hogy a hatás és az erőforrások kezelése fontos tanulási tér lehet. A munka akkor támogató, ha az eredmény nem puszta önigazolás, hanem tartós rend és felelős értékteremtés.",
     advice:
-      "Törekedj a belső és külső gazdagság kiegyenlítésére, és ne kizárólag az anyagi sikerekre fókuszálj. Ügyelj arra, hogy a vezetői ambícióid ne váljanak uralkodóvá, és adj teret mások véleményének. Tanuld meg, hogy a valódi hatalom nem az ellenőrzésben, hanem a bölcs együttműködésben és a megosztott sikerekben rejlik.",
+      "A 8-as tanulsága a hagyomány szerint az, hogy az erő akkor marad tiszta, ha nem válik ellenőrzéssé. Érdemes figyelni, hol akarsz túl gyorsan bizonyítani, és hol lenne bölcsebb bevonni másokat. A valódi tartás nem a nyomás fokozásából, hanem a mértékből, következetességből és méltányos együttműködésből épül.",
   },
   "9": {
     title: "Sorsszám 9 jelentése — A tágabb rálátás",
@@ -148,8 +142,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "A 9-es mintázat erőssége lehet a tapasztalatokból érkező együttérzés, a tágabb nézőpont és az, hogy könnyebben észreveszed mások emberi oldalát. Nem felsőbb tudást vagy megmentő szerepet jelent, inkább azt, hogy a nehézségekből tanulságot, mértéket és tiszteletteljes jelenlétet lehet formálni. Akkor működik jól, ha a segítő szándék mellett a saját határaidat is komolyan veszed.",
     shadow:
       "A 9-es árnyéka lehet, amikor a régi sérelmek túl nagy teret kapnak, vagy a segítő szándék csendes önfeladásba fordul. Nem személyes kötelességet ír elő mások nehézségeivel kapcsolatban, inkább arra figyelmeztet, hogy az együttérzés csak világos határokkal marad tartós és tiszta.",
-    love:
-      "Párkapcsolatban a 9-es mintázat az együttérzés, a lezáratlan történetek és a közös fejlődés témáit hozhatja elő. Nem mély elköteleződést vagy spirituális összeillést ígér, inkább azt mutatja, hogy a kapcsolódás akkor marad egészséges, ha a figyelem mellett az önazonosság és a határtartás is jelen van.",
+    love: "Párkapcsolatban a 9-es mintázat az együttérzés, a lezáratlan történetek és a közös fejlődés témáit hozhatja elő. Nem mély elköteleződést vagy spirituális összeillést ígér, inkább azt mutatja, hogy a kapcsolódás akkor marad egészséges, ha a figyelem mellett az önazonosság és a határtartás is jelen van.",
     career:
       "A 9-es sorsszám olyan munkákban találhat több értelmet, ahol emberi figyelem, tanítás, támogatás, közösségi szemlélet vagy kreatív önkifejezés kap helyet. Nem pusztán a cím vagy fizetés érdekli, hanem az, hogy amit csinál, hordoz-e tágabb emberi értelmet.",
     advice:
@@ -157,8 +150,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "11": {
     title: "A Sorsszám 11 jelentése — A Mester-Intuitív",
-    lead:
-      "A 11-es sorsszámot a numerológiai hagyomány mesterszámként, az ihlet, érzékeny figyelem és földelt jelenlét jelképeként olvassa. Nem különleges képességet vagy spirituális rangot ír le, inkább azt a mintát mutatja, ahol fontos lehet az érzékenység józan formába rendezése.",
+    lead: "A 11-es sorsszámot a numerológiai hagyomány mesterszámként, az ihlet, érzékeny figyelem és földelt jelenlét jelképeként olvassa. Nem különleges képességet vagy spirituális rangot ír le, inkább azt a mintát mutatja, ahol fontos lehet az érzékenység józan formába rendezése.",
     essence:
       "A 11-es sorsszám hagyományos olvasata az intuíció, érzékenység és belső figyelem témáit emeli előtérbe. Nem különleges képességet vagy gondolatolvasást jelent, hanem azt jelezheti, hogy a finom benyomásokat érdemes józan keretben vizsgálni. A 11-es út ezért nem elszakadás a valóságtól, hanem annak tanulása, hogyan lehet az ihletet földelt, józan formába rendezni.",
     strengths:
@@ -180,8 +172,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "A 22-es mintázat erőssége lehet, hogy az ötletek nem maradnak puszta elképzelések, hanem rendszert, tervet és következő lépést kaphatnak. Nem minden akadály legyőzését ígéri, inkább azt támogatja, hogy a nagyobb célok mellett is maradjon mérték, együttműködés és emberi lépték.",
     shadow:
       "A 22-es árnyéka lehet, amikor a tökéletesség keresése késlelteti a józanul elégséges megoldásokat, vagy a felelősség túl nagy belső nyomássá válik. Nem azt jelenti, hogy mindent egyedül kell kézben tartani, inkább arra hívja fel a figyelmet, hogy a tartós építéshez pihenés, delegálás és kapcsolati jelenlét is kell.",
-    love:
-      "Párkapcsolatban a 22-es mintázat a közös tervek, felelősség és hosszabb távú építkezés témáit hozhatja elő. Nem ambiciózus vagy intenzív kapcsolatot ír elő, inkább azt mutatja, hogy a nagyobb célok mellett a pihenés, az érzelmi jelenlét és a kölcsönös ritmus is számít.",
+    love: "Párkapcsolatban a 22-es mintázat a közös tervek, felelősség és hosszabb távú építkezés témáit hozhatja elő. Nem ambiciózus vagy intenzív kapcsolatot ír elő, inkább azt mutatja, hogy a nagyobb célok mellett a pihenés, az érzelmi jelenlét és a kölcsönös ritmus is számít.",
     career:
       "Nem kész szakmai címke, inkább azt jelzi, hogy a 22-es mintázatban fontos lehet a rendszerek, struktúrák és hosszabb távú tervek építése. Jól illhet hozzá olyan közeg, ahol a víziót módszeres munkává, felelősen követhető lépésekké és mások számára is átlátható renddé lehet formálni. Ez nem vezetői rangot ígér, hanem a nagyobb léptékű feladatok józan, emberi ritmusának keresését támogatja.",
     advice:
@@ -189,8 +180,7 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "33": {
     title: "Sorsszám 33 jelentése — Az Önzetlen Tanító",
-    lead:
-      "A 33-as sorsszámot a numerológiai hagyomány mesterszámként, a gondoskodó figyelem és felelősen adott támogatás jelképeként olvassa. Nem önzetlen szolgálatot vagy spirituális küldetést ír elő, inkább azt a mintát mutatja, ahol fontos lehet a szeretetteljes jelenlét és az egészséges határtartás együttese.",
+    lead: "A 33-as sorsszámot a numerológiai hagyomány mesterszámként, a gondoskodó figyelem és felelősen adott támogatás jelképeként olvassa. Nem önzetlen szolgálatot vagy spirituális küldetést ír elő, inkább azt a mintát mutatja, ahol fontos lehet a szeretetteljes jelenlét és az egészséges határtartás együttese.",
     essence:
       "A 33-as szám hagyományos olvasata a gondoskodás, tanítás, közösségi figyelem és emberi felelősség témáit emeli előtérbe. Nem egyetemes szeretetet vagy különleges rangot igazol, inkább arra emlékeztethet, hogy a támogatás akkor marad tiszta, ha nem önfeladásból, hanem józan jelenlétből indul.",
     strengths:
