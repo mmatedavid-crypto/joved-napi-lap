@@ -329,6 +329,18 @@ const contextChecks = [
     ),
     required: ["Érzések helyett biztos bizonyítékot nem ad", "következetesebb jelenlét", "konkrét figyelem"],
   },
+  {
+    name: "context:free_three_card_present_heading",
+    body: textFromReading(
+      composeThreeCardTarot({
+        readingType: "3 lapos húzás",
+        cards: [CARDS[6], CARDS[9], CARDS[16]],
+        question: "Komolyan gondolja ezt a kapcsolatot?",
+        category: "randi / ismerkedés",
+      }),
+    ),
+    required: ["Jelen — milyen minta aktív most?"],
+  },
 ].map((item) => {
   const lower = item.body.toLocaleLowerCase("hu-HU");
   const missing = item.required.filter((word) => !lower.includes(word.toLocaleLowerCase("hu-HU")));
@@ -359,6 +371,19 @@ const loveIntentBody = textFromReading(
 for (const forbiddenNeedle of ["ahol valódi szándék van", "valódi szándék"]) {
   if (loveIntentBody.includes(forbiddenNeedle)) {
     policyFailures.push(`compatibility intent answer must not claim to identify another person's true intent: ${forbiddenNeedle}`);
+  }
+}
+const threeCardBody = textFromReading(
+  composeThreeCardTarot({
+    readingType: "3 lapos húzás",
+    cards: [CARDS[6], CARDS[9], CARDS[16]],
+    question: "Komolyan gondolja ezt a kapcsolatot?",
+    category: "randi / ismerkedés",
+  }),
+);
+for (const forbiddenNeedle of ["Jelen — mi történik most valójában?"]) {
+  if (threeCardBody.includes(forbiddenNeedle)) {
+    policyFailures.push(`free three-card reading must avoid revelation-style present heading: ${forbiddenNeedle}`);
   }
 }
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
@@ -548,6 +573,7 @@ for (const needle of [
 }
 
 for (const forbiddenNeedle of [
+  "Jelen — mi történik most valójában?",
   "aranyszínű fény",
   "szíveddel érzel",
   "belső rezgés",

@@ -21,7 +21,7 @@ export function composeThreeCardTarot(input: TarotQualityInput): QualityReading 
         text: `A ${past.name} azt mutatja, hogy ez a helyzet nem a semmiből érkezett: a ${past.keywords[0].toLowerCase()} minősége már korábban is dolgozhatott benned. ${past.general}`,
       },
       {
-        heading: "Jelen — mi történik most valójában?",
+        heading: "Jelen — milyen minta aktív most?",
         text: `A ${present.name} a jelenben azt kérdezi, mit nem mondasz ki teljesen. A ${category} témájában ez inkább belső feszültség, mint kész válasz: ${present.general}`,
       },
       {
