@@ -190,9 +190,9 @@ export function PaywallDialog({
                 Pontossági visszajelzés
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ivory/66">
-                Ha az elkészült olvasat részben talál, vagy fontos helyzet kimarad belőle,
-                rendelés alapján visszanézzük. Adunk egy rövid pontosítási vázlatot is, hogy
-                egyszerűen meg tudd írni, melyik rész csúszott félre és mi maradt ki.
+                Ha az elkészült olvasat részben talál, vagy fontos helyzet kimarad belőle, rendelés
+                alapján visszanézzük. Adunk egy rövid pontosítási vázlatot is, hogy egyszerűen meg
+                tudd írni, melyik rész nem kapcsolódott eléggé a helyzetedhez és mi maradt ki.
               </p>
             </div>
 
@@ -212,13 +212,14 @@ export function PaywallDialog({
               />
               {!user && (
                 <p className="text-xs text-ivory/45 mt-1">
-                  Vendégvásárlás — fiók nem kötelező. Fontos, hogy pontos címet adj meg, mert
-                  ehhez kötjük az olvasat elküldését és visszakeresését.
+                  Vendégvásárlás — fiók nem kötelező. Fontos, hogy pontos címet adj meg, mert ehhez
+                  kötjük az olvasat elküldését és visszakeresését.
                 </p>
               )}
               <p className="mt-1 text-xs leading-relaxed text-ivory/48">
                 Fizetés előtt még egyszer nézd át: erre az email címre küldjük az értesítést, és
-                vendégként ezzel tudunk gyorsan segíteni, ha később vissza kell keresni az olvasatot.
+                vendégként ezzel tudunk gyorsan segíteni, ha később vissza kell keresni az
+                olvasatot.
               </p>
               {email && !emailValid && (
                 <p className="mt-1 text-xs text-gold/75">
@@ -392,10 +393,7 @@ export function PaywallDialog({
                     <div className="mb-1 font-medium text-ivory/82">Segítség</div>
                     <p>
                       Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk:{" "}
-                      <a
-                        className="text-gold hover:text-gold/80"
-                        href={supportMailto}
-                      >
+                      <a className="text-gold hover:text-gold/80" href={supportMailto}>
                         {SITE_LEGAL.supportEmail}
                       </a>
                     </p>
@@ -428,8 +426,12 @@ export function PaywallDialog({
                 Olvasat határai
               </div>
               <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-ivory/56">
-                <li>Nem mond biztos jövőt, visszatérést vagy másik ember döntését kész tényként.</li>
-                <li>Nem választ helyetted; a mintát, tempót és belső fókuszt segít tisztábban látni.</li>
+                <li>
+                  Nem mond biztos jövőt, visszatérést vagy másik ember döntését kész tényként.
+                </li>
+                <li>
+                  Nem választ helyetted; a mintát, tempót és belső fókuszt segít tisztábban látni.
+                </li>
                 <li>Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.</li>
               </ul>
             </div>
@@ -454,9 +456,9 @@ export function PaywallDialog({
                 <Link to="/elallasi-tajekoztato" className="text-gold hover:text-gold/80">
                   elállási tájékoztatót
                 </Link>
-                ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után, és
-                tudomásul veszem, hogy az elkészült digitális olvasatnál az elállási jog korlátozott
-                lehet. Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.
+                ; kérem a digitális tartalom teljesítésének megkezdését a fizetés után, és tudomásul
+                veszem, hogy az elkészült digitális olvasatnál az elállási jog korlátozott lehet. Ha
+                a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.
               </span>
             </label>
 
@@ -478,13 +480,11 @@ export function PaywallDialog({
               Tovább a fizetéshez · {formatHuf(total)}
             </button>
             {checkoutBlocker && (
-              <p className="text-center text-xs leading-relaxed text-ivory/50">
-                {checkoutBlocker}
-              </p>
+              <p className="text-center text-xs leading-relaxed text-ivory/50">{checkoutBlocker}</p>
             )}
             <p className="text-[10px] text-ivory/40 text-center">
-              Régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi vagy
-              pénzügyi tanácsadás.
+              Régi jelképrendszerekből készült önismereti olvasat. Nem orvosi, jogi vagy pénzügyi
+              tanácsadás.
             </p>
           </div>
         ) : (
@@ -767,9 +767,7 @@ function readingFocusPreview(
   } else if (product.slug === "horoszkop_szemelyre") {
     lines.push("A jegyedet és a mostani témádat rövid, személyes napi iránnyá kapcsoljuk össze.");
   } else if (product.slug === "szammisztika_eletut") {
-    lines.push(
-      "A születési adatokból és a névből személyesebb életút-mintát állítunk össze.",
-    );
+    lines.push("A születési adatokból és a névből személyesebb életút-mintát állítunk össze.");
   }
 
   if (cards) lines.push(`A húzott lapok is bekerülnek a fókuszba: ${cards}.`);

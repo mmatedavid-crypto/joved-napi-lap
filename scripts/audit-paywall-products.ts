@@ -104,9 +104,9 @@ for (const needle of [
   "Pontossági visszajelzés",
   "Ha az elkészült olvasat részben talál",
   "fontos helyzet kimarad belőle",
-  "rendelés alapján visszanézzük",
+  "alapján visszanézzük",
   "rövid pontosítási vázlatot",
-  "melyik rész csúszott félre",
+  "melyik rész nem kapcsolódott eléggé a helyzetedhez",
   "mi maradt ki",
   "Részletek: miből készül az olvasat, hogyan kapod meg",
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
@@ -165,11 +165,11 @@ for (const needle of [
   "kimásolható és letölthető",
   "az elkészült olvasat kimásolható és letölthető",
   "Fontos, hogy pontos címet adj meg",
-  "ehhez kötjük az olvasat elküldését és visszakeresését",
+  "kötjük az olvasat elküldését és visszakeresését",
   "Fizetés előtt még egyszer nézd át",
   "erre az email címre küldjük az értesítést",
   "vendégként ezzel tudunk gyorsan segíteni",
-  "vissza kell keresni az olvasatot",
+  "ha később vissza kell keresni az",
   "Javítsd az email címet fizetés előtt",
   "elgépelésnél nehezebb lesz eljuttatni vagy",
   "visszakeresni az olvasatot",
@@ -228,14 +228,15 @@ for (const needle of [
   "vállalt határidőt",
   "kérem a digitális tartalom teljesítésének megkezdését",
   "elkészült digitális olvasatnál az elállási jog korlátozott",
-  "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk.",
+  "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk",
   "Régi jelképrendszerekből készült önismereti olvasat",
   "Olvasat határai",
   "Nem mond biztos jövőt, visszatérést vagy másik ember döntését kész tényként",
   "Nem választ helyetted; a mintát, tempót és belső fókuszt",
   "Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás",
   "Nem orvosi, jogi vagy",
-  "pénzügyi tanácsadás",
+  "pénzügyi",
+  "tanácsadás.",
   "const formatPromise = readingFormatPromise(product)",
   "function readingFormatPromise(product: ProductDef)",
   "Forma:",
@@ -439,7 +440,7 @@ for (const needle of [
   "Menthető olvasat",
   "Pontosítási út",
   "belépő árú olvasatok alacsony kockázatú első próbát",
-  "Ha nem elég pontos, rendelés alapján visszanézzük",
+  "Ha valami nem kapcsolódott eléggé a helyzetedhez",
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
   "Belépő olvasat",
@@ -547,6 +548,7 @@ for (const needle of [
   "segítünk a hozzáférésben",
   "Mi van, ha az olvasat nem érződik elég pontosnak?",
   "rövid pontosítási vázlat",
+  "melyik rész nem kapcsolódott eléggé a helyzetedhez",
   "milyen irányban vársz segítséget",
   "Elállhatok a digitális olvasattól?",
   "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését",
@@ -568,6 +570,15 @@ for (const [file, source] of [
     failed.push(
       `${file}: conversion copy should use belépő árú / alacsony kockázatú wording instead of olcsó`,
     );
+  }
+}
+
+for (const forbidden of ["melyik rész csúszott félre", "melyik rész nem talált", "mi nem talált"]) {
+  if (pricingRoute.includes(forbidden)) {
+    failed.push(`Pricing copy should use situation-linked clarification wording: ${forbidden}`);
+  }
+  if (paywall.includes(forbidden)) {
+    failed.push(`Paywall copy should use situation-linked clarification wording: ${forbidden}`);
   }
 }
 
