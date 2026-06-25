@@ -11,7 +11,7 @@ import { SITE_LEGAL } from "@/lib/legal";
 const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Napi szerencseszámok csillagjegy szerint";
 const DESCRIPTION =
-  "Mai szerencseszámok mind a 12 csillagjegyhez: 6 személyes szám és egy játékos lottótipp, minden nap frissítve.";
+  "Mai szerencseszámok mind a 12 csillagjegyhez: 6 személyes szám, napi fókusz és felelős, játékos számsor minden nap.";
 
 const SIGNS = [
   { slug: "kos", name: "Kos", symbol: "♈" },
@@ -37,7 +37,7 @@ const FAQ = [
   {
     question: "Növelik a számok a lottónyerés esélyét?",
     answer:
-      "Nem. A számok játékos, önismereti inspirációt adnak, nem jelentenek nyerési garanciát és nem változtatják meg a véletlenen alapuló játékok esélyeit.",
+      "Nem. A számok számmisztikai ihletésű napi fókuszt adnak, nem ígérnek nyereményt, és nem változtatják meg a véletlenen alapuló játékok esélyeit.",
   },
   {
     question: "Mikor frissülnek a szerencseszámok?",
@@ -132,7 +132,7 @@ function LuckyNumbersPage() {
       <PageHeader
         eyebrow="Napi számmisztika"
         title="Mai szerencseszámaid"
-        lead="Válaszd ki a csillagjegyed, és nézd meg a mai hat számodat. Egy játékos napi rituálé — nem ígéret, hanem inspiráció."
+        lead="Válaszd ki a csillagjegyed, és nézd meg a mai hat számodat. Számmisztikai ihletésű napi rituálé — nem ígéret, hanem fókusz."
       />
 
       <div className="mx-auto max-w-3xl space-y-6 px-4 pb-20 md:px-6">
@@ -244,8 +244,9 @@ function LuckyNumbersPage() {
         </Section>
 
         <p className="text-center text-xs leading-relaxed text-ivory/45">
-          A szerencseszámok szórakoztató, önismereti tartalmak. Szerencsejátékban mindig játssz
-          felelősen; a részvétel kizárólag 18 éven felülieknek ajánlott.
+          A szerencseszámok számmisztikai ihletésű napi fókuszt adnak, nem nyerési ígéretet.
+          Szerencsejátékban mindig játssz felelősen; a részvétel kizárólag 18 éven felülieknek
+          ajánlott.
         </p>
       </div>
     </Layout>

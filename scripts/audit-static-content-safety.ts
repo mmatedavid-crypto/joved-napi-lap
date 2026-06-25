@@ -23,8 +23,19 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/routes/szerencseszamok.tsx",
-    forbidden: [/new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/],
-    required: ['import { huTodayKey } from "@/lib/dateKeys";', "return huTodayKey();"],
+    forbidden: [
+      /new Date\(\)\.toISOString\(\)\.slice\(0, 10\)/,
+      /szórakoztató, önismereti tartalmak/i,
+      /nyerési garanciát és nem változtatják/i,
+    ],
+    required: [
+      'import { huTodayKey } from "@/lib/dateKeys";',
+      "return huTodayKey();",
+      "Számmisztikai ihletésű napi rituálé",
+      "számmisztikai ihletésű napi fókuszt adnak",
+      "nem nyerési ígéretet",
+      "Szerencsejátékban mindig játssz felelősen",
+    ],
   },
   {
     file: "src/data/magazin.hu.ts",
