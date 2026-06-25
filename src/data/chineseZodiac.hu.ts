@@ -27,7 +27,8 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     personality:
       "A patkány a kínai állatöv első jegye: gyors észjárású, leleményes és kifinomultan érti az embereket. Csendben figyel, mielőtt lépne, és általában már akkor látja a megoldást, amikor mások még a problémát értelmezik.",
     love: "A patkány érzelmileg óvatos: nem mutatja meg a sebezhetőségét annak, aki nem érdemli ki. Akit viszont beenged, azt mély hűséggel és gondoskodó figyelemmel veszi körül. Romantikus, de gyakorlatias is — szereti a kiszámítható, biztonságos kötődést.",
-    career: "Stratégia, kutatás, írás, kommunikáció és rendszerező munka — minden olyan terület, ahol a kombinációs készség és az emberismeret számít. Önállóan és kis csapatban a legjobb, nagy hierarchiában kifullad.",
+    career:
+      "Stratégia, kutatás, írás, kommunikáció és rendszerező munka — minden olyan terület, ahol a kombinációs készség és az emberi minták figyelése számít. Nem kész pályaképet ad, inkább azt jelzi, hogy átlátható keretekben, önálló feladatrészekkel vagy kisebb csapatban lehet támogatóbb a ritmus.",
     money: "A biztonság és a tartalék fontos számára: általában átgondoltan gyűjt és óvatosan költ. Akkor szűkül be, ha a félelem vezérli, mert ilyenkor a lehetőségeket is veszélyként olvashatja.",
     health: "A sok elemzés és aggódás könnyen kimerítheti. Pihenés, csendes séta és következetes esti ritmus segíthet visszatalálni a nyugalmához.",
     compatible: ["Sárkány", "Majom", "Bivaly"],
@@ -117,7 +118,8 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     personality:
       "A kígyó a mély megérzés és a csendes elemzés jegye. Kívülről nyugodt, belül folyamatosan dolgozik. Tudja, mikor kell szólni és mikor hallgatni — ezért hatékonyabb sok hangos embernél.",
     love: "Lassan nyílik meg, de mélyen kötődik. Érzékeny és birtokló — bizalom kell, hogy a hűvös pikkelyek alatt megmutassa a melegét.",
-    career: "Elemzés, kutatás, művészet, stratégia, diplomácia — minden, ahol a háttérből is jól kell látni a mintákat. Önállóan a legjobb.",
+    career:
+      "Elemzés, kutatás, művészet, stratégia, diplomácia — minden, ahol a háttérből is jól kell látni a mintákat. Nem azt állítja, hogy csak önállóan működhet jól, inkább azt mutatja, hogy csendesebb, fókuszáltabb keretek között könnyebb lehet tisztán látni.",
     money: "Hosszabb távú biztonságban gondolkodik, és ritkán mutogatja, amije van. Akkor működik jól, ha az intuíció mellé józan ellenőrzést is társít.",
     health: "A folyamatos belső monológ sok energiát vihet el. A csendes figyelem, a lassú légzés és a rendszeres egyedüllét nála nem luxus, hanem ritmustartás.",
     compatible: ["Bivaly", "Kakas", "Majom"],
@@ -151,7 +153,7 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1931, 1943, 1955, 1967, 1979, 1991, 2003, 2015, 2027, 2039],
     keywords: ["érzékeny", "kreatív", "együttérző"],
     personality:
-      "A kecske finom lelkű, művészi érzékű, mélyen empatikus jegy. Nem szereti a konfliktust, és néha túl sokat ad fel a békéért. Belső világa gazdag — ott szüli a legjobb ötleteit.",
+      "A kecske a kínai zodiákus hagyományában az érzékeny figyelem, alkotó forma és békére törekvés jelképe. Nem kész személyiségcímke, inkább azt a mintát mutatja, amikor fontos lehet a szépség, a nyugalom és az, hogy a harmónia ne menjen az önfeladás rovására.",
     love: "Romantikus, érzékeny, mély érzelmű. Stabil, gyengéd partner kell hozzá, aki nem viszi át a saját stresszét. Egy biztonságos kapcsolat kivirágoztatja.",
     career: "Művészet, kézművesség, oktatás, gondoskodó vagy közösségi munka — mindenhol, ahol a kreativitás és a szív számít. Kemény versenyhelyzet kimeríti.",
     money: "Nem materialista, de szereti a szépséget. Megfontoltan költ a környezetére. Hosszú távon stabil, ha van egy gyakorlatias rendszere.",
@@ -169,7 +171,7 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1932, 1944, 1956, 1968, 1980, 1992, 2004, 2016, 2028, 2040],
     keywords: ["okos", "játékos", "leleményes"],
     personality:
-      "A majom a kreatív problémamegoldás jegye. Gyors észjárású, humoros, kíváncsi. Mindenből játékot csinál, de ha akar, meglepően pontosan és fókuszáltan dolgozik.",
+      "A majom a kínai zodiákus hagyományában a játékos találékonyság és gyors kapcsolás jelképe. Nem állandó tréfálkozást vagy kiemelkedő észjárást ír elő, inkább azt a mintát mutatja, ahol az ötletek, váltások és új nézőpontok könnyebben mozdulhatnak meg.",
     love: "Szellemes és vonzó, könnyen szerez hódolót. A tartós kapcsolathoz olyan partner kell, aki lépést tart vele intellektuálisan, és nem akarja hamar besorolni.",
     career: "Technológia, marketing, művészet, vállalkozás, kutatás — minden, ahol az ötlet és a gyors váltás érték.",
     money: "A lehetőségeket gyorsan észreveszi, de néha túl játékosan kezeli a kockázatot. Akkor stabilabb, ha hagyja, hogy a lendület mellé rendszer is társuljon.",
@@ -205,7 +207,7 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1934, 1946, 1958, 1970, 1982, 1994, 2006, 2018, 2030, 2042],
     keywords: ["hűséges", "igazságos", "védelmező"],
     personality:
-      "A kutya az állatöv erkölcsi iránytűje: lojális, igazságszerető, mélyen empatikus. Akit a szívébe zár, azért bármit megtesz. Nem hisz könnyen, de ha igen, akkor mélyen.",
+      "A kutya a kínai zodiákus hagyományában a hűség, igazságérzet és védelmező figyelem jelképe. Nem erkölcsi rangot vagy feltétlen önfeláldozást jelent, inkább azt a mintát mutatja, ahol a bizalom lassan épülhet, és a kapcsolatokban fontos a következetesség.",
     love: "Hűséges, gondoskodó partner. Bizalom nélkül nem működik — egy hazugság elég, és kifagy. Hosszú távra szövetkezik.",
     career: "Jog, oktatás, egészségügy, civil munka, biztonság — mindenhol, ahol értékek mentén lehet dolgozni.",
     money: "Nem ez a fő motívuma. Megbízhatóan keres, megbízhatóan gondoskodik a családjáról. Luxust nem hajszol.",
