@@ -117,14 +117,14 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
   },
   7: {
     number: 7,
-    title: "A Lelkek Kutatója",
+    title: "Az Elmélyülő Kutató",
     meaning:
-      "Mélyen gondolkodó, elemző és spirituális lelkület. Küldetésed az igazság keresése és a belső tudás átadása.",
-    strengths: "Intuíció, bölcsesség, belső tudás.",
+      "A 7-es mintázat az elmélyült figyelem, kérdezés és belső rendszerezés jelképe. Nem spirituális küldetés, inkább annak keresése, hogyan értheted tisztábban a tapasztalataidat.",
+    strengths: "Figyelem, elemzés, belső csend.",
     shadow: "Visszahúzódás, gyanakvás, túlanalízis.",
     love: "Mélységet keresel, nem zajt. Egyedüllét nélkül kifáradsz a kapcsolatban is.",
-    work: "Kutatás, terápia, írás, tanácsadás — bárhol, ahol mélyre kell látni.",
-    purpose: "A felszín mögé látni — és azt is megosztani, amit ott találsz.",
+    work: "Olyan közeg támogathat, ahol van idő kérdezni, rendszerezni, írni vagy összefüggéseket keresni.",
+    purpose: "Tisztább kapcsolatot találni a belső figyelem és a hétköznapi valóság között.",
     advice: "Nem minden kérdésnek kell ma válasz. De ne menekülj a kérdés elől.",
   },
   8: {
