@@ -45,7 +45,8 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     keywords: ["kitartó", "megbízható", "csendes erő"],
     personality:
       "A bivaly a türelem mestere: lassú, megfontolt, de amit elkezd, azt végig is viszi. Nem szeret feltűnősködni — a teljesítménye beszél helyette. Konzervatív értékrendű és mélyen lojális.",
-    love: "Hosszú távra szövetkezik. Nem flörtölős típus, de aki nála köt ki, az biztonságra és valódi otthonra számíthat. Néha túl visszafogott: ki kell mondania, amit érez, különben félreértik.",
+    love:
+      "Kapcsolatban a Bivaly mintázat a tartósság, biztonság és lassan épülő bizalom témáit hozhatja elő. Nem örök hűséget vagy kész otthonérzetet ígér, inkább arra figyelmeztet, hogy a stabilitás mellett az érzések kimondása is fontos.",
     career: "Mezőgazdaság, építőipar, mérnöki munka, könyvelés, jog — mindenhol, ahol a kitartás és a részletekre figyelés számít. Csapatban a hűséges, megbízható oszlop.",
     money: "Lépésről lépésre gyarapszik. Nem kockáztat feleslegesen, hosszú távon viszont a legtöbbet teszi félre az állatöv tagjai közül.",
     health: "A folyamatos teherbírás miatt különösen fontos neki a lassú levezetés. A finom mozgás és a kimondott feszültség segíthet, hogy ne mindent csendben hordozzon.",
@@ -62,9 +63,11 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1926, 1938, 1950, 1962, 1974, 1986, 1998, 2010, 2022, 2034],
     keywords: ["bátor", "szenvedélyes", "lázadó"],
     personality:
-      "A tigris a megújulás energiája. Karizmatikus, eltökélt, és nem fél szembemenni a tömeggel. Vezetésre született, de csak akkor működik jól, ha hisz az ügyben — kényszerre rosszul reagál.",
-    love: "Heves és intenzív. Akit szeret, azért képes hegyet megmozgatni, de a féltékenység és birtoklási vágy könnyen csapdába viszi. Egyenrangú partnerre van szüksége, aki nem akarja megszelídíteni.",
-    career: "Vállalkozás, politika, művészet, sport, mentorálás — mindenhol, ahol kell egy erős, eredeti hang. Beosztottnak nehéz, mert nem szereti az ostoba szabályokat.",
+      "A tigris a kínai zodiákus hagyományában a megújulás, bátorság és önálló lendület jelképe. Nem vezetői sorsot vagy állandó harci kedvet ír elő, inkább azt a mintát mutatja, ahol fontos lehet a saját erő józan, felelős mederbe terelése.",
+    love:
+      "Kapcsolatban a Tigris mintázat a szenvedély, szabadságigény és egyenrangúság témáit hozhatja elő. Nem heves kapcsolatot vagy féltékenységet ígér, inkább arra figyelmeztet, hogy az erős érzések mellett is kell tér, bizalom és kölcsönös tisztelet.",
+    career:
+      "Vállalkozás, művészet, sport, mentorálás vagy kezdeményező munka jól rezonálhat ezzel a mintával. Nem kész karrierút, inkább azt jelzi, hogy a Tigrishez kötött lendület akkor támogató, ha nem puszta szabályellenességből, hanem értelmes célból indul.",
     money: "Nagyvonalúan költ és nagyvonalúan keres — hullámvasút. Akkor stabil, ha van mellette egy földhözragadtabb partner vagy könyvelő.",
     health: "A túl sok harci helyzet könnyen elviszi az erejét. Időnként magányos, zajtalan időre van szüksége, hogy újra érezze a saját ritmusát.",
     compatible: ["Ló", "Kutya", "Disznó"],
@@ -137,7 +140,8 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     personality:
       "A ló a szabadság energiája: vidám, mozgékony, lelkes. Gyorsan tanul, gyorsan unatkozik. Egyenes ember — jó és rossz értelemben is, mert nem mindig veszi észre, mikor sebez a szavaival.",
     love: "Szenvedélyes és könnyed egyszerre. Kell, hogy a partner ne ketrecbe zárja, hanem mellé álljon. Akkor tartós a kapcsolata, ha mindketten élhetnek a saját életükkel is.",
-    career: "Értékesítés, utazás, sport, média, oktatás — mozgás, emberek, változatosság kell. Íróasztal mögé zárva elsorvad.",
+    career:
+      "Értékesítés, utazás, sport, média, oktatás — olyan területek illhetnek hozzá, ahol mozgás, emberek és változatosság is jelen van. Nem azt jelenti, hogy a nyugodtabb munka ne működhetne, inkább azt mutatja, hogy a szabadságérzet és a saját ritmus fontos támasz lehet.",
     money: "Könnyen jön és könnyen megy. Akkor stabil, ha automatikusan félretesz, mert tudatos spórolásra nem hajlamos.",
     health: "Az állandó mozgás öröm számára, de a túlhajszolás gyorsan kiveszi belőle a könnyedséget. Akkor marad jó formában, ha a szabadság mellé pihenőpontokat is tesz.",
     compatible: ["Tigris", "Kecske", "Kutya"],
@@ -154,8 +158,10 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     keywords: ["érzékeny", "kreatív", "együttérző"],
     personality:
       "A kecske a kínai zodiákus hagyományában az érzékeny figyelem, alkotó forma és békére törekvés jelképe. Nem kész személyiségcímke, inkább azt a mintát mutatja, amikor fontos lehet a szépség, a nyugalom és az, hogy a harmónia ne menjen az önfeladás rovására.",
-    love: "Romantikus, érzékeny, mély érzelmű. Stabil, gyengéd partner kell hozzá, aki nem viszi át a saját stresszét. Egy biztonságos kapcsolat kivirágoztatja.",
-    career: "Művészet, kézművesség, oktatás, gondoskodó vagy közösségi munka — mindenhol, ahol a kreativitás és a szív számít. Kemény versenyhelyzet kimeríti.",
+    love:
+      "Kapcsolatban a Kecske mintázat a gyengédség, biztonság és érzelmi figyelem témáit hozhatja elő. Nem ír elő különösen érzékeny természetet vagy ideális partnert, inkább azt jelzi, hogy a kapcsolat akkor támogató, ha a béke mellett az őszinte határtartás is helyet kap.",
+    career:
+      "Művészet, kézművesség, oktatás, gondoskodó vagy közösségi munka jól illeszkedhet ehhez a jelképi világhoz. Nem állítja, hogy versenyhelyzetben ne lehetne helytállni, inkább arra figyelmeztet, hogy a kreativitásnak és emberi figyelemnek is kell tér.",
     money: "Nem materialista, de szereti a szépséget. Megfontoltan költ a környezetére. Hosszú távon stabil, ha van egy gyakorlatias rendszere.",
     health: "Érzelmi terhelésnél könnyen kibillenhet. Fontos neki a napi rituálé, a természetközelség és az, hogy ne vegye át mindenki más hangulatát.",
     compatible: ["Nyúl", "Ló", "Disznó"],
@@ -208,7 +214,8 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     keywords: ["hűséges", "igazságos", "védelmező"],
     personality:
       "A kutya a kínai zodiákus hagyományában a hűség, igazságérzet és védelmező figyelem jelképe. Nem erkölcsi rangot vagy feltétlen önfeláldozást jelent, inkább azt a mintát mutatja, ahol a bizalom lassan épülhet, és a kapcsolatokban fontos a következetesség.",
-    love: "Hűséges, gondoskodó partner. Bizalom nélkül nem működik — egy hazugság elég, és kifagy. Hosszú távra szövetkezik.",
+    love:
+      "Kapcsolatban a Kutya mintázat a bizalom, következetesség és védelmező figyelem témáit emeli ki. Nem hűséget vagy sérthetetlen bizalmat ígér, inkább azt mutatja, hogy a kapcsolat akkor marad biztonságos, ha az őszinteség és a jóvátétel mindkét oldalon működik.",
     career: "Jog, oktatás, egészségügy, civil munka, biztonság — mindenhol, ahol értékek mentén lehet dolgozni.",
     money: "Nem ez a fő motívuma. Megbízhatóan keres, megbízhatóan gondoskodik a családjáról. Luxust nem hajszol.",
     health: "Túl sokat vehet szívére mások bajaiból. Tanulnia kell elengedni, ami nem az övé, és nem minden feszültséget saját feladatként hordozni.",
