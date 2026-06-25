@@ -702,7 +702,7 @@ function ProfileDeliveryEmailNotice({ order }: { order?: ProfileOrder }) {
       <div className="text-xs uppercase tracking-[0.18em] text-gold/75">Email kézbesítés</div>
       <p className="mt-2 text-xs leading-relaxed text-ivory/62">
         Az olvasat elkészült és itt a profilban megnyitható. Ha az email késik vagy nem találod a
-        postafiókodban, ez a profilnézet marad a biztos hozzáférésed.
+        postafiókodban, ez a profilnézet marad az elsődleges hozzáférésed.
       </p>
       <ProfileSupportContact className="mt-2" order={order} />
     </div>
