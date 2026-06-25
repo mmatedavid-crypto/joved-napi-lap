@@ -8,7 +8,7 @@ import { SITE_LEGAL } from "@/lib/legal";
 const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "I Ching / Ji King — mind a 64 hexagram magyarul";
 const DESCRIPTION =
-  "I Ching enciklopédia: 64 hexagram magyar névvel, témával, útmutatással és figyelmeztetéssel. Ősi kínai bölcsesség mai döntésekhez.";
+  "I Ching enciklopédia: 64 hexagram magyar névvel, témával, útmutatással és figyelmeztetéssel. Régi kínai jelképrendszer mai önreflexióhoz.";
 
 export const Route = createFileRoute("/jiking/")({
   head: () => ({
@@ -38,12 +38,12 @@ function IchingHub() {
       <PageHeader
         eyebrow="I Ching / Ji King"
         title="64 hexagram magyarul"
-        lead="Az I Ching a Változások könyve — 64 alaphelyzet, amibe az élet újra meg újra besorolja az embert. Válassz hexagramot, és olvasd el a magyar értelmezést."
+        lead="Az I Ching a Változások könyve: régi kínai jelképrendszer 64 hexagrammal. Válassz egy jelet, és olvasd el józan önismereti nézőpontként, milyen helyzetmintát idéz fel."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-5">
         <Section title="Hogyan használd?">
           <p>
-            Fogalmazd meg a kérdést, ami foglalkoztat. Nézd át a 64 hexagram nevét és témáját — gyakran az ránt magához tekinteted, ami a válaszhoz közel áll. A részletes oldalon megtalálod a hexagram leírását, útmutatást és figyelmeztetést.
+            Fogalmazd meg a kérdést, ami foglalkoztat. Nézd át a 64 hexagram nevét és témáját, majd azt válaszd, amelyik segít tisztábban ránézni a helyzetre. A részletes oldalon megtalálod a hexagram leírását, útmutatását és figyelmeztető szempontját.
           </p>
         </Section>
         <section className="surface p-5 md:p-7">
