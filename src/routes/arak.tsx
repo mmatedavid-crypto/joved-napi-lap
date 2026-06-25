@@ -40,7 +40,7 @@ const PRICING_FAQ = [
 const CHOICE_GUIDE = [
   {
     title: "Csak kipróbálnám",
-    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, belépő árú, és gyorsan kiderül, megszólít-e a Jövőd.hu hangja.",
+    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, belépő árú, és első benyomást ad arról, megszólít-e a Jövőd.hu hangja.",
     productSlug: "napi_lap_ai",
     cta: "Napi lap",
   },
@@ -52,7 +52,7 @@ const CHOICE_GUIDE = [
   },
   {
     title: "Döntés előtt állok",
-    text: "Ha nem az a kérdés, mit jósol a lap, hanem mit nem látsz tisztán, a Döntés előtt komplex elemzés a legjobb választás.",
+    text: "Ha nem az a kérdés, mit jósol a lap, hanem mit nem látsz tisztán, a Döntés előtt komplex elemzés jobb illeszkedés lehet.",
     productSlug: "dontes_komplex",
     cta: "Döntési elemzés",
   },
