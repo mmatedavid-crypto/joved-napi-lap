@@ -135,6 +135,7 @@ const checks: Check[] = [
     includes: [
       "href: `${SITE_LEGAL.siteUrl}/rolunk`",
       "Egy csendes magyar rituálé",
+      "hagyományos jelképrendszerekből induló, rövid és személyes önismereti olvasatokat ad",
       "magyar nyelvű, hagyományalapú önismereti olvasatokat ad",
       "Milyen hagyományból indul?",
       "régi jelképrendszerekből indulnak",
@@ -165,6 +166,7 @@ const checks: Check[] = [
       "közérthető",
       "önismereti és szórakoztató platform",
       "szórakoztató platform",
+      "jóslatgyár",
     ],
   },
   {

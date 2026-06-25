@@ -20,7 +20,7 @@ export const Route = createFileRoute("/rolunk")({
       <PageHeader
         eyebrow="Rólunk"
         title="Egy csendes magyar rituálé"
-        lead="A Jövőd.hu nem jóslatgyár. Rövid, személyes önismereti olvasatokat adunk azoknak, akik egy helyzetet szeretnének tisztábban látni."
+        lead="A Jövőd.hu hagyományos jelképrendszerekből induló, rövid és személyes önismereti olvasatokat ad azoknak, akik egy helyzetet szeretnének tisztábban látni."
       />
       <div className="mx-auto max-w-2xl px-4 md:px-6 pb-20 space-y-4">
         <Section eyebrow="Mi ez az oldal?">
