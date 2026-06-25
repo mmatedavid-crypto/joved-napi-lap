@@ -461,7 +461,7 @@ for (const needle of [
   "belépő árú olvasatok alacsony kockázatú első személyes irányt",
   "Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani",
   "Mennyi elég most?",
-  "Nem mindig a legnagyobb olvasat a jó első lépés",
+  "A jó első lépés a kérdés méretéhez igazodik",
   "Belépő olvasat",
   "tarot-lap, számminta, kristályszimbólum vagy álomkép helyzethez kötött olvasatához",
   "Részletesebb azonnali elemzés",
@@ -476,15 +476,14 @@ for (const needle of [
   "const CHOICE_GUIDE",
   "Melyiket válasszam?",
   "A kérdésedhez válassz",
+  "Válassz abból, mekkora most a kérdésed",
   "Ha ugyanaz a téma tér vissza",
   "továbbviszi az előző kérdésed ívét",
   "const NOT_FOR_GUIDE",
   "Elvárások tisztázása",
   "Mikor ne ezt válaszd?",
   "régi jelképrendszerekből induló önismereti szövegek",
-  "kész tényt",
-  "kockázatos",
-  "döntést vársz tőlük",
+  "egy helyzet mintájára, belső tempójára vagy visszatérő jelére",
   "Ha biztos eseményválaszt vársz",
   "Nem mondjuk ki kész tényként",
   "hogy valaki visszajön-e",
@@ -541,9 +540,10 @@ for (const needle of [
   "function productFitHint",
   "egy rövid mai jel megállított",
   "randi, ex, visszatérő kötődés",
-  "mi húz és mi tart vissza",
+  "a húzó és visszatartó belső szempontokat szeretnéd tisztábban látni",
   "összefüggő háromlapos tarot-olvasatot",
   "saját születési képletedhez kapcsolva",
+  "egy hosszabb időszak fő témáit szeretnéd áttekinteni",
   "const PRICING_FAQ",
   '"@type": "FAQPage"',
   'import { SITE_LEGAL } from "@/lib/legal"',
@@ -578,6 +578,18 @@ for (const needle of [
   "önismereti olvasatként kezeljük",
 ]) {
   if (!pricingRoute.includes(needle)) failed.push(`Pricing route missing: ${needle}`);
+}
+
+for (const forbidden of [
+  "Nem mindig a legnagyobb olvasat a jó első lépés",
+  "általában nem újabb gyors húzás kell",
+  "nem kész választ vársz",
+  "nem napi választ keresel",
+  "döntést vársz tőlük",
+]) {
+  if (pricingRoute.includes(forbidden)) {
+    failed.push(`Pricing route should avoid defensive choice framing: ${forbidden}`);
+  }
 }
 
 for (const [file, source] of [

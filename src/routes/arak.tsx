@@ -213,7 +213,7 @@ function PricingPage() {
             Mennyi elég most?
           </div>
           <h2 className="mt-2 font-display text-3xl text-ivory">
-            Nem mindig a legnagyobb olvasat a jó első lépés
+            A jó első lépés a kérdés méretéhez igazodik
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
             Ha csak egy mai érzést vagy rövid jelet szeretnél tisztábban látni, elég lehet egy
@@ -252,9 +252,8 @@ function PricingPage() {
             </div>
             <h2 className="mt-2 font-display text-3xl text-ivory">A kérdésedhez válassz</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
-              Nem mindenkinek ugyanaz az olvasat kell. Itt a leggyorsabb út, ha még nem tudod, hol
-              kezdd. Ha ugyanaz a téma tér vissza, általában nem újabb gyors húzás kell, hanem olyan
-              olvasat, amely továbbviszi az előző kérdésed ívét.
+              Válassz abból, mekkora most a kérdésed. Ha ugyanaz a téma tér vissza, olyan olvasat
+              adhat több kapaszkodót, amely továbbviszi az előző kérdésed ívét.
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -302,8 +301,7 @@ function PricingPage() {
           <h2 className="mt-2 font-display text-3xl text-ivory">Mikor ne ezt válaszd?</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
             A Jövőd.hu olvasatai régi jelképrendszerekből induló önismereti szövegek. Akkor működnek
-            jól, ha egy helyzetre szeretnél ránézni, nem akkor, ha kész tényt vagy kockázatos
-            döntést vársz tőlük.
+            jól, ha egy helyzet mintájára, belső tempójára vagy visszatérő jelére szeretnél ránézni.
           </p>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {NOT_FOR_GUIDE.map((item) => (
@@ -624,7 +622,7 @@ function productFitHint(product: (typeof PRODUCTS)[number]): string {
     case "kelta_kereszt":
       return "összetett helyzetet nézel, ahol több réteg, félelem és lehetőség keveredik.";
     case "dontes_komplex":
-      return "nem kész választ vársz, hanem tisztábban szeretnéd látni, mi húz és mi tart vissza.";
+      return "a húzó és visszatartó belső szempontokat szeretnéd tisztábban látni.";
     case "parkapcsolat_elemzes":
       return "randi, ex, visszatérő kötődés vagy bizonytalan dinamika kér figyelmet.";
     case "szammisztika_eletut":
@@ -632,7 +630,7 @@ function productFitHint(product: (typeof PRODUCTS)[number]): string {
     case "personal_30_day":
       return "a következő hetek ívét néznéd a saját születési képletedhez kapcsolva.";
     case "personal_yearly":
-      return "nem napi választ keresel, hanem egy hosszabb időszak fő témáit szeretnéd látni.";
+      return "egy hosszabb időszak fő témáit szeretnéd áttekinteni.";
     case "transits_personal":
       return "arra vagy kíváncsi, miért most erősödik fel egy téma az életedben.";
     case "vedic_full":
