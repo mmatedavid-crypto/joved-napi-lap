@@ -289,7 +289,7 @@ export function PaywallDialog({
 
                 <div className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 p-4">
                   <div className="text-xs uppercase tracking-[0.18em] text-ivory/48">
-                    Nem ezt keresed, ha
+                    Másik olvasat jobb lehet, ha
                   </div>
                   <ul className="mt-3 space-y-2 text-sm text-ivory/58">
                     {wrongFitPromise(product).map((item) => (
@@ -657,43 +657,43 @@ function choiceFitPromise(product: ProductDef): string[] {
 function wrongFitPromise(product: ProductDef): string[] {
   if (product.slug === "parkapcsolat_elemzes") {
     return [
-      "biztos választ vársz arra, hogy visszajön-e, szeret-e vagy írni fog-e",
-      "egy másik ember döntését szeretnéd kész tényként kimondatni",
+      "biztos eseményválaszt keresel arra, hogy valaki visszajön-e, szeret-e vagy írni fog-e",
+      "inkább saját döntési fókuszt kérnél, nem kapcsolati dinamikát",
     ];
   }
   if (product.slug === "dontes_komplex") {
     return [
-      "azt várod, hogy az olvasat helyetted válasszon két út között",
-      "jogi, pénzügyi vagy egészségügyi döntéshez kérsz szakmai tanácsot",
+      "kész külső választ szeretnél két út között, nem a belső mérleg tisztázását",
+      "jogi, pénzügyi vagy egészségügyi döntéshez keresel szakmai tanácsot",
     ];
   }
   if (product.slug === "kristaly_ai") {
     return [
-      "testi vagy lelki hatásígéretet keresel",
-      "orvosi vagy terápiás tanács helyett próbálnád használni",
+      "testi vagy lelki hatásígéretet keresel, nem szimbolikus fókuszt",
+      "orvosi vagy terápiás kérdéshez keresel szakmai segítséget",
     ];
   }
   if (product.slug === "alomfejtes_rovid") {
     return [
-      "diagnózist, traumamagyarázatot vagy biztos lelki okot vársz",
-      "az álmot szó szerinti jóslatként szeretnéd kezelni",
+      "diagnózist, traumamagyarázatot vagy biztos lelki okot szeretnél tisztázni",
+      "az álmot szó szerinti jóslatként kezelnéd, nem belső képként",
     ];
   }
   if (product.slug === "horoszkop_szemelyre") {
     return [
       "részletes születési képletet vagy hosszú tranzitriportot keresel",
-      "biztos eseményjóslatot vársz a mai napra",
+      "biztos eseményjóslatot keresel a mai napra, nem napi időminőséget",
     ];
   }
   if (product.category === "delayed") {
     return [
       "azonnali, pár perces választ szeretnél",
-      "biztos dátumot, eredményt vagy megváltozhatatlan jövőt vársz",
+      "biztos dátumot, eredményt vagy megváltozhatatlan jövőt keresel",
     ];
   }
   return [
-    "biztos jövőállítást vagy kész döntést vársz",
-    "orvosi, jogi vagy pénzügyi tanács helyett használnád",
+    "biztos jövőállítást vagy kész döntést keresel",
+    "orvosi, jogi vagy pénzügyi kérdéshez keresel szakmai tanácsot",
   ];
 }
 
