@@ -25,7 +25,7 @@ export const Route = createFileRoute("/rolunk")({
       <div className="mx-auto max-w-2xl px-4 md:px-6 pb-20 space-y-4">
         <Section eyebrow="Mi ez az oldal?">
           <p>
-            A Jövőd.hu magyar nyelvű digitális önismereti és szórakoztató platform. Tarot,
+            A Jövőd.hu magyar nyelvű, hagyományalapú önismereti olvasatokat ad. Tarot,
             számmisztika, párkapcsolati összeillés, álomfejtés, horoszkóp és más szimbolikus
             olvasatok segítenek abban, hogy egy kérdésre ne csak gyors választ, hanem nyugodtabb
             nézőpontot kapj.

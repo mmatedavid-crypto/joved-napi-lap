@@ -11,7 +11,7 @@ import {
 } from "@/lib/products/reportQuality.server";
 
 const LEGAL_FOOTER =
-  "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
+  "A Jövőd.hu hagyományalapú, önismereti célú olvasatokat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
 
 const AREA_LABEL: Record<string, string> = {
   szerelem: "Szerelem / párkapcsolat",

@@ -643,6 +643,7 @@ for (const report of delegatedReports) {
     report.schema,
     report.heading,
     "LEGAL_FOOTER",
+    "hagyományalapú, önismereti célú olvasatokat nyújt",
     "Nem orvosi, jogi, pénzügyi",
     "assertPaidAstrologySource",
     "requireUsablePaidAstrologyReport",

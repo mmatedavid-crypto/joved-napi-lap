@@ -978,8 +978,15 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/lib/legal.ts",
-    forbidden: [/technikai szolgáltatóként készít/i, /\bAPI\b/i, /lefordít/i, /fordítjuk/i],
+    forbidden: [
+      /technikai szolgáltatóként készít/i,
+      /szórakoztató és önismereti célú tartalmat/i,
+      /\bAPI\b/i,
+      /lefordít/i,
+      /fordítjuk/i,
+    ],
     required: [
+      "hagyományalapú, önismereti célú olvasatokat nyújt",
       "SYMBOLIC_TRADITION_DISCLAIMER",
       "nagy hagyományú, történeti jelképrendszerekből és népi megfigyelésekből indul",
       "józan, mai önismereti nyelven olvassa",

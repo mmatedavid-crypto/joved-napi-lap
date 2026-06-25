@@ -18,7 +18,7 @@ export const SITE_LEGAL = {
 } as const;
 
 export const ENTERTAINMENT_DISCLAIMER =
-  "A Jövőd.hu szórakoztató és önismereti célú tartalmat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
+  "A Jövőd.hu hagyományalapú, önismereti célú olvasatokat nyújt. Nem orvosi, jogi, pénzügyi, pszichológiai vagy krízistanácsadás.";
 
 export const SYMBOLIC_TRADITION_DISCLAIMER =
   "A tarot, a számmisztika és a horoszkóp nagy hagyományú, történeti jelképrendszerekből és népi megfigyelésekből indul; a Jövőd.hu ezeket józan, mai önismereti nyelven olvassa.";
