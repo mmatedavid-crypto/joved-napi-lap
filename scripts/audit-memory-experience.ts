@@ -4,6 +4,7 @@ type Check = {
   name: string;
   file: string;
   includes: string[];
+  excludes?: string[];
 };
 
 const checks: Check[] = [
@@ -75,7 +76,8 @@ const checks: Check[] = [
       "memoryContinuation",
       "memoryNextStepItems",
       "Következő jó kérdés",
-      "nem kell újra nulláról indulnod",
+      "a korábbi mintáid már kapaszkodót adnak",
+      "természetesen kapcsolódik a visszatérő kérdéseidhez",
       "Folytasd innen",
       "Kapcsolati dinamika folytatása",
       "Döntés újranézése",
@@ -89,6 +91,7 @@ const checks: Check[] = [
       "Kapcsolati dinamika",
       'to: "/osszeillunk"',
       "Döntés előtt",
+      "a döntés mögötti húzó és visszatartó szempontokat néznéd tisztábban",
       'to: "/dontes-elott"',
       "Három lap",
       'to: "/harom-lap"',
@@ -97,6 +100,12 @@ const checks: Check[] = [
       "30 napos térkép",
       'to: "/szemelyes-30-napos-horoszkop"',
       "személyesebb időszaki fókusz a saját képleted alapján",
+      "milyen időminőség ismétlődik körülötted",
+    ],
+    excludes: [
+      "nem kell újra nulláról indulnod",
+      "ha nem új jóslat kell",
+      "Ha nem napi jegyszöveget keresel",
     ],
   },
   {
@@ -469,6 +478,8 @@ for (const check of checks) {
   const body = readFileSync(check.file, "utf8");
   const missing = check.includes.filter((needle) => !body.includes(needle));
   if (missing.length) failed.push(`${check.name}: missing ${missing.join(", ")}`);
+  const present = (check.excludes ?? []).filter((needle) => body.includes(needle));
+  if (present.length) failed.push(`${check.name}: forbidden ${present.join(", ")}`);
 }
 
 if (failed.length) {

@@ -987,8 +987,8 @@ function MemoryNextSteps({
         Következő jó kérdés
       </div>
       <p className="mt-2 text-sm leading-relaxed text-ivory/62">
-        Ha továbbviszed ezt az ívet, nem kell újra nulláról indulnod. Válassz egy irányt, ami most
-        természetesen kapcsolódik a visszatérő mintáidhoz.
+        Ha továbbviszed ezt az ívet, a korábbi mintáid már kapaszkodót adnak. Válassz egy irányt,
+        ami most természetesen kapcsolódik a visszatérő kérdéseidhez.
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
         {items.map((item) => (
@@ -1052,7 +1052,7 @@ function memoryNextStepItems(
   if (/dönt|dont|decision|irány|munka|választás/.test(text)) {
     push({
       label: "Döntés előtt",
-      reason: "ha nem új jóslat kell, hanem tisztább belső szempont",
+      reason: "ha a döntés mögötti húzó és visszatartó szempontokat néznéd tisztábban",
       to: "/dontes-elott",
     });
   }
@@ -1162,8 +1162,7 @@ function memoryContinuation(memory: ReadingMemory): { label: string; reason: str
   if (/horoszkóp|horoszkop|asztrol|tranzit|képlet|keplet|hold|időszak/.test(source)) {
     return {
       label: "Időszakos térkép folytatása",
-      reason:
-        "Ha nem napi jegyszöveget keresel, hanem azt, milyen időminőség ismétlődik körülötted, innen érdemes továbbmenni.",
+      reason: "Ha azt néznéd, milyen időminőség ismétlődik körülötted, innen érdemes továbbmenni.",
       to: "/szemelyes-30-napos-horoszkop",
     };
   }
