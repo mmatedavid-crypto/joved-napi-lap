@@ -483,7 +483,7 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
   const items = [
     {
       title: "Gyors első jel",
-      text: "Egy napi lap vagy mai iránytű jó belépő, ha még csak azt néznéd, megszólít-e a hang.",
+      text: "Egy napi tarot-jel vagy mai iránytű jó belépő, ha rövid, helyzethez kötött első irányt kérsz.",
       to: "/mai-lap",
       cta: "Napi lap",
     },

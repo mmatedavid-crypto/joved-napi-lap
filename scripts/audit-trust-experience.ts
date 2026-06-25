@@ -394,6 +394,8 @@ const checks: Check[] = [
       "ProfileStarterActions",
       "Hogyan induljon az íved?",
       "Gyors első jel",
+      "napi tarot-jel vagy mai iránytű",
+      "helyzethez kötött első irányt kérsz",
       "Kapcsolati kérdés",
       "Döntés előtt",
       'to: "/mai-lap"',
@@ -403,7 +405,7 @@ const checks: Check[] = [
       "Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal",
       "Minden fizetős olvasat és ár áttekintése",
     ],
-    excludes: ["Még nincs vásárlásod. <Link"],
+    excludes: ["Még nincs vásárlásod. <Link", "megszólít-e a hang"],
   },
   {
     name: "thank-you page never displays raw order status errors",
