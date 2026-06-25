@@ -38,6 +38,9 @@ for (const product of PRODUCTS) {
   if (/\b(napi limit|limit feloldása)\b/i.test(visibleCopy)) {
     failed.push(`${product.slug}: paywall copy must frame extra readings as a separate perspective, not a quota unlock`);
   }
+  if (/\b(magazinos jóslat|bulvárjóslat|újságos jegyhoroszkóp)\b/i.test(visibleCopy)) {
+    failed.push(`${product.slug}: paywall copy should state the positive product voice instead of tabloid/magazine contrast`);
+  }
 }
 
 const paywall = readFileSync("src/components/PaywallDialog.tsx", "utf8");
