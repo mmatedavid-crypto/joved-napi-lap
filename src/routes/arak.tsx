@@ -52,7 +52,7 @@ const CHOICE_GUIDE = [
   },
   {
     title: "Döntés előtt állok",
-    text: "Ha nem az a kérdés, mit jósol a lap, hanem mit nem látsz tisztán, a Döntés előtt komplex elemzés jobb illeszkedés lehet.",
+    text: "Ha egy döntés mögött a tétet, a félelmet és a tisztább belső irányt keresed, a Döntés előtt komplex elemzés jobb illeszkedés lehet.",
     productSlug: "dontes_komplex",
     cta: "Döntési elemzés",
   },
@@ -610,17 +610,17 @@ function productFitHint(product: (typeof PRODUCTS)[number]): string {
     case "extra_huzas":
       return "egy rövid mai jel megállított, és szeretnéd a saját helyzetedre visszafordítani.";
     case "mai_iranytu_ai":
-      return "nem nagy riport kell, hanem egy személyes napi fókusz szerelem, munka vagy belső ritmus felől.";
+      return "egy személyes napi fókuszt kérsz szerelem, munka vagy belső ritmus felől.";
     case "angyalszam_ai":
-      return "egy szám újra felbukkant, és nem általános jelentést, hanem helyzethez kötött olvasatot kérsz.";
+      return "egy szám újra felbukkant, és helyzethez kötött számmisztikai olvasatot kérsz.";
     case "kristaly_ai":
       return "szimbolikus támpontot keresel egy érzéshez vagy időszakhoz, testi hatásígéret nélkül.";
     case "alomfejtes_rovid":
       return "egy álom képe vagy hangulata veled maradt, és önismereti jelként néznél rá.";
     case "horoszkop_szemelyre":
-      return "az általános jegyszöveg helyett a mostani témádra kérsz rövid napi fókuszt.";
+      return "a mostani témádra kérsz rövid napi fókuszt az asztrológiai hagyományból.";
     case "harom_lap_mely":
-      return "egy kérdés mögött már történetet érzel, és nem három külön lapmagyarázatot szeretnél.";
+      return "egy kérdés mögött már történetet érzel, és összefüggő háromlapos tarot-olvasatot szeretnél.";
     case "kelta_kereszt":
       return "összetett helyzetet nézel, ahol több réteg, félelem és lehetőség keveredik.";
     case "dontes_komplex":

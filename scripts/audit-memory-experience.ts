@@ -96,7 +96,7 @@ const checks: Check[] = [
       'to: "/mai-iranytu"',
       "30 napos térkép",
       'to: "/szemelyes-30-napos-horoszkop"',
-      "ha nem napi jegyszöveg kell",
+      "személyesebb időszaki fókusz a saját képleted alapján",
     ],
   },
   {

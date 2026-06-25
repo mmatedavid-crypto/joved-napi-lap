@@ -54,7 +54,7 @@ function Page() {
       <PageHeader
         eyebrow="Személyes asztrológia"
         title="Személyes éves horoszkópod"
-        lead="12 hónapos időszaki térkép a saját születési képletedből, havi bontásban. Nem általános jegyhoroszkóp: a tranzitokat a te születési képletedhez illesztjük."
+        lead="12 hónapos időszaki térkép a saját születési képletedből, havi bontásban. A tranzitokat a te születési képletedhez illesztjük."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
@@ -171,8 +171,8 @@ function Page() {
             <li>• Mire figyelj és záró üzenet</li>
           </ul>
           <p className="text-xs text-ivory/55">
-            A riport a saját születési adataidból és a következő 12 hónap tranzitjaiból készül. Nem
-            újságos éves jegyhoroszkóp.
+            A riport a saját születési adataidból és a következő 12 hónap tranzitjaiból készül,
+            személyes éves időszaki térképként.
           </p>
         </section>
       </div>

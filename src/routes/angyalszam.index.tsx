@@ -255,5 +255,5 @@ function angelSituationReflection(
   if (/félek|szorong|bizonytalan|nehéz|elakadt/.test(lower)) {
     return `${opening} Nehéz érzésnél a szám nem azt mondja, hogy minden megoldódik, hanem azt, hogy érdemes finoman észrevenned, melyik gondolat tér vissza benned túl gyakran. A ${root}-es gyökér ezt a belső ritmust teszi láthatóbbá.`;
   }
-  return `${opening} A ${root}-es gyökér alapján ezt most nem jóslatként, hanem figyelmi jelként érdemes olvasni: mi az a gondolat vagy érzés, amelyik ugyanúgy ismétlődik benned, ahogy maga a szám is ismétlődött?`;
+  return `${opening} A ${root}-es gyökér alapján ezt most figyelmi jelként érdemes olvasni: mi az a gondolat vagy érzés, amelyik ugyanúgy ismétlődik benned, ahogy maga a szám is ismétlődött?`;
 }

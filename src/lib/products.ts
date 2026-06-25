@@ -208,7 +208,7 @@ export const PRODUCTS: ProductDef[] = [
       "érzelmi szempontok döntésparancs nélkül",
     ],
     depthPromise: [
-      "a tarot jelképrendszerét a konkrét döntésedre vonatkoztatja, nem általános tanácsot ad",
+      "a tarot jelképrendszerét a konkrét döntésedre vonatkoztatva ad személyes nézőpontot",
       "külön kezeli, mi félelemből és mi tisztább belső irányból mozgat",
     ],
     qualityPromise: "Szétválasztja a tétet, a félelmet és a tisztább belső irányt.",
@@ -228,7 +228,7 @@ export const PRODUCTS: ProductDef[] = [
     ],
     depthPromise: [
       "a szerelmi tarot hagyományos kapcsolati motívumait a kapcsolat típusához illeszti",
-      "nem ígér visszatérést, hanem tempót, realitást és ismétlődő mintát olvas",
+      "visszatérési kérdésnél tempót, realitást és ismétlődő mintát olvas",
     ],
     qualityPromise: "Kapcsolati tempót, realitást és ismétlődő szerelmi mintát olvas.",
     priceHuf: 990,
@@ -265,7 +265,7 @@ export const PRODUCTS: ProductDef[] = [
       "időszaki figyelmi pontok és lehetőségi ablakok",
     ],
     depthPromise: [
-      "az asztrológiai tranzithagyományt a saját képletedre vetíti, nem általános horoszkóp",
+      "az asztrológiai tranzithagyományt a saját képletedre vetíti személyes időszaki térképként",
       "életterületre fókuszál: szerelem, munka, pénz-döntés vagy általános",
     ],
     qualityPromise: "Több oldalas, személyre szabott időszaki térkép a következő 30 napra.",
@@ -306,7 +306,7 @@ export const PRODUCTS: ProductDef[] = [
     ],
     depthPromise: [
       "az éves asztrológiai ciklusokat a saját születési képletedhez illeszti",
-      "havi bontás, nem általános éves jegyhoroszkóp",
+      "havi bontás a saját képletedre, hónapról hónapra követhető fókuszokkal",
     ],
     qualityPromise:
       "Több oldalas, személyre szabott éves riport, hónapról hónapra követhető fókuszokkal.",
@@ -327,7 +327,7 @@ export const PRODUCTS: ProductDef[] = [
     ],
     depthPromise: [
       "a hagyományos bolygótranzitokat a saját bolygóid és házaid felől olvassa",
-      "nem általános napi horoszkóp, hanem a te képletedre szóló időzítés",
+      "a te képletedre szóló időzítésként mutatja meg az aktív hangsúlyokat",
     ],
     qualityPromise: "Komoly asztrológiai tranzit-elemzés magyarul, józan hanggal.",
     priceHuf: 3990,

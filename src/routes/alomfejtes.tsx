@@ -25,7 +25,10 @@ export const Route = createFileRoute("/alomfejtes")({
           "Álomfejtés magyarul. Visszatérő álom, álom jelentése, mit jelent az álmom — csendes belső tükör.",
       },
       { property: "og:title", content: "Álomfejtés | Jövőd.hu" },
-      { property: "og:description", content: "Mit jelent az álmod? Belső tükör, nem jóslat." },
+      {
+        property: "og:description",
+        content: "Mit jelent az álmod? Hagyományos álomfejtés belső tükörként.",
+      },
     ],
     links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/alomfejtes` }],
   }),
@@ -151,7 +154,7 @@ function Page() {
       <PageHeader
         eyebrow="Álomfejtés"
         title="Mit álmodtál?"
-        lead="Egy belső tükör, nem jóslat. Írd le röviden — egy fő jelet keresünk benne."
+        lead="Hagyományos álomfejtés belső tükörként. Írd le röviden — egy fő jelet keresünk benne."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-6">
         <form onSubmit={submit} className="surface p-6 space-y-4">
@@ -241,7 +244,7 @@ function Page() {
               <Section eyebrow="A te álmodban">
                 {dreamContextReflection(text, emotion, result.title)}
               </Section>
-              <Section eyebrow="Nem jóslat, inkább belső tükör">
+              <Section eyebrow="Belső tükör">
                 {dreamSafetyNote(result.title)}
               </Section>
               {result.oneLine && (

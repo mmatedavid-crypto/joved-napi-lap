@@ -18,11 +18,11 @@ export const Route = createFileRoute("/angyalszam-jelentese")({
     <SeoLandingPage
       eyebrow="Angyalszám"
       title="Angyalszám jelentése"
-      lead="Ha egy szám újra és újra felbukkan, önismereti jelként is olvashatod. Nem bizonyíték, inkább finom figyelmeztetés arra, mire érdemes most ránézned."
+      lead="Ha egy szám újra és újra felbukkan, a számmisztikai hagyomány finom figyelmi jelként olvassa: mire érdemes most ránézned?"
       sections={[
         {
           title: "Mit jelenthet az angyalszám?",
-          text: "Az angyalszám olyan ismétlődő vagy feltűnő számminta, amelyhez sok hagyomány szimbolikus jelentést társít. A Jövőd.hu ezt nem jóslatként kezeli, hanem rövid belső tükörként.",
+          text: "Az angyalszám olyan ismétlődő vagy feltűnő számminta, amelyhez sok hagyomány szimbolikus jelentést társít. A Jövőd.hu ezt rövid belső tükörként, józan önismereti nyelven olvassa.",
         },
         {
           title: "Gyakran keresett számok",

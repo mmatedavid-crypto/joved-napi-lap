@@ -37,8 +37,8 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
   dream: [
     "Kiemeljük az álom legerősebb szimbólumait.",
     "Megnézzük, mit jelent a kép a hagyományos álomfejtésben.",
-    "Az érzést és a képet együtt olvassuk, nem diagnózist készítünk.",
-    "A jelentést önismereti jelként, nem jóslatként fogalmazzuk meg.",
+    "Az érzést és a képet együtt olvassuk, belső tükörként.",
+    "A jelentést önismereti jelként fogalmazzuk meg.",
   ],
   crystal: [
     "Előhívjuk a kristály hagyományos jelentését és csakrakapcsolódását.",
@@ -50,7 +50,7 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Megnézzük az ismétlődő szám numerológiai gyökerét.",
     "Összevetjük a számot az angyali számtan hagyományos jelentésével.",
     "A jelentést rövid, magyar önismereti üzenetté rendezzük.",
-    "Nem jóslatot adunk, hanem figyelmi pontot.",
+    "Figyelmi pontot adunk a mostani helyzetedhez.",
   ],
   numerology: [
     "Kiszámoljuk a sorsszámodat a születési dátumból.",

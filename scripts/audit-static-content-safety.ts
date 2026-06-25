@@ -386,11 +386,7 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/routes/szammisztika.tsx",
-    forbidden: [
-      /\bMit mond rólad a születési dátumod\b/i,
-      /\bAPI\b/i,
-      /\blefordít/i,
-    ],
+    forbidden: [/\bMit mond rólad a születési dátumod\b/i, /\bAPI\b/i, /\blefordít/i],
     required: [
       "számmisztika régi jelképrendszere",
       "születési dátum mintáiból indul",
@@ -408,7 +404,8 @@ const checks: StaticSafetyCheck[] = [
     required: [
       "asztrológiai hagyomány jelképeiből",
       "asztrológiai hagyomány régi jelképrendszeréből",
-      "jegyed hagyományos motívumait",
+      "jegyed hagyományos",
+      "motívumait a mostani kérdésed felől olvassuk",
     ],
   },
   {
@@ -898,7 +895,7 @@ const checks: StaticSafetyCheck[] = [
     file: "src/routes/alomfejtes-jelentes.tsx",
     forbidden: [/\ba halál pedig sokszor\b/i],
     required: [
-      "halálképek pedig nem jóslatként",
+      "halálképek pedig lezárás vagy átalakulás önismereti képeként olvashatók",
       "Mit jelent, ha halállal álmodom?",
       "Nem kezeljük előrejelzésként",
       "tartós szorongáshoz kapcsolódik",
@@ -1041,11 +1038,7 @@ const checks: StaticSafetyCheck[] = [
       /fordítjuk/i,
       /szimbolikus, önismereti és szórakoztató tartalmak/i,
     ],
-    required: [
-      "SYMBOLIC_TRADITION_DISCLAIMER",
-      "önmagában nem minősül",
-      "hozzáférési hibának",
-    ],
+    required: ["SYMBOLIC_TRADITION_DISCLAIMER", "önmagában nem minősül", "hozzáférési hibának"],
   },
   {
     file: "src/lib/roxy.functions.ts",
@@ -1174,7 +1167,13 @@ const checks: StaticSafetyCheck[] = [
   },
   {
     file: "src/components/RitualTable.tsx",
-    forbidden: [/roxy_call_/, /roxy_cache_/, /roxy_fallback_/, /endpoint:/, /code: r\.providerCode/],
+    forbidden: [
+      /roxy_call_/,
+      /roxy_cache_/,
+      /roxy_fallback_/,
+      /endpoint:/,
+      /code: r\.providerCode/,
+    ],
     required: [
       "knowledge_lookup_started",
       "knowledge_lookup_failed",
@@ -1273,13 +1272,19 @@ const publicTrustLeakPatterns = [
   /magyarra fordít/i,
   /lefordít/i,
   /fordítjuk/i,
+  /nem jóslat/i,
+  /nem általános/i,
+  /újságos/i,
+  /diagnózis és ijesztgetés/i,
 ];
 
 for (const file of publicTrustLeakFiles) {
   const body = readFileSync(file, "utf8");
   for (const forbidden of publicTrustLeakPatterns) {
     if (forbidden.test(body)) {
-      failures.push(`${file}: public trust copy must not expose internal/provider wording: ${forbidden}`);
+      failures.push(
+        `${file}: public trust copy must not expose internal/provider wording: ${forbidden}`,
+      );
     }
   }
 }
@@ -1330,7 +1335,9 @@ for (const file of symbolicSourceNarrativeFiles) {
   const body = readFileSync(file, "utf8");
   for (const forbidden of symbolicSourceNarrativeForbidden) {
     if (forbidden.test(body)) {
-      failures.push(`${file}: internal symbolic-source narrative must avoid provider/translation framing: ${forbidden}`);
+      failures.push(
+        `${file}: internal symbolic-source narrative must avoid provider/translation framing: ${forbidden}`,
+      );
     }
   }
 }

@@ -437,7 +437,7 @@ export const aiDreamHU = createServerFn({ method: "POST" })
       };
       const t = await translateWithAI<DreamHU>({
         source: r.data,
-        domainHint: `Álom-szimbólum jelentése (szimbólum slug: ${data.slug}). A 'title' a szimbólum magyar neve. 'surface' = mit hozhat felszínre, 'notice' = mire érdemes figyelni — belső tükör, nem jóslat.`,
+        domainHint: `Álom-szimbólum jelentése (szimbólum slug: ${data.slug}). A 'title' a szimbólum magyar neve. 'surface' = mit hozhat felszínre, 'notice' = mire érdemes figyelni — hagyományos álomfejtés belső tükörként.`,
         schemaName: "DreamHU",
         schema,
       });

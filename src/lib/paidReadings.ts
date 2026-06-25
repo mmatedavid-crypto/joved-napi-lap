@@ -559,8 +559,8 @@ function premiumHoroscope(input: Record<string, unknown>): PaidReadingPayload {
     {
       heading: "Miért rólad szólhat ma?",
       text: name
-        ? `${name}, ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`
-        : `Ez az olvasat nem általános jóslatként kezeli a ${signName} minőséget. Inkább azt nézi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`,
+        ? `${name}, ez az olvasat a ${signName} minőséget a mai személyes fókuszod felől nézi. Azt keresi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`
+        : `Ez az olvasat a ${signName} minőséget a mai személyes fókuszod felől nézi. Azt keresi, hol jelenik meg benned ma a jegyed alapfeszültsége: ${tension}.`,
     },
     ...(situation ? [situationReflection(situation)] : []),
     ...(articleLead || articleSections.length || moonPhase || luckyColor || luckyNumber

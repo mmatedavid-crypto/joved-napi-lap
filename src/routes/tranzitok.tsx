@@ -54,7 +54,7 @@ function Page() {
       <PageHeader
         eyebrow="Személyes asztrológia"
         title="Személyes tranzit-elemzésed"
-        lead="A jelenleg ható bolygótranzitok jelentése a saját képletedre vetítve, 90 napos kitekintéssel. Nem általános napi horoszkóp."
+        lead="A jelenleg ható bolygótranzitok jelentése a saját képletedre vetítve, 90 napos kitekintéssel."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
@@ -171,7 +171,7 @@ function Page() {
           </ul>
           <p className="text-xs text-ivory/55">
             A riport a saját születési képletedre vetített aktuális bolygótranzitokra épül, 90 napos
-            kitekintéssel. Nem általános napi horoszkóp.
+            kitekintéssel és személyes időzítési fókuszokkal.
           </p>
         </section>
       </div>

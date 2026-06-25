@@ -401,7 +401,9 @@ function Page() {
                             </div>
                           )}
                         </div>
-                        <div className="text-gold tabular-nums text-sm">{formatHuf(o.price_huf)}</div>
+                        <div className="text-gold tabular-nums text-sm">
+                          {formatHuf(o.price_huf)}
+                        </div>
                       </div>
 
                       <OrderStatusNote
@@ -493,7 +495,7 @@ function ProfileStarterActions({ compact = false }: { compact?: boolean }) {
     },
     {
       title: "Döntés előtt",
-      text: "Ha nem jóslatot keresel, hanem tisztább belső irányt, innen érdemes indulni.",
+      text: "Ha egy döntés tétjét és belső irányát szeretnéd tisztábban látni, innen érdemes indulni.",
       to: "/dontes-elott",
       cta: "Döntés előtt",
     },
@@ -565,7 +567,9 @@ function OrderOverviewNotice({ orders }: { orders: ProfileOrder[] }) {
   const delivered = orders.filter((order) => order.status === "delivered").length;
   const active = orders.filter(
     (order) =>
-      order.status === "paid" || order.status === "processing" || order.status === "pending_payment",
+      order.status === "paid" ||
+      order.status === "processing" ||
+      order.status === "pending_payment",
   ).length;
   const failed = orders.filter((order) => order.status === "failed").length;
 
@@ -587,8 +591,8 @@ function OrderOverviewNotice({ orders }: { orders: ProfileOrder[] }) {
         )}
         {delivered > 0 && (
           <div>
-            <span className="font-medium text-ivory/78">{delivered} kész olvasat.</span> A
-            megnyitás után másolhatod, letöltheted és visszajelzést küldhetsz.
+            <span className="font-medium text-ivory/78">{delivered} kész olvasat.</span> A megnyitás
+            után másolhatod, letöltheted és visszajelzést küldhetsz.
           </div>
         )}
         {failed > 0 && (
@@ -646,8 +650,8 @@ function OrderStatusNote({
           Rendelés biztonságban
         </div>
         <p className="text-xs leading-relaxed text-ivory/65">
-          Az olvasatkészítés most elakadt, de a rendelés nem vész el. A fizetést ellenőrizzük, és
-          az újraindítást csak akkor engedjük, ha a fizetés igazoltan sikeres.
+          Az olvasatkészítés most elakadt, de a rendelés nem vész el. A fizetést ellenőrizzük, és az
+          újraindítást csak akkor engedjük, ha a fizetés igazoltan sikeres.
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-ivory/52">
           Ha az újrapróbálás sem rendezi, rendelés alapján utánanézünk: pótoljuk az olvasathoz való
@@ -746,13 +750,7 @@ function ProfileSupportContact({
   );
 }
 
-function ProfileLoadError({
-  message,
-  supportLabel,
-}: {
-  message: string;
-  supportLabel: string;
-}) {
+function ProfileLoadError({ message, supportLabel }: { message: string; supportLabel: string }) {
   return (
     <div className="rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
       <p className="text-sm leading-relaxed text-ivory/68">{message}</p>
@@ -1065,10 +1063,14 @@ function memoryNextStepItems(
       to: "/alomfejtes",
     });
   }
-  if (/horoszkóp|horoszkop|asztrol|tranzit|születési|keplet|képlet|időszak|hetek|hónap|month|year/.test(text)) {
+  if (
+    /horoszkóp|horoszkop|asztrol|tranzit|születési|keplet|képlet|időszak|hetek|hónap|month|year/.test(
+      text,
+    )
+  ) {
     push({
       label: "30 napos térkép",
-      reason: "ha nem napi jegyszöveg kell, hanem személyesebb időszaki fókusz",
+      reason: "személyesebb időszaki fókusz a saját képleted alapján",
       to: "/szemelyes-30-napos-horoszkop",
     });
   }

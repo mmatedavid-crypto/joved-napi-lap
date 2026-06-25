@@ -95,9 +95,7 @@ export function SmartReadingFollowup({
       <div className="mt-2 grid gap-5 md:grid-cols-[1fr_auto] md:items-start">
         <div>
           <h2 className="font-display text-2xl text-ivory">Egy jó következő kérdés</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
-            {intro.text}
-          </p>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">{intro.text}</p>
           {intro.context && (
             <p className="mt-3 rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-3 py-2 text-sm leading-relaxed text-ivory/68">
               {intro.context}
@@ -122,8 +120,7 @@ export function SmartReadingFollowup({
                 ))}
               </ul>
               <p className="mt-2 text-xs leading-relaxed text-ivory/45">
-                A fizetős folytatás nem idegenként indul; ebből a fonalból készül a mélyebb
-                olvasat.
+                A fizetős folytatás nem idegenként indul; ebből a fonalból készül a mélyebb olvasat.
               </p>
             </div>
           )}
@@ -238,22 +235,18 @@ function followupIntro({
   const fallbackByIntent: Record<FollowupIntent, string> = {
     daily:
       "Ha ez az olvasat megmozdított valamit, nem biztos, hogy újabb általános választ kell kérned. Válassz inkább ahhoz, ami most tényleg tisztázásra vár.",
-    love:
-      "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
+    love: "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
     decision:
       "Döntés előtt a jó folytatás nem helyetted választ, hanem segít szétválasztani, melyik érzés húz és melyik tart vissza.",
     compatibility:
       "Összeillés után a mélyebb érték nem a százalékban van, hanem abban, miért működhet, hol akadhat el, és mit ismételtek.",
     dream:
-      "Álom után a jó folytatás nem diagnózist keres, hanem azt, milyen érzés maradt veled, és mit tükrözhet önismereti jelként.",
+      "Álom után a jó folytatás azt keresi, milyen érzés maradt veled, és mit tükrözhet önismereti jelként.",
     numerology:
-      "Számmisztikánál a mélyebb folytatás akkor ér valamit, ha nem címkéket ad, hanem józanul ránéz arra, hogyan működhet benned a minta.",
-    horoscope:
-      "Horoszkóp után a személyesebb folytatás nem általános jegyszöveg, hanem időszakos fókusz és saját ritmus.",
-    angel:
-      "Angyalszámnál a folytatás akkor jó, ha a számot nem külső bizonyítékként, hanem a mostani helyzeted jelzéseként kezeli.",
-    crystal:
-      "Kristálynál a folytatás nem hatást ígér, hanem azt keresi, milyen szimbolikus minőségre van most szükséged.",
+      "Számmisztikánál a mélyebb folytatás józanul ránéz arra, hogyan működhet benned a minta.",
+    horoscope: "Horoszkóp után a személyesebb folytatás időszakos fókuszt és saját ritmust ad.",
+    angel: "Angyalszámnál a folytatás a számot a mostani helyzeted jelzéseként olvassa.",
+    crystal: "Kristálynál a folytatás azt keresi, milyen szimbolikus minőségre van most szükséged.",
   };
   return { text: fallbackByIntent[intent], context: "" };
 }
@@ -423,8 +416,7 @@ function followupOptions(
       {
         slug: "personal_30_day",
         label: "Mire figyeljek a következő hetekben?",
-        reason:
-          "A 30 napos térkép akkor jó, ha nem általános jegyszöveget, hanem személyesebb időszakot néznél.",
+        reason: "A 30 napos térkép személyesebb időszakot és saját ritmust mutat.",
       },
       {
         slug: "transits_personal",

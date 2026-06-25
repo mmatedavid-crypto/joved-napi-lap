@@ -48,7 +48,7 @@ for (const product of PRODUCTS) {
     );
   }
   if (
-    /\b(Nem általános horoszkópszöveg|nem egészségügyi állítás|diagnózis és ijesztgetés nélkül|Nem mondja meg, mit tegyél|Nem ígéri, hogy valaki visszajön|Nem napi horoszkóp)\b/i.test(
+    /\b(Nem általános horoszkópszöveg|nem egészségügyi állítás|diagnózis és ijesztgetés nélkül|Nem mondja meg, mit tegyél|Nem ígéri, hogy valaki visszajön|Nem napi horoszkóp|nem általános horoszkóp|nem általános éves jegyhoroszkóp|nem általános napi horoszkóp|nem általános tanácsot ad|nem ígér visszatérést)\b/i.test(
       visibleCopy,
     )
   ) {
@@ -521,7 +521,7 @@ for (const needle of [
   "egy rövid mai jel megállított",
   "randi, ex, visszatérő kötődés",
   "mi húz és mi tart vissza",
-  "nem három külön lapmagyarázatot",
+  "összefüggő háromlapos tarot-olvasatot",
   "saját születési képletedhez kapcsolva",
   "const PRICING_FAQ",
   '"@type": "FAQPage"',

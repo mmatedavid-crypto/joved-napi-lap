@@ -591,13 +591,13 @@ function selfCheckHeading(readingType: ReturnType<typeof selfCheckReadingType>):
     case "love":
       return "Akkor jó, ha a kapcsolat tempójára is reagál";
     case "decision":
-      return "Akkor jó, ha nem dönt helyetted";
+      return "Akkor jó, ha a döntés tétjét tisztázza";
     case "dream":
       return "Akkor jó, ha az álomhangulatot is érti";
     case "numerology":
       return "Akkor jó, ha a számokból minta lesz";
     case "horoscope":
-      return "Akkor jó, ha nem jegyhoroszkópnak hat";
+      return "Akkor jó, ha a képletedhez és témádhoz kapcsolódik";
     case "tarot":
       return "Akkor jó, ha a lap a helyzetedben szólal meg";
     default:
@@ -608,38 +608,38 @@ function selfCheckHeading(readingType: ReturnType<typeof selfCheckReadingType>):
 function selfCheckItems(readingType: ReturnType<typeof selfCheckReadingType>): string[] {
   const common = [
     "Van benne legalább egy mondat, ami konkrétan a te kérdésedhez kapcsolódik.",
-    "Nem állít biztos jövőt, hanem irányt és mintát mutat.",
+    "Irányt és mintát mutat, józan önismereti keretben.",
   ];
   switch (readingType) {
     case "love":
       return [
         common[0],
         "Külön kezeli a vonzalmat, tempót és azt, mi lenne tartósabb szándék.",
-        "Exnél vagy visszatérő történetnél nem ígér visszatérést.",
+        "Exnél vagy visszatérő történetnél tempót és realitást is olvas.",
       ];
     case "decision":
       return [
         common[0],
         "Elválasztja, mi mozdít vágyból, félelemből vagy józan belső irányból.",
-        "Nem mondja meg, mit tegyél, hanem tisztább mérlegelést ad.",
+        "Tisztább mérlegelést ad a következő belső lépéshez.",
       ];
     case "dream":
       return [
         common[0],
         "Figyelembe veszi, milyen érzéssel ébredtél.",
-        "Nem diagnosztizál, hanem önismereti jelként kezeli a szimbólumot.",
+        "Önismereti jelként kezeli az álom szimbólumát.",
       ];
     case "numerology":
       return [
         "A születési dátum és név számai nem külön címkék, hanem egy közös mintává állnak össze.",
         "Megmutat erősséget és árnyékoldalt is.",
-        "Nem általános személyiségleírás, hanem élethelyzeti tükör.",
+        "Személyes élethelyzeti tükörként olvassa a számok mintáját.",
       ];
     case "horoscope":
       return [
         "A jegy mintáját a megadott témáddal kapcsolja össze.",
-        "Nem használ újságos jóslatnyelvet.",
-        "Időszakot, hangsúlyt és figyelmi pontot ad, nem biztos eseményt.",
+        "Józan, hagyományalapú asztrológiai nyelven szól.",
+        "Időszakot, hangsúlyt és figyelmi pontot ad.",
       ];
     case "tarot":
       return [

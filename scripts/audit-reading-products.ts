@@ -292,8 +292,7 @@ const contextChecks = [
     name: "context:paid_followup_reason_survives_fallback",
     body: composePaidOrderReading("dontes_komplex", "Döntés előtt — komplex elemzés", {
       ...demoPayloads.dontes_komplex,
-      followupContext:
-        "A kérdés, amiből továbbmegyünk: „Elfogadjam az új munkalehetőséget?”",
+      followupContext: "A kérdés, amiből továbbmegyünk: „Elfogadjam az új munkalehetőséget?”",
     }).body,
     required: ["Miért ezt ajánlottuk?", "A kérdés, amiből továbbmegyünk"],
   },
@@ -327,7 +326,11 @@ const contextChecks = [
         }),
       ),
     ),
-    required: ["Érzések helyett biztos bizonyítékot nem ad", "következetesebb jelenlét", "konkrét figyelem"],
+    required: [
+      "Érzések helyett biztos bizonyítékot nem ad",
+      "következetesebb jelenlét",
+      "konkrét figyelem",
+    ],
   },
   {
     name: "context:free_three_card_present_heading",
@@ -370,7 +373,9 @@ const loveIntentBody = textFromReading(
 );
 for (const forbiddenNeedle of ["ahol valódi szándék van", "valódi szándék"]) {
   if (loveIntentBody.includes(forbiddenNeedle)) {
-    policyFailures.push(`compatibility intent answer must not claim to identify another person's true intent: ${forbiddenNeedle}`);
+    policyFailures.push(
+      `compatibility intent answer must not claim to identify another person's true intent: ${forbiddenNeedle}`,
+    );
   }
 }
 const threeCardBody = textFromReading(
@@ -383,7 +388,9 @@ const threeCardBody = textFromReading(
 );
 for (const forbiddenNeedle of ["Jelen — mi történik most valójában?"]) {
   if (threeCardBody.includes(forbiddenNeedle)) {
-    policyFailures.push(`free three-card reading must avoid revelation-style present heading: ${forbiddenNeedle}`);
+    policyFailures.push(
+      `free three-card reading must avoid revelation-style present heading: ${forbiddenNeedle}`,
+    );
   }
 }
 const paidServer = readFileSync("src/lib/paidReadings.server.ts", "utf8");
@@ -402,7 +409,7 @@ for (const needle of [
   "dailyFocus",
   "dailyFocusReflection",
   "Egy lap, egy napi fókusz a tarot hagyományából",
-  "Nem jóslatként kezeljük, hanem csendes önismereti jelként",
+  "Egy lap, egy napi fókusz a tarot hagyományából, csendes önismereti jelként",
   "Mire kérsz ma finomabb fókuszt?",
   "A napi lap ugyanaz marad",
   "A te fókuszodban",
@@ -417,9 +424,10 @@ for (const needle of [
 
 for (const needle of [
   "Tarot, számminta, holdjel és kristály hagyományos jeleiből induló napi fókusz",
-  "Nem jóslat, hanem józan önismereti irány",
-  "sourceRoute=\"/mai-iranytu\"",
-  "productSlug=\"mai_iranytu_ai\"",
+  "Tarot, számminta, holdjel és kristály hagyományos jeleiből induló napi fókusz",
+  "józan önismereti iránnyal",
+  'sourceRoute="/mai-iranytu"',
+  'productSlug="mai_iranytu_ai"',
 ]) {
   if (!dailyCompassRoute.includes(needle)) {
     policyFailures.push(`daily compass route must keep tradition-based trust framing: ${needle}`);
@@ -444,7 +452,9 @@ for (const forbiddenNeedle of [
   "belső irányát",
 ]) {
   if (loveRoute.includes(forbiddenNeedle)) {
-    policyFailures.push(`relationship tarot route must not claim to reveal another person's inner state: ${forbiddenNeedle}`);
+    policyFailures.push(
+      `relationship tarot route must not claim to reveal another person's inner state: ${forbiddenNeedle}`,
+    );
   }
 }
 
@@ -489,7 +499,7 @@ for (const needle of [
   "categoryFreeHint",
   "A három lap együtt",
   "Mire figyelj most?",
-  "A kérdésed nem általános",
+  "A kérdésed konkrét helyzetet hoz be",
   "randi",
   "Visszatérő történetnél",
   "Döntés előtt",

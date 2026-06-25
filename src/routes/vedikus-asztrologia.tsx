@@ -178,7 +178,7 @@ function Page() {
           </ul>
           <p className="text-xs text-ivory/55">
             A jegyek és nakshatra számítása sziderikus (Lahiri ayanamsa). A riport a saját
-            adataidból készül — nem általános szöveg.
+            adataidból készül, védikus szemléletű képlet-olvasatként.
           </p>
         </section>
       </div>

@@ -84,8 +84,8 @@ function HoroszkopIndex() {
                 Rövid olvasat a mai helyzetedre
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
-                Ha nem általános jegyszöveget szeretnél, kérhetsz egy rövid, személyre szabott napi
-                horoszkópot: a jegyed hagyományos motívumait a mostani kérdésed felől olvassuk.
+                Kérhetsz egy rövid, személyre szabott napi horoszkópot: a jegyed hagyományos
+                motívumait a mostani kérdésed felől olvassuk.
               </p>
             </div>
             <button className="btn-gold" onClick={openPersonalHoroscopePaywall}>

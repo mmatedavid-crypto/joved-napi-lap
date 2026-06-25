@@ -54,7 +54,7 @@ function Page() {
       <PageHeader
         eyebrow="Személyes asztrológia"
         title="A következő 30 napod térképe"
-        lead="Egy időszaki térkép a saját születési képletedről és a következő 30 nap legfontosabb időablakairól. Nem általános horoszkóp."
+        lead="Egy időszaki térkép a saját születési képletedről és a következő 30 nap legfontosabb időablakairól."
       />
       <div className="mx-auto max-w-3xl px-4 md:px-6 pb-20 space-y-8">
         <form onSubmit={onSubmit} className="surface p-6 space-y-5">
@@ -170,9 +170,8 @@ function Page() {
             <li>• Mire figyelj és záró üzenet</li>
           </ul>
           <p className="text-xs text-ivory/55">
-            A riport a saját születési adataidból és a következő 30 nap tranzitjaiból készül. Nem
-            általános horoszkóp: a személyes képleted és az előtted álló időszak találkozását
-            értelmezi közérthetően.
+            A riport a saját születési adataidból és a következő 30 nap tranzitjaiból készül: a
+            személyes képleted és az előtted álló időszak találkozását értelmezi közérthetően.
           </p>
         </section>
       </div>

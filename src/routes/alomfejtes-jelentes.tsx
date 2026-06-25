@@ -26,7 +26,7 @@ export const Route = createFileRoute("/alomfejtes-jelentes")({
         },
         {
           title: "Gyakori álomszimbólumok",
-          text: "A víz érzelmi mozgást, a ház belső teret, az út döntési irányt, a zuhanás kontrollvesztést, a halálképek pedig nem jóslatként, hanem lezárás vagy átalakulás önismereti képeként olvashatók.",
+          text: "A víz érzelmi mozgást, a ház belső teret, az út döntési irányt, a zuhanás kontrollvesztést, a halálképek pedig lezárás vagy átalakulás önismereti képeként olvashatók.",
         },
       ]}
       ctaTo="/alomfejtes"

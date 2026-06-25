@@ -59,24 +59,23 @@ function rememberDailyCard(
     sourceRoute: "/mai-lap",
     title: `Mai lap · ${card.name}${reversed ? " fordítva" : ""}`,
     summary:
-      [
-        cleanFocus ? `Mai fókusz: ${cleanFocus}.` : null,
-        hu?.oneLine,
-        hu?.meaning,
-      ]
+      [cleanFocus ? `Mai fókusz: ${cleanFocus}.` : null, hu?.oneLine, hu?.meaning]
         .filter(Boolean)
         .join(" ") || `${card.name} napi tarot lap.`,
     oneSentence: hu?.oneLine ?? undefined,
-    anchors: [cleanFocus, card.name, reversed ? "fordított lap" : "álló lap", ...card.keywords].filter(
-      Boolean,
-    ),
+    anchors: [
+      cleanFocus,
+      card.name,
+      reversed ? "fordított lap" : "álló lap",
+      ...card.keywords,
+    ].filter(Boolean),
   });
 }
 
 function dailyFocusReflection(card: TarotCard, focus: string, reversed: boolean): string {
   const clean = focus.trim();
   if (!clean) {
-    return `${card.name} ma nem nagy jóslatként érkezik, hanem figyelmi pontként: azt mutatja, melyik belső minőséget érdemes észrevenned, mielőtt automatikusan reagálnál.`;
+    return `${card.name} ma figyelmi pontként érkezik: azt mutatja, melyik belső minőséget érdemes észrevenned, mielőtt automatikusan reagálnál.`;
   }
   const lower = clean.toLocaleLowerCase("hu-HU");
   const orientation = reversed
@@ -89,12 +88,12 @@ function dailyFocusReflection(card: TarotCard, focus: string, reversed: boolean)
     return `A „${clean}” témájában ${card.name} ${orientation}. A lap most azt segíthet látni, hol van valódi felelősséged, és hol viszel túl sok feszültséget puszta megfelelésből.`;
   }
   if (/dönt|válassz|lépjek|maradjak|menjek|igen|nem/.test(lower)) {
-    return `A „${clean}” kérdésében ${card.name} ${orientation}. Nem dönt helyetted, inkább megmutathatja, melyik válasz mögött van több belső nyugalom, és melyik csak a bizonytalanság gyors csökkentése.`;
+    return `A „${clean}” kérdésében ${card.name} ${orientation}. A lap azt mutathatja meg, melyik válasz mögött van több belső nyugalom, és melyik csak a bizonytalanság gyors csökkentése.`;
   }
   if (/család|anya|apa|gyerek|barát|barátnő/.test(lower)) {
     return `A „${clean}” helyzetében ${card.name} ${orientation}. Ma érdemes különválasztanod, mi a saját érzésed, és mi az a szerep, amit megszokásból veszel magadra.`;
   }
-  return `A „${clean}” témájában ${card.name} ${orientation}. A mai üzenet akkor lesz használható, ha nem általános tanácsként olvasod, hanem egyetlen konkrét helyzetre viszed vissza.`;
+  return `A „${clean}” témájában ${card.name} ${orientation}. A mai üzenet akkor lesz használható, ha egyetlen konkrét helyzetre viszed vissza.`;
 }
 
 function MaiLap() {
@@ -139,7 +138,9 @@ function MaiLap() {
     try {
       const r = await callDaily({ data: { dateKey: todayKey() } });
       if (!r.ok || !r.slot) {
-        setDrawError("A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
+        setDrawError(
+          "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+        );
         return;
       }
       setSlot(r.slot);
@@ -185,7 +186,7 @@ function MaiLap() {
       <PageHeader
         eyebrow="Napi rituálé"
         title="Mai lap"
-        lead="Egy lap, egy napi fókusz a tarot hagyományából. Nem jóslatként kezeljük, hanem csendes önismereti jelként."
+        lead="Egy lap, egy napi fókusz a tarot hagyományából, csendes önismereti jelként."
       />
       <div className="mx-auto max-w-5xl px-4 md:px-6 pb-20">
         {!card && (
@@ -195,8 +196,7 @@ function MaiLap() {
             </div>
             <div className="w-full max-w-md space-y-2">
               <label htmlFor="daily-card-focus" className="block text-sm text-ivory/78">
-                Mire kérsz ma finomabb fókuszt?{" "}
-                <span className="text-ivory/45">(opcionális)</span>
+                Mire kérsz ma finomabb fókuszt? <span className="text-ivory/45">(opcionális)</span>
               </label>
               <input
                 id="daily-card-focus"

@@ -136,13 +136,13 @@ export function statusText(status: string | undefined, score: number): string {
   if (normalized.includes("házasság") || normalized.includes("hosszú")) {
     return "Hosszú távú vagy házassági helyzetben a kapcsolat nem attól erős, hogy nincs feszültség, hanem attól, hogy van-e közös tartás, amikor a romantikus könnyedség kevesebb. Itt a stabilitás, felelősség és szabadság aránya a kulcs.";
   }
-  return "A megadott kapcsolati helyzet alapján ezt nem általános összeillésként érdemes olvasni, hanem annak jelzéseként, hogy ebben az életszakaszban milyen tempót, közelséget és biztonságot tudtok egymásnak adni.";
+  return "A megadott kapcsolati helyzet alapján ez az olvasat azt mutatja, hogy ebben az életszakaszban milyen tempót, közelséget és biztonságot tudtok egymásnak adni.";
 }
 
 function questionText(question: string, status: string | undefined): string {
   const clean = question.trim().replace(/\s+/g, " ");
   const normalized = `${status ?? ""} ${clean}`.toLocaleLowerCase("hu-HU");
-  const quoted = `A „${clean}” kérdésre ez az összeillés nem biztos jóslatként válaszol.`;
+  const quoted = `A „${clean}” kérdésre ez az összeillés kapcsolati mintaként válaszol.`;
   if (/vissza|visszatér|ex|újra/.test(normalized)) {
     return `${quoted} Inkább azt mutatja, hogy a visszatérés értéke nem önmagában a megjelenésben van, hanem abban, hogy a régi minta mellett látszik-e több felelősség, következetesség és tisztább szándék. Ha csak a hiány hozza vissza, rövid hullám maradhat; ha a tempó is változik, abból már érdemesebb olvasni.`;
   }

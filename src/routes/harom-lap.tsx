@@ -58,7 +58,7 @@ function threeCardFreeSynthesis(slots: TarotSlot[], question: string, category: 
   const [past, present, future] = cards;
   const questionText = question.trim();
   const situation = questionText
-    ? `A kérdésed nem általános: „${questionText}”.`
+    ? `A kérdésed konkrét helyzetet hoz be: „${questionText}”.`
     : `Most ebben a témában kérsz irányt: ${category}.`;
   const categoryHint = categoryFreeHint(category);
   const pastTone = past.reversed ? "nem teljesen lezárt minta" : "hozott minta";
@@ -148,11 +148,15 @@ function HaromLap() {
       const seed = `three:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
       const r = await drawCards({ data: { count: 3, allowReversals: true, seed } });
       if (!r.ok) {
-        setDrawError("A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
+        setDrawError(
+          "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+        );
         return;
       }
       if (r.slots.length < 3) {
-        setDrawError("A húzás nem teljes. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
+        setDrawError(
+          "A húzás nem teljes. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+        );
         return;
       }
       setSlots(r.slots.slice(0, 3));
@@ -326,14 +330,10 @@ function HaromLap() {
                   return (
                     <>
                       <div className="md:col-span-2">
-                        <Section eyebrow="A három lap együtt">
-                          {synthesis.together}
-                        </Section>
+                        <Section eyebrow="A három lap együtt">{synthesis.together}</Section>
                       </div>
                       <div className="md:col-span-2">
-                        <Section eyebrow="Mire figyelj most?">
-                          {synthesis.attention}
-                        </Section>
+                        <Section eyebrow="Mire figyelj most?">{synthesis.attention}</Section>
                       </div>
                       <div className="md:col-span-2">
                         <Section eyebrow="Egy mondatban az üzenet">

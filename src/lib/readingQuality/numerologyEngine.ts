@@ -148,7 +148,7 @@ export function composeNumerologyReading(profile: NumerologyProfile): QualityRea
       },
       {
         heading: "Mit mutat rólad?",
-        text: `${life.purpose ?? life.strengths} A születésnapod ${profile.birthDayNumber}-es száma hozzáteszi: ${birth.meaning.toLocaleLowerCase("hu-HU")} Ez nem általános jellemvonás, hanem visszatérő működésmód.`,
+        text: `${life.purpose ?? life.strengths} A születésnapod ${profile.birthDayNumber}-es száma hozzáteszi: ${birth.meaning.toLocaleLowerCase("hu-HU")} Ezt visszatérő működésmódként érdemes figyelni a saját helyzeteidben.`,
       },
       {
         heading: "Belső hajtóerőd",
