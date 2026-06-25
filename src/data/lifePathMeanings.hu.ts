@@ -108,14 +108,15 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "7": {
     title: "Sorsszám 7 jelentése – A tudáskereső útja",
-    lead: "A 7-es sorsszám a mélységek, a bölcsesség és az elmélyült gondolkodás felé tereli egyéniségét. Ez az út a rejtett igazságok és a létezés mélyebb értelmének felfedezéséről szól.",
+    lead:
+      "A 7-es sorsszámot a numerológiai hagyomány a csendes elmélyülés, a kérdezés és a belső figyelem jelképeként olvassa. Nem rejtett igazságot vagy különleges tudást ígér, inkább azt a mintát mutatja, ahol fontos lehet a megértés keresése és a józan kapcsolódás egyensúlya.",
     essence:
-      "Lényét a folytonos kutatás, az elemzés és a belső világ vizsgálata határozza meg. Nem elégszik meg a felszínes magyarázatokkal; a valódi értéket a mélyebb összefüggések megértésében találja. Keresi az okokat és a miérteket, miközben erős intuitív képességei vezetik a tudás felé.",
+      "A 7-es szám hagyományos olvasata a kutatás, elemzés és befelé figyelés témáit emeli előtérbe. Támogató oldala nem felsőbb tudás, hanem annak igénye, hogy a felszín mögött is legyen idő kérdezni, rendszerezni és megérteni. Akkor marad földelt, ha a csend nem elszigetelődésbe, hanem tisztább rálátásba vezet.",
     strengths:
-      "Kiemelkedő spirituális érzékenység jellemzi, mely a láthatatlan világ törvényszerűségei iránti fogékonyságban nyilvánul meg. Intellektuális megközelítésével, elemző képességével képes rendszerezni és értelmezni a megszerzett információkat. Elmélyedő kíváncsisága arra ösztönzi, hogy folyamatosan tanuljon és felfedezze az élet sokrétű aspektusait.",
+      "A 7-es mintázat erőssége a figyelmes megfigyelés, az elemzés és az elmélyült tanulás lehet. Jól működhet ott, ahol nem kell azonnal választ adni, hanem lehet időt hagyni a pontosabb megértésnek. A hagyomány szerint ez a szám a belső csend és a józan kíváncsiság értékére emlékeztethet.",
     shadow:
-      "Hajlamos lehet az elvonulásra, ami idővel elszigeteltséget okozhat, gátolva az új kapcsolatok kialakítását. Zárkózottsága és titoktartása megnehezítheti a mélyebb érzelmi kapcsolódást másokkal. Néha túl sokat analizál, és gyanakvóvá válhat, ott is keresve a rejtett motívumokat, ahol nincsenek.",
-    love: "Párkapcsolataiban a valódi, mély intellektuális és spirituális kapcsolódásra vágyik. Nehezen nyílik meg, de ha megtalálja azt a partnert, aki megérti és tiszteletben tartja belső világát, akkor rendkívül hűséges és elkötelezett társsá válik. Fontos számára a bizalom és a megértés.",
+      "Árnyékban a 7-es mintázat túlzott elvonulást, túlelemzést vagy bizalmatlanabb belső ritmust jelezhet. Ilyenkor a csend nem feltétlenül pihenés, hanem távolságtartás is lehet, ezért fontos a kapcsolódás apró, biztonságos formáit megtartani. A józan kérdezés segíthet abban, hogy a mélységkeresés ne elszigetelődésbe forduljon.",
+    love: "Párkapcsolatban a 7-es mintázat a bizalom, a belső tér és a fokozatos megnyílás kérdéseit hozhatja elő. Nem hűséget vagy különleges spirituális kapcsolódást ígér, inkább arra figyelmeztet, hogy a közelség akkor mélyülhet, ha az elmélyülés mellett marad őszinte kommunikáció és hétköznapi jelenlét is.",
     career:
       "Nem kész pályaválasztási tanács, inkább azt jelzi, hogy a 7-es mintázatban erős lehet a kutatás, elemzés és csendes elmélyülés igénye. Jól illhet hozzá olyan közeg, ahol van idő kérdezni, rendszerezni, írni vagy összefüggéseket keresni, de ez nem igazol konkrét hivatást. A munka akkor támogató, ha nem zár el teljesen másoktól, és a tudáskeresést józan kapcsolódással egészíti ki.",
     advice:
