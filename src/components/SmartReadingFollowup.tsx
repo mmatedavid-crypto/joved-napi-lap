@@ -241,13 +241,13 @@ function followupIntro({
     love:
       "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
     decision:
-      "Döntés előtt a jó folytatás nem helyetted választ, hanem megmutatja, melyik érzés húz és melyik tart vissza.",
+      "Döntés előtt a jó folytatás nem helyetted választ, hanem segít szétválasztani, melyik érzés húz és melyik tart vissza.",
     compatibility:
       "Összeillés után a mélyebb érték nem a százalékban van, hanem abban, miért működhet, hol akadhat el, és mit ismételtek.",
     dream:
       "Álom után a jó folytatás nem diagnózist keres, hanem azt, milyen érzés maradt veled, és mit tükrözhet önismereti jelként.",
     numerology:
-      "Számmisztikánál a mélyebb folytatás akkor ér valamit, ha nem címkéket ad, hanem megmutatja, hogyan működik benned a minta.",
+      "Számmisztikánál a mélyebb folytatás akkor ér valamit, ha nem címkéket ad, hanem józanul ránéz arra, hogyan működhet benned a minta.",
     horoscope:
       "Horoszkóp után a személyesebb folytatás nem általános jegyszöveg, hanem időszakos fókusz és saját ritmus.",
     angel:
@@ -338,7 +338,7 @@ function followupOptions(
         slug: "harom_lap_mely",
         label: "Mi ennek a története?",
         reason:
-          "Ha a döntés mögött régebbi minta van, a három lap jobban megmutatja, honnan jön és merre mozdulhat.",
+          "Ha a döntés mögött régebbi minta van, a három lap segít óvatosan ránézni, honnan jön és merre mozdulhat.",
       },
     ];
   }

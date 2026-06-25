@@ -962,12 +962,18 @@ const checks: StaticSafetyCheck[] = [
       /A teljes elemzés a születési dátum/i,
       /Mi történik köztetek valójában/i,
       /napi lap valójában kapcsolati kérdést/i,
+      /megmutatja, melyik érzés húz/i,
+      /megmutatja, hogyan működik benned a minta/i,
+      /jobban megmutatja, honnan jön/i,
     ],
     required: [
       "A részletes elemzés a születési dátum",
       "Milyen mintát mutat köztetek?",
       "tempót, kölcsönösséget, kommunikációt",
       "tempót, kölcsönösséget és visszatérő mintát",
+      "segít szétválasztani, melyik érzés húz",
+      "józanul ránéz arra, hogyan működhet benned a minta",
+      "segít óvatosan ránézni, honnan jön",
     ],
   },
   {
