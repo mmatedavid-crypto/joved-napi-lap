@@ -218,7 +218,7 @@ function PricingPage() {
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ivory/62">
             Ha csak egy mai érzést vagy rövid jelet szeretnél tisztábban látni, elég lehet egy
             belépő olvasat. Ha viszont ugyanaz a kapcsolat, döntés vagy élethelyzet tér vissza, a
-            mélyebb azonnali elemzés ad több kapaszkodót.
+            részletesebb azonnali elemzés több szempontot adhat.
           </p>
           <div className="mt-5 grid gap-3 md:grid-cols-3">
             <BudgetFitCard
@@ -229,7 +229,7 @@ function PricingPage() {
               href="/mai-lap"
             />
             <BudgetFitCard
-              title="Mélyebb azonnali elemzés"
+              title="Részletesebb azonnali elemzés"
               price={focusedPriceRange}
               text="Három laphoz, döntéshez, kapcsolathoz vagy számmisztikához, amikor már nem elég egy rövid jel."
               cta="Helyzethez választok"

@@ -77,9 +77,9 @@ for (const needle of [
   "function priceFitNudge(product: ProductDef)",
   "Ha csak kipróbálnád a hangot",
   "belépő árú azonnali olvasat",
-  "Ez mélyebb azonnali olvasat",
+  "Ez részletesebb azonnali olvasat",
   "belépő árú olvasatok kisebb első lépést jelentenek",
-  "ha viszont visszatérő kérdésed van",
+  "több szempontot adhat",
   "Pontossági visszajelzés",
   "Ha az elkészült olvasat részben talál",
   "fontos helyzet kimarad belőle",
@@ -421,7 +421,7 @@ for (const needle of [
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
   "Belépő olvasat",
-  "Mélyebb azonnali elemzés",
+  "Részletesebb azonnali elemzés",
   "Asztrológiai riport",
   "function BudgetFitCard",
   "const entryPriceRange = productRange(entry)",
@@ -560,8 +560,13 @@ if (productsSource.includes("A legmélyebb tarot-riport: lassabb")) {
 for (const forbidden of [
   "Részletesebb, prémium olvasat",
   "A legmélyebb azonnali tarot-olvasat",
+  "Ez mélyebb azonnali olvasat",
+  "többet ad egy napi lapnál",
+  "ad több kapaszkodót",
 ]) {
   if (productsSource.includes(forbidden)) failed.push(`Product copy should avoid ranking/superlative promise: ${forbidden}`);
+  if (paywall.includes(forbidden)) failed.push(`Paywall copy should avoid ranking/superlative promise: ${forbidden}`);
+  if (pricingRoute.includes(forbidden)) failed.push(`Pricing copy should avoid ranking/superlative promise: ${forbidden}`);
 }
 if (paywall.includes("ráérsz megvárni a részletesebb, hosszabb írásos riportot")) {
   failed.push("Kelta kereszt paywall copy must not imply delayed delivery");
