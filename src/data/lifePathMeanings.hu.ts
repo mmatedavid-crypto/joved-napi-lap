@@ -62,14 +62,15 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "4": {
     title: "Sorsszám 4 jelentése —  Az építő alapokon",
-    lead: "A 4-es sorsszám a stabilitás, a rendszerezettség és a megbízhatóság energiáját hordozza. Azoknak szól, akik a gondos építkezést és a tartós értékeket képviselik az életben.",
+    lead: "A 4-es sorsszámot a numerológiai hagyomány a stabilitás, rendszerezettség és tartós építkezés jelképeként olvassa. Nem kész személyiségcímke, inkább azt a mintát mutatja, ahol fontos lehet a megbízható ritmus, a határok és az alapok gondos felépítése.",
     essence:
-      "Ezen sorsszám rezgése a földelésről, a kitartó munkáról és a gyakorlati megközelítésről szól. A 4-es energiát hordozó személyek általában konkrét, mérhető eredményeket szeretnének látni, és ragaszkodnak a bevált módszerekhez. Számukra a szervezettség és a rendszer a biztonság alapja.",
+      "A 4-es hagyományos olvasata a földelés, kitartó munka és gyakorlati rend témáit emeli előtérbe. Nem azt állítja, hogy valaki csak mérhető eredményekben gondolkodik, inkább arra figyelmeztet, hogy a biztonság érzése sokszor átlátható keretekből, követhető lépésekből és vállalt ritmusból épül.",
     strengths:
       "A 4-es sorsszám erőssége a rend, kitartás és gyakorlati építkezés jelképes mintájában jelenhet meg. Józan formában stabil alapokat keres, figyel a részletekre, és értékeli azt, ami idővel válik megbízhatóvá. Kapcsolatokban és munkában is akkor támogató, ha a biztonság nem merevségként, hanem tartós figyelemként jelenik meg.",
     shadow:
-      "Időnként dogmatikussá válhatnak, mereven ragaszkodnak a saját igazukhoz, és nehezen fogadnak el más nézőpontokat. Előfordulhat, hogy túlságosan is ragaszkodnak a megszokotthoz, és elutasítanak minden újdonságot, ami unalmassá vagy fantáziátlanná teheti őket. Rugalmatlanságuk miatt nehezen illeszkednek be olyan helyzetekbe, ahol kompromisszumra és csapatmunkára van szükség.",
-    love: "Párkapcsolataikban a stabilitásra és a hosszú távú elköteleződésre törekednek. Hűségesek, megbízhatóak és odaadóak, akik számára a tartós biztonság fontosabb, mint a spontán kalandok. Hajlamosak lehetnek a megszokott rutinokhoz ragaszkodni, és szükségük van egy olyan partnerre, aki értékelni tudja a biztonságra való törekvésüket és a kitartó gondoskodásukat.",
+      "A 4-es árnyéka lehet, amikor a biztonság keresése merev ragaszkodássá vagy túl szűk keretté válik. Nem rugalmatlanságot ír elő, inkább arra hívja fel a figyelmet, hogy a stabilitás akkor marad élő, ha van benne párbeszéd, tanulás és hely az új szempontoknak is.",
+    love:
+      "Párkapcsolatban a 4-es mintázat a stabilitás, megbízhatóság és közösen épített biztonság témáit hozhatja elő. Nem hűséget vagy hosszú távú elköteleződést ígér, inkább azt mutatja, hogy a kapcsolat akkor marad megtartó, ha a rutin mellett az érzések kimondása és a rugalmasság is helyet kap.",
     career:
       "A 4-es sorsszámhoz jól illhetnek azok a munkakörnyezetek, ahol precizitás, szervezettség és módszeres gondolkodás érték. Nem kész szakmai útmutató, inkább arra ad nézőpontot, hogy a stabil alapok, rendszerek és tartós építés témái erősebbek lehetnek nálad. A kitartás és a részletekre figyelés akkor hasznos, ha nem merevséggé, hanem megbízható ritmussá válik.",
     advice:
