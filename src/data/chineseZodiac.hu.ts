@@ -97,9 +97,9 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1928, 1940, 1952, 1964, 1976, 1988, 2000, 2012, 2024, 2036],
     keywords: ["karizmatikus", "ambiciózus", "varázslatos"],
     personality:
-      "A sárkány a kínai állatöv legmágikusabb jegye: nagy energiájú, vízionárius, magával ragadó. Ahol megjelenik, ott történik valami. Nem szeret középszerű lenni — vagy a csúcson, vagy sehol.",
+      "A sárkány a kínai állatöv hagyományában erős jelenléttel, lendülettel és nagyobb ívű elképzelésekkel társul. Nem rangot vagy különleges sorsot jelent, inkább azt a mintát, amikor valaki szeret tágabb horizontban gondolkodni. Akkor működik jól, ha a látványos lendület mellé figyelem, mérték és következetesség is társul.",
     love: "Erős vonzerejű, sokak fejét elcsavarja, de a tartós kapcsolathoz valódi partner kell, aki nem a státuszáért, hanem érte van vele.",
-    career: "Vezetés, vállalkozás, művészet, technológia — bárhol, ahol látnoki energia és nagy tét van. Unalmas munka megöli.",
+    career: "Olyan közeg illhet hozzá, ahol van tér kezdeményezni, alkotni vagy nagyobb összefüggéseket átlátni. Nem kész karrierút, inkább azt jelzi, hogy a Sárkány mintázatot a felelősen kezelt lendület és a józan ritmus teszi támogatóvá.",
     money: "Erős benne a nagyvonalúság és a látványos célok vágya. Akkor talál stabilabb ritmust, ha az ambíció mellé tudatosabb keretet is tesz.",
     health: "Magas energiaszintje könnyen túl sok vállalásba viszi. A nagy jelenlét után csendre, alvásra és olyan térre van szüksége, ahol nem kell bizonyítania.",
     compatible: ["Patkány", "Majom", "Kakas"],

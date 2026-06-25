@@ -105,6 +105,11 @@ const checks: StaticSafetyCheck[] = [
       /\borvosi\b/i,
       /\bkatonai\b/i,
       /\bhalálos pontosan\b/i,
+      /\bA sárkány a kínai állatöv legmágikusabb jegye\b/i,
+      /\bAhol megjelenik, ott történik valami\b/i,
+      /\bvagy a csúcson, vagy sehol\b/i,
+      /\blátnoki energia és nagy tét\b/i,
+      /\bUnalmas munka megöli\b/i,
     ],
     required: [
       "ritmus",
@@ -113,6 +118,10 @@ const checks: StaticSafetyCheck[] = [
       "józan ellenőrzést",
       "meglepően pontosan és fókuszáltan",
       "Rendszerező, elemző, adminisztratív",
+      "Nem rangot vagy különleges sorsot jelent",
+      "figyelem, mérték és következetesség",
+      "Nem kész karrierút",
+      "felelősen kezelt lendület és a józan ritmus",
     ],
   },
   {
