@@ -171,19 +171,20 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
       "Érdemes az érzékeny benyomásokat nem azonnali igazságként, hanem finom jelzésként kezelni. Segíthet, ha az ihletet leírod, összeveted a helyzet tényeivel, és hagysz időt a döntéseknek. A 11-es mintázat akkor válhat megtartóvá, ha a belső figyelemhez földelt ritmus és emberi léptékű elvárás társul.",
   },
   "22": {
-    title: "Sorsszám 22 jelentése — Az Építőmester útja",
-    lead: "A 22-es sorsszámot a hagyomány a „Mester Építő” archetípusához köti: a vízió és a gyakorlati felelősség találkozásához. Ez az út nem kész sorsot ír le, hanem azt vizsgálja, hogyan kaphatnak formát a nagyobb elképzelések józan, lépésről lépésre építkező módon.",
+    title: "Sorsszám 22 jelentése — A felelős építés",
+    lead: "A 22-es sorsszámot a numerológiai hagyomány a nagyobb tervek, gyakorlati forma és felelős építkezés jelképeként olvassa. Nem rangot vagy különleges sorsot ír le, inkább azt a mintát mutatja, ahol az elképzelések józan, lépésről lépésre követhető formát keresnek.",
     essence:
-      "Ez a szám nagy potenciált jelöl: hidat épít az elképzelés és a konkrét tett között. A 22-es akkor működik erősen, ha a vízió nem marad álom, hanem módszerességgel, felelősséggel és emberi érzékkel kap formát. Nem felsőbbrendűség, hanem nagyobb teherbírás és nagyobb tudatossági feladat.",
+      "A 22-es hagyományos olvasata az elképzelés és a konkrét tett közötti hidat emeli előtérbe. Nem nagyobb teherbírást vagy különleges feladatot bizonyít, inkább arra figyelmeztet, hogy a nagyobb tervek csak emberi ritmussal, átlátható lépésekkel és másokra is figyelő felelősséggel maradnak megtartók.",
     strengths:
-      "Erős képességed lehet arra, hogy nagyobb elképzeléseket gyakorlati fegyelemmel építs fel. Átláthatod a nagy képet, miközben a részleteket sem veszted szem elől. A 22-es ereje nem abban áll, hogy minden akadályt legyőz, hanem abban, hogy a nehézségekből is rendszert, tanulságot és következő lépést tud formálni.",
+      "A 22-es mintázat erőssége lehet, hogy az ötletek nem maradnak puszta elképzelések, hanem rendszert, tervet és következő lépést kaphatnak. Nem minden akadály legyőzését ígéri, inkább azt támogatja, hogy a nagyobb célok mellett is maradjon mérték, együttműködés és emberi lépték.",
     shadow:
-      "Előfordulhat, hogy a túlzott maximalizmusod megbénít, és a tökéletességre való törekvés megakadályoz abban, hogy elfogadd a „jó” megoldásokat. Ez gyakran késedelmekhez, stresszhez és kiégéshez vezethet. A hatalmas felelősségvállalás és a céljaid hajszolása közben könnyen figyelmen kívül hagyhatod a pihenést, a kapcsolataidat és az öngondoskodást, kimerülve a túlhajszoltságban. Nehezen delegálsz, mert úgy érzed, mindent jobban elvégzel magad, ami korlátozhatja a nagyszabású elképzeléseid kibontakozását.",
-    love: "Párkapcsolataidban intenzív, céltudatos és ambiciózus mintát hozhatsz, ezért fontos lehet, hogy a közös tervek mellett a hétköznapi figyelem is helyet kapjon. Olyan kapcsolat támogathat igazán, ahol a nagyobb célok mellett a pihenés, az érzelmi jelenlét és a kölcsönös ritmus is számít.",
+      "A 22-es árnyéka lehet, amikor a tökéletesség keresése késlelteti a józanul elégséges megoldásokat, vagy a felelősség túl nagy belső nyomássá válik. Nem azt jelenti, hogy mindent egyedül kell kézben tartani, inkább arra hívja fel a figyelmet, hogy a tartós építéshez pihenés, delegálás és kapcsolati jelenlét is kell.",
+    love:
+      "Párkapcsolatban a 22-es mintázat a közös tervek, felelősség és hosszabb távú építkezés témáit hozhatja elő. Nem ambiciózus vagy intenzív kapcsolatot ír elő, inkább azt mutatja, hogy a nagyobb célok mellett a pihenés, az érzelmi jelenlét és a kölcsönös ritmus is számít.",
     career:
       "Nem kész szakmai címke, inkább azt jelzi, hogy a 22-es mintázatban fontos lehet a rendszerek, struktúrák és hosszabb távú tervek építése. Jól illhet hozzá olyan közeg, ahol a víziót módszeres munkává, felelősen követhető lépésekké és mások számára is átlátható renddé lehet formálni. Ez nem vezetői rangot ígér, hanem a nagyobb léptékű feladatok józan, emberi ritmusának keresését támogatja.",
     advice:
-      "Érdemes tudatosítanod a benned rejlő építőerőt, de nem kell állandóan bizonyítanod. Fontos, hogy megtaláld az egyensúlyt a nagyszabású tervek és a személyes jóllét, kapcsolatok gondozása között. Az öngondoskodás nem gyengeség, hanem része annak, hogy hosszú távon is stabilan tudj jelen lenni.",
+      "A 22-es tanulsága a hagyomány szerint az, hogy a nagyobb tervek is csak emberi léptékben tarthatók meg. Érdemes a víziót kisebb, ellenőrizhető lépésekre bontani, közben pedig komolyan venni a pihenést, a segítségkérést és a kapcsolatok hétköznapi gondozását is.",
   },
   "33": {
     title: "Sorsszám 33 jelentése — Az Önzetlen Tanító",
