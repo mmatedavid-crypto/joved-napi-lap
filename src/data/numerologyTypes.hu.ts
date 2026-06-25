@@ -36,9 +36,9 @@ export const LELEK_SZAM: NumerologyType = {
     { n: 7, title: "7-es lélekszám", body: "Bölcsesség és mélység után vágyik a lelked. Csendre, befelé fordulásra, kutatásra van szükséged. A felszínes társalgások és a folyamatos zaj fárasztanak." },
     { n: 8, title: "8-as lélekszám", body: "A 8-as lélekszám az erő, felelősség és kézzelfogható hatás iránti belső igényt jelképezi. Nem pénzügyi vagy státuszígéret, inkább azt mutathatja, hogy fontos számodra a kompetens jelenlét és a rendezett döntés. Árnyéka akkor jelenhet meg, ha az értékességet túl könnyen teljesítményhez vagy kontrollhoz kötöd." },
     { n: 9, title: "9-es lélekszám", body: "Tágabb értelmet keresel: szolgálatot, együttérzést, valamit, ami túlmutat rajtad. Akkor érzed teljesnek magad, ha az életed értelemmel tölt fel másokat is." },
-    { n: 11, title: "11-es lélekszám", body: "Mestersz lélekszám: intuíció, ihlet, spirituális látás. Belső igazságokat akarsz közvetíteni — ám ehhez bátorság kell, mert a 11-es szenzitivitása sebezhetővé is tesz." },
-    { n: 22, title: "22-es lélekszám", body: "Mestersz: nagy víziók megvalósítása a földön. Lelked olyat akar építeni, ami sokakat szolgál — ehhez fegyelmet és türelmet kell tanulnod." },
-    { n: 33, title: "33-as lélekszám", body: "Mestersz: szeretetből szolgálni. A lelked tanítóként vagy mélyen támogató jelenlétként akar jelen lenni — de először magadnak kell megadnod azt a szeretetet, amit másoknak adsz." },
+    { n: 11, title: "11-es lélekszám", body: "A 11-es lélekszámot a numerológiai hagyomány mesterszámként kezeli: az intuíció, ihlet és finom érzékelés jelképeként. Nem spirituális látást vagy különleges küldetést igazol, inkább azt mutathatja, hogy fontos lehet számodra az érzékeny figyelem józan formába rendezése." },
+    { n: 22, title: "22-es lélekszám", body: "A 22-es lélekszám a nagyobb elképzelések földelt, lépésenkénti építésének jelképe. Nem kész életprogram, inkább azt jelezheti, hogy megtartó erőt adhat, ha a tágabb víziókat fegyelemmel, türelemmel és közérthető renddel kapcsolod össze." },
+    { n: 33, title: "33-as lélekszám", body: "A 33-as lélekszám gondoskodó figyelemként, tanításként és mélyen támogató jelenlétként jelenik meg a hagyományban. Nem azt mondja, hogy tanítóként kell élned, inkább arra emlékeztethet, hogy mások támogatására csak egészséges határokkal és önmagad felé is működő szeretettel érdemes építeni." },
   ],
 };
 
