@@ -21,9 +21,9 @@ export const LELEK_SZAM: NumerologyType = {
   slug: "lelek-szam",
   title: "Lélekszám jelentése — mit kíván a szíved",
   shortTitle: "Lélekszám",
-  lead: "A lélekszám (más néven szívvágy-szám) azt mutatja, mire vágyik legmélyebben a lelked — a magánjellegű motiváció, ami a döntéseid mögött áll.",
+  lead: "A lélekszám (más néven szívvágy-szám) a numerológiai hagyomány szerint a belső vágyirányokra és csendesebb motivációkra adhat nézőpontot.",
   intro:
-    "A lélekszám a numerológia egyik legbelsőbb mutatója. Nem azt írja le, milyennek látnak mások, hanem azt, mi az, ami valójában boldoggá tesz. Sokan akkor ismerik fel a lélekszámukat, amikor egy kívülről sikeres életben is hiányérzet jelentkezik — a lélekszám visszamutat oda, ahonnan a valódi öröm fakad.",
+    "A lélekszámot a numerológia a belső igények egyik jelképes mutatójaként kezeli. Nem azt írja le, milyennek látnak mások, és nem ad kész választ arra sem, mitől leszel boldog; inkább azt segítheti észrevenni, milyen vágyak, hiányérzetek vagy motivációk térnek vissza benned.",
   howTo:
     "A teljes születési neved magánhangzóit (A, E, I, O, U, Á, É, Í, Ó, Ö, Ő, Ú, Ü, Ű) számértékre váltod (A=1, E=5, I=9, O=6, U=3, Y=7 — a magyar ékezetes hangzók ugyanazt az értéket kapják, mint az alapbetű), összeadod, majd egy számjegyre vagy mesterszámra (11, 22, 33) redukálod. Ez a lélekszámod.",
   numbers: [
