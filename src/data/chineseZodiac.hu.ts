@@ -44,12 +44,15 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1925, 1937, 1949, 1961, 1973, 1985, 1997, 2009, 2021, 2033],
     keywords: ["kitartó", "megbízható", "csendes erő"],
     personality:
-      "A bivaly a türelem mestere: lassú, megfontolt, de amit elkezd, azt végig is viszi. Nem szeret feltűnősködni — a teljesítménye beszél helyette. Konzervatív értékrendű és mélyen lojális.",
+      "A bivaly a kínai zodiákus hagyományában a türelem, kitartás és csendes építkezés jelképe. Nem kész személyiségítéletet ad, inkább azt a mintát mutatja, ahol a lassabb ritmus, a megbízhatóság és a következetes jelenlét lehet fontos.",
     love:
       "Kapcsolatban a Bivaly mintázat a tartósság, biztonság és lassan épülő bizalom témáit hozhatja elő. Nem örök hűséget vagy kész otthonérzetet ígér, inkább arra figyelmeztet, hogy a stabilitás mellett az érzések kimondása is fontos.",
-    career: "Mezőgazdaság, építőipar, mérnöki munka, könyvelés, jog — mindenhol, ahol a kitartás és a részletekre figyelés számít. Csapatban a hűséges, megbízható oszlop.",
-    money: "Lépésről lépésre gyarapszik. Nem kockáztat feleslegesen, hosszú távon viszont a legtöbbet teszi félre az állatöv tagjai közül.",
-    health: "A folyamatos teherbírás miatt különösen fontos neki a lassú levezetés. A finom mozgás és a kimondott feszültség segíthet, hogy ne mindent csendben hordozzon.",
+    career:
+      "Mezőgazdaság, építőipar, mérnöki munka, könyvelés vagy jogi terület is illeszkedhet ahhoz a mintához, ahol a kitartás és a részletekre figyelés számít. Nem kész szerepet ír elő, inkább azt jelzi, hogy a megbízható ritmus és az átlátható feladatok lehetnek megtartók.",
+    money:
+      "A Bivaly mintázatban a pénz témája gyakran a lassú építkezés, tartalék és előrelátás felől olvasható. Nem ígér kiemelkedő takarékosságot, inkább arra figyelmeztet, hogy a biztonság józan, követhető lépésekből épül.",
+    health:
+      "A tartós erőfeszítés mellett különösen fontos lehet a lassú levezetés. A finom mozgás és a kimondott feszültség segíthet, hogy a terhek ne maradjanak csendben, magányosan hordozott minták.",
     compatible: ["Patkány", "Kígyó", "Kakas"],
     challenging: ["Kecske", "Ló"],
     luckyColor: "Sárga, fehér, zöld",
@@ -83,9 +86,11 @@ export const CHINESE_ANIMALS: ChineseAnimal[] = [
     years: [1927, 1939, 1951, 1963, 1975, 1987, 1999, 2011, 2023, 2035],
     keywords: ["finom", "diplomatikus", "esztéta"],
     personality:
-      "A nyúl a kifinomultság és a béke jegye. Érzékeny mások hangulatára, jó megfigyelő, művészi lélek. Konfliktusokat kerül — néha a saját kárára is.",
-    love: "Romantikus, gyengéd, hosszú udvarlást vár és ad. Akkor virágzik, ha a kapcsolat harmonikus és esztétikus. A nyers, hangos energia gyorsan kimeríti.",
-    career: "Művészet, design, támogató munka, oktatás, diplomácia — minden, ahol az érzékenység és az ízlés érték. Csendes szakértőként a legerősebb.",
+      "A nyúl a kínai zodiákus hagyományában a béke, tapintat és kifinomult figyelem jelképe. Nem kész érzékeny személyiséget ír le, inkább azt a mintát mutatja, ahol fontos lehet a nyugodt közeg, a finom jelzések és a határok tisztelete.",
+    love:
+      "Kapcsolatban a Nyúl mintázat a gyengédség, türelem és harmonikus ritmus témáit hozhatja elő. Nem romantikát vagy konfliktusmentességet ígér, inkább arra figyelmeztet, hogy a béke csak őszinte kommunikációval marad tartós.",
+    career:
+      "Művészet, design, támogató munka, oktatás vagy diplomácia jól kapcsolódhat ehhez a jelképi világhoz. Nem csendes szakértői rangot jelöl, inkább azt mutatja, hogy a tapintat, ízlés és figyelmes jelenlét értékes lehet.",
     money: "Óvatosan gazdálkodik, szépségbe és kényelembe szívesen fektet. A pénz biztonságot jelent neki, nem státuszt.",
     health: "A túl sok inger, zaj és érzelmi hullám gyorsan kimerítheti. Akkor talál vissza magához, ha szépség, csend és kiszámítható napirend veszi körül.",
     compatible: ["Kecske", "Disznó", "Kutya"],
