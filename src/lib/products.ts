@@ -28,7 +28,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "napi_lap_ai",
     priceId: "napi_lap_ai_price",
     name: "Napi lap — személyes olvasat",
-    short: "Személyre szabott elemzés a mai lapodhoz.",
+    short: "Egy tarot-lap rövid, személyes olvasata a mai helyzetedhez.",
     includes: [
       "a kihúzott lap személyes értelmezése",
       "rövid helyzetkép a mai napra",
@@ -48,7 +48,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "mai_iranytu_ai",
     priceId: "mai_iranytu_ai_price",
     name: "Mai iránytű — személyes üzenet",
-    short: "Mit üzen a mai napod neked személyesen.",
+    short: "Napi tarot-, számminta- és holdjel-fókusz a saját kérdésed felől.",
     includes: [
       "napi önismereti irány",
       "szerelem/munka/hangulat finom bontása",
@@ -67,7 +67,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "angyalszam_ai",
     priceId: "angyalszam_ai_price",
     name: "Angyalszám — mélyebb olvasat",
-    short: "Az angyalszámod személyre szabott jelentése.",
+    short: "A visszatérő szám számmisztikai jelentése a mostani helyzetedre olvasva.",
     includes: [
       "a szám szimbolikus jelentése",
       "mit jelezhet a mostani élethelyzetedben",
@@ -86,7 +86,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "kristaly_ai",
     priceId: "kristaly_ai_price",
     name: "Kristály ajánlás — személyesen",
-    short: "A mostani helyzetedhez illő kristály.",
+    short: "Kristályszimbolikai ajánlás egy érzéshez, időszakhoz vagy kérdéshez.",
     includes: [
       "egy kristály szimbolikus ajánlása",
       "milyen minőséget képviselhet számodra",
@@ -105,7 +105,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "alomfejtes_rovid",
     priceId: "alomfejtes_rovid_price",
     name: "Álomfejtés — rövid olvasat",
-    short: "Az álmod szimbólumainak rövid értelmezése.",
+    short: "Az álom fő képének és hangulatának rövid, önismereti értelmezése.",
     includes: [
       "az álom fő szimbólumának értelmezése",
       "az általad megadott álomhangulat figyelembevétele",
@@ -124,7 +124,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "horoszkop_szemelyre",
     priceId: "horoszkop_szemelyre_price",
     name: "Horoszkóp — személyre szabott",
-    short: "Mai horoszkópod a te helyzetedre szabva.",
+    short: "Asztrológiai napi jegyfókusz a megadott helyzetedre olvasva.",
     includes: [
       "jegyed mai archetípusos mintája",
       "rövid szerelem/munka/figyelem bontás",
@@ -143,7 +143,7 @@ export const PRODUCTS: ProductDef[] = [
     slug: "extra_huzas",
     priceId: "extra_huzas_price",
     name: "Extra napi húzás",
-    short: "Még egy külön olvasat ma, ha új nézőpontot kérsz.",
+    short: "Új tarot-húzás ugyanahhoz vagy egy friss belső kérdéshez.",
     includes: [
       "egy új személyes lapolvasat",
       "rövid helyzethez kötött értelmezés",

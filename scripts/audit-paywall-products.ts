@@ -14,6 +14,25 @@ for (const product of PRODUCTS) {
   if (!Array.isArray(product.depthPromise) || product.depthPromise.length < 2) {
     failed.push(`${product.slug}: missing at least two depthPromise items`);
   }
+  if (product.category === "instant" && product.priceHuf < 900) {
+    if (
+      !/(tarot|számminta|holdjel|számmisztikai|kristályszimbolikai|álom|asztrológiai)/i.test(
+        product.short,
+      ) ||
+      !/(helyzet|kérdés|érzés|időszak|hangulat)/i.test(product.short)
+    ) {
+      failed.push(
+        `${product.slug}: starter product short copy must name a symbolic tradition and the user situation`,
+      );
+    }
+    if (
+      /\b(Személyre szabott elemzés a mai lapodhoz|Mit üzen a mai napod|személyre szabott jelentése|mostani helyzetedhez illő kristály|szimbólumainak rövid értelmezése)\b/i.test(
+        product.short,
+      )
+    ) {
+      failed.push(`${product.slug}: starter product short copy is too generic`);
+    }
+  }
   for (const item of product.depthPromise ?? []) {
     if (item.length < 24) failed.push(`${product.slug}: weak depthPromise item: ${item}`);
     if (/\b(ai|gpt|prompt|api|endpoint)\b/i.test(item)) {
