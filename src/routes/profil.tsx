@@ -363,7 +363,7 @@ function Page() {
             <div className="space-y-4">
               <p className="text-ivory/70">
                 Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy belépő
-                árú személyes próbaolvasatot.
+                árú személyes olvasatot.
               </p>
               <ProfileStarterActions compact />
             </div>

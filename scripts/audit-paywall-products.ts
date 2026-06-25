@@ -96,7 +96,7 @@ for (const needle of [
   "A részleteket lejjebb is ellenőrizheted fizetés előtt",
   "priceFitNudge(product)",
   "function priceFitNudge(product: ProductDef)",
-  "Ha csak kipróbálnád a hangot",
+  "Ha első személyes irányt keresel",
   "belépő árú azonnali olvasat",
   "Ez részletesebb azonnali olvasat",
   "belépő árú olvasatok kisebb első lépést jelentenek",
@@ -203,7 +203,7 @@ for (const needle of [
   "diagnózist, traumamagyarázatot",
   "biztos eseményjóslatot vársz",
   "megváltozhatatlan jövőt vársz",
-  "gyors, belépő árú próbaolvasatot",
+  "rövid, belépő árú személyes irányt",
   "nem csak százalékot szeretnél",
   "nem azt várod, hogy valaki döntsön helyetted",
   "nem egyetlen igen-nem kérdésed van",
@@ -438,7 +438,7 @@ for (const needle of [
   "Stripe fizetés",
   "Menthető olvasat",
   "Pontosítási út",
-  "belépő árú olvasatok alacsony kockázatú első próbát",
+  "belépő árú olvasatok alacsony kockázatú első személyes irányt",
   "Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani",
   "Mennyi elég most?",
   "Nem mindig a legnagyobb olvasat a jó első lépés",
@@ -450,7 +450,7 @@ for (const needle of [
   "const focusedPriceRange = productRange(focused)",
   'href="#azonnali-olvasatok"',
   'id={category === "instant" ? "azonnali-olvasatok" : "asztrologiai-riportok"}',
-  "Belépő próbaolvasat",
+  "Belépő olvasat indítása",
   "Helyzethez választok",
   "const CHOICE_GUIDE",
   "Melyiket válasszam?",
@@ -473,7 +473,7 @@ for (const needle of [
   "Orvosi, jogi, pénzügyi, pszichológiai vagy sürgős krízishelyzetben",
   "Ha hosszú riportot vársz pár perc alatt",
   "Születési képletre épülő, többoldalas riportnál",
-  "Csak kipróbálnám",
+  "Első személyes irányt kérek",
   "Kapcsolat vagy ex jár a fejemben",
   "Kapcsolati olvasat",
   "Döntés előtt állok",
@@ -483,7 +483,7 @@ for (const needle of [
   "personal_30_day",
   "function productCardCta(product: (typeof PRODUCTS)[number])",
   'if (product.category === "delayed") return "Riport részletei"',
-  'if (product.priceHuf < 900) return "Próbaolvasat indítása"',
+  'if (product.priceHuf < 900) return "Belépő olvasat indítása"',
   'return "Személyes olvasat indítása"',
   "Mit kapsz kézhez?",
   "Azonnali vagy részletes?",
@@ -587,7 +587,7 @@ for (const forbidden of [
   }
 }
 
-if (!profileRoute.includes("belépő") || !profileRoute.includes("árú személyes próbaolvasat")) {
+if (!profileRoute.includes("belépő") || !profileRoute.includes("árú személyes olvasatot")) {
   failed.push("Profile empty order state must frame starter paid readings as belépő árú");
 }
 if (!smartFollowupSource.includes("Rövid, belépő árú személyes olvasat")) {

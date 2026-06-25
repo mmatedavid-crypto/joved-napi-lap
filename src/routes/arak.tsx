@@ -39,8 +39,8 @@ const PRICING_FAQ = [
 
 const CHOICE_GUIDE = [
   {
-    title: "Csak kipróbálnám",
-    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, belépő árú, és első benyomást ad arról, megszólít-e a Jövőd.hu hangja.",
+    title: "Első személyes irányt kérek",
+    text: "Kezdj a Napi lappal vagy a Mai iránytűvel. Rövid, belépő árú olvasatként is valódi helyzethez kötött fókuszt ad.",
     productSlug: "napi_lap_ai",
     cta: "Napi lap",
   },
@@ -192,7 +192,7 @@ function PricingPage() {
         <section className="grid gap-3 md:grid-cols-4">
           <TrustPoint
             title="590 Ft-tól"
-            text="A belépő árú olvasatok alacsony kockázatú első próbát adnak, mielőtt mélyebb elemzést kérnél."
+            text="A belépő árú olvasatok alacsony kockázatú első személyes irányt adnak, mielőtt mélyebb elemzést kérnél."
           />
           <TrustPoint
             title="Stripe fizetés"
@@ -225,7 +225,7 @@ function PricingPage() {
               title="Belépő olvasat"
               price={entryPriceRange}
               text="Egy napi lap, angyalszám, kristály vagy álomszimbólum személyesebb értelmezéséhez."
-              cta="Belépő próbaolvasat"
+              cta="Belépő olvasat indítása"
               href="/mai-lap"
             />
             <BudgetFitCard
@@ -290,7 +290,7 @@ function PricingPage() {
 
         <PricingGroup
           title="Azonnali olvasatok"
-          lead="Rövid, személyes válaszok néhány percen belül. Jó első próba, napi kérdéshez vagy egy konkrét belső fókuszhoz."
+          lead="Rövid, személyes válaszok néhány percen belül. Jó első személyes irány napi kérdéshez vagy egy konkrét belső fókuszhoz."
           products={instant}
           category="instant"
         />
@@ -600,7 +600,7 @@ function PricingGroup({
 
 function productCardCta(product: (typeof PRODUCTS)[number]): string {
   if (product.category === "delayed") return "Riport részletei";
-  if (product.priceHuf < 900) return "Próbaolvasat indítása";
+  if (product.priceHuf < 900) return "Belépő olvasat indítása";
   return "Személyes olvasat indítása";
 }
 
