@@ -209,8 +209,8 @@ function LuckyNumbersPage() {
               ))}
             </div>
             <p className="mt-6 font-editorial text-lg text-ivory/75">
-              Válassz közülük egyet napi fókusznak, vagy használd a teljes sort játékos
-              lottótippként.
+              Válassz közülük egyet napi fókusznak, vagy tartsd meg a teljes sort játékos
+              számsorként.
             </p>
           </section>
         )}
