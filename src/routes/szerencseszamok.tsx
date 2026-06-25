@@ -222,11 +222,11 @@ function LuckyNumbersPage() {
             A számok nem jósolják meg a jövőt, és nem garantálnak szerencsét.
           </p>
           <p>
-            Ha mélyebben érdekel a születési dátumod jelentése, próbáld ki a{" "}
+            Ha mélyebben érdekel a születési dátumod jelentése, indulhatsz a{" "}
             <Link to="/sorsszam-kalkulator" className="text-gold hover:underline">
-              sorsszám kalkulátort
+              sorsszám kalkulátorral
             </Link>
-            , vagy olvasd el a{" "}
+            , vagy tovább olvashatod a{" "}
             <Link to="/numerologia" className="text-gold hover:underline">
               számmisztika útmutatót
             </Link>

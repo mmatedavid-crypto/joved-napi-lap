@@ -70,11 +70,11 @@ function Index() {
         <div className="grid gap-3 md:grid-cols-3">
           <div className="surface p-4">
             <div className="text-[10px] tracking-[0.28em] uppercase text-[oklch(0.78_0.10_80/0.72)]">
-              Először próbáld ki
+              Kezdj ingyenesen
             </div>
             <p className="mt-2 text-sm leading-relaxed text-ivory/68">
-              A rövid olvasatok ingyen is elindíthatók. Ha betalál a hang, kérhetsz mélyebb,
-              személyesebb változatot.
+              A rövid olvasatok ingyen is elindíthatók első tájékozódásként. Ha saját helyzethez
+              kötött irányt kérsz, választhatsz mélyebb, személyesebb változatot.
             </p>
           </div>
           <div className="surface p-4">
@@ -204,11 +204,23 @@ function Index() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
             { to: "/tarot", label: "Tarot kártyák", text: "Mind a 78 lap részletes jelentése." },
-            { to: "/numerologia", label: "Számmisztika", text: "Sorsszám, lélekszám és személyes év." },
-            { to: "/kinai-horoszkop", label: "Kínai horoszkóp", text: "A 12 állatövi jegy útmutatója." },
+            {
+              to: "/numerologia",
+              label: "Számmisztika",
+              text: "Sorsszám, lélekszám és személyes év.",
+            },
+            {
+              to: "/kinai-horoszkop",
+              label: "Kínai horoszkóp",
+              text: "A 12 állatövi jegy útmutatója.",
+            },
             { to: "/jiking", label: "I Ching", text: "A változások könyvének 64 hexagramja." },
             { to: "/magazin", label: "Magazin", text: "Tarot, asztrológia és önismeret magyarul." },
-            { to: "/arak", label: "Személyes olvasatok", text: "Árak, tartalom és elkészülési idők." },
+            {
+              to: "/arak",
+              label: "Személyes olvasatok",
+              text: "Árak, tartalom és elkészülési idők.",
+            },
           ].map((item) => (
             <Link
               key={item.to}
@@ -221,12 +233,24 @@ function Index() {
           ))}
         </div>
         <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-gold">
-          <Link to="/alomfejtes" className="hover:underline">Álomfejtés</Link>
-          <Link to="/angyalszam" className="hover:underline">Angyalszám</Link>
-          <Link to="/szemelyes-30-napos-horoszkop" className="hover:underline">30 napos asztrológiai térkép</Link>
-          <Link to="/eves-horoszkop" className="hover:underline">Éves horoszkóp</Link>
-          <Link to="/tranzitok" className="hover:underline">Tranzitelemzés</Link>
-          <Link to="/vedikus-asztrologia" className="hover:underline">Védikus elemzés</Link>
+          <Link to="/alomfejtes" className="hover:underline">
+            Álomfejtés
+          </Link>
+          <Link to="/angyalszam" className="hover:underline">
+            Angyalszám
+          </Link>
+          <Link to="/szemelyes-30-napos-horoszkop" className="hover:underline">
+            30 napos asztrológiai térkép
+          </Link>
+          <Link to="/eves-horoszkop" className="hover:underline">
+            Éves horoszkóp
+          </Link>
+          <Link to="/tranzitok" className="hover:underline">
+            Tranzitelemzés
+          </Link>
+          <Link to="/vedikus-asztrologia" className="hover:underline">
+            Védikus elemzés
+          </Link>
         </div>
       </section>
 

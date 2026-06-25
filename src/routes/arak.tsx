@@ -185,7 +185,7 @@ function PricingPage() {
       <PageHeader
         eyebrow="Árak"
         title="Olvasatok átlátható áron"
-        lead="A horoszkóp, az angyalszám, az álomfejtés és a kristályajánló ingyenesen is kipróbálható. A személyes olvasatok 590 Ft-tól indulnak."
+        lead="A horoszkóp, az angyalszám, az álomfejtés és a kristályajánló ingyenes első tájékozódást ad. A saját helyzethez kapcsolt személyes olvasatok 590 Ft-tól indulnak."
       />
 
       <div className="mx-auto max-w-6xl px-4 md:px-6 pb-20">
