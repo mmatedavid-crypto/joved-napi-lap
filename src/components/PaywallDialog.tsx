@@ -73,7 +73,7 @@ export function PaywallDialog({
   const contextualAlternative = contextualProductAlternative(product, inputPayload, sourceRoute);
   const deliveryLabel =
     product.category === "instant"
-      ? "azonnal, fizetés után"
+      ? "általában pár percen belül"
       : express
         ? "6 órán belül"
         : `${product.standardHours ?? 24} órán belül`;

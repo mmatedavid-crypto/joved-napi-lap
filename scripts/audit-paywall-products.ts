@@ -112,6 +112,8 @@ for (const needle of [
   "Vásárlás menete",
   'trackEvent("paywall_opened"',
   'trackEvent("checkout_confirmed"',
+  'product.category === "instant"',
+  ' ? "általában pár percen belül"',
   "checkoutDeliverySummary(product.category, deliveryLabel, isLoggedIn)",
   "checkoutSteps(product.category, deliveryLabel, isLoggedIn)",
   "Fizetés után elindítjuk az olvasat elkészítését; az azonnali termékek általában pár percen belül megjelennek.",
@@ -239,6 +241,7 @@ for (const needle of [
 }
 
 for (const forbidden of [
+  "azonnal, fizetés után",
   "Fizetés után azonnal elkészítjük az olvasatot.",
   "A köszönőoldalon rögtön megnyílik",
   "Az olvasat a köszönőoldalon azonnal megnyílik",
