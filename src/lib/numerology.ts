@@ -129,13 +129,13 @@ export const LIFE_PATHS: Record<number, LifePathInfo> = {
   },
   8: {
     number: 8,
-    title: "A Hatalom Kezelője",
+    title: "Az Erő Rendezője",
     meaning:
-      "Anyagi és szervezeti energiák gazdája. A pénz, a hatalom és a felelősség tanít téged.",
+      "A 8-as mintázat az erő, felelősség és következmény jelképe. Nem pénzügyi vagy hatalmi ígéret, inkább azt kérdezi, hogyan bánsz azzal, amit felépítesz.",
     strengths: "Stratégia, erő, eredményesség.",
     shadow: "Kontroll, kiégés, érzelmi keménység.",
     love: "Komoly kapcsolatokra vágysz. Vigyázz, ne menedzseld a társad.",
-    work: "Vezetés, vállalkozás, pénzügy, ingatlan — ahol nagyban gondolkodhatsz.",
+    work: "Olyan közeg támogathat, ahol felelősséget, rendszert és józan döntéseket lehet gyakorolni.",
     purpose:
       "Megtanulni, hogy az erő nem ugyanaz, mint a kontroll — és a gyengéd nem ugyanaz, mint a gyenge.",
     advice: "Ne győzz le valakit, akit szeretsz. Az ár drágább, mint a győzelem.",

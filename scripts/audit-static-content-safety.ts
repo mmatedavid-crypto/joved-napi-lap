@@ -196,11 +196,20 @@ const checks: StaticSafetyCheck[] = [
     forbidden: [
       /\btényleg meg tud állni\b/i,
       /\bHalogatott beszélgetésekből lesznek a nagy szakítások\b/i,
+      /\bA Hatalom Kezelője\b/i,
+      /\bAnyagi és szervezeti energiák gazdája\b/i,
+      /\bA pénz, a hatalom és a felelősség tanít téged\b/i,
+      /\bVezetés, vállalkozás, pénzügy, ingatlan\b/i,
+      /\bahol nagyban gondolkodhatsz\b/i,
     ],
     required: [
       "kapcsolatmintát jelezhet",
       "tartósság a figyelmes hétköznapi jelenléten múlik",
       "halogatott beszélgetések idővel feszültséget gyűjthetnek",
+      "Az Erő Rendezője",
+      "Nem pénzügyi vagy hatalmi ígéret",
+      "hogyan bánsz azzal, amit felépítesz",
+      "felelősséget, rendszert és józan döntéseket",
     ],
   },
   {
