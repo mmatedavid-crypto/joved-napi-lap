@@ -149,7 +149,7 @@ function HoroscopeArticlePending() {
     `A ${periodRange} képlet- és jegyhangulatát egységben olvassuk.`,
     "A holdfázist, a kiemelt színt és a szerencseszámot is figyelembe vesszük.",
     "A szerelem, munka, figyelmeztetés és belső fókusz részeit külön választjuk.",
-    "Nem rövid sablonüzenetet adunk: minden fontos életterület külön figyelmet kap.",
+    "Minden fontos életterület külön figyelmet kap, rövid és áttekinthető formában.",
     "A végső olvasat rövid, józan és személyes hangon áll össze.",
     "Ha a friss olvasat lassabban készül, az utolsó ellenőrzött változatot mutatjuk.",
   ] as const;
@@ -179,8 +179,8 @@ function HoroscopeArticlePending() {
           Készül a friss horoszkópod
         </h1>
         <p className="font-editorial text-ivory/72 text-lg leading-relaxed mt-4">
-          Nálunk nem egy rövid, általános sablonszöveg kerül eléd. A mostani időszak jegyhangulatát,
-          holdfázisát és kiemelt témáit a horoszkóp hagyománya szerint, józanul olvassuk össze.
+          A mostani időszak jegyhangulatát, holdfázisát és kiemelt témáit a horoszkóp hagyománya
+          szerint, józanul olvassuk össze. Így rövid, átnézett és használható olvasat kerül eléd.
         </p>
         <ReadingLoadingState
           kind="horoscope"

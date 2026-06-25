@@ -15,8 +15,8 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Megkeverjük a paklit, és kihúzzuk a lapjaidat.",
     "Megnézzük, melyik lap milyen pozícióban érkezett.",
     "Összevetjük a lapok jelentését a Major és Minor Arcana hagyományával.",
-    "A lapok közötti kapcsolatot, az ívet is olvassuk — nem csak a darabokat.",
-    "A kérdésedhez igazítjuk a lap üzenetét, nem sablonjelentést írunk.",
+    "A lapok közötti kapcsolatból és az ívből áll össze a válasz.",
+    "A kérdésedhez igazítjuk a tarot-hagyományból érkező üzenetet.",
     "Az utolsó simítások: a válasz rövid, személyes, használható legyen.",
   ],
   horoscope: [
@@ -32,7 +32,7 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Egymás mellé tesszük a két numerológiai mintát.",
     "Megnézzük, milyen a kommunikációs, a vonzalmi és a hosszú távú illeszkedés.",
     "Hol erősítitek, és hol fáraszthatjátok egymást — mindkettőt megnézzük.",
-    "A kapcsolat típusát is beleszőjük, nem csak százalékot számolunk.",
+    "A kapcsolat típusát a százalék mellé olvassuk, hogy a dinamika is látszódjon.",
   ],
   dream: [
     "Kiemeljük az álom legerősebb szimbólumait.",
@@ -63,7 +63,7 @@ const STEPS: Record<ReadingLoadingKind, readonly string[]> = {
     "Kihúzzuk a mai napi lapodat.",
     "Megnézzük a Hold állását és a mai jegyhangulatot.",
     "Egymás mellé tesszük a lapot, a bolygóhatást és a belső ritmust.",
-    "Nem hosszú szöveget írunk, hanem használható napi fókuszt.",
+    "Rövid, használható napi fókuszt állítunk össze.",
     "A választ úgy fogalmazzuk, hogy ma is lehessen vele dolgozni.",
   ],
 };
