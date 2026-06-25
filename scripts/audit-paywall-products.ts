@@ -101,7 +101,7 @@ for (const needle of [
   "Ez részletesebb azonnali olvasat",
   "belépő árú olvasatok kisebb első lépést jelentenek",
   "több szempontot adhat",
-  "Pontossági visszajelzés",
+  "Minőségi visszajelzés",
   "Az elkészült olvasatnál közvetlen visszajelzési út vár",
   "visszanézhető, melyik részt szeretnéd finomítani",
   "melyik részt szeretnéd finomítani",

@@ -187,7 +187,7 @@ export function PaywallDialog({
 
             <div className="rounded-md border border-[oklch(0.78_0.10_80/0.16)] bg-black/12 p-4">
               <div className="text-[10px] uppercase tracking-[0.22em] text-gold/75">
-                Pontossági visszajelzés
+                Minőségi visszajelzés
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ivory/66">
                 Az elkészült olvasatnál közvetlen visszajelzési út vár. Rendelés alapján

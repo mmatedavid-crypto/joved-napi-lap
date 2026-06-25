@@ -217,13 +217,14 @@ const checks: Check[] = [
     file: "src/routes/aszf.tsx",
     includes: [
       "Minőségi visszajelzés",
-      "mennyire talált",
+      "mennyire volt hasznos",
+      "kapcsolódott-e a helyzetedhez",
       "mi maradt ki a helyzetedből",
       "szolgáltatás javítására",
       "ügyfélszolgálati ellenőrzésre",
       "rendelési azonosítóval együtt",
     ],
-    excludes: ["garantált javítás", "automatikus visszatérítés"],
+    excludes: ["garantált javítás", "automatikus visszatérítés", "mennyire talált"],
   },
   {
     name: "terms explain safe digital fulfillment support path",

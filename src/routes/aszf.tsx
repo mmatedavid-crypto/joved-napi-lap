@@ -81,8 +81,8 @@ export const Route = createFileRoute("/aszf")({
       <LegalSection title="Minőségi visszajelzés">
         <p>
           Az elkészült fizetős olvasatoknál rövid visszajelzést adhatsz arról, hogy az olvasat
-          mennyire talált. Ha pontosítást kérsz, opcionálisan azt is megírhatod, melyik részt
-          finomítanád és mi maradt ki a helyzetedből.
+          mennyire volt hasznos, és kapcsolódott-e a helyzetedhez. Ha pontosítást kérsz,
+          opcionálisan azt is megírhatod, melyik részt finomítanád és mi maradt ki a helyzetedből.
         </p>
         <p>
           A visszajelzéseket a szolgáltatás javítására és ügyfélszolgálati ellenőrzésre használjuk.
