@@ -18,11 +18,11 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
     lead:
       "Az 1-es sorsszám az önállóság, az újrakezdések és a saját irány keresésének jelképe. Nem vezetői rangot vagy kész szerepet ír le, inkább azt a mintát mutatja, amikor fontos lehet a kezdeményezés és a felelős önállóság.",
     essence:
-      "Ez a szám a kezdeményezőkészséget, az innovációt és a magabiztosságot testesíti meg. Az 1-es arra ösztönöz, hogy bízzunk a saját erőnkben, és alakítsuk a körülményeinket. A teremtés és a kezdetek energiáját hordozza, amely a lehetőségek gyökerét jelenti az életünkben.",
+      "Az 1-es hagyományos olvasata a kezdeményezés, újrakezdés és önálló iránykeresés témáit emeli előtérbe. Nem azt állítja, hogy mindent egyedül kell alakítanod, inkább arra figyelmeztet, hogy a saját döntési tér felismerése akkor támogató, ha felelősséggel és másokra is figyelő jelenléttel társul.",
     strengths:
       "Az 1-es sorsszám mintája az önálló kezdeményezést, a saját irány keresését és a cselekvő bátorságot emeli ki. Erőssége akkor látszik tisztán, amikor az újrakezdés nem türelmetlen bizonyítás, hanem felelősen vállalt első lépés. A hagyomány szerint ez a szám kreatív megoldáskeresést és kezdeményező ritmust jelezhet.",
     shadow:
-      "Erőteljes előrehaladásuk során hajlamosak lehetnek túl dominánssá válni, ami figyelmetlenséggel párosulva sértést okozhat másoknak.  A túlzott kockázatvállalás és a korlátozott látásmód elkerülhető problémákhoz vezethet. Belső bizonytalanságuk, a hibáktól való félelem mélyen élhet bennük, noha kifelé ezt ritkán mutatják.",
+      "Az 1-es árnyéka lehet, amikor a kezdeményezés türelmetlen bizonyítássá, túl gyors döntéssé vagy mások ritmusának figyelmen kívül hagyásává válik. Nem dominanciát vagy rejtett bizonytalanságot ír elő, inkább arra hívja fel a figyelmet, hogy az önállóság akkor marad tiszta, ha kapcsolódik visszajelzéshez és önreflexióhoz is.",
     love: "Párkapcsolataikban az önállóság és a tisztelet kulcsfontosságú lehet. Olyan kapcsolat illhet ehhez a mintához, ahol van tér a saját ritmusnak, mégis megmarad a figyelmes jelenlét és a kölcsönös alkalmazkodás.",
     career:
       "Nem kész karriertanács, inkább azt jelzi, hogy az 1-es mintázathoz jól illhet az önálló feladatvállalás, az új ötletek elindítása és a döntési tér. Támogató lehet minden olyan közeg, ahol van felelősség, mozgástér és világos cél, de a jó ritmushoz együttműködésre és visszajelzésre is szükség van.",
