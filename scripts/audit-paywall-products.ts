@@ -885,6 +885,9 @@ for (const needle of [
   "Korábbi mintáid finom jelzésként számítanak",
   "A fizetős folytatás nem idegenként indul",
   "ebből a fonalból készül",
+  "ugyanabból a kérdésből indul tovább",
+  "célzottabb olvasatot választasz hozzá",
+  "válassz olyan célzott folytatást",
   "const meta = followupOptionMeta(product)",
   "function followupOptionMeta(",
   "Azonnali olvasat",
@@ -908,6 +911,13 @@ for (const needle of [
 ]) {
   if (!smartFollowup.includes(needle)) {
     failed.push(`SmartReadingFollowup missing: ${needle}`);
+  }
+}
+for (const forbidden of ["új, általános olvasatból", "újabb általános választ"]) {
+  if (smartFollowup.includes(forbidden)) {
+    failed.push(
+      `SmartReadingFollowup should avoid defensive generic-reading contrast: ${forbidden}`,
+    );
   }
 }
 

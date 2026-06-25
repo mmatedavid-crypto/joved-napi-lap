@@ -216,7 +216,7 @@ function followupIntro({
   const sit = situation?.trim();
   if (q) {
     return {
-      text: "A következő lépés akkor lesz pontosabb, ha ugyanabból a kérdésből indul tovább, nem egy új, általános olvasatból.",
+      text: "A következő lépés akkor lesz pontosabb, ha ugyanabból a kérdésből indul tovább, és célzottabb olvasatot választasz hozzá.",
       context: `A kérdés, amiből továbbmegyünk: „${shortenContext(q)}”`,
     };
   }
@@ -234,7 +234,7 @@ function followupIntro({
   }
   const fallbackByIntent: Record<FollowupIntent, string> = {
     daily:
-      "Ha ez az olvasat megmozdított valamit, nem biztos, hogy újabb általános választ kell kérned. Válassz inkább ahhoz, ami most tényleg tisztázásra vár.",
+      "Ha ez az olvasat megmozdított valamit, válassz olyan célzott folytatást, amely ahhoz kapcsolódik, ami most tényleg tisztázásra vár.",
     love: "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
     decision:
       "Döntés előtt a jó folytatás nem helyetted választ, hanem segít szétválasztani, melyik érzés húz és melyik tart vissza.",
