@@ -184,18 +184,19 @@ export const LIFE_PATH_MEANINGS_HU: Record<string, LifePathMeaning> = {
   },
   "33": {
     title: "Sorsszám 33 jelentése — Az Önzetlen Tanító",
-    lead: "A 33-as sorsszám a feltétel nélküli szeretet és az önzetlen szolgálat rezgését hordozza. Ez az út mély támogatásra, tanításra és spirituális érlelődésre hív.",
+    lead:
+      "A 33-as sorsszámot a numerológiai hagyomány mesterszámként, a gondoskodó figyelem és felelősen adott támogatás jelképeként olvassa. Nem önzetlen szolgálatot vagy spirituális küldetést ír elő, inkább azt a mintát mutatja, ahol fontos lehet a szeretetteljes jelenlét és az egészséges határtartás együttese.",
     essence:
-      "A 33-as sorsszám a mesterszámok közé tartozik, a szív és a lélek mélységeivel való összekapcsolódásról szól. Az egyetemes szeretet szimbóluma, amely másokat is emlékeztethet a reményre, az együttérzésre és a felelősségteljes jelenlétre. Ez az út a mély empátián és az élettapasztalatokon keresztül mutat irányt.",
+      "A 33-as szám hagyományos olvasata a gondoskodás, tanítás, közösségi figyelem és emberi felelősség témáit emeli előtérbe. Nem egyetemes szeretetet vagy különleges rangot igazol, inkább arra emlékeztethet, hogy a támogatás akkor marad tiszta, ha nem önfeladásból, hanem józan jelenlétből indul.",
     strengths:
-      "Mélyen együttérző és empatikus, képes mások szenvedését autentikusan megérteni. Inspiráló jelenléte és tanítása motiválja az embereket a növekedésre és önfelfedezésre. Kreatív megközelítéssel és innovatív módon képes a komplex spirituális igazságokat átadni, láthatóvá téve a láthatatlant.",
+      "A 33-as mintázat erőssége lehet a figyelmes támogatás, a tanulás átadása és az, hogy a nehéz tapasztalatokból emberibb forma születhet. Támogató oldala akkor látszik tisztán, amikor a gondoskodás nem megmentő szerep, hanem kölcsönös tisztelet és mérték. A hagyomány szerint ez a szám kreatív vagy közösségi közvetítésben is erősebb témává válhat.",
     shadow:
-      "Időnként túlzottan magas elvárásokat támaszthat önmagával és másokkal szemben, ami csalódottsághoz és kiégéshez vezethet. Mély érzelmi tudatossága sebezhetővé teszi a kritikával és negativitással szemben, határok kijelölésére lehet szüksége.  Az önfeláldozás tendenciája miatt hajlamos lehet elhanyagolni saját igényeit, ami kimerülést okozhat.",
-    love: "Párkapcsolataiban mélyen elkötelezett, gondoskodó és spirituálisan érzékeny. Olyan társat keres, aki osztja szenvedélyét a fejlődés és a szolgálat iránt, és képes megérteni belső világának mélységeit.",
+      "Árnyékban a 33-as mintázat túl nagy felelősségvállalást, önmagad háttérbe szorítását vagy megmentő szerepbe csúszást jelezhet. Ilyenkor a segítség könnyen kimerítővé válhat, ha nincs mellette pihenés, visszajelzés és világos határ. A józan mérték segít abban, hogy a gondoskodás ne váljon csendes önfeladássá.",
+    love: "Párkapcsolatban a 33-as mintázat a gondoskodás, érzékeny figyelem és kölcsönös felelősség kérdéseit hozhatja elő. Nem mély elköteleződést vagy spirituális összeillést ígér, inkább arra figyelmeztet, hogy a szeretet akkor marad megtartó, ha egyik fél sem válik a másik megmentőjévé.",
     career:
       "A 33-as mintázathoz jól illhetnek azok a helyzetek, ahol tanítás, támogatás, közösségi figyelem vagy kreatív közvetítés kap szerepet. Nem spirituális rangot vagy hivatást igazol, inkább azt jelzi, hogy a gondoskodó jelenlét és az értelmes forma erősebb témává válhat. Művészi, írásos vagy segítő jellegű közegben akkor hasznos, ha egészséges határokkal és józan felelősséggel társul.",
     advice:
-      "Mély empátiája erőt ad, de fontos, hogy megtanulja az egészséges érzelmi határokat felállítani. Fordítson figyelmet saját feltöltődésére és szükségleteire, hogy hosszú távon tudja adni a legjobbját. Engedje meg magának, hogy elfogadja a tökéletlenséget, és emlékezzen, hogy a legnagyobb tanítás a szeretetteljes jelenlét.",
+      "Érdemes figyelni arra, hogy a támogatás ne menjen a saját szükségleteid rovására. A 33-as mintázat akkor válhat érettebbé, ha a gondoskodás mellett pihenés, visszajelzés és kölcsönösség is helyet kap. Nem kell tökéletesen tartanod másokat: elég, ha emberi léptékben, világos határokkal vagy jelen.",
   },
 };
 
