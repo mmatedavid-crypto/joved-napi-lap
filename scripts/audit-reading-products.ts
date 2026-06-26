@@ -818,6 +818,9 @@ for (const needle of [
   "belső irányként működik",
   "eseményívet és belső reakciót is mutat",
   "mostani élethelyzet",
+  "a százalék mellé az is odakerül",
+  "a sorsszámod mellé az is odakerül",
+  "a százalékok mögött az ismétlődő érzést is érdemes látni",
 ]) {
   if (!paidReadingsSource.includes(needle)) {
     policyFailures.push(`paid local draft must keep tradition-based customer voice: ${needle}`);
@@ -831,6 +834,10 @@ for (const forbiddenNeedle of [
   "nem csak eseményívet",
   "nem lezárást, hanem",
   "nem kész választ ad",
+  "nem csak kettőtök százaléka",
+  "nem az a legfontosabb, ki kap magasabb százalékot",
+  "Itt nem csak azt nézzük",
+  "nem csak haladni szeretnél",
 ]) {
   if (paidReadingsSource.includes(forbiddenNeedle)) {
     policyFailures.push(

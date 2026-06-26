@@ -778,13 +778,13 @@ function premiumCompatibility(input: Record<string, unknown>): PaidReadingPayloa
   if (memoryContext) {
     reading.sections.splice(2, 0, {
       heading: "A visszatérő mintád",
-      text: "A korábbi kérdéseid alapján itt nem csak kettőtök százaléka számít, hanem az is, milyen kapcsolati mintát keresel újra: biztonságot, lezárást, visszatérést vagy tisztább választ. Ezt most finoman érdemes különválasztani attól, hogy ez az egy ember mit mutat.",
+      text: "A korábbi kérdéseid alapján a százalék mellé az is odakerül, milyen kapcsolati mintát keresel újra: biztonságot, lezárást, visszatérést vagy tisztább választ. Ezt most finoman érdemes különválasztani attól, hogy ez az egy ember mit mutat.",
     });
   }
   if (comparisonContext) {
     reading.sections.splice(3, 0, {
       heading: "Ha több embert is összehasonlítasz",
-      text: "Ez a fizetős elemzés külön kezeli azt is, ha mostanában több kapcsolatot nézel egymás mellé. Ilyenkor nem az a legfontosabb, ki kap magasabb százalékot, hanem hogy milyen érzést keresel ismétlődően: biztonságot, izgalmat, lezárást vagy bizonyosságot.",
+      text: "Ez a fizetős elemzés külön kezeli azt is, ha mostanában több kapcsolatot nézel egymás mellé. Ilyenkor a százalékok mögött az ismétlődő érzést is érdemes látni: biztonságot, izgalmat, lezárást vagy bizonyosságot keresel-e újra.",
     });
   }
   if (text(freeSummary.oneSentence)) {
@@ -806,12 +806,12 @@ function premiumNumerology(input: Record<string, unknown>): PaidReadingPayload {
   reading.sections.push(
     {
       heading: "A fizetős elemzés mélyebb rétege",
-      text: `Itt nem csak azt nézzük, mi a sorsszámod, hanem azt is, hogyan találkozik a születési ritmusod az idei személyes éveddel. A ${profile.lifePathNumber}-es alapmintád és a ${profile.personalYearNumber}-es személyes éved együtt azt kérdezi, hol kell most kevesebb szerepből és több saját ritmusból döntened.`,
+      text: `Itt a sorsszámod mellé az is odakerül, hogyan találkozik a születési ritmusod az idei személyes éveddel. A ${profile.lifePathNumber}-es alapmintád és a ${profile.personalYearNumber}-es személyes éved együtt azt kérdezi, hol kell most kevesebb szerepből és több saját ritmusból döntened.`,
     },
     profile.fullName
       ? {
           heading: "A név rétegei",
-          text: `A teljes név miatt a belső vágyad, a külső képed és a kifejeződésed is látszik. A ${profile.soulUrgeNumber ?? "belső"}-es belső vágy nem mindig ugyanazt akarja, mint amit a külvilág először észrevesz rajtad. Ettől lehet az életutad egyszerre vonzó és fárasztó: nem csak haladni szeretnél, hanem úgy megjelenni, hogy közben ne veszítsd el a belső irányodat.`,
+          text: `A teljes név miatt a belső vágyad, a külső képed és a kifejeződésed is látszik. A ${profile.soulUrgeNumber ?? "belső"}-es belső vágy más ritmust is kérhet, mint amit a külvilág először észrevesz rajtad. Ettől lehet az életutad egyszerre vonzó és fárasztó: haladni szeretnél, közben úgy megjelenni, hogy ne veszítsd el a belső irányodat.`,
         }
       : {
           heading: "A név rétegei",
