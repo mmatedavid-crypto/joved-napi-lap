@@ -715,7 +715,7 @@ function ProfileDeliveryEmailNotice({ order }: { order?: ProfileOrder }) {
 
 function profileOrderPreparationLead(order: ProfileOrder): string {
   if (order.category === "delayed") {
-    return "A részletes olvasat készül: nem azonnali sablonválasz, hanem több szakaszos elemzés a megadott adataid alapján.";
+    return "A részletes olvasat készül: több szakaszos elemzés áll össze a megadott adataidból és a választott hagyomány jelképeiből.";
   }
   return "Az olvasat készül. Amikor elkészül, itt megnyithatod, és emailben is jelzünk.";
 }

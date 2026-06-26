@@ -492,7 +492,7 @@ function OrderPreparationTimeline({ order }: { order: OrderView }) {
     order.category === "delayed"
       ? [
           "A fizetés megérkezett, a kérdésedet és a megadott adatokat rögzítettük.",
-          "A részletes olvasat több szakaszban készül, ezért nem azonnali sablonszöveget kapsz.",
+          "A részletes olvasat több szakaszban készül: a megadott adatokból, kérdésből és a választott hagyomány jelképeiből áll össze.",
           ...(order.express
             ? [
                 "Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.",
@@ -796,7 +796,7 @@ function feedbackMailto(opts: {
 
 function orderPreparationLead(order: OrderView): string {
   if (order.category === "delayed") {
-    return "A részletes olvasatod rögzítve van. Itt nem egy rövid sablonválaszt mutatunk: a megadott kérdést, adatokat és témát több szakaszban dolgozzuk össze.";
+    return "A részletes olvasatod rögzítve van. A megadott kérdést, adatokat és témát több szakaszban, a választott hagyomány jelképeivel dolgozzuk össze.";
   }
   return "A személyes olvasatod ezen az oldalon jelenik meg, amint elkészült. Az azonnali termékek általában pár percen belül megérkeznek.";
 }

@@ -143,8 +143,8 @@ const checks: Check[] = [
     includes: [
       "orderPreparationLead",
       "orderPreparationDetail",
-      "nem egy rövid sablonválaszt",
-      "több szakaszban dolgozzuk össze",
+      "több szakaszban, a választott hagyomány jelképeivel dolgozzuk össze",
+      "a megadott adatokból, kérdésből és a választott hagyomány jelképeiből áll össze",
       "Express rendelésnél",
       "gyorsított határidő csúszna",
       "a gyorsítás díját külön rendezzük",
@@ -153,7 +153,12 @@ const checks: Check[] = [
       "pár percig hagyd nyitva",
       "biztonságos rendelési linket érdemes megtartanod",
     ],
-    excludes: ["nem egy rövid automata választ"],
+    excludes: [
+      "nem egy rövid automata választ",
+      "nem egy rövid sablonválaszt",
+      "nem azonnali sablonszöveget",
+    ],
+    enforceExcludes: true,
   },
   {
     name: "thank-you page exposes a short order reference",
@@ -530,14 +535,16 @@ const checks: Check[] = [
     includes: [
       "profileOrderPreparationLead",
       "profileOrderPreparationDetail",
-      "nem azonnali sablonválasz",
-      "több szakaszos elemzés",
+      "több szakaszos elemzés áll össze",
+      "a választott hagyomány jelképeiből",
       "Az azonnali termékek általában pár percen belül",
       "ha az email késik, a profilban akkor is",
       "Express rendelésnél",
       "gyorsított határidő csúszna",
       "a gyorsítás díját külön rendezzük",
     ],
+    excludes: ["nem azonnali sablonválasz", "nem azonnali sablonszöveg"],
+    enforceExcludes: true,
   },
   {
     name: "profile exposes support contact for stuck orders",
