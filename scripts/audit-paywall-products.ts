@@ -965,6 +965,7 @@ for (const needle of [
   "const loveIntent",
   "const decisionIntent",
   "const recurringIntent",
+  "A kapcsolati olvasat tempót, kölcsönösséget, kommunikációt és visszatérő mintát is ad a százalék mellé.",
   'intent === "daily" && loveIntent',
   'intent === "daily" && decisionIntent',
   'intent === "angel"',
@@ -978,7 +979,11 @@ for (const needle of [
     failed.push(`SmartReadingFollowup missing: ${needle}`);
   }
 }
-for (const forbidden of ["új, általános olvasatból", "újabb általános választ"]) {
+for (const forbidden of [
+  "új, általános olvasatból",
+  "újabb általános választ",
+  "nem csak százalékot ad",
+]) {
   if (smartFollowup.includes(forbidden)) {
     failed.push(
       `SmartReadingFollowup should avoid defensive generic-reading contrast: ${forbidden}`,

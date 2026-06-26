@@ -275,7 +275,7 @@ function followupOptions(
             ? "Mi történne, ha újra megjelenne?"
             : "Milyen mintát mutat köztetek?",
         reason:
-          "A kapcsolati olvasat nem csak százalékot ad: tempót, kölcsönösséget, kommunikációt és visszatérő mintát is néz.",
+          "A kapcsolati olvasat tempót, kölcsönösséget, kommunikációt és visszatérő mintát is ad a százalék mellé.",
       },
       {
         slug: "dontes_komplex",
