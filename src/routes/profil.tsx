@@ -816,7 +816,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     {
       label: "Részben volt hasznos",
       value: "partial" as const,
-      body: "Az olvasat részben hasznos volt, és szeretném pontosabban megmutatni, melyik részt érdemes tovább finomítani.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmit szeretnék pontosítani:\n\nA helyzetemből ezt érdemes még hozzátenni:",
+      body: "Az olvasat részben hasznos volt, és szeretném pontosabban megmutatni, mit pontosítanék vagy tennék hozzá.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmit szeretnék pontosítani:\n\nA helyzetemből ezt érdemes még hozzátenni:",
     },
     {
       label: "Pontosítást kérek",
