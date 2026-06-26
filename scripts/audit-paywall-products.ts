@@ -38,6 +38,9 @@ for (const product of PRODUCTS) {
     if (/\b(ai|gpt|prompt|api|endpoint)\b/i.test(item)) {
       failed.push(`${product.slug}: technical wording in depthPromise: ${item}`);
     }
+    if (/\bnem csak kulcsszavakat\b/i.test(item)) {
+      failed.push(`${product.slug}: depthPromise should use positive symbolic value wording`);
+    }
   }
   if (
     !product.depthPromise.some((item) =>
@@ -686,6 +689,12 @@ if (
   failed.push(
     "Kelta kereszt copy must present the concrete instant tarot structure without ranking claims",
   );
+}
+
+if (
+  !productsSource.includes("rövid belső irányt ad a lap jelképeiből és a megadott helyzetedből")
+) {
+  failed.push("Napi lap product promise must use positive symbolic value wording");
 }
 
 for (const needle of [

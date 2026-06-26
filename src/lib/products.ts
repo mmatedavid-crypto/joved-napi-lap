@@ -36,7 +36,7 @@ export const PRODUCTS: ProductDef[] = [
     ],
     depthPromise: [
       "a tarot hagyományos lapjelképét a kérdésedhez és a mai helyzetedhez köti",
-      "nem csak kulcsszavakat ad, hanem rövid belső irányt",
+      "rövid belső irányt ad a lap jelképeiből és a megadott helyzetedből",
     ],
     qualityPromise:
       "Azonnali, rövid tarot-olvasat, amely a mai helyzetedhez köt egy figyelmi pontot.",
