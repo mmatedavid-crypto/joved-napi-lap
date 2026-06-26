@@ -569,7 +569,7 @@ function paidReadingAssurance(
   if (generation.source === "local_premium_draft" || generation.fallbackUsed) {
     return {
       heading: "Rendelés alapján visszanézhető olvasat",
-      text: "Az olvasat a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Ha pontosítanál a konkrét kérdésed felől, rendelés alapján visszanézzük, melyik részt érdemes finomítani.",
+      text: "Az olvasat a megadott adatokból, a kártyákból, számokból vagy horoszkópjelekből indul ki. Ha pontosítanál a konkrét kérdésed felől, rendelés alapján visszanézzük, mit szeretnél más fókuszba tenni.",
     };
   }
   return null;
@@ -651,7 +651,7 @@ function selfCheckItems(readingType: ReturnType<typeof selfCheckReadingType>): s
     default:
       return [
         ...common,
-        "Ha valami kimaradt, pontosan meg tudod nevezni, melyik rész igényel figyelmet.",
+        "Pontosan meg tudod nevezni, mit pontosítanál vagy mit érdemes még hozzátenni.",
       ];
   }
 }
