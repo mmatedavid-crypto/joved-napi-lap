@@ -66,12 +66,12 @@ const CHOICE_GUIDE = [
 
 const NOT_FOR_GUIDE = [
   {
-    title: "Ha biztos eseményválaszt vársz",
-    text: "Nem mondjuk ki kész tényként, hogy valaki visszajön-e, mit dönt-e a másik ember, vagy pontosan mi fog történni.",
+    title: "Ha kész tényként várt eseménylistát keresel",
+    text: "Az olvasat a helyzet mintáját és a belső fókuszt segít olvasni, nem másik ember döntését vagy pontos jövőbeli eseményt rögzít.",
   },
   {
-    title: "Ha döntést kell helyetted meghozni",
-    text: "Az olvasat irányt, mintát és belső fókuszt adhat, de nem választ helyetted munkában, kapcsolatban vagy pénzügyi helyzetben.",
+    title: "Ha felelős döntést kell meghoznod",
+    text: "Munka, kapcsolat vagy pénzügyi helyzet előtt az olvasat önismereti fókuszt adhat, a döntés felelőssége nálad marad.",
   },
   {
     title: "Ha krízisben vagy szakmai segítség kell",

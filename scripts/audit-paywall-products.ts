@@ -509,11 +509,10 @@ for (const needle of [
   "Mikor ne ezt válaszd?",
   "régi jelképrendszerekből induló önismereti szövegek",
   "egy helyzet mintájára, belső tempójára vagy visszatérő jelére",
-  "Ha biztos eseményválaszt vársz",
-  "Nem mondjuk ki kész tényként",
-  "hogy valaki visszajön-e",
-  "Ha döntést kell helyetted meghozni",
-  "nem választ helyetted munkában",
+  "Ha kész tényként várt eseménylistát keresel",
+  "nem másik ember döntését vagy pontos jövőbeli eseményt rögzít",
+  "Ha felelős döntést kell meghoznod",
+  "a döntés felelőssége nálad marad",
   "Ha krízisben vagy szakmai segítség kell",
   "Orvosi, jogi, pénzügyi, pszichológiai vagy sürgős krízishelyzetben",
   "Ha hosszú riportot vársz pár perc alatt",
@@ -612,6 +611,10 @@ for (const forbidden of [
   "nem kész választ vársz",
   "nem napi választ keresel",
   "döntést vársz tőlük",
+  "Ha biztos eseményválaszt vársz",
+  "Nem mondjuk ki kész tényként",
+  "Ha döntést kell helyetted meghozni",
+  "nem választ helyetted munkában",
 ]) {
   if (pricingRoute.includes(forbidden)) {
     failed.push(`Pricing route should avoid defensive choice framing: ${forbidden}`);
