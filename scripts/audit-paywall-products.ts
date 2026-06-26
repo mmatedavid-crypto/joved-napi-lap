@@ -515,6 +515,7 @@ for (const needle of [
   "Születési képletre épülő, többoldalas riportnál",
   "Első személyes irányt kérek",
   "Kapcsolat vagy ex jár a fejemben",
+  "a százalék mellé tempót, vonzalmat és visszatérő mintát is ad",
   "Kapcsolati olvasat",
   "Döntés előtt állok",
   "30 napos térképet kérek",
@@ -800,9 +801,36 @@ for (const forbiddenNeedle of ["30 napos előrejelzés"]) {
   }
 }
 
-for (const forbiddenNeedle of ["teljesebb képet", "nem nagy előrejelzést"]) {
+for (const needle of ["A napi lap mellé más hagyományos jelekből is választhatsz mai fókuszt"]) {
+  if (!homeRoute.includes(needle)) {
+    failed.push(`Home route missing positive tradition-based cross-link copy: ${needle}`);
+  }
+}
+
+for (const forbiddenNeedle of ["Ha nem csak lapot húznál"]) {
+  if (homeRoute.includes(forbiddenNeedle)) {
+    failed.push(`Home route must avoid defensive cross-link copy: ${forbiddenNeedle}`);
+  }
+}
+
+for (const forbiddenNeedle of ["teljesebb képet", "nem nagy előrejelzést", "nem csak választ"]) {
   if (threeCardRoute.includes(forbiddenNeedle) || productsSource.includes(forbiddenNeedle)) {
     failed.push(`Visible product copy must avoid overpromising wording: ${forbiddenNeedle}`);
+  }
+}
+
+for (const forbiddenNeedle of ["nem csak százalékot", "Ha nem csak rövid napi választ keresel"]) {
+  if (pricingRoute.includes(forbiddenNeedle) || paywall.includes(forbiddenNeedle)) {
+    failed.push(`Choice guide copy must use positive product-fit wording: ${forbiddenNeedle}`);
+  }
+}
+
+for (const needle of [
+  "a százalék mellé tempót, vonzalmat és visszatérő mintát is ad",
+  "a 30 napos térkép jobb illeszkedés a rövid napi iránynál",
+]) {
+  if (!pricingRoute.includes(needle) && !paywall.includes(needle)) {
+    failed.push(`Choice guide missing positive product-fit wording: ${needle}`);
   }
 }
 

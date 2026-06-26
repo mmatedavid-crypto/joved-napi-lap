@@ -841,7 +841,7 @@ function contextualProductAlternative(
     if (/(30 nap|következő hónap|hónap|hetek|időszak|előrejelzés)/.test(text)) {
       return pick(
         "personal_30_day",
-        "Ha nem csak rövid napi választ keresel, hanem a következő hetek ívét, a 30 napos térkép jobb illeszkedés.",
+        "Ha a következő hetek ívét szeretnéd látni, a 30 napos térkép jobb illeszkedés a rövid napi iránynál.",
       );
     }
   }

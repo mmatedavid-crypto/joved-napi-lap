@@ -163,7 +163,7 @@ function Index() {
             További jelek
           </div>
           <p className="font-editorial text-ivory/70 mt-2 max-w-xl mx-auto">
-            Ha nem csak lapot húznál, nézd meg, milyen más jelek szólnak ma hozzád.
+            A napi lap mellé más hagyományos jelekből is választhatsz mai fókuszt.
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

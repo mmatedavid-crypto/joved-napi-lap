@@ -46,7 +46,7 @@ const CHOICE_GUIDE = [
   },
   {
     title: "Kapcsolat vagy ex jár a fejemben",
-    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a kapcsolati olvasat ad több teret, nem csak százalékot.",
+    text: "Ha randi, visszatérő történet vagy bizonytalan kötődés a téma, a kapcsolati olvasat a százalék mellé tempót, vonzalmat és visszatérő mintát is ad.",
     productSlug: "parkapcsolat_elemzes",
     cta: "Kapcsolati olvasat",
   },
