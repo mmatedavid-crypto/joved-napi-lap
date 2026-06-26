@@ -265,7 +265,7 @@ function ReadingUseGuide() {
     },
     {
       label: "Ha pontosítanál",
-      text: "Írd meg, melyik részt szeretnéd finomítani, mi maradt ki a helyzetedből, és milyen irányban vársz pontosítást.",
+      text: "Írd meg, mi kapcsolódott a helyzetedhez, mit szeretnél pontosítani, és milyen irányban kérnél finomítást.",
     },
   ] as const;
 
@@ -290,7 +290,7 @@ function ReadingUseGuide() {
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
         </a>{" "}
-        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik részt szeretnéd finomítani.
+        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik részt szeretnéd pontosítani.
       </p>
     </aside>
   );
@@ -714,7 +714,7 @@ function formatDownloadedReading(
     meta.orderReference
       ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
       : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
-    "Nem kell a teljes olvasatot bemásolni; elég megírni, melyik rész talált, melyik részt finomítanád, és mi maradt ki.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, mi kapcsolódott, mit szeretnél pontosítani, és mit érdemes még hozzátenni.",
     "",
     "Pontosítási vázlat:",
     clarificationDraft,
