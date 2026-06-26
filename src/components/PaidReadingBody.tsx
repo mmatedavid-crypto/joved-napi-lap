@@ -527,11 +527,11 @@ function paidReadingClarificationDraft({
     "",
     "Ami kapcsolódott a helyzetemhez:",
     "",
-    "Ezt a részt szeretném finomítani:",
+    "Amit szeretnék pontosítani:",
     "",
-    "A helyzetemből ez maradt ki:",
+    "A helyzetemből ezt érdemes még hozzátenni:",
     "",
-    "Ebben az irányban kérek pontosítást:",
+    "Ebben az irányban kérnék finomítást:",
   ].join("\n");
 }
 

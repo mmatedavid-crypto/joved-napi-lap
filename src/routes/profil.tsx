@@ -816,12 +816,12 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
     {
       label: "Részben volt hasznos",
       value: "partial" as const,
-      body: "Az olvasat részben volt hasznos, és szeretnék egy részt pontosabban a saját helyzetemhez igazítani.\n\nAmi kapcsolódott a helyzetemhez:\n\nEzt a részt szeretném finomítani:\n\nA helyzetemből ez maradt ki:",
+      body: "Az olvasat részben hasznos volt, és szeretném pontosabban megmutatni, melyik részt érdemes tovább finomítani.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmit szeretnék pontosítani:\n\nA helyzetemből ezt érdemes még hozzátenni:",
     },
     {
       label: "Pontosítást kérek",
       value: "missed" as const,
-      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nMelyik részt szeretném finomítani?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nAmit szeretnék pontosítani:\n\nA saját helyzetemből ezt érdemes még figyelembe venni:\n\nEbben az irányban kérnék finomítást:",
     },
   ] as const;
   const shortId = shortOrderId(order.id) ?? "nincs rövid azonosító";

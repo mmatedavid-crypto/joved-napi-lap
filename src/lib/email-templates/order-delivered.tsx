@@ -59,13 +59,13 @@ const OrderDeliveredEmail = ({
       label: "Részben volt hasznos",
       feedback: "Részben volt hasznos",
       feedbackValue: "partial",
-      body: "Az olvasat részben volt hasznos, de van benne olyan rész, amit pontosítanék.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmi nem volt elég pontos:\n\nA helyzetemből ez maradt ki:",
+      body: "Az olvasat részben hasznos volt, és szeretném pontosabban megmutatni, melyik részt érdemes tovább finomítani.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmit szeretnék pontosítani:\n\nA helyzetemből ezt érdemes még hozzátenni:",
     },
     {
       label: "Pontosítást kérek",
       feedback: "Pontosítást kérek",
       feedbackValue: "missed",
-      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nMelyik részt szeretném finomítani?\n\nMi az a konkrét helyzet, amit jobban figyelembe kellene venni?\n\nMilyen irányban várnék pontosítást?",
+      body: "Szeretnék pontosítást kérni az elkészült olvasathoz.\n\nAmit szeretnék pontosítani:\n\nA saját helyzetemből ezt érdemes még figyelembe venni:\n\nEbben az irányban kérnék finomítást:",
     },
   ];
   return (
@@ -151,7 +151,7 @@ const OrderDeliveredEmail = ({
                     productName,
                     shortOrderId,
                     feedback: "Pontosítást kérek",
-                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi kapcsolódott a helyzetemhez:\n\nEzt a részt szeretném finomítani:\n\nA helyzetemből ez maradt ki:\n\nEbben az irányban kérek pontosítást:",
+                    body: "Szeretnék pár szóban pontosítást kérni az elkészült olvasathoz.\n\nAmi kapcsolódott a helyzetemhez:\n\nAmit szeretnék pontosítani:\n\nA helyzetemből ezt érdemes még hozzátenni:\n\nEbben az irányban kérnék finomítást:",
                   })}
                   style={link}
                 >
