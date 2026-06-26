@@ -224,7 +224,7 @@ for (const needle of [
   "keresel szakmai tanácsot",
   "testi vagy lelki hatásígéretet keresel, nem szimbolikus fókuszt",
   "diagnózist, traumamagyarázatot vagy biztos lelki okot szeretnél tisztázni",
-  "biztos eseményjóslatot keresel a mai napra",
+  "kész tényként várt eseménylistát keresel a mai napra",
   "megváltozhatatlan jövőt keresel",
   "rövid, belépő árú személyes irányt",
   "a százalék mellé érthető kapcsolati dinamikát is szeretnél",
@@ -297,6 +297,7 @@ for (const forbidden of [
   "A válasz nem dönt helyetted",
   "nem egyetlen igen-nem kérdésed van",
   "az általános jegyszöveg helyett",
+  "biztos eseményjóslatot keresel a mai napra, nem napi időminőséget",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(

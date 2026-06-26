@@ -682,7 +682,7 @@ function wrongFitPromise(product: ProductDef): string[] {
   if (product.slug === "horoszkop_szemelyre") {
     return [
       "részletes születési képletet vagy hosszú tranzitriportot keresel",
-      "biztos eseményjóslatot keresel a mai napra, nem napi időminőséget",
+      "kész tényként várt eseménylistát keresel a mai napra",
     ];
   }
   if (product.category === "delayed") {
