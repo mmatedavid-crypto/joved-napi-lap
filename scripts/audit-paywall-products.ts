@@ -962,6 +962,8 @@ for (const needle of [
   "ugyanabból a kérdésből indul tovább",
   "célzottabb olvasatot választasz hozzá",
   "válassz olyan célzott folytatást",
+  "Kapcsolati kérdésnél a mélyebb folytatás a vágy, a tempó és a bizonytalanság rétegeit választja szét.",
+  "Döntés előtt a jó folytatás segít szétválasztani, melyik érzés húz előre, és melyik tart vissza.",
   "const meta = followupOptionMeta(product)",
   "function followupOptionMeta(",
   "Azonnali olvasat",
@@ -994,6 +996,8 @@ for (const forbidden of [
   "újabb általános választ",
   "nem csak százalékot ad",
   "nem csak általános jelentést ad",
+  "nem erősebb jóslatot ad",
+  "nem helyetted választ",
 ]) {
   if (smartFollowup.includes(forbidden)) {
     failed.push(

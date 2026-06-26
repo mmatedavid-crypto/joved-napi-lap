@@ -235,9 +235,10 @@ function followupIntro({
   const fallbackByIntent: Record<FollowupIntent, string> = {
     daily:
       "Ha ez az olvasat megmozdított valamit, válassz olyan célzott folytatást, amely ahhoz kapcsolódik, ami most tényleg tisztázásra vár.",
-    love: "Kapcsolati kérdésnél a mélyebb folytatás nem erősebb jóslatot ad, hanem jobban szétválasztja a vágyat, a tempót és a bizonytalanságot.",
+    love:
+      "Kapcsolati kérdésnél a mélyebb folytatás a vágy, a tempó és a bizonytalanság rétegeit választja szét.",
     decision:
-      "Döntés előtt a jó folytatás nem helyetted választ, hanem segít szétválasztani, melyik érzés húz és melyik tart vissza.",
+      "Döntés előtt a jó folytatás segít szétválasztani, melyik érzés húz előre, és melyik tart vissza.",
     compatibility:
       "Összeillés után a mélyebb érték nem a százalékban van, hanem abban, miért működhet, hol akadhat el, és mit ismételtek.",
     dream:
