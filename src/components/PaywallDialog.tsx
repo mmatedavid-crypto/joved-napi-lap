@@ -635,7 +635,7 @@ function choiceFitPromise(product: ProductDef): string[] {
   }
   if (product.slug === "horoszkop_szemelyre") {
     return [
-      "az általános jegyszöveg helyett a saját mostani témádra kérsz rövid választ",
+      "a saját mostani témádra kérsz rövid napi választ az asztrológiai időminőség felől",
       "gyors, személyes napi irányt keresel rövid asztrológiai formában",
       "fontos, hogy a szöveg józan maradjon és ne ígérjen biztos jövőt",
     ];

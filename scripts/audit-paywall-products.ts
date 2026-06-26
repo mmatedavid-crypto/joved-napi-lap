@@ -230,7 +230,7 @@ for (const needle of [
   "a százalék mellé érthető kapcsolati dinamikát is szeretnél",
   "tisztábban szeretnéd látni a döntés mögötti mintát",
   "több egymásba kapaszkodó szálat szeretnél",
-  "az általános jegyszöveg helyett",
+  "a saját mostani témádra kérsz rövid napi választ az asztrológiai időminőség felől",
   "van egy erős álomkép vagy érzés",
   "Minőségi ellenőrzés",
   "qualityReviewPromise(product).map",
@@ -296,6 +296,7 @@ for (const forbidden of [
   "nem csak százalékként",
   "A válasz nem dönt helyetted",
   "nem egyetlen igen-nem kérdésed van",
+  "az általános jegyszöveg helyett",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(
