@@ -148,6 +148,9 @@ for (const needle of [
   "szimbolikus önismereti jelként",
   'const birthTime = payloadText(payload, "birthTime")',
   'const birthPlace = payloadText(payload, "birthPlace")',
+  "const summaryLimit = 5",
+  'add("Születési idő", payload.birthTime',
+  "return items.slice(0, summaryLimit)",
   "születési idő nélkül, közelített képlettel",
   "hely: ${birthPlace}",
   'add("Születési hely", payload.birthPlace',
@@ -307,6 +310,8 @@ for (const forbidden of [
   "biztos dátumot, eredményt vagy megváltozhatatlan jövőt keresel",
   "biztos jövőállítást vagy kész döntést keresel",
   "Ez nem teljes olvasat-előzetes",
+  "items.length >= 4",
+  "return items.slice(0, 4)",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(

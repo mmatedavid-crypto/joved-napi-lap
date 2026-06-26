@@ -906,14 +906,15 @@ function summarizeInputPayload(
   payload: Record<string, unknown> | undefined,
 ): Array<{ label: string; value: string }> {
   if (!payload) return [];
+  const summaryLimit = 5;
   const items: Array<{ label: string; value: string }> = [];
   const add = (label: string, value: unknown, max = 140) => {
-    if (items.length >= 4 || typeof value !== "string" || !value.trim()) return;
+    if (items.length >= summaryLimit || typeof value !== "string" || !value.trim()) return;
     const clean = value.trim().replace(/\s+/g, " ");
     items.push({ label, value: clean.length > max ? `${clean.slice(0, max - 1)}…` : clean });
   };
   const addNumber = (label: string, value: unknown) => {
-    if (items.length >= 4) return;
+    if (items.length >= summaryLimit) return;
     if (typeof value === "number" && Number.isFinite(value)) {
       items.push({ label, value: String(value) });
     } else if (typeof value === "string" && /^\d+$/.test(value.trim())) {
@@ -921,18 +922,18 @@ function summarizeInputPayload(
     }
   };
   const addMonth = (value: unknown) => {
-    if (items.length >= 4) return;
+    if (items.length >= summaryLimit) return;
     const month = typeof value === "number" ? value : Number(value);
     if (!Number.isInteger(month) || month < 1 || month > 12) return;
     items.push({ label: "Hónap", value: MONTH_HU[month - 1] });
   };
   const addSign = (value: unknown) => {
-    if (items.length >= 4 || typeof value !== "string" || !value.trim()) return;
+    if (items.length >= summaryLimit || typeof value !== "string" || !value.trim()) return;
     const clean = value.trim();
     items.push({ label: "Jegy", value: SIGN_HU[clean] ?? clean });
   };
   const addPair = (label: string, a: unknown, b: unknown, max = 120) => {
-    if (items.length >= 4) return;
+    if (items.length >= summaryLimit) return;
     const values = [a, b]
       .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
       .map((value) => value.trim().replace(/\s+/g, " "));
@@ -945,6 +946,7 @@ function summarizeInputPayload(
   add("Megszólítás", payload.callName ?? payload.preferredName, 60);
   addPair("Nevek", payload.myName ?? payload.fullNameA, payload.hisName ?? payload.fullNameB);
   add("Születési dátum", payload.dob ?? payload.birthDate, 30);
+  add("Születési idő", payload.birthTime, 30);
   add("Születési hely", payload.birthPlace, 80);
   addPair("Dátumok", payload.myDob ?? payload.birthDateA, payload.hisDob ?? payload.birthDateB, 80);
   add("Kérdés", payload.question ?? payload.q);
@@ -961,10 +963,10 @@ function summarizeInputPayload(
   add("Hangulat", payload.emotion, 60);
 
   const cards = payload.cards;
-  if (items.length < 4 && Array.isArray(cards) && cards.length > 0) {
+  if (items.length < summaryLimit && Array.isArray(cards) && cards.length > 0) {
     const names = cards.filter((card): card is string => typeof card === "string").slice(0, 4);
     if (names.length) items.push({ label: "Lapok", value: names.join(", ") });
   }
 
-  return items.slice(0, 4);
+  return items.slice(0, summaryLimit);
 }
