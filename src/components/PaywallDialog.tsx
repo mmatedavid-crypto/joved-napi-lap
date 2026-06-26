@@ -249,8 +249,9 @@ export function PaywallDialog({
                       ))}
                     </ul>
                     <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
-                      Ez nem teljes olvasat-előzetes, hanem annak tiszta összefoglalása, milyen
-                      kérdésből, adatokból és szimbólumokból indul a fizetett olvasat.
+                      Ez a fizetés előtti fókuszellenőrzés: megmutatja, milyen kérdésből,
+                      adatokból és szimbólumokból indulunk, hogy még rendelés előtt lásd az
+                      olvasat keretét.
                     </p>
                   </div>
                 )}

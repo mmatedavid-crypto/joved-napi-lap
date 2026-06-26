@@ -134,8 +134,9 @@ for (const needle of [
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
   "focusPreview.map",
   "function readingFocusPreview(",
-  "Ez nem teljes olvasat-előzetes",
-  "kérdésből, adatokból és szimbólumokból indul",
+  "Ez a fizetés előtti fókuszellenőrzés",
+  "még rendelés előtt lásd az",
+  "olvasat keretét",
   "A fő fókusz a saját kérdésed lesz",
   "A szöveg a megadott helyzetből indul ki",
   "A kapcsolat típusát külön kezeljük",
@@ -305,6 +306,7 @@ for (const forbidden of [
   "diagnózist, traumamagyarázatot vagy biztos lelki okot szeretnél tisztázni",
   "biztos dátumot, eredményt vagy megváltozhatatlan jövőt keresel",
   "biztos jövőállítást vagy kész döntést keresel",
+  "Ez nem teljes olvasat-előzetes",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(
