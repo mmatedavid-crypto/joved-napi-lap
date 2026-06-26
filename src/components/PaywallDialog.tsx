@@ -657,13 +657,13 @@ function choiceFitPromise(product: ProductDef): string[] {
 function wrongFitPromise(product: ProductDef): string[] {
   if (product.slug === "parkapcsolat_elemzes") {
     return [
-      "biztos eseményválaszt keresel arra, hogy valaki visszajön-e, szeret-e vagy írni fog-e",
-      "inkább saját döntési fókuszt kérnél, nem kapcsolati dinamikát",
+      "kész tényként várt kapcsolati eseménylistát keresel",
+      "most inkább saját döntési fókuszra van szükséged, nem kapcsolati dinamikára",
     ];
   }
   if (product.slug === "dontes_komplex") {
     return [
-      "kész külső választ szeretnél két út között, nem a belső mérleg tisztázását",
+      "azt várod, hogy a válasz válasszon két út között",
       "jogi, pénzügyi vagy egészségügyi döntéshez keresel szakmai tanácsot",
     ];
   }
@@ -675,7 +675,7 @@ function wrongFitPromise(product: ProductDef): string[] {
   }
   if (product.slug === "alomfejtes_rovid") {
     return [
-      "diagnózist, traumamagyarázatot vagy biztos lelki okot szeretnél tisztázni",
+      "orvosi vagy terápiás bizonyosságot szeretnél egy álom okáról",
       "az álmot szó szerinti jóslatként kezelnéd, nem belső képként",
     ];
   }
@@ -688,11 +688,11 @@ function wrongFitPromise(product: ProductDef): string[] {
   if (product.category === "delayed") {
     return [
       "azonnali, pár perces választ szeretnél",
-      "biztos dátumot, eredményt vagy megváltozhatatlan jövőt keresel",
+      "rögzített dátumot, kész eredményt vagy megváltozhatatlan jövőképet keresel",
     ];
   }
   return [
-    "biztos jövőállítást vagy kész döntést keresel",
+    "kész tényként rögzített jövőállítást vagy döntést keresel",
     "orvosi, jogi vagy pénzügyi kérdéshez keresel szakmai tanácsot",
   ];
 }
