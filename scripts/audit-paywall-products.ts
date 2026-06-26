@@ -982,6 +982,7 @@ for (const needle of [
   "Mi ismétlődik ebben a kapcsolatban?",
   "Hogyan döntsek tisztábban?",
   "Mit jelent ez most személyesen?",
+  "A mélyebb angyalszám-olvasat a szám hagyományos jelét a saját helyzetedhez és mostani kérdésedhez kapcsolja.",
   "Melyik minőséget érdemes most hordoznom?",
 ]) {
   if (!smartFollowup.includes(needle)) {
@@ -992,6 +993,7 @@ for (const forbidden of [
   "új, általános olvasatból",
   "újabb általános választ",
   "nem csak százalékot ad",
+  "nem csak általános jelentést ad",
 ]) {
   if (smartFollowup.includes(forbidden)) {
     failed.push(

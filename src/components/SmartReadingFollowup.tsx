@@ -368,7 +368,7 @@ function followupOptions(
           ? "Ha a szám kapcsolat közben jelent meg, érdemes külön nézni a tempót, a várakozást és a visszatérő mintát."
           : decisionIntent
             ? "Ha a szám döntés előtt tűnt fel, a döntési olvasat jobban szétválasztja a félelmet és a józan belső irányt."
-            : "A mélyebb angyalszám-olvasat a számot a saját helyzetedhez köti, nem csak általános jelentést ad.",
+            : "A mélyebb angyalszám-olvasat a szám hagyományos jelét a saját helyzetedhez és mostani kérdésedhez kapcsolja.",
       },
       {
         slug: "mai_iranytu_ai",
