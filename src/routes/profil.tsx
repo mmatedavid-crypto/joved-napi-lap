@@ -1038,7 +1038,7 @@ function memoryNextStepItems(
     push({
       label: "Kapcsolati mintázat tisztázása",
       reason:
-        "ha nem csak egy ember érdekel, hanem az, milyen biztonságot vagy visszajelzést keresel újra több kapcsolatban",
+        "ha több kapcsolat mögött ugyanazt a biztonságot, izgalmat vagy visszajelzést keresed újra",
       to: "/osszeillunk",
     });
   }

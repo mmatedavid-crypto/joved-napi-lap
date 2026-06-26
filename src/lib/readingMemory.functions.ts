@@ -236,7 +236,7 @@ function buildGentleNudge(memories: ReadingMemory[]): string {
     recentCompatibility.map((memory) => memory.topic || memory.situation || memory.title),
   );
   if (compatibilityPartners.size >= 3) {
-    return "Most érdemes lehet nem csak azt nézni, kivel mennyi az összeillés, hanem azt is, milyen érzést keresel újra több emberben.";
+    return "Most érdemes lehet a több összeillés mögött kirajzolódó érzést is figyelni: milyen biztonságot, izgalmat vagy visszajelzést keresel újra.";
   }
   const recentDecisionCount = memoriesSince(
     memories.filter((memory) => memory.reading_type === "decision"),

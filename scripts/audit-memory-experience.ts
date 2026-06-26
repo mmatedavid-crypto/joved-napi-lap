@@ -87,7 +87,7 @@ const checks: Check[] = [
       "Három lapos folytatás",
       "több ember|több összeill|választási minta|több kapcsolat",
       "Kapcsolati mintázat tisztázása",
-      "milyen biztonságot vagy visszajelzést keresel újra több kapcsolatban",
+      "ha több kapcsolat mögött ugyanazt a biztonságot, izgalmat vagy visszajelzést keresed újra",
       "Kapcsolati dinamika",
       'to: "/osszeillunk"',
       "Döntés előtt",
@@ -106,6 +106,7 @@ const checks: Check[] = [
       "nem kell újra nulláról indulnod",
       "ha nem új jóslat kell",
       "Ha nem napi jegyszöveget keresel",
+      "ha nem csak egy ember érdekel",
     ],
   },
   {
@@ -441,12 +442,18 @@ const checks: Check[] = [
     file: "src/routes/osszeillunk.tsx",
     includes: [
       "function compatibilityMemorySentence",
-      "Több emberrel is megnézted az összeillést",
-      "Visszatérő történetnél nem csak az számít",
+      "Több összeillés után kirajzolódhat egy visszatérő kapcsolati érzés is",
+      "Visszatérő történetnél az is beszédes",
+      "Több összeillés egymás mellé téve már kapcsolati mintát is rajzolhat",
       "ismerkedésnél a kezdeti vonzalom",
       "relationshipNumber: fallbackProfile.relationshipNumber",
       "summary: `${fallbackReading.oneSentence} ${memorySentence}`",
       "oneSentence: memorySentence",
+    ],
+    excludes: [
+      "itt már nem csak az a fontos",
+      "Visszatérő történetnél nem csak az számít",
+      "Most nem csak az a kérdés",
     ],
   },
   {

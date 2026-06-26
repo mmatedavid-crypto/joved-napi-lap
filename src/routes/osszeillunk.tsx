@@ -51,10 +51,10 @@ function compatibilityMemorySentence(input: {
 }): string {
   const normalized = input.status.toLocaleLowerCase("hu-HU");
   if (input.isComparing) {
-    return "Több emberrel is megnézted az összeillést; itt már nem csak az a fontos, ki illik hozzád, hanem milyen kapcsolati érzést keresel újra.";
+    return "Több összeillés után kirajzolódhat egy visszatérő kapcsolati érzés is: milyen biztonságot, izgalmat, lezárást vagy megerősítést keresel újra.";
   }
   if (normalized.includes("ex") || normalized.includes("visszatér")) {
-    return "Visszatérő történetnél nem csak az számít, újra megjelenik-e, hanem hogy más felelősséggel és tempóval tér-e vissza.";
+    return "Visszatérő történetnél az is beszédes, milyen felelősséggel és tempóval térne vissza ez a kapcsolat.";
   }
   if (normalized.includes("ismerked")) {
     return "Ennél az ismerkedésnél a kezdeti vonzalom mellett az lesz beszédes, megjelenik-e következetes figyelem is.";
@@ -418,10 +418,10 @@ function Page() {
               ))}
               {comparisonContext && (
                 <Section eyebrow="A keresésed mintája">
-                  Most nem csak az a kérdés, hogy egy emberrel mennyi az összeillés. Ha több
-                  kapcsolatot is összehasonlítasz, érdemes lehet azt is figyelned, milyen minőséget
-                  keresel újra és újra: biztonságot, izgalmat, lezárást vagy megerősítést. Ez nem
-                  baj, inkább jelzés arra, hogy a választás mögötti mintát is érdemes olvasni.
+                  Több összeillés egymás mellé téve már kapcsolati mintát is rajzolhat. Ilyenkor
+                  érdemes figyelned, milyen minőséget keresel újra és újra: biztonságot, izgalmat,
+                  lezárást vagy megerősítést. Ez nem baj, inkább jelzés arra, hogy a választás
+                  mögötti mintát is érdemes olvasni.
                 </Section>
               )}
               <Section eyebrow="Egy mondatban">
