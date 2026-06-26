@@ -95,7 +95,7 @@ export function PaidReadingBody({
           <p className="text-[11px] leading-relaxed text-ivory/38">
             Mentéskor a fájl tartalmazza a címet
             {orderReference ? `, a rendelésazonosítót (${orderReference})` : ""}, a visszaolvasási
-            útmutatót és a pontosítási teendőket is.
+            útmutatót és a rövid pontosítási vázlatot is.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -187,7 +187,7 @@ function ReadingSelfCheck({
   return (
     <aside className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/12 p-4">
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">
-        Pontosítás, ha valami kimaradt
+        Pontosítás, ha továbbírnád
       </div>
       <h3 className="mt-2 font-display text-xl leading-snug text-ivory">{selfCheck.heading}</h3>
       <p className="mt-2 text-sm leading-relaxed text-ivory/60">{selfCheck.intro}</p>
@@ -220,8 +220,9 @@ function ReadingSelfCheck({
           Pontosítást kérek emailben
         </a>
         <p className="text-xs leading-relaxed text-ivory/45">
-          Akkor hasznos, ha az olvasat jó irányba indult, de egy fontos rész kimaradt. Az email
-          tartalmazza a rendelésazonosítót és a pontosítási vázlatot.
+          Akkor hasznos, ha az olvasat jó irányba indult, de szeretnéd megírni, mit pontosítanál
+          vagy mit érdemes még hozzátenni. Az email tartalmazza a rendelésazonosítót és a
+          pontosítási vázlatot.
         </p>
       </div>
     </aside>
@@ -506,7 +507,7 @@ function paidReadingSelfCheck({
   return {
     heading: selfCheckHeading(readingType),
     intro:
-      "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Ha egy fontos rész kimaradt, innen gyorsan meg tudod írni, mit pontosítsunk.",
+      "Az olvasat akkor használható igazán, ha felismerhetően a te helyzetedhez kapcsolódik. Innen gyorsan megírhatod, mi kapcsolódott, mit pontosítanál, és mit érdemes még hozzátenni.",
     checks,
     clarificationDraft,
     clarificationMailto,
@@ -562,7 +563,7 @@ function paidReadingAssurance(
   if (generation.qualityRejected) {
     return {
       heading: "Ellenőrzött, óvatosan szerkesztett olvasat",
-      text: "A megjelenített szövegnek konkrétan a rendelésedhez és a megadott helyzetedhez kell kapcsolódnia. Ha mégis úgy érzed, hogy egy fontos rész kimaradt, a pontosítási vázlattal gyorsan jelezheted, merre finomítsuk.",
+      text: "A megjelenített szövegnek konkrétan a rendelésedhez és a megadott helyzetedhez kell kapcsolódnia. Ha mégis pontosítanál, a vázlattal gyorsan megírhatod, mi kapcsolódott, mit kérsz más fókuszba, és mit érdemes még hozzátenni.",
     };
   }
   if (generation.source === "local_premium_draft" || generation.fallbackUsed) {

@@ -243,7 +243,7 @@ for (const needle of [
   "minden olvasat a választott hagyomány jelképeit a megadott helyzethez köti",
   "nem tartalmazhat biztos jövőígéretet",
   "az elkészült olvasat mellett pontosítási vázlat",
-  "ha egy fontos rész kimaradt",
+  "mit pontosítanál vagy tennél hozzá",
   "több, egymásra épülő szakaszban",
   "konkrétan a megadott helyzethez kötöttnek",
   "Teljesítési biztonság",
@@ -865,6 +865,14 @@ for (const forbiddenNeedle of ["teljesebb képet", "nem nagy előrejelzést", "n
 for (const forbiddenNeedle of ["nem csak százalékot", "Ha nem csak rövid napi választ keresel"]) {
   if (pricingRoute.includes(forbiddenNeedle) || paywall.includes(forbiddenNeedle)) {
     failed.push(`Choice guide copy must use positive product-fit wording: ${forbiddenNeedle}`);
+  }
+}
+
+for (const forbiddenNeedle of ["ha egy fontos rész kimaradt", "merre finomítsuk"]) {
+  if (paywall.includes(forbiddenNeedle)) {
+    failed.push(
+      `Paywall quality review must avoid deficit-led clarification copy: ${forbiddenNeedle}`,
+    );
   }
 }
 

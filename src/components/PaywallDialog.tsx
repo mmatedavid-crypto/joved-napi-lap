@@ -701,7 +701,7 @@ function qualityReviewPromise(product: ProductDef): string[] {
   const base = [
     "minden olvasat a választott hagyomány jelképeit a megadott helyzethez köti",
     "a válasz nem tartalmazhat biztos jövőígéretet vagy ijesztgető állítást",
-    "az elkészült olvasat mellett pontosítási vázlat segít jelezni, ha egy fontos rész kimaradt",
+    "az elkészült olvasat mellett pontosítási vázlat segít megírni, mit pontosítanál vagy tennél hozzá",
   ];
   if (product.category === "delayed") {
     return [...base, "a részletes olvasatnak több, egymásra épülő szakaszban kell választ adnia"];
