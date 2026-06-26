@@ -131,7 +131,7 @@ const OrderDeliveredEmail = ({
               <Text style={feedbackText}>
                 Segít, ha jelzed, mennyire volt hasznos az olvasat, és kapcsolódott-e a
                 helyzetedhez. Ha pontosítanál rajta, rendelés alapján visszanézzük, és rövid
-                pontosítási vázlattal segítünk megírni, melyik részt finomítsuk.
+                pontosítási vázlattal segítünk megírni, mit érdemes még hozzátenni.
               </Text>
               <Section>
                 {feedbackOptions.map((option) => (
@@ -145,7 +145,7 @@ const OrderDeliveredEmail = ({
                 ))}
               </Section>
               <Text style={feedbackFinePrint}>
-                Ha rögtön leírnád, mi maradt ki,{" "}
+                Ha rögtön leírnád, mit pontosítanál,{" "}
                 <Link
                   href={feedbackMailto({
                     productName,
@@ -243,7 +243,7 @@ function feedbackMailto(opts: {
     `Rendelés: ${orderRef}`,
     `Termék: ${opts.productName}`,
     "",
-    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyet finomítanál.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, mi kapcsolódott, mit szeretnél pontosítani, és mit érdemes még hozzátenni.",
     "",
     "Röviden ezt szeretném hozzátenni:",
   ].join("\n");

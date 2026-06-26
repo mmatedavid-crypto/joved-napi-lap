@@ -863,7 +863,8 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
       <div className="text-xs uppercase tracking-[0.2em] text-gold/75">Minőségi visszajelzés</div>
       <p className="mt-2 text-xs leading-relaxed text-ivory/58">
         Ha pontosítanál az olvasaton, jelezd nyugodtan. Rendelés alapján visszanézzük, és rövid
-        pontosítási vázlattal segítünk megírni, mi maradt ki vagy melyik részt finomítsuk.
+        pontosítási vázlattal segítünk megírni, mit érdemes még hozzátenni vagy melyik részt
+        pontosítanád.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {feedbackOptions.map((option) => (
@@ -896,7 +897,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
           Köszönjük, mentettük a visszajelzést.{" "}
           {selectedOption.value === "accurate"
             ? "Ez segít látni, mely termékek működnek igazán jól."
-            : "Ha leírod pár szóban, mi maradt ki, abból gyorsabban tanulunk."}
+            : "Ha leírod pár szóban, mit pontosítanál, abból gyorsabban tanulunk."}
         </p>
       )}
       {selectedOption && selectedOption.value !== "accurate" && (
@@ -909,7 +910,7 @@ function ProfilePaidReadingFeedback({ order }: { order: ProfileOrder }) {
             onChange={(event) => setFeedbackNote(event.target.value)}
             maxLength={600}
             rows={3}
-            placeholder="Pl. ezt a részt szeretném finomítani, vagy a kérdésem egyik fontos oldala kimaradt..."
+            placeholder="Pl. ezt a részt szeretném pontosítani, vagy a kérdésem egyik fontos oldalát érdemes még hozzátenni..."
             className="mt-2 w-full rounded-md border border-[oklch(0.78_0.10_80/0.18)] bg-transparent px-3 py-2 text-xs text-ivory outline-none placeholder:text-ivory/35 focus:border-gold/65"
           />
           <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -965,7 +966,7 @@ function profileFeedbackMailto(opts: {
     `Rendelés: ${opts.shortId}`,
     `Termék: ${opts.order.product_name}`,
     "",
-    "Nem kell a teljes olvasatot bemásolni; elég azt a részt vagy érzést megírni, amelyet finomítanál.",
+    "Nem kell a teljes olvasatot bemásolni; elég megírni, mi kapcsolódott, mit szeretnél pontosítani, és mit érdemes még hozzátenni.",
     "",
     "Röviden ezt szeretném hozzátenni:",
     note || "",

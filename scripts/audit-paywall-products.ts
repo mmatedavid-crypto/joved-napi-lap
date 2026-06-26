@@ -126,10 +126,10 @@ for (const needle of [
   "Minőségi visszajelzés",
   "jelezheted, mennyire volt hasznos",
   "helyzetedhez. Rendelés alapján",
-  "visszanézhető, melyik részt szeretnéd finomítani",
-  "melyik részt szeretnéd finomítani",
+  "visszanézhető, melyik részt szeretnéd pontosítani",
+  "melyik részt szeretnéd pontosítani",
   "pontosítási vázlat",
-  "mi maradt ki",
+  "mit érdemes még hozzátenni",
   "Részletek: miből készül az olvasat, hogyan kapod meg",
   "const focusPreview = readingFocusPreview(product, inputPayload, inputSummary)",
   "focusPreview.map",
@@ -498,7 +498,7 @@ for (const needle of [
   "Menthető olvasat",
   "Pontosítási út",
   "belépő árú olvasatok alacsony kockázatú első személyes irányt",
-  "Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani",
+  "Rendelés alapján visszanézhető, melyik részt szeretnéd pontosítani",
   "Mennyi elég most?",
   "A jó első lépés a kérdés méretéhez igazodik",
   "Belépő olvasat",
@@ -607,8 +607,9 @@ for (const needle of [
   "segítünk a hozzáférésben",
   "Mi van, ha az olvasat nem érződik elég pontosnak?",
   "rövid pontosítási vázlat",
-  "melyik részt szeretnéd finomítani",
-  "milyen irányban vársz segítséget",
+  "melyik részt szeretnéd pontosítani",
+  "mit érdemes még hozzátenni",
+  "milyen irányban kérsz finomítást",
   "Elállhatok a digitális olvasattól?",
   "Fizetés előtt külön kéred a digitális tartalom teljesítésének megkezdését",
   "az elállási jog korlátozott lehet",
@@ -815,14 +816,13 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   ) {
     failed.push(`${file}: delayed astrology route must frame birth time as helpful but optional`);
   }
-  if (
-    !source.includes("a riport ezt jelzi") ||
-    !source.includes("óvatosabban kezeli")
-  ) {
+  if (!source.includes("a riport ezt jelzi") || !source.includes("óvatosabban kezeli")) {
     failed.push(`${file}: delayed astrology route must explain missing birth time handling`);
   }
   if (source.includes("12:00-val közelítünk")) {
-    failed.push(`${file}: delayed astrology route must avoid implying noon approximation precision`);
+    failed.push(
+      `${file}: delayed astrology route must avoid implying noon approximation precision`,
+    );
   }
 }
 

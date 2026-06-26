@@ -191,8 +191,8 @@ export function PaywallDialog({
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ivory/66">
                 Az elkészült olvasatnál jelezheted, mennyire volt hasznos és kapcsolódott-e a
-                helyzetedhez. Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani, a
-                pontosítási vázlat pedig segít röviden megírni, mi maradt ki a helyzetedből.
+                helyzetedhez. Rendelés alapján visszanézhető, melyik részt szeretnéd pontosítani, a
+                pontosítási vázlat pedig segít röviden megírni, mit érdemes még hozzátenni.
               </p>
             </div>
 
@@ -249,9 +249,8 @@ export function PaywallDialog({
                       ))}
                     </ul>
                     <p className="mt-3 border-t border-gold/10 pt-3 text-xs leading-relaxed text-ivory/52">
-                      Ez a fizetés előtti fókuszellenőrzés: megmutatja, milyen kérdésből,
-                      adatokból és szimbólumokból indulunk, hogy még rendelés előtt lásd az
-                      olvasat keretét.
+                      Ez a fizetés előtti fókuszellenőrzés: megmutatja, milyen kérdésből, adatokból
+                      és szimbólumokból indulunk, hogy még rendelés előtt lásd az olvasat keretét.
                     </p>
                   </div>
                 )}

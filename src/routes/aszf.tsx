@@ -82,7 +82,8 @@ export const Route = createFileRoute("/aszf")({
         <p>
           Az elkészült fizetős olvasatoknál rövid visszajelzést adhatsz arról, hogy az olvasat
           mennyire volt hasznos, és kapcsolódott-e a helyzetedhez. Ha pontosítást kérsz,
-          opcionálisan azt is megírhatod, melyik részt finomítanád és mi maradt ki a helyzetedből.
+          opcionálisan azt is megírhatod, mit szeretnél pontosítani és mit érdemes még hozzátenni a
+          helyzetedből.
         </p>
         <p>
           A visszajelzéseket a szolgáltatás javítására és ügyfélszolgálati ellenőrzésre használjuk.

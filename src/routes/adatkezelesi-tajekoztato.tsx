@@ -85,8 +85,8 @@ function PrivacyPage() {
         <p>
           Az elkészült fizetős olvasatoknál röviden jelezheted, hogy az olvasat hasznos volt,
           részben volt hasznos, vagy pontosítást kérsz. Ha szeretnéd, néhány mondatban azt is
-          leírhatod, melyik rész kapcsolódott a helyzetedhez, melyik részt finomítanád, mi maradt ki
-          vagy milyen irányban vártál volna pontosabb segítséget.
+          leírhatod, melyik rész kapcsolódott a helyzetedhez, mit szeretnél pontosítani, mit érdemes
+          még hozzátenni, vagy milyen irányban kérsz finomítást.
         </p>
         <p>
           Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati, hibajavítási

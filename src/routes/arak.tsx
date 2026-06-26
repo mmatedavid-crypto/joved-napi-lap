@@ -23,7 +23,7 @@ const PRICING_FAQ = [
   {
     question: "Mi van, ha az olvasat nem érződik elég pontosnak?",
     answer:
-      "Az elkészült olvasatnál közvetlen minőségi visszajelzést kérhetsz. Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani, a rövid pontosítási vázlat pedig segít megírni, mi maradt ki a helyzetedből és milyen irányban vársz segítséget.",
+      "Az elkészült olvasatnál közvetlen minőségi visszajelzést kérhetsz. Rendelés alapján visszanézhető, melyik részt szeretnéd pontosítani, a rövid pontosítási vázlat pedig segít megírni, mit érdemes még hozzátenni és milyen irányban kérsz finomítást.",
   },
   {
     question: "Elállhatok a digitális olvasattól?",
@@ -204,7 +204,7 @@ function PricingPage() {
           />
           <TrustPoint
             title="Pontosítási út"
-            text="Rendelés alapján visszanézhető, melyik részt szeretnéd finomítani, és rövid vázlat segít pontosítást kérni."
+            text="Rendelés alapján visszanézhető, melyik részt szeretnéd pontosítani, és rövid vázlat segít finomítást kérni."
           />
         </section>
 
