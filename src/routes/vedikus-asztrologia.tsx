@@ -71,7 +71,7 @@ function Page() {
 
           <div>
             <label htmlFor="birth-time" className="block text-sm text-ivory/80 mb-2">
-              Születési idő (a Lagna miatt fontos)
+              Születési idő (opcionális, ha tudod pontosabb)
             </label>
             <input
               id="birth-time"
@@ -81,8 +81,8 @@ function Page() {
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
             />
             <p className="text-xs text-ivory/50 mt-2 font-editorial">
-              Ha nem tudod, hagyd üresen — Hold-rashi és nakshatra akkor is számolható, csak a Lagna
-              (aszcendens) lesz pontatlan.
+              Ha nem tudod, hagyd üresen; a riport ezt jelzi, és óvatosabban kezeli a Lagnához
+              vagy pontos időhöz kötött részeket.
             </p>
           </div>
 

@@ -77,7 +77,8 @@ function Page() {
               className="w-full bg-transparent border border-[oklch(0.78_0.10_80/0.25)] rounded-md px-4 py-3 text-ivory focus:border-gold outline-none"
             />
             <p className="text-xs text-ivory/50 mt-2 font-editorial">
-              Ha nem tudod pontosan, hagyd üresen. 12:00-val közelítünk, és a riportban jelezzük.
+              Ha tudod, pontosabb képlet készül. Ha nem tudod, hagyd üresen; a riport ezt jelzi, és
+              óvatosabban kezeli az időhöz kötött részeket.
             </p>
           </div>
 

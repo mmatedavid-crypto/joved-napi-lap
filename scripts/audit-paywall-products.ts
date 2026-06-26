@@ -809,6 +809,21 @@ for (const { file, source } of delayedAstrologyRouteSources) {
   ) {
     failed.push(`${file}: delayed astrology route must explain why birth place is required`);
   }
+  if (
+    !source.includes("Ha tudod, pontosabb képlet készül") &&
+    !source.includes("Születési idő (opcionális, ha tudod pontosabb)")
+  ) {
+    failed.push(`${file}: delayed astrology route must frame birth time as helpful but optional`);
+  }
+  if (
+    !source.includes("a riport ezt jelzi") ||
+    !source.includes("óvatosabban kezeli")
+  ) {
+    failed.push(`${file}: delayed astrology route must explain missing birth time handling`);
+  }
+  if (source.includes("12:00-val közelítünk")) {
+    failed.push(`${file}: delayed astrology route must avoid implying noon approximation precision`);
+  }
 }
 
 const delayedRouteExpectations = new Map<string, string>([
