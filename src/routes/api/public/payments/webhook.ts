@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
 import { PRODUCTS_BY_SLUG, EXPRESS_HOURS } from "@/lib/products";
 import type { Database } from "@/integrations/supabase/types";
+import { notifyAdmin } from "@/lib/telegram.server";
 
 async function getSupabase() {
   const mod = await import("@/integrations/supabase/client.server");
@@ -59,7 +60,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const supabase = await getSupabase();
   const { data: existing } = await supabase
     .from("orders")
-    .select("id, category, status, product_slug, express")
+    .select("id, category, status, product_slug, express, customer_email, total_amount, currency")
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
 
@@ -139,13 +140,36 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
         session_id_redacted: redactStripeId(sessionId),
         error_code: "paid_order_processing_failed",
       });
+      void notifyAdmin("error", "Olvasat feldolgozás hibára futott", {
+        order_id: existing.id,
+        product: existing.product_slug,
+        email: (existing as { customer_email?: string }).customer_email,
+      });
     }
   } catch {
     console.error("processPaidOrderBySession failed", {
       session_id_redacted: redactStripeId(sessionId),
       error_code: "paid_order_processing_exception",
     });
+    void notifyAdmin("error", "Olvasat feldolgozás kivétel", {
+      order_id: existing.id,
+      product: existing.product_slug,
+    });
   }
+
+  const orderRow = existing as {
+    product_slug?: string;
+    customer_email?: string;
+    total_amount?: number | null;
+    currency?: string | null;
+    express?: boolean;
+  };
+  void notifyAdmin("success", "Új fizetett rendelés", {
+    termék: PRODUCTS_BY_SLUG[orderRow.product_slug ?? ""]?.name ?? orderRow.product_slug,
+    összeg: orderRow.total_amount != null ? `${orderRow.total_amount} ${orderRow.currency ?? ""}` : undefined,
+    email: orderRow.customer_email,
+    express: orderRow.express ? "igen" : "nem",
+  });
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {
@@ -158,11 +182,16 @@ async function handleWebhook(req: Request, env: StripeEnv) {
     case "checkout.session.async_payment_failed":
     case "checkout.session.expired": {
       const supabase = await getSupabase();
+      const sessId = checkoutObjectId(event.data.object) ?? "";
       await supabase
         .from("orders")
         .update({ status: "failed", error_message: paymentFailureCode(event.type) })
-        .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "")
+        .eq("stripe_session_id", sessId)
         .eq("status", "pending_payment");
+      void notifyAdmin("warn", "Fizetés meghiúsult / lejárt", {
+        reason: paymentFailureCode(event.type),
+        session_id: redactStripeId(sessId),
+      });
       break;
     }
     default:
