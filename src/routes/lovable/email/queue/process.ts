@@ -2,6 +2,7 @@ import { sendLovableEmail } from '@lovable.dev/email-js'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { createFileRoute } from '@tanstack/react-router'
 import type { Database, Json } from '@/integrations/supabase/types'
+import { notifyAdmin } from '@/lib/telegram.server'
 
 const MAX_RETRIES = 5
 const DEFAULT_BATCH_SIZE = 10
@@ -362,6 +363,12 @@ export const Route = createFileRoute("/lovable/email/queue/process")({
               // message, so move straight to DLQ and stop processing the rest of the batch.
               if (isForbidden(error)) {
                 await moveToDlq(supabase, queue, msg, 'email_send_forbidden')
+                void notifyAdmin('error', 'Email küldés tiltva (DLQ)', {
+                  queue,
+                  to: payload.to,
+                  label: payload.label || payload.purpose,
+                  reason: 'email_send_forbidden',
+                })
                 return Response.json({ processed: totalProcessed, stopped: 'forbidden' })
               }
 

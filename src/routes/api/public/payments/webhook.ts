@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
 import { PRODUCTS_BY_SLUG, EXPRESS_HOURS } from "@/lib/products";
 import type { Database } from "@/integrations/supabase/types";
+import { notifyAdmin } from "@/lib/telegram.server";
 
 async function getSupabase() {
   const mod = await import("@/integrations/supabase/client.server");
@@ -59,7 +60,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const supabase = await getSupabase();
   const { data: existing } = await supabase
     .from("orders")
-    .select("id, category, status, product_slug, express")
+    .select("id, category, status, product_slug, express, guest_email, price_huf, product_name")
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
 
@@ -139,13 +140,29 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
         session_id_redacted: redactStripeId(sessionId),
         error_code: "paid_order_processing_failed",
       });
+      void notifyAdmin("error", "Olvasat feldolgozás hibára futott", {
+        order_id: existing.id,
+        product: existing.product_slug,
+        email: existing.guest_email ?? undefined,
+      });
     }
   } catch {
     console.error("processPaidOrderBySession failed", {
       session_id_redacted: redactStripeId(sessionId),
       error_code: "paid_order_processing_exception",
     });
+    void notifyAdmin("error", "Olvasat feldolgozás kivétel", {
+      order_id: existing.id,
+      product: existing.product_slug,
+    });
   }
+
+  void notifyAdmin("success", "Új fizetett rendelés", {
+    termék: existing.product_name ?? PRODUCTS_BY_SLUG[existing.product_slug ?? ""]?.name ?? existing.product_slug,
+    összeg: existing.price_huf != null ? `${existing.price_huf} Ft` : undefined,
+    email: existing.guest_email ?? undefined,
+    express: existing.express ? "igen" : "nem",
+  });
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {
@@ -158,11 +175,16 @@ async function handleWebhook(req: Request, env: StripeEnv) {
     case "checkout.session.async_payment_failed":
     case "checkout.session.expired": {
       const supabase = await getSupabase();
+      const sessId = checkoutObjectId(event.data.object) ?? "";
       await supabase
         .from("orders")
         .update({ status: "failed", error_message: paymentFailureCode(event.type) })
-        .eq("stripe_session_id", checkoutObjectId(event.data.object) ?? "")
+        .eq("stripe_session_id", sessId)
         .eq("status", "pending_payment");
+      void notifyAdmin("warn", "Fizetés meghiúsult / lejárt", {
+        reason: paymentFailureCode(event.type),
+        session_id: redactStripeId(sessId),
+      });
       break;
     }
     default:
