@@ -60,7 +60,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
   const supabase = await getSupabase();
   const { data: existing } = await supabase
     .from("orders")
-    .select("id, category, status, product_slug, express, customer_email, total_amount, currency")
+    .select("id, category, status, product_slug, express, guest_email, price_huf, product_name")
     .eq("stripe_session_id", sessionId)
     .maybeSingle();
 
@@ -143,7 +143,7 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
       void notifyAdmin("error", "Olvasat feldolgozás hibára futott", {
         order_id: existing.id,
         product: existing.product_slug,
-        email: (existing as { customer_email?: string }).customer_email,
+        email: existing.guest_email ?? undefined,
       });
     }
   } catch {
@@ -157,18 +157,11 @@ async function handleCheckoutCompleted(session: CheckoutSessionLike) {
     });
   }
 
-  const orderRow = existing as {
-    product_slug?: string;
-    customer_email?: string;
-    total_amount?: number | null;
-    currency?: string | null;
-    express?: boolean;
-  };
   void notifyAdmin("success", "Új fizetett rendelés", {
-    termék: PRODUCTS_BY_SLUG[orderRow.product_slug ?? ""]?.name ?? orderRow.product_slug,
-    összeg: orderRow.total_amount != null ? `${orderRow.total_amount} ${orderRow.currency ?? ""}` : undefined,
-    email: orderRow.customer_email,
-    express: orderRow.express ? "igen" : "nem",
+    termék: existing.product_name ?? PRODUCTS_BY_SLUG[existing.product_slug ?? ""]?.name ?? existing.product_slug,
+    összeg: existing.price_huf != null ? `${existing.price_huf} Ft` : undefined,
+    email: existing.guest_email ?? undefined,
+    express: existing.express ? "igen" : "nem",
   });
 }
 
