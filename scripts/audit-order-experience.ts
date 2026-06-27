@@ -937,8 +937,8 @@ const checks: Check[] = [
     file: "src/integrations/supabase/types.ts",
     includes: [
       "order_feedback: {",
-      'feedback: "accurate" | "partial" | "missed"',
-      'source: "thank_you" | "profile"',
+      'order_feedback_value: "accurate" | "partial" | "missed"',
+      'order_feedback_source: "thank_you" | "profile"',
       "order_feedback_order_id_fkey",
       'referencedRelation: "orders"',
     ],
