@@ -137,37 +137,37 @@ export type Database = {
       order_feedback: {
         Row: {
           created_at: string
-          feedback: string
+          feedback: Database["public"]["Enums"]["order_feedback_value"]
           id: string
           note: string | null
           order_id: string
           product_name: string
           product_slug: string
-          source: string
+          source: Database["public"]["Enums"]["order_feedback_source"]
           updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
-          feedback: string
+          feedback: Database["public"]["Enums"]["order_feedback_value"]
           id?: string
           note?: string | null
           order_id: string
           product_name: string
           product_slug: string
-          source: string
+          source: Database["public"]["Enums"]["order_feedback_source"]
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
-          feedback?: string
+          feedback?: Database["public"]["Enums"]["order_feedback_value"]
           id?: string
           note?: string | null
           order_id?: string
           product_name?: string
           product_slug?: string
-          source?: string
+          source?: Database["public"]["Enums"]["order_feedback_source"]
           updated_at?: string
           user_id?: string | null
         }
@@ -390,6 +390,8 @@ export type Database = {
       }
     }
     Enums: {
+      order_feedback_source: "thank_you" | "profile"
+      order_feedback_value: "accurate" | "partial" | "missed"
       order_status:
         | "pending_payment"
         | "paid"
@@ -525,6 +527,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      order_feedback_source: ["thank_you", "profile"],
+      order_feedback_value: ["accurate", "partial", "missed"],
       order_status: [
         "pending_payment",
         "paid",
