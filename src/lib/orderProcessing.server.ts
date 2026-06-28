@@ -11,7 +11,7 @@ type ProcessOrderResult =
   | { ok: false; error: string };
 
 const PUBLIC_ORDER_PROCESSING_ERROR =
-  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; próbáld újra később, vagy írj nekünk a vásárlási email címedről.";
+  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; frissíts rá pár perc múlva, vagy írj nekünk a vásárlási email címedről, és utánanézünk.";
 const ORDER_GENERATION_FAILED_CODE = "paid_reading_generation_failed";
 
 const PROCESSING_RETRY_AFTER_MS = Number(

@@ -56,9 +56,11 @@ type OrderForPaymentRecheck = PublicOrderFields &
   >;
 
 const CHECKOUT_GENERIC_ERROR =
-  "Most nem sikerült elindítani a fizetést. Kérlek próbáld újra pár perc múlva.";
+  "Most nem sikerült elindítani a fizetést. Kártyaadat ilyenkor nem jut el hozzánk; indítsd újra nyugodtan, vagy írj nekünk a vásárlási email címedről.";
 const ORDER_PROCESSING_GENERIC_ERROR =
-  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; kérlek próbáld újra később, vagy írj nekünk a vásárlási email címedről.";
+  "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; frissíts rá pár perc múlva, vagy írj nekünk a vásárlási email címedről, és utánanézünk.";
+const PAYMENT_RECHECK_PUBLIC_ERROR =
+  "Most nem sikerült ellenőrizni a fizetést. A rendelés nem vész el; frissíts rá pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
 const PAYMENT_RECHECK_INTERVAL_MS = 15_000;
 const HUF_MINOR_UNIT_MULTIPLIER = 100;
 const ORDER_SELECT_BASE =
@@ -784,7 +786,7 @@ async function prepareFailedOrderRetry(
       provider_code: stableErrorCode(error),
       session_id_redacted: redactStripeId(order.stripe_session_id),
     });
-    return { ok: false, error: "Most nem sikerült ellenőrizni a fizetést" };
+    return { ok: false, error: PAYMENT_RECHECK_PUBLIC_ERROR };
   }
 
   const { error } = await supabase
@@ -902,7 +904,7 @@ function safeOrderProcessingResult<T extends { ok: boolean; error?: string }>(re
     "Még nincs kifizetve",
     "Még nincs feldolgozható állapotban",
     "A fizetés állapota nem ellenőrizhető",
-    "Most nem sikerült ellenőrizni a fizetést",
+    PAYMENT_RECHECK_PUBLIC_ERROR,
   ];
   if (allowedMessages.includes(result.error)) return result;
   return { ...result, error: ORDER_PROCESSING_GENERIC_ERROR };
