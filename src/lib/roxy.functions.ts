@@ -672,7 +672,7 @@ export type TarotReadingHU = {
 };
 
 const TAROT_AI_READING_ERROR =
-  "Most nem sikerült elkészíteni az olvasatot. Próbáld újra egy pillanat múlva.";
+  "Most nem sikerült elkészíteni az olvasatot. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.";
 
 const TarotCardInput = z.object({
   id: z.string().min(1).max(64),

@@ -785,8 +785,13 @@ const checks: Check[] = [
       "TAROT_AI_READING_ERROR",
       "message: TAROT_AI_READING_ERROR",
       "Most nem sikerült elkészíteni az olvasatot",
+      "Nem mentettünk félkész olvasatot",
+      "indíts új húzást nyugodtan",
     ],
-    excludes: ['message: guard.issues.join("; ")'],
+    excludes: [
+      'message: guard.issues.join("; ")',
+      "Próbáld újra egy pillanat múlva",
+    ],
   },
   {
     name: "withdrawal page gives clear recovery steps for paid delivery issues",
