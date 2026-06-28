@@ -83,12 +83,12 @@ export const Route = createFileRoute("/rolunk")({
             {`Üzemeltető: ${SITE_LEGAL.operator.name}. Székhely: ${SITE_LEGAL.operator.registeredOffice}. Cégjegyzékszám: ${SITE_LEGAL.operator.companyRegistrationNumber}. Adószám: ${SITE_LEGAL.operator.taxNumber}.`}
           </p>
           <p>
-            Rendeléssel, hozzáféréssel vagy hibás megjelenéssel kapcsolatban ezen a címen érsz el
-            minket:{" "}
+            Rendeléssel, hozzáféréssel vagy hibás megjelenéssel kapcsolatban a vásárlási email
+            címedről írj erre a címre:{" "}
             <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
               {SITE_LEGAL.supportEmail}
             </a>
-            .
+            . Ha látod, add meg a rövid rendelésazonosítót is.
           </p>
         </Section>
 

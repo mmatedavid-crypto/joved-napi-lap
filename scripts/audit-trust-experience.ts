@@ -157,6 +157,9 @@ const checks: Check[] = [
       "SITE_LEGAL.operator.registeredOffice",
       "SITE_LEGAL.operator.companyRegistrationNumber",
       "SITE_LEGAL.operator.taxNumber",
+      "a vásárlási email",
+      "címedről írj erre a címre",
+      "add meg a rövid rendelésazonosítót is",
       "mailto:${SITE_LEGAL.supportEmail}",
       "nem szakmai döntéshelyettesítő",
       "SYMBOLIC_TRADITION_DISCLAIMER",
@@ -172,6 +175,7 @@ const checks: Check[] = [
       "önismereti és szórakoztató platform",
       "szórakoztató platform",
       "jóslatgyár",
+      "Rendeléssel, hozzáféréssel vagy hibás megjelenéssel kapcsolatban ezen a címen érsz el",
     ],
   },
   {
