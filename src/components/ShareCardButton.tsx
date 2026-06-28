@@ -134,6 +134,17 @@ async function buildShareImage(card: TarotCard, oneLine?: string, eyebrow?: stri
   });
 }
 
+function downloadShareImage(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -151,21 +162,29 @@ export function ShareCardButton({ card, oneLine, eyebrow }: Props) {
         share?: (data: ShareData) => Promise<void>;
       };
       if (nav.canShare?.({ files: [file] }) && nav.share) {
-        await nav.share({ files: [file], title: card.name, text: oneLine ?? "" });
+        try {
+          await nav.share({ files: [file], title: card.name, text: oneLine ?? "" });
+          setStatus("Megosztva");
+          setStatusKind("success");
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") {
+            setStatus("A megosztás megszakadt; a lapod itt maradt.");
+            setStatusKind("success");
+            return;
+          }
+          downloadShareImage(blob, file.name);
+          setStatus("A megosztás nem indult el, ezért letöltöttük a képet.");
+          setStatusKind("success");
+        }
       } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        downloadShareImage(blob, file.name);
         setStatus("Letöltve");
         setStatusKind("success");
       }
     } catch {
-      setStatus("Most nem sikerült menteni. Próbáld újra, vagy készíts képernyőképet az olvasatról.");
+      setStatus(
+        "Most nem sikerült menteni. A lap és az üzenet nem vész el; próbáld újra, vagy készíts képernyőképet az olvasatról.",
+      );
       setStatusKind("error");
     } finally {
       setBusy(false);

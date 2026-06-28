@@ -871,8 +871,13 @@ const checks: Check[] = [
     file: "src/components/ShareCardButton.tsx",
     includes: [
       "statusKind",
+      "function downloadShareImage",
+      "downloadShareImage(blob, file.name)",
+      "A megosztás nem indult el, ezért letöltöttük a képet",
+      "A megosztás megszakadt; a lapod itt maradt",
       'aria-live="polite"',
       "Most nem sikerült menteni",
+      "A lap és az üzenet nem vész el",
       "készíts képernyőképet az olvasatról",
       "Megosztás / mentés",
     ],
