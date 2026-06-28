@@ -415,6 +415,9 @@ for (const needle of [
   "type CheckoutErrorCode",
   "CheckoutSessionResult = { clientSecret: string } | { error: CheckoutErrorCode }",
   "safeCheckoutErrorCode(error)",
+  "CHECKOUT_SESSION_UNAVAILABLE_CODE",
+  "throw new Error(CHECKOUT_SESSION_UNAVAILABLE_CODE)",
+  "message === CHECKOUT_SESSION_UNAVAILABLE_CODE",
   "normalizeCheckoutEmail(data.customerEmail)",
   "function normalizeCheckoutEmail",
   'value.trim().toLocaleLowerCase("hu-HU")',
@@ -448,6 +451,7 @@ for (const forbidden of [
   "return { error: safeCheckoutErrorMessage(error) }",
   "type CheckoutSessionResult = { clientSecret: string } | { error: string }",
   "return_url: data.returnUrl,",
+  "A fizetési munkamenet nem indítható el. Próbáld újra később.",
 ]) {
   if (paymentsServer.includes(forbidden)) {
     failed.push(`payments.functions checkout must not use raw text errors: ${forbidden}`);

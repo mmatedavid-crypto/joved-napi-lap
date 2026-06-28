@@ -57,6 +57,7 @@ type OrderForPaymentRecheck = PublicOrderFields &
 
 const CHECKOUT_GENERIC_ERROR =
   "Most nem sikerült elindítani a fizetést. Kártyaadat ilyenkor nem jut el hozzánk; indítsd újra nyugodtan, vagy írj nekünk a vásárlási email címedről.";
+const CHECKOUT_SESSION_UNAVAILABLE_CODE = "checkout_session_unavailable";
 const ORDER_PROCESSING_GENERIC_ERROR =
   "Most nem sikerült befejezni az olvasat feldolgozását. A rendelés nem vész el; frissíts rá pár perc múlva, vagy írj nekünk a vásárlási email címedről, és utánanézünk.";
 const PAYMENT_RECHECK_PUBLIC_ERROR =
@@ -244,7 +245,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       });
 
       if (!session.client_secret) {
-        throw new Error("A fizetési munkamenet nem indítható el. Próbáld újra később.");
+        throw new Error(CHECKOUT_SESSION_UNAVAILABLE_CODE);
       }
 
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -333,9 +334,7 @@ function safeCheckoutErrorCode(error: unknown): CheckoutErrorCode {
   if (message === "Érvénytelen visszatérési cím") return "invalid_return_url";
   if (message === "A termék ára nem található") return "missing_product_price";
   if (message === "Az express ár nem található") return "missing_express_price";
-  if (message === "A fizetési munkamenet nem indítható el. Próbáld újra később.") {
-    return "checkout_session_unavailable";
-  }
+  if (message === CHECKOUT_SESSION_UNAVAILABLE_CODE) return CHECKOUT_SESSION_UNAVAILABLE_CODE;
   if (message === "order_insert_failed") return "order_insert_failed";
   if (message === CHECKOUT_GENERIC_ERROR) return "checkout_start_failed";
   return "checkout_start_failed";
