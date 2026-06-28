@@ -31,7 +31,7 @@ function UnsubscribePage() {
     fetch(`/email/unsubscribe?token=${encodeURIComponent(token)}`)
       .then(async (r) => {
         const j = await r.json().catch(() => ({}));
-        if (!r.ok) return setStatus("invalid");
+        if (!r.ok) return setStatus(r.status >= 500 ? "error" : "invalid");
         if (j.valid) return setStatus("valid");
         if (j.reason === "already_unsubscribed") return setStatus("already");
         setStatus("invalid");

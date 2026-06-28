@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { createFileRoute } from "@tanstack/react-router";
+import { SITE_LEGAL } from "@/lib/legal";
 
 function redactEmail(email: string | null | undefined): string {
   if (!email) return "***";
@@ -21,7 +22,7 @@ function stableErrorCode(error: unknown): string {
 }
 
 const PUBLIC_UNSUBSCRIBE_ERROR =
-  "A leiratkozási kérést most nem tudtuk feldolgozni. Kérlek próbáld újra később.";
+  `A leiratkozási kérést most nem tudtuk feldolgozni. Frissíts rá pár perc múlva, vagy írj nekünk erről az email címről: ${SITE_LEGAL.supportEmail}.`;
 const MISSING_UNSUBSCRIBE_TOKEN =
   "A leiratkozási linkből hiányzik a biztonságos ellenőrző rész. Nyisd meg az emailben kapott teljes linket, vagy írj nekünk segítségért.";
 const INVALID_UNSUBSCRIBE_LINK = "Ez a leiratkozási link érvénytelen vagy lejárt.";
