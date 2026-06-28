@@ -196,10 +196,15 @@ const checks: Check[] = [
       "nem helyettesíti a",
       "panaszt vagy",
       "ügyfélszolgálati kérést",
+      "ha választ vársz, írj a vásárlási email címedről erre a címre",
+      "mailto:${SITE_LEGAL.supportEmail}",
       "rendelési",
       "adatokkal együtt őrizhetjük meg",
     ],
-    excludes: ["teljes olvasatot automatikusan"],
+    excludes: [
+      "teljes olvasatot automatikusan",
+      "ha választ vársz, írj a kapcsolati email címre is",
+    ],
   },
   {
     name: "privacy notice explains guest order profile attachment",

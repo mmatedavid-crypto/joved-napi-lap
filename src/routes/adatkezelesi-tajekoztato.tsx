@@ -91,7 +91,11 @@ function PrivacyPage() {
         <p>
           Ezt a visszajelzést a rendeléshez kapcsoljuk, és kizárólag ügyfélszolgálati, hibajavítási
           és szolgáltatásminőségi célra használjuk. A visszajelzés nem helyettesíti a panaszt vagy
-          ügyfélszolgálati kérést; ha választ vársz, írj a kapcsolati email címre is.
+          ügyfélszolgálati kérést; ha választ vársz, írj a vásárlási email címedről erre a címre:{" "}
+          <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+            {SITE_LEGAL.supportEmail}
+          </a>
+          .
         </p>
       </LegalSection>
 
