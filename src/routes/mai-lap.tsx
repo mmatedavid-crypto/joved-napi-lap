@@ -152,6 +152,10 @@ function MaiLap() {
         cardId: lc.id,
         reversed: r.slot.roxy.reversed,
       });
+    } catch {
+      setDrawError(
+        "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+      );
     } finally {
       setDrawing(false);
     }

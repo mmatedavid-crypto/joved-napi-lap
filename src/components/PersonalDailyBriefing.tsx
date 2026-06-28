@@ -104,7 +104,9 @@ export function PersonalDailyBriefing() {
     try {
       const r = await callDaily({ data: { dateKey: todayKey() } });
       if (!r.ok || !r.slot) {
-        setDrawError("A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
+        setDrawError(
+          "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+        );
         return;
       }
       const lc = localCardFromSlot(r.slot);
@@ -112,6 +114,10 @@ export function PersonalDailyBriefing() {
       setDrawnCard(lc);
       setPhase("card");
       trackEvent("daily_card_revealed", { cardId: lc.id, from: "home" });
+    } catch {
+      setDrawError(
+        "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+      );
     } finally {
       setDrawing(false);
     }

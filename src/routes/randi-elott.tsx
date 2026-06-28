@@ -122,10 +122,16 @@ function Page() {
       const seed = `love:${Date.now()}:${Math.floor(Math.random() * 1_000_000)}`.slice(0, 60);
       const r = await drawCards({ data: { count: type, allowReversals: true, seed } });
       if (!r.ok || r.slots.length < type) {
-        setDrawError("A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.");
+        setDrawError(
+          "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+        );
         return;
       }
       setSlots(r.slots.slice(0, type));
+    } catch {
+      setDrawError(
+        "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+      );
     } finally {
       setDrawing(false);
     }

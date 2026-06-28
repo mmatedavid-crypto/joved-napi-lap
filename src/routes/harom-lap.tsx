@@ -161,6 +161,10 @@ function HaromLap() {
       }
       setSlots(r.slots.slice(0, 3));
       setRevealed([false, false, false]);
+    } catch {
+      setDrawError(
+        "A húzás most nem érkezett meg. Nem mentettünk félkész olvasatot; indíts új húzást nyugodtan.",
+      );
     } finally {
       setDrawing(false);
     }
