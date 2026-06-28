@@ -219,13 +219,13 @@ function checkoutErrorMessageByCode(code: CheckoutErrorCode): string {
     return "Kérlek ellenőrizd az email címet, mert erre küldjük az olvasat értesítését is.";
   }
   if (code === "unknown_product") {
-    return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Válassz újra a termékek közül, vagy írj nekünk, ha ugyanitt akadtál el.";
+    return "Ezt az olvasatot most nem tudjuk fizetésre előkészíteni. Válassz újra a termékek közül, vagy írj nekünk a vásárlási email címedről, ha ugyanitt akadtál el.";
   }
   if (code === "invalid_user_id") {
-    return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. A korábbi rendeléseid nem vesznek el; frissítsd az oldalt, vagy írj nekünk.";
+    return "A bejelentkezésedet most nem tudtuk összekötni a fizetéssel. A korábbi rendeléseid nem vesznek el; frissítsd az oldalt, vagy írj nekünk a vásárlási email címedről.";
   }
   if (code === "invalid_return_url") {
-    return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Kártyaadat ilyenkor nem jut el hozzánk; frissítsd az oldalt, vagy írj nekünk.";
+    return "A fizetés visszaigazoló oldala most nem állítható be biztonságosan. Kártyaadat ilyenkor nem jut el hozzánk; frissítsd az oldalt, vagy írj nekünk a vásárlási email címedről.";
   }
   return "A fizetés most nem nyílt meg. Kártyaadat ilyenkor nem jut el hozzánk; indítsd újra nyugodtan, vagy írj nekünk a vásárlási email címedről.";
 }

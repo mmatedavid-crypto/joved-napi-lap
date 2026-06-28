@@ -380,6 +380,9 @@ for (const needle of [
   "A vásárlási email címem:",
   "Mi történt röviden:",
   "invalid_user_id",
+  "Válassz újra a termékek közül, vagy írj nekünk a vásárlási email címedről",
+  "A korábbi rendeléseid nem vesznek el; frissítsd az oldalt, vagy írj nekünk a vásárlási email címedről",
+  "Kártyaadat ilyenkor nem jut el hozzánk; frissítsd az oldalt, vagy írj nekünk a vásárlási email címedről",
   'message === "Érvénytelen visszatérési cím"',
   'return "invalid_return_url"',
   'checkoutErrorMessageByCode("invalid_return_url")',
@@ -393,6 +396,15 @@ for (const needle of [
 
 if (checkout.includes("setCheckoutError(message ||")) {
   failed.push("StripeEmbeddedCheckout must not display raw checkout error messages");
+}
+for (const forbidden of [
+  "Válassz újra a termékek közül, vagy írj nekünk, ha ugyanitt akadtál el.",
+  "A korábbi rendeléseid nem vesznek el; frissítsd az oldalt, vagy írj nekünk.",
+  "Kártyaadat ilyenkor nem jut el hozzánk; frissítsd az oldalt, vagy írj nekünk.",
+]) {
+  if (checkout.includes(forbidden)) {
+    failed.push(`StripeEmbeddedCheckout must use purchase-email support wording: ${forbidden}`);
+  }
 }
 if (/trackEvent\("checkout_[^"]+",\s*\{[^}]*customerEmail/s.test(checkout)) {
   failed.push("Stripe checkout analytics must not include customer email");
