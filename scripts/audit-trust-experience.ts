@@ -128,8 +128,10 @@ const checks: Check[] = [
     includes: [
       "SITE_LEGAL.supportEmail",
       "Rendeléssel vagy hozzáféréssel kapcsolatban",
+      "a vásárlási email címedről írj",
       "mailto:${SITE_LEGAL.supportEmail}",
     ],
+    excludes: ["Rendeléssel vagy hozzáféréssel kapcsolatban:"],
   },
   {
     name: "about page builds trust before paid use",

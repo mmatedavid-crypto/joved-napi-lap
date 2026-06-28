@@ -136,7 +136,7 @@ export function Layout({ children }: { children?: ReactNode }) {
               Napi lap. Sorsszám. Összeillés. Egy csendes rituálé, mielőtt döntesz.
             </p>
             <p className="mt-4 text-xs leading-relaxed text-ivory/50">
-              Rendeléssel vagy hozzáféréssel kapcsolatban:{" "}
+              Rendeléssel vagy hozzáféréssel kapcsolatban a vásárlási email címedről írj:{" "}
               <a
                 className="text-gold hover:text-gold/80"
                 href={`mailto:${SITE_LEGAL.supportEmail}`}
