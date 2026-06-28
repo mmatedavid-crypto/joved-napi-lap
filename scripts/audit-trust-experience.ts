@@ -808,7 +808,7 @@ const checks: Check[] = [
       "elkészítés a sikeres fizetés után",
       "az elkészült olvasat pedig a rendelési oldalon vagy a felhasználói profilban",
       "Hibás teljesítés vagy hozzáférési gond",
-      "vásárláshoz használt email címet",
+      "írj a vásárlási email címedről erre a címre",
       "rövid rendelésazonosítót",
       "melyik olvasatnál akadt el",
       "fizetés utáni",
@@ -819,7 +819,12 @@ const checks: Check[] = [
       "önmagában nem minősül",
       "hozzáférési hibának",
     ],
-    excludes: ["automatikusan készülnek el", "szimbolikus, önismereti és szórakoztató tartalmak"],
+    excludes: [
+      "automatikusan készülnek el",
+      "szimbolikus, önismereti és szórakoztató tartalmak",
+      "hozzáférési gond történt, írj erre a címre",
+      "Gyorsabb ügyintézéshez írd meg a vásárláshoz használt email címet",
+    ],
   },
   {
     name: "numerology SEO pages never expose raw router error messages",

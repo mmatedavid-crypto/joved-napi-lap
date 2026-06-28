@@ -44,15 +44,15 @@ export const Route = createFileRoute("/elallasi-tajekoztato")({
       <LegalSection title="Hibás teljesítés vagy hozzáférési gond">
         <p>
           Ha a fizetés sikeres volt, de az olvasat nem jelent meg, nem nyílt meg, vagy nyilvánvaló
-          hozzáférési gond történt, írj erre a címre:{" "}
+          hozzáférési gond történt, írj a vásárlási email címedről erre a címre:{" "}
           <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
             {SITE_LEGAL.supportEmail}
           </a>
           . Ilyenkor a rendelést ellenőrizzük, és lehetőség szerint pótoljuk a teljesítést.
         </p>
         <p>
-          Gyorsabb ügyintézéshez írd meg a vásárláshoz használt email címet, a rendelési oldalon
-          látható rövid rendelésazonosítót, és azt, hogy melyik olvasatnál akadt el a folyamat.
+          Gyorsabb ügyintézéshez add meg a rendelési oldalon látható rövid rendelésazonosítót, és
+          azt, hogy melyik olvasatnál akadt el a folyamat.
         </p>
         <p>
           Ha a kártyás fizetés sikeres volt, de az email késik, először a fizetés utáni

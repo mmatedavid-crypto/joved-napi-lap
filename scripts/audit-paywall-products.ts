@@ -919,6 +919,8 @@ for (const needle of [
   "korlátozott lehet",
   "hozzáférési vagy teljesítési gond miatt az olvasat",
   "a hozzáférést pótoljuk",
+  "írj a vásárlási email címedről erre a címre",
+  "rövid rendelésazonosítót",
   "SYMBOLIC_TRADITION_DISCLAIMER",
   "önmagában nem minősül",
   "hozzáférési hibának",
@@ -927,6 +929,9 @@ for (const needle of [
 }
 if (withdrawalRoute.includes("szimbolikus, önismereti és szórakoztató tartalmak")) {
   failed.push("Withdrawal route must frame readings through tradition, not cold content wording");
+}
+if (withdrawalRoute.includes("hozzáférési gond történt, írj erre a címre")) {
+  failed.push("Withdrawal route must ask users to write from the purchase email address");
 }
 
 for (const needle of [
