@@ -45,7 +45,7 @@ function Page() {
     });
     if (r.error) {
       setErr(
-        `Most nem sikerült elindítani a ${provider === "google" ? "Google" : "Apple"} bejelentkezést. A fiók létrehozása nem indít fizetést, és a korábbi rendeléseid nem vesznek el; próbáld újra, vagy írj nekünk.`,
+        `Most nem sikerült elindítani a ${provider === "google" ? "Google" : "Apple"} bejelentkezést. A fiók létrehozása nem indít fizetést, és a korábbi rendeléseid nem vesznek el; próbáld újra, vagy írj nekünk a vásárlási email címedről.`,
       );
       setBusy(false);
       return;
@@ -243,9 +243,9 @@ function safeAuthErrorMessage(error: unknown, mode: "signin" | "signup"): string
     return "Túl sok próbálkozás történt rövid idő alatt. Várj egy kicsit; a biztonságos rendelési linkjeid továbbra is működnek.";
   }
   if (mode === "signup") {
-    return "Most nem sikerült létrehozni a fiókot. A vendégvásárlásaid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk.";
+    return "Most nem sikerült létrehozni a fiókot. A vendégvásárlásaid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
   }
-  return "Most nem sikerült belépni. A korábbi rendeléseid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk.";
+  return "Most nem sikerült belépni. A korábbi rendeléseid nem vesznek el; próbáld újra pár perc múlva, vagy írj nekünk a vásárlási email címedről.";
 }
 
 function authSupportMailto({
