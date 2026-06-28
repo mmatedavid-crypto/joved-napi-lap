@@ -1,3 +1,5 @@
+import { SITE_LEGAL } from "@/lib/legal";
+
 export function renderErrorPage(): string {
   return `<!doctype html>
 <html lang="hu">
@@ -12,6 +14,7 @@ export function renderErrorPage(): string {
       .eyebrow { color: rgba(213, 181, 105, 0.78); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.75rem; }
       h1 { font-size: 1.35rem; margin: 0 0 0.5rem; font-weight: 600; }
       p { color: rgba(246, 239, 227, 0.68); margin: 0 0 1.5rem; }
+      .support { font-size: 0.82rem; color: rgba(246, 239, 227, 0.56); margin-top: 1.25rem; margin-bottom: 0; }
       .actions { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
       a, button { padding: 0.5rem 1rem; border-radius: 0.375rem; font: inherit; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
       .primary { background: #d5b569; color: #16110b; }
@@ -22,11 +25,12 @@ export function renderErrorPage(): string {
     <div class="card">
       <div class="eyebrow">Jövőd.hu</div>
       <h1>Most nem töltött be az oldal</h1>
-      <p>Valami megakadt az oldal betöltésénél. A rendelésed vagy olvasatod ettől nem vész el; próbáld frissíteni az oldalt, vagy térj vissza a főoldalra.</p>
+      <p>Valami megakadt az oldal betöltésénél. A rendelésed vagy olvasatod ettől nem vész el; frissíts rá az oldalra, vagy térj vissza a főoldalra.</p>
       <div class="actions">
         <button class="primary" onclick="location.reload()">Újrapróbálom</button>
         <a class="secondary" href="/">Vissza a főoldalra</a>
       </div>
+      <p class="support">Ha fizetés vagy elkészült olvasat közben akadtál el, írj a vásárlási email címedről: <a href="mailto:${SITE_LEGAL.supportEmail}">${SITE_LEGAL.supportEmail}</a></p>
     </div>
   </body>
 </html>`;
