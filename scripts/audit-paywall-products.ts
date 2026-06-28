@@ -478,6 +478,18 @@ for (const forbidden of [
 
 const stripeClient = readFileSync("src/lib/stripe.ts", "utf8");
 const paymentBanner = readFileSync("src/components/PaymentTestModeBanner.tsx", "utf8");
+for (const required of [
+  "CLIENT_PAYMENTS_UNAVAILABLE_ERROR",
+  "Kártyaadat ilyenkor nem jut el hozzánk",
+  "vásárlási email címedről",
+]) {
+  if (!stripeClient.includes(required)) {
+    failed.push(`Stripe client unavailable copy missing: ${required}`);
+  }
+}
+if (stripeClient.includes("Kérlek próbáld újra később")) {
+  failed.push("Stripe client unavailable copy must not use a dead-end retry-later message");
+}
 for (const [file, body] of [
   ["src/lib/stripe.ts", stripeClient],
   ["src/components/PaymentTestModeBanner.tsx", paymentBanner],
