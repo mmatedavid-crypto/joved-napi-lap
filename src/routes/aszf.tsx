@@ -71,8 +71,11 @@ export const Route = createFileRoute("/aszf")({
         </p>
         <p>
           Ha hozzáférési vagy teljesítési gond miatt az olvasat nem nyílik meg, nem hozzáférhető,
-          vagy hibásan jelenik meg, a felhasználó a kapcsolati email címen kérhet segítséget.
-          Ilyenkor a vásárlási email cím és a rövid rendelésazonosító alapján ellenőrizzük a
+          vagy hibásan jelenik meg, írj a vásárlási email címedről erre a címre:{" "}
+          <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
+            {SITE_LEGAL.supportEmail}
+          </a>
+          . Ilyenkor a vásárlási email cím és a rövid rendelésazonosító alapján ellenőrizzük a
           rendelést, és lehetőség szerint pótoljuk a hozzáférést, javítjuk a hibás megjelenítést
           vagy újraküldjük az olvasatot.
         </p>
@@ -87,8 +90,8 @@ export const Route = createFileRoute("/aszf")({
         </p>
         <p>
           A visszajelzéseket a szolgáltatás javítására és ügyfélszolgálati ellenőrzésre használjuk.
-          Ha konkrét választ vagy javítást kérsz, a rendelési azonosítóval együtt írj a kapcsolati
-          email címre is.
+          Ha konkrét választ vagy javítást kérsz, a vásárlási email címedről írj, és add meg a
+          rövid rendelésazonosítót is.
         </p>
       </LegalSection>
 
