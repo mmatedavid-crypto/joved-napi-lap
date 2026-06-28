@@ -328,7 +328,8 @@ function Page() {
                   profilodban is eléred az elkészült olvasatot.
                 </p>
                 <p className="mt-3 text-sm text-ivory/50">
-                  Ha az oldal nem frissül, írj nekünk a rendelés email címéről, és utánanézünk.
+                  Ha az oldal nem frissül, írj nekünk a vásárlási email címedről, és add meg a
+                  rövid rendelésazonosítót.
                 </p>
                 <SupportContact className="mt-4" order={order} />
               </Section>
