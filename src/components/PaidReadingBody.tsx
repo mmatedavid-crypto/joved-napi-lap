@@ -238,10 +238,10 @@ function readingSaveStatusMessage(states: {
     return "A böngésző most nem engedte a másolást. Az olvasat nem vész el; kijelölheted kézzel, vagy készíthetsz képernyőképet.";
   }
   if (states.downloadState === "failed") {
-    return "A letöltés most nem indult el. Az olvasat ezen az oldalon továbbra is elérhető; próbáld újra, vagy másold ki kézzel.";
+    return "A letöltés most nem indult el. Az olvasat nem vész el, ezen az oldalon továbbra is elérhető; másold ki kézzel, vagy készíts képernyőképet.";
   }
   if (states.clarifyState === "failed") {
-    return "A pontosítási vázlatot most nem sikerült kimásolni. Írhatsz nekünk a lenti email címen, elég a rendelésazonosítót megadnod.";
+    return `A pontosítási vázlatot most nem sikerült kimásolni. Írhatsz nekünk a ${SITE_LEGAL.supportEmail} címen; elég a rendelésazonosítót megadnod.`;
   }
   return "";
 }
