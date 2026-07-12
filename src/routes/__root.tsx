@@ -60,8 +60,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           Ez az oldal most nem töltött be
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Valami megakadt nálunk. A rendelésed vagy olvasatod ettől nem vész el; próbáld újra, vagy
-          térj vissza a főoldalra.
+          Valami megakadt nálunk. A rendelésed vagy olvasatod ettől nem vész el; frissíts rá az
+          oldalra, vagy térj vissza a főoldalra.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -81,7 +81,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           </a>
         </div>
         <p className="mt-5 text-xs leading-relaxed text-muted-foreground">
-          Ha fizetés vagy elkészült olvasat közben akadtál el, írj a vásárlási email címedről:{" "}
+          Ha fizetés vagy elkészült olvasat közben akadtál el, ne indíts új fizetést. Írj a
+          vásárlási email címedről, és utánanézünk:{" "}
           <a
             className="font-medium text-primary hover:text-primary/80"
             href={`mailto:${SITE_LEGAL.supportEmail}`}

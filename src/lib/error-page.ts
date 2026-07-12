@@ -30,7 +30,7 @@ export function renderErrorPage(): string {
         <button class="primary" onclick="location.reload()">Újrapróbálom</button>
         <a class="secondary" href="/">Vissza a főoldalra</a>
       </div>
-      <p class="support">Ha fizetés vagy elkészült olvasat közben akadtál el, írj a vásárlási email címedről: <a href="mailto:${SITE_LEGAL.supportEmail}">${SITE_LEGAL.supportEmail}</a></p>
+      <p class="support">Ha fizetés vagy elkészült olvasat közben akadtál el, ne indíts új fizetést. Írj a vásárlási email címedről, és utánanézünk: <a href="mailto:${SITE_LEGAL.supportEmail}">${SITE_LEGAL.supportEmail}</a></p>
     </div>
   </body>
 </html>`;
