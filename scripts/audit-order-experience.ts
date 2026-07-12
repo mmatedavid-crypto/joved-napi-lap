@@ -1123,6 +1123,7 @@ const checks: Check[] = [
       "missingBodyText",
       "SITE_LEGAL.supportEmail",
       "Ha a gomb nem nyílik meg",
+      "Az olvasat nem vész el, és nem kell újra megvásárolnod",
       "orderSupportMailto({ productName, shortOrderId })",
       "function orderSupportMailto",
       "Segítséget szeretnék kérni a megrendelt olvasatom megnyitásához.",
@@ -1135,6 +1136,7 @@ const checks: Check[] = [
       "biztonságos rendelési link a legfontosabb hozzáférés",
       "létrehozása nem kötelező",
       "ezen a biztonságos rendelési linken éred el",
+      "az olvasat nem vész el; ne vásárold meg újra",
       "ki is másolhatod",
       "letöltheted magadnak",
       "szöveges fájlként",
@@ -1177,6 +1179,7 @@ const checks: Check[] = [
       "melyik részt érdemes tovább finomítani",
       "Mi az a konkrét helyzet",
       "Milyen irányban várnék pontosítást?",
+      "Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről.",
     ],
   },
   {

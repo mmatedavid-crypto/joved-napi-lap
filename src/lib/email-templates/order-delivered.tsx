@@ -46,7 +46,7 @@ const OrderDeliveredEmail = ({
     ? "A teljes olvasatot ezen a biztonságos rendelési linken is eléred. Vendégvásárlásnál ezt a linket érdemes megtartanod."
     : "A teljes olvasatot ezen a biztonságos linken és a profilodban is eléred. Ha az emailt később keresed vissza, innen közvetlenül meg tudod nyitni.";
   const missingBodyText = isGuest
-    ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, írj nekünk a vásárlási email címedről."
+    ? "A részletes olvasatot ezen a biztonságos rendelési linken éred el. Ha a link nem nyílik meg, az olvasat nem vész el; ne vásárold meg újra, írj nekünk a vásárlási email címedről."
     : "A részletes olvasatot ezen a linken és a profilodban is eléred.";
   const feedbackOptions = [
     {
@@ -165,7 +165,8 @@ const OrderDeliveredEmail = ({
               <Link href={orderSupportMailto({ productName, shortOrderId })} style={link}>
                 {SITE_LEGAL.supportEmail}
               </Link>{" "}
-              címre. A gyorsabb segítséghez ezt add meg:{" "}
+              címre. Az olvasat nem vész el, és nem kell újra megvásárolnod. A gyorsabb segítséghez
+              ezt add meg:{" "}
               {shortOrderId
                 ? `Rendelés rövid azonosítója: ${shortOrderId}.`
                 : "a vásárlási email címed."}
