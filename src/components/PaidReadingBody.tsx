@@ -241,7 +241,7 @@ function readingSaveStatusMessage(states: {
     return "A letöltés most nem indult el. Az olvasat nem vész el, ezen az oldalon továbbra is elérhető; másold ki kézzel, vagy készíts képernyőképet.";
   }
   if (states.clarifyState === "failed") {
-    return `A pontosítási vázlatot most nem sikerült kimásolni. Írhatsz nekünk a ${SITE_LEGAL.supportEmail} címen; elég a rendelésazonosítót megadnod.`;
+    return `A pontosítási vázlatot most nem sikerült kimásolni. Írhatsz nekünk a ${SITE_LEGAL.supportEmail} címen; a gyors visszakereséshez a vásárlási email címedről írj, és add meg a rendelésazonosítót.`;
   }
   return "";
 }
@@ -291,7 +291,8 @@ function ReadingUseGuide() {
         <a className="text-gold hover:text-gold/80" href={`mailto:${SITE_LEGAL.supportEmail}`}>
           {SITE_LEGAL.supportEmail}
         </a>{" "}
-        címre. A rendelésazonosítóval gyorsabban visszanézzük, melyik részt szeretnéd pontosítani.
+        címre. A vásárlási email címed és a rendelésazonosító alapján gyorsabban visszanézzük,
+        melyik részt szeretnéd pontosítani.
       </p>
     </aside>
   );
@@ -550,6 +551,7 @@ function paidReadingClarificationMailto({
     clarificationDraft,
     "",
     "Kérlek, nézzétek vissza rendelés alapján, melyik rész igényel finomítást.",
+    "A vásárlási email címem:",
     `Olvasat típusa: ${productLabel}`,
   ].join("\n");
 
