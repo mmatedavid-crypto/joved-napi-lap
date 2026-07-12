@@ -243,6 +243,7 @@ function feedbackMailto(opts: {
     `Visszajelzés: ${opts.feedback}`,
     `Rendelés: ${orderRef}`,
     `Termék: ${opts.productName}`,
+    "A vásárlási email címem:",
     "",
     "Nem kell a teljes olvasatot bemásolni; elég megírni, mi kapcsolódott, mit szeretnél pontosítani, és mit érdemes még hozzátenni.",
     "",

@@ -1169,6 +1169,7 @@ const checks: Check[] = [
       "feedbackMailto",
       "emailben is elküldheted",
       "Röviden ezt szeretném hozzátenni:",
+      '`Termék: ${opts.productName}`,\n    "A vásárlási email címem:",',
       "Ami kapcsolódott a helyzetemhez:",
       "Amit szeretnék pontosítani:",
       "A helyzetemből ezt érdemes még hozzátenni:",
