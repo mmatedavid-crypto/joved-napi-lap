@@ -31,6 +31,16 @@ function NotFoundComponent() {
         <p className="mt-2 text-sm text-muted-foreground">
           Lehet, hogy a keresett oldal elköltözött, vagy már nem elérhető.
         </p>
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          Ha rendelési linkről vagy elkészült olvasatból érkeztél, az olvasat nem vész el. Írj a
+          vásárlási email címedről, és utánanézünk:{" "}
+          <a
+            className="font-medium text-primary hover:text-primary/80"
+            href={`mailto:${SITE_LEGAL.supportEmail}`}
+          >
+            {SITE_LEGAL.supportEmail}
+          </a>
+        </p>
         <div className="mt-6">
           <Link
             to="/"

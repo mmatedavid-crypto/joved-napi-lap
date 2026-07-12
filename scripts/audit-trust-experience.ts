@@ -78,6 +78,23 @@ const checks: Check[] = [
     excludes: ['{ rel: "canonical", href: SITE_URL }'],
   },
   {
+    name: "root 404 gives paid-order recovery path",
+    file: "src/routes/__root.tsx",
+    includes: [
+      "function NotFoundComponent",
+      "Az oldal nem található",
+      "Lehet, hogy a keresett oldal elköltözött",
+      "Ha rendelési linkről vagy elkészült olvasatból érkeztél",
+      "az olvasat nem vész el",
+      "vásárlási email címedről",
+      "és utánanézünk",
+      "SITE_LEGAL.supportEmail",
+      "mailto:${SITE_LEGAL.supportEmail}",
+      "Vissza a főoldalra",
+    ],
+    excludes: ["404 Not Found", "Page not found", "This page does not exist"],
+  },
+  {
     name: "root route errors use localized UI and redacted console logs",
     file: "src/routes/__root.tsx",
     includes: [
