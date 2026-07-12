@@ -177,6 +177,8 @@ for (const needle of [
   "isLoggedIn,",
   "href={supportMailto}",
   "function paywallSupportMailto(",
+  "Ha a hozzáférés megakad, a vásárlási email címed és a rendelési link alapján",
+  "utánanézünk és segítünk",
   "Az azonnali olvasat általában pár percen belül megjelenik a köszönőoldalon",
   "Fizetési próbálkozás:",
   "bejelentkezve",
@@ -255,7 +257,7 @@ for (const needle of [
   "vállalt határidőt",
   "kérem a digitális tartalom teljesítésének megkezdését",
   "elkészült digitális olvasatnál az elállási jog korlátozott",
-  "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk",
+  "Ha a hozzáférés megakad, a vásárlási email címed és a rendelési link alapján",
   "Régi jelképrendszerekből készült önismereti olvasat",
   "Olvasat határai",
   "Nem mond biztos jövőt, visszatérést vagy másik ember döntését kész tényként",
@@ -467,6 +469,7 @@ for (const forbidden of [
   "technikai hiba miatt nem nyílik meg",
   "Kérlek próbáld újra később, vagy írj",
   "kézzel is segítünk elindítani a rendelést",
+  "Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk",
 ]) {
   if (paywall.includes(forbidden)) {
     failed.push(`PaywallDialog must use customer-friendly access wording: ${forbidden}`);

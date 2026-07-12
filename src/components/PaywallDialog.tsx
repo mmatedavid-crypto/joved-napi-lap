@@ -392,7 +392,8 @@ export function PaywallDialog({
                   <div>
                     <div className="mb-1 font-medium text-ivory/82">Segítség</div>
                     <p>
-                      Ha a hozzáférés megakad, rendelés alapján utánanézünk és segítünk:{" "}
+                      Ha a hozzáférés megakad, a vásárlási email címed és a rendelési link alapján
+                      utánanézünk és segítünk:{" "}
                       <a className="text-gold hover:text-gold/80" href={supportMailto}>
                         {SITE_LEGAL.supportEmail}
                       </a>
