@@ -444,7 +444,9 @@ const checks: Check[] = [
       "Hiányzik a rendelési azonosító",
       "nem a fizetés utáni teljes visszatérési link",
       "kapott teljes köszönőoldali linket",
+      "ugyanazt az olvasatot ne rendeld meg újra",
       "Vendégvásárlásnál a vásárlási email cím a legfontosabb azonosító",
+      "írj nekünk a vásárlási email címedről, és utánanézünk",
       'to="/profil"',
       'to="/arak"',
       "safeOrderStatusErrorMessage(e)",
@@ -471,6 +473,7 @@ const checks: Check[] = [
       "keressük hozzá a rendelési sort",
       "rendelésállapot beért",
       "fizetési szolgáltató gyorsabban",
+      "írj nekünk arról a címről",
     ],
   },
   {

@@ -200,11 +200,11 @@ function Page() {
             <p>
               Ha már fizettél, a vásárlás nem ettől az oldaltól függ. Nyisd meg újra a Stripe után
               kapott teljes köszönőoldali linket, vagy nézd meg a profilodat, ha be voltál
-              jelentkezve.
+              jelentkezve; ugyanazt az olvasatot ne rendeld meg újra.
             </p>
             <p className="mt-3 text-sm text-ivory/58">
               Vendégvásárlásnál a vásárlási email cím a legfontosabb azonosító. Ha nem találod a
-              linket vagy az emailt, írj nekünk arról a címről, amellyel vásároltál.
+              linket vagy az emailt, írj nekünk a vásárlási email címedről, és utánanézünk.
             </p>
             <SupportContact className="mt-4" />
           </Section>
