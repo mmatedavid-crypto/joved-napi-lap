@@ -732,7 +732,7 @@ function profileOrderPreparationDetail(order: ProfileOrder): string {
       ? `Várhatóan ${new Date(order.deliver_by).toLocaleString("hu-HU")}-ig érkezik. Ha az email késik, itt a profilban akkor is megjelenik.`
       : "Amint elkészül, itt a profilban is megjelenik; emailben csak értesítünk róla.";
     if (!order.express) return deadline;
-    return `${deadline} Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.`;
+    return `${deadline} Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; a vásárlási email és a rendelésazonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.`;
   }
   return "Az azonnali termékek általában pár percen belül megjelennek; ha az email késik, a profilban akkor is visszanézheted.";
 }

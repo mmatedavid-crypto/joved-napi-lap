@@ -452,7 +452,7 @@ function OrderCapturedSummary({ order }: { order: OrderView }) {
       ? "elkészült"
       : order.category === "delayed"
         ? order.express
-          ? "részletes olvasat express határidővel; csúszásnál a gyorsítás díját külön rendezzük"
+          ? "express határidős részletes olvasat; csúszásnál rendelés alapján rendezzük"
           : "részletes olvasat vállalt határidővel"
         : "azonnali olvasat, általában pár percen belül";
   const source =
@@ -496,7 +496,7 @@ function OrderPreparationTimeline({ order }: { order: OrderView }) {
           "A részletes olvasat több szakaszban készül: a megadott adatokból, kérdésből és a választott hagyomány jelképeiből áll össze.",
           ...(order.express
             ? [
-                "Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.",
+                "Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; a vásárlási email és a rendelésazonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.",
               ]
             : []),
           "Amikor elkészül, ezen a linken megnyílik; emailben is jelzünk, akkor is, ha közben bezárod az oldalt.",
@@ -809,7 +809,7 @@ function orderPreparationDetail(order: OrderView): string {
       ? `A vállalt határidő: ${deadline}. Addig ezt a biztonságos rendelési linket érdemes megtartanod; elkészüléskor emailben is jelzünk.`
       : "A részletes elemzést gondosabb szövegezéssel készítjük el; amikor kész, ezen a biztonságos rendelési linken és emailben is eléred.";
     if (!order.express) return base;
-    return `${base} Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; utánanézünk, és a gyorsítás díját külön rendezzük.`;
+    return `${base} Express rendelésnél, ha a gyorsított határidő csúszna, a rendelés nem vész el; a vásárlási email és a rendelésazonosító alapján utánanézünk, és a gyorsítás díját külön rendezzük.`;
   }
   return "Ha a fizetés már sikeres volt, de az oldal még készítést mutat, pár percig hagyd nyitva vagy frissítsd később ugyanerről a biztonságos linkről.";
 }

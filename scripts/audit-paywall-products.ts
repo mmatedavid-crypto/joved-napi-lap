@@ -589,6 +589,7 @@ for (const needle of [
   "normál esetben 24",
   "expressz gyorsítással 6 órán belül",
   "Ha az express határidő",
+  "a vásárlási email és a rendelésazonosító alapján",
   "utánanézünk, és a gyorsítás díját külön rendezzük",
   "const PRE_PURCHASE_CHECKS",
   "Fizetés előtt átnézhető",
@@ -661,6 +662,7 @@ for (const forbidden of [
   "Nem mondjuk ki kész tényként",
   "Ha döntést kell helyetted meghozni",
   "nem választ helyetted munkában",
+  "csúszna, a rendelés nem vész el: utánanézünk, és a gyorsítás díját külön rendezzük",
 ]) {
   if (pricingRoute.includes(forbidden)) {
     failed.push(`Pricing route should avoid defensive choice framing: ${forbidden}`);

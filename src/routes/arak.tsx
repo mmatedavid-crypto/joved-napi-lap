@@ -362,7 +362,8 @@ function PricingPage() {
             <p className="font-editorial text-lg leading-relaxed text-ivory/78">
               Az asztrológiai riportok a saját születési adataidból készülnek; normál esetben 24
               órán belül érkeznek, expressz gyorsítással 6 órán belül. Ha az express határidő
-              csúszna, a rendelés nem vész el: utánanézünk, és a gyorsítás díját külön rendezzük.
+              csúszna, a rendelés nem vész el: a vásárlási email és a rendelésazonosító alapján
+              utánanézünk, és a gyorsítás díját külön rendezzük.
             </p>
           </div>
         </section>
