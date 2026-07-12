@@ -429,7 +429,9 @@ const checks: Check[] = [
       "Ez nem érinti a rendeléseidet",
       "Rendelési előzmény segítség",
       "Memória betöltési segítség",
+      "Ha rendelést keresel, a vásárlási vagy belépési email címedről írj",
       "Segítséget szeretnék kérni a profilom betöltéséhez.",
+      "A vásárlási vagy belépési email címem:",
       "SITE_LEGAL.supportEmail",
     ],
     excludes: [
@@ -437,6 +439,7 @@ const checks: Check[] = [
       "loadAndImportMemory().catch(() => setMemoriesLoading(false))",
       "setOrdersError(e instanceof Error ? e.message",
       "setMemoryError(e instanceof Error ? e.message",
+      "Segítség:",
     ],
   },
   {

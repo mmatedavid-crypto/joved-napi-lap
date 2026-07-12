@@ -761,7 +761,7 @@ function ProfileLoadError({ message, supportLabel }: { message: string; supportL
     <div className="rounded-md border border-gold/15 bg-gold/[0.06] px-4 py-3">
       <p className="text-sm leading-relaxed text-ivory/68">{message}</p>
       <p className="mt-2 text-xs leading-relaxed text-ivory/50">
-        Segítség:{" "}
+        Ha rendelést keresel, a vásárlási vagy belépési email címedről írj:{" "}
         <a className="text-gold hover:text-gold/80" href={profileLoadErrorMailto(supportLabel)}>
           {SITE_LEGAL.supportEmail}
         </a>
