@@ -715,7 +715,7 @@ function formatDownloadedReading(
     "",
     "Mentett példány és pontosítás:",
     meta.orderReference
-      ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, erre hivatkozz.`
+      ? `Rendelésazonosító: ${meta.orderReference}. Ha pontosítást kérsz, a vásárlási email címedről írj, és erre az azonosítóra hivatkozz.`
       : "Ha pontosítást kérsz, a vásárlási email címedről írj, hogy rendelés alapján visszanézhessük.",
     "Nem kell a teljes olvasatot bemásolni; elég megírni, mi kapcsolódott, mit szeretnél pontosítani, és mit érdemes még hozzátenni.",
     "",
