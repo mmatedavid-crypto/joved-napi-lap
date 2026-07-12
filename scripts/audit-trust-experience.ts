@@ -455,9 +455,17 @@ const checks: Check[] = [
       'to: "/dontes-elott"',
       'to="/arak"',
       "Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal",
+      "Ha korábban vendégként vásároltál",
+      "ugyanazzal az email címmel érdemes belépni",
+      "A biztonságos rendelési link addig is működik",
+      "nem találod, írj a vásárlási email címedről, és utánanézünk",
       "Minden fizetős olvasat és ár áttekintése",
     ],
-    excludes: ["Még nincs vásárlásod. <Link", "megszólít-e a hang"],
+    excludes: [
+      "Még nincs vásárlásod. <Link",
+      "megszólít-e a hang",
+      "Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy belépő\n                árú személyes olvasatot.\n              </p>\n              <ProfileStarterActions compact />",
+    ],
   },
   {
     name: "thank-you page never displays raw order status errors",

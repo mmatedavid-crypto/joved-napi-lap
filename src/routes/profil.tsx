@@ -365,6 +365,11 @@ function Page() {
                 Még nincs vásárlásod. Kezdhetsz ingyenes olvasattal, vagy választhatsz egy belépő
                 árú személyes olvasatot.
               </p>
+              <p className="rounded-md border border-[oklch(0.78_0.10_80/0.14)] bg-black/10 px-4 py-3 text-xs leading-relaxed text-ivory/52">
+                Ha korábban vendégként vásároltál, ugyanazzal az email címmel érdemes belépni,
+                amelyet a vásárlásnál használtál. A biztonságos rendelési link addig is működik; ha
+                nem találod, írj a vásárlási email címedről, és utánanézünk.
+              </p>
               <ProfileStarterActions compact />
             </div>
           )}
