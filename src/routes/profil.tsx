@@ -598,7 +598,8 @@ function OrderOverviewNotice({ orders }: { orders: ProfileOrder[] }) {
         {failed > 0 && (
           <div>
             <span className="font-medium text-ivory/78">{failed} figyelmet kér.</span> Az érintett
-            rendelésnél újrapróbálhatod a feldolgozást vagy írhatsz nekünk.
+            rendelés nem vész el: újrapróbálhatod a feldolgozást, vagy írhatsz nekünk a vásárlási
+            email címedről a rövid rendelésazonosítóval.
           </div>
         )}
       </div>
