@@ -135,15 +135,15 @@ export const Route = createFileRoute("/arak")({
             "@type": "ListItem",
             position: index + 1,
             item: {
-              "@type": "Product",
+              "@type": "Service",
               name: product.name,
               description: product.short,
-              category:
+              serviceType:
                 product.category === "instant"
                   ? "Azonnali önismereti olvasat"
                   : "Részletes önismereti olvasat",
-              brand: {
-                "@type": "Brand",
+              provider: {
+                "@type": "Organization",
                 name: "Jövőd.hu",
               },
               offers: {
