@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { HEXAGRAMS, findHexagramBySlug } from "@/data/ichingHexagrams.hu";
+import { PaidCrossSell } from "@/components/PaidCrossSell";
 import { SITE_LEGAL } from "@/lib/legal";
 
 const SITE_URL = SITE_LEGAL.siteUrl;
@@ -16,8 +17,8 @@ export const Route = createFileRoute("/jiking/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "I Ching | Jövőd.hu" }] };
     const { hex } = loaderData;
-    const title = `${hex.num}. ${hex.name} — I Ching hexagram`;
-    const description = `${hex.name} (${hex.trigrams}): ${hex.description}`;
+    const title = `${hex.num}. hexagram — ${hex.name} jelentése (Ji King)`;
+    const description = `${hex.num}. hexagram, ${hex.name} (${hex.trigrams}) jelentése magyarul: ${hex.description}`;
     const url = `${SITE_URL}/jiking/${hex.slug}`;
     return {
       meta: [
@@ -108,6 +109,7 @@ function HexagramPage() {
             Mind a 64 hexagram →
           </Link>
         </div>
+        <PaidCrossSell />
       </div>
     </Layout>
   );

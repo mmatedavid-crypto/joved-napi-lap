@@ -18,12 +18,23 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/harom-lap")({
   head: () => ({
     meta: [
-      { title: "3 lapos tarot — Múlt, Jelen, Jövő | Jövőd.hu" },
+      { title: "Három lapos tarot ingyen — múlt, jelen, jövő most | Jövőd.hu" },
       {
         name: "description",
         content:
-          "Klasszikus három lapos tarot húzás magyarul. Múlt, jelen, jövő — egy összefüggő történet.",
+          "Húzz most ingyen három tarot lapot magyarul: múlt, jelen, jövő egy összefüggő olvasatban, regisztráció nélkül, azonnal.",
       },
+      {
+        property: "og:title",
+        content: "Három lapos tarot ingyen — múlt, jelen, jövő most",
+      },
+      {
+        property: "og:description",
+        content:
+          "Ingyenes három lapos tarot húzás magyarul: múlt, jelen, jövő egy összefüggő történetben.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_LEGAL.siteUrl}/harom-lap` },
     ],
     links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/harom-lap` }],
   }),

@@ -3,12 +3,13 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
+import { PaidCrossSell } from "@/components/PaidCrossSell";
 import { SITE_LEGAL } from "@/lib/legal";
 
 const SITE_URL = SITE_LEGAL.siteUrl;
-const TITLE = "I Ching / Ji King — mind a 64 hexagram magyarul";
+const TITLE = "Ji King jóslás — mit üzen a hexagramod? 64 hexagram magyarul";
 const DESCRIPTION =
-  "I Ching enciklopédia: 64 hexagram magyar névvel, témával, útmutatással és figyelmeztetéssel. Régi kínai jelképrendszer mai önreflexióhoz.";
+  "Ji King (I Ching) magyarul: válaszd ki a hexagramodat, és nézd meg, mit üzen. Mind a 64 hexagram jelentése, útmutatása és figyelmeztetése egy helyen.";
 
 export const Route = createFileRoute("/jiking/")({
   head: () => ({
@@ -67,6 +68,7 @@ function IchingHub() {
             ))}
           </ul>
         </section>
+        <PaidCrossSell />
       </div>
     </Layout>
   );

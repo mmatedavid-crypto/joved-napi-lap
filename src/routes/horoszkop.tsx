@@ -16,23 +16,23 @@ import { productCtaLabel } from "@/lib/products";
 import { SIGN_HU, SIGNS_HU_ORDERED } from "@/lib/roxyNormalize";
 
 export const Route = createFileRoute("/horoszkop")({
-  head: () => ({
-    meta: [
-      { title: "Horoszkóp — napi, heti és havi horoszkóp | Jövőd.hu" },
-      {
-        name: "description",
-        content:
-          "Napi, heti és havi horoszkóp magyarul mind a 12 csillagjegynek: az asztrológiai hagyomány jelképeiből, józan önismereti keretben.",
-      },
-      { property: "og:title", content: "Horoszkóp | Jövőd.hu" },
-      {
-        property: "og:description",
-        content:
-          "Napi, heti és havi horoszkóp magyarul, az asztrológiai hagyomány jelképeiből indulva.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/horoszkop` }],
-  }),
+  head: () => {
+    const napi = periodDateLabel("napi");
+    const havi = periodDateLabel("havi");
+    const title = `Horoszkóp ${havi} — napi, heti és havi horoszkóp mind a 12 jegyre`;
+    const description = `Mai horoszkóp (${napi}), heti és havi horoszkóp magyarul mind a 12 csillagjegynek. Válaszd ki a jegyed, és olvasd el a friss olvasatot.`;
+    return {
+      meta: [
+        { title: `${title} | Jövőd.hu` },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: `${SITE_LEGAL.siteUrl}/horoszkop` },
+      ],
+      links: [{ rel: "canonical", href: `${SITE_LEGAL.siteUrl}/horoszkop` }],
+    };
+  },
   component: HoroszkopIndex,
 });
 
