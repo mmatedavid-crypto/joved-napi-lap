@@ -241,6 +241,167 @@ export const ANGEL_NUMBER_PAGES: AngelNumberPage[] = [
     pattern:
       "A négyszeres 2-es a kapcsolódás, arányérzék és közösen épített tervek témáit emeli ki. Nem tartós eredményt ígér, inkább a lassabb, következetesebb ritmust támogatja.",
   },
+  {
+    szam: "123",
+    intro:
+      "A 123 az egyszerű sorrend száma: egy, kettő, három. Ha gyakran látod, arra terelheti a figyelmed, hogy a helyzeted nem bonyolultabb annál, mint amit a következő lépés megkíván.",
+    pattern:
+      "Az emelkedő számsor a fokozatosságot jelképezi: előbb a szándék, aztán a kapcsolódás, végül a kifejeződés. Egyszerűsítésre hívó jel.",
+  },
+  {
+    szam: "1000",
+    intro:
+      "Az 1000 a nagy nyitás száma: egy kezdet és három üres kör. Nem eredményt jelez, inkább azt, hogy most sok minden még alakítható abban, amibe belefogtál.",
+    pattern:
+      "Az 1-es kezdete és a nullák nyitottsága együtt a formálódó, még el nem döntött szakaszt jelképezi a számszimbolikában.",
+  },
+  {
+    szam: "1122",
+    intro:
+      "Az 1122 az önálló szándék és a közös építkezés találkozása. Ha sokszor látod, arra utalhat, hogy amit egyedül kezdtél el, most már másokkal együtt formálódik tovább.",
+    pattern:
+      "A kettőzött 1-es és 2-es a kezdeményezés és az együttműködés váltakozó ritmusát emeli ki.",
+  },
+  {
+    szam: "1133",
+    intro:
+      "Az 1133 a kimondás száma: egy új irány akkor válik valóságossá, amikor szavakat is adsz neki. Ha gyakran felbukkan, érdemes lehet megfogalmazni, mit szeretnél valójában.",
+    pattern:
+      "Az 1-es kezdet és a 3-as önkifejezés párosa a szándék és a hangot adás összekapcsolását jelképezi.",
+  },
+  {
+    szam: "1144",
+    intro:
+      "Az 1144 a kitartó kezdés száma. Nem a lelkesedésről szól, hanem arról, hogy a most indított dolog akkor marad meg, ha napi rendszerességet adsz neki.",
+    pattern:
+      "Az 1-es kezdeményezés és a 4-es alapozás párosa a türelmes, lépésről lépésre haladó építkezést emeli ki.",
+  },
+  {
+    szam: "1155",
+    intro:
+      "Az 1155 a fordulat száma: valami új indul, és közben egy régi keret lazul. Ha sokszor látod, érdemes megnézni, mihez ragaszkodsz még megszokásból.",
+    pattern:
+      "Az 1-es kezdet és az 5-ös változás együtt a mozgásba lendülő, még nem letisztult átmenetet jelképezi.",
+  },
+  {
+    szam: "1313",
+    intro:
+      "Az 1313 a bátor önkifejezés száma. Ha ismétlődve látod, arra terelheti a figyelmed, hogy amit visszatartasz magadban, az most többet kérne a hangodból.",
+    pattern:
+      "Az 1-3 ismétlődése a kezdeményezés és a kreatív megmutatkozás körkörös ritmusát jelzi.",
+  },
+  {
+    szam: "1414",
+    intro:
+      "Az 1414 a rendrakás száma. Nem nagy döntést kér, hanem azt, hogy a hétköznapi kereteid — idő, pénz, alvás — visszakerüljenek a helyükre.",
+    pattern:
+      "Az 1-4 ismétlődése a szándék és a szerkezet összehangolását emeli ki a számszimbolikában.",
+  },
+  {
+    szam: "1515",
+    intro:
+      "Az 1515 a szabadulás száma. Ha gyakran találkozol vele, valószínűleg már tudod, mi az, ami szűk lett — a kérdés inkább az, mikor engeded el.",
+    pattern:
+      "Az 1-5 ismétlődése a kezdés és a változás egymást erősítő mintáját jelképezi.",
+  },
+  {
+    szam: "1616",
+    intro:
+      "Az 1616 az otthon és a nyugalom száma. Arra terelheti a figyelmed, hogy a külső teljesítés mellett a közeli kapcsolataid is figyelmet kérnek.",
+    pattern:
+      "Az 1-6 ismétlődése az önálló irány és a gondoskodás közötti arányt hangsúlyozza.",
+  },
+  {
+    szam: "1717",
+    intro:
+      "Az 1717 a csendes tanulás száma. Ha sokszor látod, most nem a hangos lépés, hanem a megfigyelés hozhat tisztább képet.",
+    pattern:
+      "Az 1-7 ismétlődése a kezdeményezés és az elmélyülés váltakozását jelzi.",
+  },
+  {
+    szam: "1818",
+    intro:
+      "Az 1818 a felelősség száma. Amit építettél, most elkezd formát ölteni — és ezzel együtt döntéseket is kér tőled.",
+    pattern:
+      "Az 1-8 ismétlődése a kezdet és a következmény összekapcsolódását emeli ki.",
+  },
+  {
+    szam: "1919",
+    intro:
+      "Az 1919 a küszöb száma: egy szakasz lezárul, egy másik már látszik. Nem sürget, inkább arra hív, hogy tisztán fejezd be, ami véget ért.",
+    pattern:
+      "Az 1-9 ismétlődése a kezdet és a lezárás körkörös kapcsolatát jelképezi.",
+  },
+  {
+    szam: "2020",
+    intro:
+      "A 2020 a tiszta látás száma. Ha gyakran felbukkan, arra utalhat, hogy egy kapcsolati vagy munkahelyi helyzetet most reálisabban látsz, mint korábban.",
+    pattern:
+      "A 2-0 ismétlődése a kapcsolódás és a nyitottság párosát emeli ki: türelem, de illúziók nélkül.",
+  },
+  {
+    szam: "2121",
+    intro:
+      "A 2121 a közös kezdet száma. Egy új szakasz nem egyedül indul: valaki más is részese annak, ami most formálódik.",
+    pattern:
+      "A 2-1 ismétlődése az együttműködés és a kezdeményezés váltakozó ritmusát jelzi.",
+  },
+  {
+    szam: "2323",
+    intro:
+      "A 2323 az őszinte beszélgetés száma. Ha sokszor látod, egy kimondatlan mondat vár rád — valószínűleg tudod is, kinek szól.",
+    pattern:
+      "A 2-3 ismétlődése a kapcsolódás és az önkifejezés összekapcsolását emeli ki.",
+  },
+  {
+    szam: "3333",
+    intro:
+      "A 3333 az erős önkifejezés száma. Négyszeres 3-asként a hangodra, az alkotásra és a láthatóságra tereli a figyelmet.",
+    pattern:
+      "A négyszeres 3-as a kommunikáció, kreativitás és megmutatkozás témáit sűríti egy jelbe.",
+  },
+  {
+    szam: "4444",
+    intro:
+      "A 4444 a szilárd alap száma. Ha nehéz időszakban találkozol vele, a hagyomány szerint a stabilitás keresésére és a támaszra emlékeztet.",
+    pattern:
+      "A négyszeres 4-es a rend, kitartás és biztonság témáit erősíti fel.",
+  },
+  {
+    szam: "5555",
+    intro:
+      "Az 5555 a nagy változás száma. Nem külső eseményt jósol, inkább azt jelzi, hogy sok minden mozgásban van körülötted és benned egyszerre.",
+    pattern:
+      "A négyszeres 5-ös a fordulat, a mozgástér és az alkalmazkodás témáit sűríti.",
+  },
+  {
+    szam: "6666",
+    intro:
+      "A 6666 nem rossz előjel: az egyensúly visszaállítására hív. Arra utalhat, hogy az anyagi vagy teljesítménybeli oldal túlsúlyba került.",
+    pattern:
+      "A négyszeres 6-os az otthon, a gondoskodás és az anyagi-lelki arány témáit emeli ki.",
+  },
+  {
+    szam: "7777",
+    intro:
+      "A 7777 az elmélyülés száma. Ha gyakran látod, most a csend, az olvasás és a saját gondolataid rendezése adhat tisztább képet.",
+    pattern:
+      "A négyszeres 7-es a befelé figyelés és a tanulás témáit erősíti.",
+  },
+  {
+    szam: "8888",
+    intro:
+      "A 8888 a beérés száma. A számszimbolikában a kiegyenlítődés jele: ami figyelmet és munkát kapott, az most formát ölthet.",
+    pattern:
+      "A négyszeres 8-as az erő, a felelősség és a következmény témáit sűríti.",
+  },
+  {
+    szam: "9999",
+    intro:
+      "A 9999 a teljes lezárás száma. Egy hosszabb szakasz ér véget, és a szám arra biztat, hogy tanulsággal, ne dacból búcsúzz tőle.",
+    pattern:
+      "A négyszeres 9-es a befejezés és az összegzés témáit erősíti fel.",
+  },
 ];
 
 export function findAngelNumberPage(szam: string): AngelNumberPage | undefined {
