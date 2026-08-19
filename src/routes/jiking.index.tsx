@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { PageHeader, Section } from "@/components/Section";
 import { Breadcrumb, breadcrumbJsonLd } from "@/components/Breadcrumb";
 import { HEXAGRAMS } from "@/data/ichingHexagrams.hu";
+import { PaidCrossSell } from "@/components/PaidCrossSell";
 import { SITE_LEGAL } from "@/lib/legal";
 
 const SITE_URL = SITE_LEGAL.siteUrl;
@@ -67,6 +68,7 @@ function IchingHub() {
             ))}
           </ul>
         </section>
+        <PaidCrossSell />
       </div>
     </Layout>
   );
