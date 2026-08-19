@@ -9,6 +9,7 @@ import {
   reduceAngel,
 } from "@/lib/angel.hu";
 import { SITE_LEGAL } from "@/lib/legal";
+import { PaidCrossSell } from "@/components/PaidCrossSell";
 
 const SITE_URL = SITE_LEGAL.siteUrl;
 
@@ -137,6 +138,7 @@ function AngelNumberPageComponent() {
             ))}
           </ul>
         </div>
+        <PaidCrossSell />
       </div>
     </Layout>
   );
