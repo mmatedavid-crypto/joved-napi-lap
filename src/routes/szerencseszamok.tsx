@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import { huTodayKey } from "@/lib/dateKeys";
 import { SITE_LEGAL } from "@/lib/legal";
+import { PaidCrossSell } from "@/components/PaidCrossSell";
 
 const SITE_URL = SITE_LEGAL.siteUrl;
 const TITLE = "Napi szerencseszámok csillagjegy szerint";
@@ -242,6 +243,8 @@ function LuckyNumbersPage() {
             </div>
           ))}
         </Section>
+
+        <PaidCrossSell />
 
         <p className="text-center text-xs leading-relaxed text-ivory/45">
           A szerencseszámok számmisztikai ihletésű napi fókuszt adnak, nem nyerési ígéretet.
