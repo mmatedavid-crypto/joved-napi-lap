@@ -16,8 +16,8 @@ export const Route = createFileRoute("/jiking/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "I Ching | Jövőd.hu" }] };
     const { hex } = loaderData;
-    const title = `${hex.num}. ${hex.name} — I Ching hexagram`;
-    const description = `${hex.name} (${hex.trigrams}): ${hex.description}`;
+    const title = `${hex.num}. hexagram — ${hex.name} jelentése (Ji King)`;
+    const description = `${hex.num}. hexagram, ${hex.name} (${hex.trigrams}) jelentése magyarul: ${hex.description}`;
     const url = `${SITE_URL}/jiking/${hex.slug}`;
     return {
       meta: [
